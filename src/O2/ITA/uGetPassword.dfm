@@ -1,0 +1,50 @@
+object GetPasswordDlg: TGetPasswordDlg
+  Left = 191
+  Top = 108
+  ActiveControl = edPassword
+  BorderStyle = bsDialog
+  Caption = 'Password'
+  ClientHeight = 88
+  ClientWidth = 257
+  Color = clBtnFace
+  Font.Charset = ANSI_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poMainFormCenter
+  PixelsPerInch = 96
+  TextHeight = 13
+  object edPassword: TJvEdit
+    Left = 12
+    Top = 16
+    Width = 233
+    Height = 21
+    ProtectPassword = True
+    ThemedPassword = True
+    TabOrder = 0
+    OnChange = edPasswordChange
+  end
+  object btOk: TButton
+    Left = 50
+    Top = 52
+    Width = 75
+    Height = 25
+    Caption = 'OK'
+    Default = True
+    Enabled = False
+    ModalResult = 1
+    TabOrder = 1
+  end
+  object btCancel: TButton
+    Left = 131
+    Top = 52
+    Width = 75
+    Height = 25
+    Cancel = True
+    Caption = 'Annulla'
+    ModalResult = 2
+    TabOrder = 2
+  end
+end

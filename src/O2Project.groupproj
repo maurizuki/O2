@@ -1,0 +1,72 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{4DFE44B2-115B-4275-A6E9-92843A542480}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="O2\o2.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Launcher\O2Portable.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="O2\ENU\o2_ENU.bdsproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="O2\ITA\o2_ITA.bdsproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="o2">
+        <MSBuild Projects="O2\o2.dproj"/>
+    </Target>
+    <Target Name="o2:Clean">
+        <MSBuild Projects="O2\o2.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="o2:Make">
+        <MSBuild Projects="O2\o2.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="O2Portable">
+        <MSBuild Projects="Launcher\O2Portable.dproj"/>
+    </Target>
+    <Target Name="O2Portable:Clean">
+        <MSBuild Projects="Launcher\O2Portable.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="O2Portable:Make">
+        <MSBuild Projects="Launcher\O2Portable.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="o2_ENU">
+        <MSBuild Projects="O2\ENU\o2_ENU.bdsproj"/>
+    </Target>
+    <Target Name="o2_ENU:Clean">
+        <MSBuild Projects="O2\ENU\o2_ENU.bdsproj" Targets="Clean"/>
+    </Target>
+    <Target Name="o2_ENU:Make">
+        <MSBuild Projects="O2\ENU\o2_ENU.bdsproj" Targets="Make"/>
+    </Target>
+    <Target Name="o2_ITA">
+        <MSBuild Projects="O2\ITA\o2_ITA.bdsproj"/>
+    </Target>
+    <Target Name="o2_ITA:Clean">
+        <MSBuild Projects="O2\ITA\o2_ITA.bdsproj" Targets="Clean"/>
+    </Target>
+    <Target Name="o2_ITA:Make">
+        <MSBuild Projects="O2\ITA\o2_ITA.bdsproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="o2;O2Portable;o2_ENU;o2_ITA"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="o2:Clean;O2Portable:Clean;o2_ENU:Clean;o2_ITA:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="o2:Make;O2Portable:Make;o2_ENU:Make;o2_ITA:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

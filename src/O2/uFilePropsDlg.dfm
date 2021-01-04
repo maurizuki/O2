@@ -1,0 +1,125 @@
+object FilePropsDlg: TFilePropsDlg
+  Left = 253
+  Top = 110
+  BorderStyle = bsDialog
+  Caption = 'File properties'
+  ClientHeight = 331
+  ClientWidth = 297
+  Color = clBtnFace
+  Font.Charset = ANSI_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  Position = poMainFormCenter
+  OnShow = FormShow
+  DesignSize = (
+    297
+    331)
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Label1: TLabel
+    Left = 8
+    Top = 12
+    Width = 24
+    Height = 13
+    Caption = '&Title:'
+    FocusControl = edTitle
+  end
+  object Label2: TLabel
+    Left = 8
+    Top = 66
+    Width = 57
+    Height = 13
+    Caption = '&Description:'
+    FocusControl = edDescription
+  end
+  object Label3: TLabel
+    Left = 8
+    Top = 120
+    Width = 37
+    Height = 13
+    Caption = '&Author:'
+    FocusControl = edAuthor
+  end
+  object Label4: TLabel
+    Left = 8
+    Top = 174
+    Width = 55
+    Height = 13
+    Caption = '&Encryption:'
+    FocusControl = edCipher
+  end
+  object Label5: TLabel
+    Left = 8
+    Top = 228
+    Width = 75
+    Height = 13
+    Caption = '&Hash algorithm:'
+    FocusControl = edHash
+  end
+  object edTitle: TEdit
+    Left = 8
+    Top = 31
+    Width = 281
+    Height = 21
+    TabOrder = 0
+  end
+  object edDescription: TEdit
+    Left = 8
+    Top = 85
+    Width = 281
+    Height = 21
+    TabOrder = 1
+  end
+  object edAuthor: TEdit
+    Left = 8
+    Top = 139
+    Width = 281
+    Height = 21
+    TabOrder = 2
+  end
+  object edCipher: TEdit
+    Left = 8
+    Top = 193
+    Width = 281
+    Height = 21
+    Color = clBtnFace
+    ReadOnly = True
+    TabOrder = 3
+  end
+  object edHash: TEdit
+    Left = 8
+    Top = 247
+    Width = 281
+    Height = 21
+    Color = clBtnFace
+    ReadOnly = True
+    TabOrder = 4
+  end
+  object btOk: TButton
+    Left = 133
+    Top = 298
+    Width = 75
+    Height = 25
+    Anchors = [akRight, akBottom]
+    Caption = 'OK'
+    Default = True
+    TabOrder = 5
+    OnClick = btOkClick
+    ExplicitTop = 397
+  end
+  object btCancel: TButton
+    Left = 214
+    Top = 298
+    Width = 75
+    Height = 25
+    Anchors = [akRight, akBottom]
+    Cancel = True
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 6
+    ExplicitTop = 397
+  end
+end
