@@ -18,7 +18,7 @@ unit uO2Relations;
 interface
 
 uses
-  Classes, Contnrs, SysUtils, uO2Classes, uO2Objects;
+  Classes, Contnrs, SysUtils, System.Types, uO2Classes, uO2Objects;
 
 type
   TO2ObjRelation = class;

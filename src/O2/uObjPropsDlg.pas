@@ -236,7 +236,6 @@ end;
 procedure TObjPropsDlg.AddFieldExecute(Sender: TObject);
 var
   AField: TO2Field;
-  Index: Integer;
 begin
   AField := Fields.AddField(cbFieldName.Text);
   AField.FieldValue := cbFieldValue.Text;

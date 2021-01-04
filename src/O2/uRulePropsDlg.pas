@@ -20,7 +20,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, StdCtrls, ActnList, ComCtrls, ExtCtrls, Mask, JvExMask, JvSpin,
-  uO2Rules, Menus;
+  uO2Rules, Menus, System.Actions;
 
 type
   TRulePropsDlg = class(TForm)
@@ -184,7 +184,7 @@ procedure TRulePropsDlg.FormShow(Sender: TObject);
 var
   FormatSettings: TFormatSettings;
 begin
-  GetLocaleFormatSettings(LOCALE_SYSTEM_DEFAULT, FormatSettings);
+  FormatSettings := TFormatSettings.Create;
   if RuleIndex <> -1 then
     with Rules[RuleIndex] do
     begin

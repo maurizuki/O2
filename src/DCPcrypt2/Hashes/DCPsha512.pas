@@ -101,6 +101,7 @@ Non-optimised version
   end;
 }
 
+{$WARN COMBINING_SIGNED_UNSIGNED64 OFF}
   t1:= h + (((e shr 14) or (e shl 50)) xor ((e shr 18) or (e shl 46)) xor ((e shr 41) or (e shl 23))) + ((e and f) xor (not e and g)) + $428a2f98d728ae22 + W[0]; t2:= (((a shr 28) or (a shl 36)) xor ((a shr 34) or (a shl 30)) xor ((a shr 39) or (a shl 25))) + ((a and b) xor (a and c) xor (b and c)); d:= d + t1; h:= t1 + t2;
   t1:= g + (((d shr 14) or (d shl 50)) xor ((d shr 18) or (d shl 46)) xor ((d shr 41) or (d shl 23))) + ((d and e) xor (not d and f)) + $7137449123ef65cd + W[1]; t2:= (((h shr 28) or (h shl 36)) xor ((h shr 34) or (h shl 30)) xor ((h shr 39) or (h shl 25))) + ((h and a) xor (h and b) xor (a and b)); c:= c + t1; g:= t1 + t2;
   t1:= f + (((c shr 14) or (c shl 50)) xor ((c shr 18) or (c shl 46)) xor ((c shr 41) or (c shl 23))) + ((c and d) xor (not c and e)) + $b5c0fbcfec4d3b2f + W[2]; t2:= (((g shr 28) or (g shl 36)) xor ((g shr 34) or (g shl 30)) xor ((g shr 39) or (g shl 25))) + ((g and h) xor (g and a) xor (h and a)); b:= b + t1; f:= t1 + t2;
@@ -181,6 +182,7 @@ Non-optimised version
   t1:= c + (((h shr 14) or (h shl 50)) xor ((h shr 18) or (h shl 46)) xor ((h shr 41) or (h shl 23))) + ((h and a) xor (not h and b)) + $597f299cfc657e2a + W[77]; t2:= (((d shr 28) or (d shl 36)) xor ((d shr 34) or (d shl 30)) xor ((d shr 39) or (d shl 25))) + ((d and e) xor (d and f) xor (e and f)); g:= g + t1; c:= t1 + t2;
   t1:= b + (((g shr 14) or (g shl 50)) xor ((g shr 18) or (g shl 46)) xor ((g shr 41) or (g shl 23))) + ((g and h) xor (not g and a)) + $5fcb6fab3ad6faec + W[78]; t2:= (((c shr 28) or (c shl 36)) xor ((c shr 34) or (c shl 30)) xor ((c shr 39) or (c shl 25))) + ((c and d) xor (c and e) xor (d and e)); f:= f + t1; b:= t1 + t2;
   t1:= a + (((f shr 14) or (f shl 50)) xor ((f shr 18) or (f shl 46)) xor ((f shr 41) or (f shl 23))) + ((f and g) xor (not f and h)) + $6c44198c4a475817 + W[79]; t2:= (((b shr 28) or (b shl 36)) xor ((b shr 34) or (b shl 30)) xor ((b shr 39) or (b shl 25))) + ((b and c) xor (b and d) xor (c and d)); e:= e + t1; a:= t1 + t2;
+{$WARN COMBINING_SIGNED_UNSIGNED64 ON}
 
   CurrentHash[0]:= CurrentHash[0] + a;
   CurrentHash[1]:= CurrentHash[1] + b;
@@ -278,6 +280,7 @@ end;
 procedure TDCP_sha384.Init;
 begin
   Burn;
+{$WARN BOUNDS_ERROR OFF}
   CurrentHash[0]:= $cbbb9d5dc1059ed8;
   CurrentHash[1]:= $629a292a367cd507;
   CurrentHash[2]:= $9159015a3070dd17;
@@ -286,6 +289,7 @@ begin
   CurrentHash[5]:= $8eb44a8768581511;
   CurrentHash[6]:= $db0c2e0d64f98fa7;
   CurrentHash[7]:= $47b5481dbefa4fa4;
+{$WARN BOUNDS_ERROR ON}
   fInitialized:= true;
 end;
 
@@ -356,6 +360,7 @@ end;
 procedure TDCP_sha512.Init;
 begin
   Burn;
+{$WARN BOUNDS_ERROR OFF}
   CurrentHash[0]:= $6a09e667f3bcc908;
   CurrentHash[1]:= $bb67ae8584caa73b;
   CurrentHash[2]:= $3c6ef372fe94f82b;
@@ -364,6 +369,7 @@ begin
   CurrentHash[5]:= $9b05688c2b3e6c1f;
   CurrentHash[6]:= $1f83d9abfb41bd6b;
   CurrentHash[7]:= $5be0cd19137e2179;
+{$WARN BOUNDS_ERROR ON}
   fInitialized:= true;
 end;
 

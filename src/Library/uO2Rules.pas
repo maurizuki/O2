@@ -567,7 +567,7 @@ end;
 
 function TO2Rule.GetFormatSettings: TFormatSettings;
 begin
-  GetLocaleFormatSettings(LOCALE_SYSTEM_DEFAULT, Result);
+  Result := TFormatSettings.Create;
   Result.DateSeparator := Params.StrValue(DateSeparatorParam,
     Result.DateSeparator)[1];
   Result.ShortDateFormat := Params.StrValue(ShortDateFormatParam,

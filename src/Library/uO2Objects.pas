@@ -18,7 +18,7 @@ unit uO2Objects;
 interface
 
 uses
-  Classes, Contnrs, SysUtils, uO2Classes;
+  Classes, Contnrs, SysUtils, System.Types, uO2Classes;
 
 type
   TO2Field = class(TO2CollectionItem)

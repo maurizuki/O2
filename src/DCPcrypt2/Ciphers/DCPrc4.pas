@@ -33,7 +33,7 @@ type
   protected
     KeyData, KeyOrg: array[0..255] of byte;
   public
-    class function GetID: integer; override;
+    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
     class function SelfTest: boolean; override;

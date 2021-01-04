@@ -218,10 +218,12 @@ end;
 
 class function TDCP_tiger.SelfTest: boolean;
 const
+{$WARN BOUNDS_ERROR OFF}
   Test1Out: array[0..2] of int64=
     ($87FB2A9083851CF7,$470D2CF810E6DF9E,$B586445034A5A386);
   Test2Out: array[0..2] of int64=
     ($0C410A042968868A,$1671DA5A3FD29A72,$5EC1E457D3CDB303);
+{$WARN BOUNDS_ERROR ON}
 var
   TestHash: TDCP_tiger;
   TestOut: array[0..2] of int64;
@@ -242,9 +244,11 @@ procedure TDCP_tiger.Init;
 begin
   Burn;
   fInitialized:= true;
+{$WARN BOUNDS_ERROR OFF}
   CurrentHash[0]:= $0123456789ABCDEF;
   CurrentHash[1]:= $FEDCBA9876543210;
   CurrentHash[2]:= $F096A5B4C3B2E187;
+{$WARN BOUNDS_ERROR ON}
 end;
 
 procedure TDCP_tiger.Burn;

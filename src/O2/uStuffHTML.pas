@@ -82,7 +82,9 @@ begin
 
   //See MSDN documentation for the concept of connection points
   OleCheck(FBrowser.QueryInterface(IConnectionPointContainer, CPC));
+{$WARN SYMBOL_PLATFORM OFF}
   OleCheck(CPC.FindConnectionPoint(DWebBrowserEvents2, FConnectionPoint));
+{$WARN SYMBOL_PLATFORM ON}
 
   { The Advise will refcount this object. The Unadvise called in the event
     handler will unreference the object }
