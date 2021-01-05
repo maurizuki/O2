@@ -336,7 +336,7 @@
         </prop-group>
       </trans-unit>
       <trans-unit id="O:AboutForm.O:Label1.Caption" resname="O:AboutForm.O:Label1.Caption">
-        <source>'Copyright (C) 2004-2015 Maurizio Basaglia'</source>
+        <source>'Copyright (C) 2004-2021 Maurizio Basaglia'</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40178.7447665278</prop>
           <prop prop-type="Status">1</prop>
