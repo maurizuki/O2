@@ -1,0 +1,1 @@
+brcc32 o2.rc -foo2res.res
