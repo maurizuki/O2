@@ -16,7 +16,7 @@
 program O2Portable;
 
 uses
-  Windows, Forms, SysUtils, ShellApi;
+  Windows, SysUtils, ShellApi;
 
 {$R *.res}
 
@@ -24,12 +24,12 @@ var
   Directory, FileName, Parameters: string;
 
 begin
-  Directory := ExtractFilePath(Application.ExeName) + '\App\O2';
+  Directory := ExtractFileDir(ParamStr(0)) + '\App\O2';
   FileName := Directory + '\o2.exe';
   Parameters := 'portable' + ' '
-    + AnsiQuotedStr(ExtractFilePath(Application.ExeName), '"');
+    + AnsiQuotedStr(ExtractFilePath(ParamStr(0)), '"');
   if ParamCount > 0 then
     Parameters := Parameters + ' ' + AnsiQuotedStr(ParamStr(1), '"');
-  ShellExecute(Application.Handle, 'open', PChar(FileName), PChar(Parameters),
+  ShellExecute(0, 'open', PChar(FileName), PChar(Parameters),
     PChar(Directory), SW_SHOWNORMAL);
 end.
