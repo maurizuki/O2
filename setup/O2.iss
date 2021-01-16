@@ -1,20 +1,36 @@
-#define AppVersion = "2.2.1"
+#expr Exec(AddBackslash(SourcePath) + "preprocess.bat")
+
+#define AppName "O2"
+#define AppVersion GetFileProductVersion("..\src\O2\O2.exe")
+#define Copyright "(C) 2004-2021 Maurizio Basaglia. All rights reserved."
+
+#define SetupDir "setup"
+#define AppExeDir "src\O2"
+#define LauncherDir "src\Launcher"
+#define LicenseDir "setup"
+#define ReadmeDir "setup"
+#define ExamplesDir "setup"
+
+#define AppExeFile "o2.exe"
+#define LauncherFile "O2Portable.exe"
+#define LicenseFile "License.txt"
+#define ReadmeFile "ReadMe.txt"
 
 [Setup]
 SourceDir=..
-OutputBaseFilename=O2-{#AppVersion}-setup
+OutputBaseFilename={#AppName}-{#AppVersion}-setup
 OutputDir=setup\output
-DefaultDirName={pf}\O2
-DefaultGroupName=O2
-AppName=O2
-AppVerName=O2 {#AppVersion}
-AppCopyright=© Maurizio Basaglia. All rights reserved.
+DefaultDirName={pf}\{#AppName}
+DefaultGroupName={#AppName}
+AppName={#AppName}
+AppVerName={#AppName} {#AppVersion}
+AppCopyright={#Copyright}
 VersionInfoVersion={#AppVersion}
-VersionInfoCopyright=(C) 2004-2021 Maurizio Basaglia. All rights reserved.
-LicenseFile=setup\License.txt
-InfoBeforeFile=setup\ReadMe.txt
-WizardImageFile=setup\WizardImage.bmp
-WizardSmallImageFile=setup\WizardSmallImage.bmp
+VersionInfoCopyright={#Copyright}
+LicenseFile={#LicenseDir}\{#LicenseFile}
+InfoBeforeFile={#ReadmeDir}\{#ReadmeFile}
+WizardImageFile={#SetupDir}\WizardImage.bmp
+WizardSmallImageFile={#SetupDir}\WizardSmallImage.bmp
 ChangesAssociations=true
 
 [Languages]
@@ -27,39 +43,39 @@ Name: compact; Description: Compact installation
 Name: custom; Description: Custom installation; Flags: iscustom
 
 [Components]
-Name: program; Description: O2; Types: full compact custom; Flags: fixed
+Name: program; Description: {#AppName}; Types: full compact custom; Flags: fixed
 Name: examples; Description: Examples; Types: full
 Name: languages; Description: Languages; Types: full
 Name: languages\en; Description: English; Types: full compact custom; Flags: fixed
 Name: languages\it; Description: Italian; Types: full
 
 [Files]
-Source: src\O2\o2.exe; DestDir: {app}; Components: program; Flags: replacesameversion
-Source: src\Launcher\O2Portable.exe; DestDir: {app}; Components: program; Flags: replacesameversion
-Source: setup\appicon.ico; DestDir: {app}; Components: program;
-Source: setup\appicon_16.png; DestDir: {app}; Components: program;
-Source: setup\appicon_32.png; DestDir: {app}; Components: program;
-Source: setup\o2.ico; DestDir: {app}; Components: program;
-Source: setup\o2_16.png; DestDir: {app}; Components: program;
-Source: setup\o2_32.png; DestDir: {app}; Components: program;
-Source: setup\help.html; DestDir: {app}; Components: program
-Source: setup\License.txt; DestDir: {app}; Components: program
-Source: setup\ReadMe.txt; DestDir: {app}; Components: program
-Source: setup\AddressBook.o2; DestDir: {app}\Examples; Components: examples
-Source: setup\PasswordWallet.o2; DestDir: {app}\Examples; Components: examples
-Source: src\O2\o2.ENU; DestDir: {app}; Components: languages\en; Flags: ignoreversion
-Source: src\O2\o2.ITA; DestDir: {app}; Components: languages\it; Flags: ignoreversion
+Source: {#AppExeDir}\{#AppExeFile}; DestDir: {app}; Components: program; Flags: replacesameversion
+Source: {#LauncherDir}\{#LauncherFile}; DestDir: {app}; Components: program; Flags: replacesameversion
+Source: {#SetupDir}\appicon.ico; DestDir: {app}; Components: program;
+Source: {#SetupDir}\appicon_16.png; DestDir: {app}; Components: program;
+Source: {#SetupDir}\appicon_32.png; DestDir: {app}; Components: program;
+Source: {#SetupDir}\o2.ico; DestDir: {app}; Components: program;
+Source: {#SetupDir}\o2_16.png; DestDir: {app}; Components: program;
+Source: {#SetupDir}\o2_32.png; DestDir: {app}; Components: program;
+Source: {#SetupDir}\help.html; DestDir: {app}; Components: program
+Source: {#LicenseDir}\{#LicenseFile}; DestDir: {app}; Components: program
+Source: {#ReadmeDir}\{#ReadmeFile}; DestDir: {app}; Components: program
+Source: {#ExamplesDir}\AddressBook.o2; DestDir: {app}\Examples; Components: examples
+Source: {#ExamplesDir}\PasswordWallet.o2; DestDir: {app}\Examples; Components: examples
+Source: {#AppExeDir}\o2.ENU; DestDir: {app}; Components: languages\en; Flags: ignoreversion
+Source: {#AppExeDir}\o2.ITA; DestDir: {app}; Components: languages\it; Flags: ignoreversion
 
 [Icons]
-Name: {group}\O2; Filename: {app}\o2.exe; WorkingDir: {app}; IconFilename: {app}\o2.exe; IconIndex: 0; Comment: Start O2
-Name: {group}\License; Filename: {app}\License.txt; Comment: View the Mozilla Public License Version 2.0
-Name: {group}\Uninstall; Filename: {uninstallexe}; Comment: Uninstall O2
-Name: {commondesktop}\O2; Filename: {app}\o2.exe; WorkingDir: {app}; IconFilename: {app}\o2.exe; IconIndex: 0; Comment: Start O2; Tasks: desktopicon
+Name: {group}\{#AppName}; Filename: {app}\{#AppExeFile}; WorkingDir: {app}; IconFilename: {app}\{#AppExeFile}; IconIndex: 0; Comment: Start {#AppName}
+Name: {group}\License; Filename: {app}\{#LicenseFile}; Comment: View the Mozilla Public License Version 2.0
+Name: {group}\Uninstall; Filename: {uninstallexe}; Comment: Uninstall {#AppName}
+Name: {commondesktop}\{#AppName}; Filename: {app}\{#AppExeFile}; WorkingDir: {app}; IconFilename: {app}\{#AppExeFile}; IconIndex: 0; Comment: Start {#AppName}; Tasks: desktopicon
 
 [Registry]
-Root: HKCR; Subkey: o2project.o2; ValueType: string; ValueData: O2 file; Flags: uninsdeletekey
-Root: HKCR; Subkey: o2project.o2\DefaultIcon; ValueType: string; ValueData: {app}\o2.exe,1
-Root: HKCR; Subkey: o2project.o2\shell\open\command; ValueType: string; ValueData: """{app}\o2.exe"" ""%1"""
+Root: HKCR; Subkey: o2project.o2; ValueType: string; ValueData: {#AppName} file; Flags: uninsdeletekey
+Root: HKCR; Subkey: o2project.o2\DefaultIcon; ValueType: string; ValueData: {app}\{#AppExeFile},1
+Root: HKCR; Subkey: o2project.o2\shell\open\command; ValueType: string; ValueData: """{app}\{#AppExeFile}"" ""%1"""
 Root: HKCR; Subkey: .o2; ValueType: string; ValueData: o2project.o2; Flags: uninsdeletekey
 Root: HKCR; Subkey: .o2; ValueType: string; ValueName: "Content Type"; ValueData: application/o2project.o2
 Root: HKCR; Subkey: .o2\DefaultIcon; ValueType: none; Flags: deletekey
@@ -67,10 +83,10 @@ Root: HKCR; Subkey: .o2\shell\open; ValueType: none; Flags: deletekey
 
 [Tasks]
 Name: desktopicon; Description: {cm:CreateDesktopIcon}
-Name: launchprogram; Description: {cm:LaunchProgram,O2}
+Name: launchprogram; Description: {cm:LaunchProgram,{#AppName}}
 
 [Run]
-Filename: {app}\o2.exe; WorkingDir: {app}; Tasks: launchprogram; Flags: nowait
+Filename: {app}\{#AppExeFile}; WorkingDir: {app}; Tasks: launchprogram; Flags: nowait
 
 [InstallDelete]
 Name: {app}\MPL-1.1.txt; Type: files
