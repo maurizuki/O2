@@ -20,7 +20,7 @@
 SourceDir=..
 OutputBaseFilename={#AppName}-{#AppVersion}-setup
 OutputDir=setup\output
-DefaultDirName={pf}\{#AppName}
+DefaultDirName={commonpf}\{#AppName}
 DefaultGroupName={#AppName}
 AppName={#AppName}
 AppVerName={#AppName} {#AppVersion}
@@ -29,9 +29,9 @@ VersionInfoVersion={#AppVersion}
 VersionInfoCopyright={#Copyright}
 LicenseFile={#LicenseDir}\{#LicenseFile}
 InfoBeforeFile={#ReadmeDir}\{#ReadmeFile}
-WizardImageFile={#SetupDir}\WizardImage.bmp
 WizardSmallImageFile={#SetupDir}\WizardSmallImage.bmp
 ChangesAssociations=true
+WizardStyle=modern
 
 [Languages]
 Name: en; MessagesFile: compiler:Default.isl
