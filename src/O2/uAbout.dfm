@@ -378,17 +378,17 @@ object AboutForm: TAboutForm
         'Copyright (C) 1999-2009 David Barton.'
         ''
         'Inno Setup'
-        'Copyright (C) 1997-2014 Jordan Russell.'
-        'Portions Copyright (C) 2000-2014 Martijn Laan.'
+        'Copyright (C) 1997-2020 Jordan Russell.'
+        'Portions Copyright (C) 2000-2020 Martijn Laan.'
         ''
         'Jedi VCL Project'
-        'Copyright (C) The Jedi VCL Team.'
+        'Copyright (C) 1999-2020 The Jedi VCL Team.'
         ''
         'SZCRC32 unit'
         'Copyright (C) 2004 Sasa Zeman.'
         ''
         'UPX - The Ultimate Packer for eXecutables'
-        'Copyright (C) 1996-2013 Markus Oberhumer, '
+        'Copyright (C) 1996-2020 Markus Oberhumer, '
         'Laszlo Molnar, John Reiser.')
       ParentColor = True
       ReadOnly = True
