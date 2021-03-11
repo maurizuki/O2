@@ -36,7 +36,7 @@ const
   LauncherFile = 'O2Portable.exe';
   SettingsFile = 'O2.xml';
   HTMLHelpFile = 'help.html';
-  LicenseFile = 'License.txt';
+  LicenseFile = 'License.rtf';
   ReadMeFile = 'ReadMe.txt';
 
   LocalSettingsDir = 'O2';
