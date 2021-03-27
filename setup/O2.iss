@@ -14,7 +14,7 @@
 #define AppExeFile "o2.exe"
 #define LauncherFile "O2Portable.exe"
 #define LicenseFile "License.rtf"
-#define ReadmeFile "ReadMe.txt"
+#define ReadmeFile "ReadMe.rtf"
 
 [Setup]
 SourceDir=..
@@ -89,6 +89,7 @@ Name: launchprogram; Description: {cm:LaunchProgram,{#AppName}}
 Filename: {app}\{#AppExeFile}; WorkingDir: {app}; Tasks: launchprogram; Flags: nowait
 
 [InstallDelete]
+Name: {app}\ReadMe.txt; Type: files
 Name: {app}\License.txt; Type: files
 Name: {app}\MPL-1.1.txt; Type: files
 Name: {app}\upd8r.exe; Type: files

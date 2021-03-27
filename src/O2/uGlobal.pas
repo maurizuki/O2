@@ -37,7 +37,7 @@ const
   SettingsFile = 'O2.xml';
   HTMLHelpFile = 'help.html';
   LicenseFile = 'License.rtf';
-  ReadMeFile = 'ReadMe.txt';
+  ReadMeFile = 'ReadMe.rtf';
 
   LocalSettingsDir = 'O2';
 
