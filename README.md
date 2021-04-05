@@ -84,14 +84,14 @@ __DCPCrypt Cryptographic Component Library__
 Copyright (C) 1999-2009 David Barton.  
 
 __Inno Setup__  
-Copyright (C) 1997-2014 Jordan Russell.  
-Portions Copyright (C) 2000-2014 Martijn Laan.  
+Copyright (C) 1997-2020 Jordan Russell.  
+Portions Copyright (C) 2000-2020 Martijn Laan.  
 
 __Jedi VCL Project__  
-Copyright (C) The Jedi VCL Team.  
+Copyright (C) 1999-2020 The Jedi VCL Team.  
 
 __SZCRC32 unit__  
 Copyright (C) 2004 Sasa Zeman.  
 
 __UPX - The Ultimate Packer for eXecutables__  
-Copyright (C) 1996-2013 Markus Oberhumer, Laszlo Molnar, John Reiser.
+Copyright (C) 1996-2020 Markus Oberhumer, Laszlo Molnar, John Reiser.
