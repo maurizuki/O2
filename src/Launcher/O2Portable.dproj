@@ -84,6 +84,7 @@
         <DCC_DependencyCheckOutputName>O2Portable.exe</DCC_DependencyCheckOutputName>
         <SanitizedProjectName>O2Portable</SanitizedProjectName>
         <DCC_OutputDRCFile>true</DCC_OutputDRCFile>
+        <BT_BuildType>Debug</BT_BuildType>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <Version>7.0</Version>

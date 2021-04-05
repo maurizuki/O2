@@ -134,6 +134,7 @@ type
     Duplicate1: TMenuItem;
     OpenLink: TAction;
     SendEmail: TAction;
+    ShowPasswords: TAction;
     N9: TMenuItem;
     Browse1: TMenuItem;
     Sendemail1: TMenuItem;
@@ -336,6 +337,8 @@ type
     Replacerole1: TMenuItem;
     WebDocs: TAction;
     Documentation1: TMenuItem;
+    N30: TMenuItem;
+    Showpasswords1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -461,6 +464,8 @@ type
     procedure OpenLinkUpdate(Sender: TObject);
     procedure SendEmailExecute(Sender: TObject);
     procedure SendEmailUpdate(Sender: TObject);
+    procedure ShowPasswordsExecute(Sender: TObject);
+    procedure ShowPasswordsUpdate(Sender: TObject);
     procedure RelationsViewDblClick(Sender: TObject);
     procedure RelationsViewKeyDown(Sender: TObject; var Key: Word;
       Shift: TShiftState);
@@ -510,6 +515,7 @@ type
     FStayOnTop: Boolean;
     FTransparency: Integer;
     FTransparencyOnlyIfDeactivated: Boolean;
+    FShowPasswords: Boolean;
 
     MRUMenuItems: TList;
     MRUList: TMRUList;
@@ -1795,7 +1801,7 @@ begin
     Result := FieldsView.Items.Add;
   Result.Caption := AField.FieldName;
   Result.SubItems.Clear;
-  Result.SubItems.Add(O2File.Rules.GetDisplayText(AField));
+  Result.SubItems.Add(O2File.Rules.GetDisplayText(AField, FShowPasswords));
   Result.Data := AField;
 end;
 
@@ -3032,6 +3038,18 @@ begin
       and Assigned(O2File.Rules.FindFirstRule(
         TO2Field(Selected.Data), [rtEmail]));
   TAction(Sender).Enabled := TAction(Sender).Visible;
+end;
+
+procedure TMainForm.ShowPasswordsExecute(Sender: TObject);
+begin
+  FShowPasswords := not FShowPasswords;
+  NotifyChanges([ncObjProps]);
+end;
+
+procedure TMainForm.ShowPasswordsUpdate(Sender: TObject);
+begin
+  TAction(sender).Checked := FShowPasswords;
+  TAction(sender).Enabled := not Busy;
 end;
 
 procedure TMainForm.RelationsViewDblClick(Sender: TObject);

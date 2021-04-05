@@ -151,10 +151,6 @@ object MainForm: TMainForm
       object tsNotes: TTabSheet
         Caption = 'Note'
         ImageIndex = 1
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Notes: TMemo
           AlignWithMargins = True
           Left = 3
@@ -176,10 +172,6 @@ object MainForm: TMainForm
       object tsRelations: TTabSheet
         Caption = 'Relazioni'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object RelationsView: TListView
           AlignWithMargins = True
           Left = 3
@@ -215,10 +207,6 @@ object MainForm: TMainForm
       object tsRules: TTabSheet
         Caption = 'Regole'
         ImageIndex = 3
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object RulesView: TListView
           AlignWithMargins = True
           Left = 3
@@ -1131,6 +1119,13 @@ object MainForm: TMainForm
       Caption = 'Inverti selezione'
       OnExecute = FindByRuleInvertSelectionExecute
       OnUpdate = ActionUpdate
+    end
+    object ShowPasswords: TAction
+      Category = 'Field'
+      Caption = 'Mostra password'
+      Hint = 'Mostra password'
+      OnExecute = ShowPasswordsExecute
+      OnUpdate = ShowPasswordsUpdate
     end
   end
   object ToolBarImages: TImageList
@@ -4921,6 +4916,12 @@ object MainForm: TMainForm
     end
     object Sendemail1: TMenuItem
       Action = SendEmail
+    end
+    object N30: TMenuItem
+      Caption = '-'
+    end
+    object Showpasswords1: TMenuItem
+      Action = ShowPasswords
     end
   end
   object ImportDialog: TOpenDialog

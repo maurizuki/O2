@@ -5,9 +5,9 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">44219.6349074074</prop>
-        <prop prop-type="OrigDateTime">44219.6349074074</prop>
-        <prop prop-type="XlatDateTime">41181.3968981481</prop>
+        <prop prop-type="SelfDateTime">44291.3948148148</prop>
+        <prop prop-type="OrigDateTime">44291.3947453704</prop>
+        <prop prop-type="XlatDateTime">41181.4385648148</prop>
         <prop prop-type="Translated">829</prop>
         <prop prop-type="UnTranslated">0</prop>
       </prop-group>
@@ -5146,7 +5146,6 @@
           <prop prop-type="Created">40198.9517961458</prop>
           <prop prop-type="Status">3</prop>
         </prop-group>
-        <target>"Personalizzato..."</target>
       </trans-unit>
       <trans-unit id="uGlobal_SRelationsViewHint" resname="uGlobal_SRelationsViewHint">
         <source>"Double-click: edit properties"</source>
@@ -5584,7 +5583,6 @@
           <prop prop-type="Created">40322.9419422685</prop>
           <prop prop-type="Status">3</prop>
         </prop-group>
-        <target>"Grigio chiaro"</target>
       </trans-unit>
       <trans-unit id="Consts_SNameRed" resname="Consts_SNameRed">
         <source>"Red"</source>
@@ -5592,7 +5590,6 @@
           <prop prop-type="Created">40322.9419422685</prop>
           <prop prop-type="Status">3</prop>
         </prop-group>
-        <target>"Rosso"</target>
       </trans-unit>
       <trans-unit id="Consts_SNameLime" resname="Consts_SNameLime">
         <source>"Lime"</source>
@@ -5607,7 +5604,6 @@
           <prop prop-type="Created">40322.9419422685</prop>
           <prop prop-type="Status">3</prop>
         </prop-group>
-        <target>"Giallo"</target>
       </trans-unit>
       <trans-unit id="Consts_SNameBlue" resname="Consts_SNameBlue">
         <source>"Blue"</source>
@@ -5615,7 +5611,6 @@
           <prop prop-type="Created">40322.9419422685</prop>
           <prop prop-type="Status">3</prop>
         </prop-group>
-        <target>"Blu"</target>
       </trans-unit>
       <trans-unit id="Consts_SNameFuchsia" resname="Consts_SNameFuchsia">
         <source>"Fuchsia"</source>
@@ -5623,7 +5618,6 @@
           <prop prop-type="Created">40322.9419422685</prop>
           <prop prop-type="Status">3</prop>
         </prop-group>
-        <target>"Fucsia"</target>
       </trans-unit>
       <trans-unit id="Consts_SNameAqua" resname="Consts_SNameAqua">
         <source>"Aqua"</source>
@@ -5631,7 +5625,6 @@
           <prop prop-type="Created">40322.9419422685</prop>
           <prop prop-type="Status">3</prop>
         </prop-group>
-        <target>"Acqua"</target>
       </trans-unit>
       <trans-unit id="Consts_SNameWhite" resname="Consts_SNameWhite">
         <source>"White"</source>
@@ -5639,7 +5632,6 @@
           <prop prop-type="Created">40322.9419422685</prop>
           <prop prop-type="Status">3</prop>
         </prop-group>
-        <target>"Bianco"</target>
       </trans-unit>
       <trans-unit id="Consts_SNameMoneyGreen" resname="Consts_SNameMoneyGreen">
         <source>"Money Green"</source>
@@ -5731,7 +5723,6 @@
           <prop prop-type="Created">40322.9419424537</prop>
           <prop prop-type="Status">3</prop>
         </prop-group>
-        <target>"Nero"</target>
       </trans-unit>
       <trans-unit id="Consts_SNameMaroon" resname="Consts_SNameMaroon">
         <source>"Maroon"</source>
@@ -5739,7 +5730,6 @@
           <prop prop-type="Created">40322.9419424537</prop>
           <prop prop-type="Status">3</prop>
         </prop-group>
-        <target>"Rosso scuro"</target>
       </trans-unit>
       <trans-unit id="Consts_SNameGreen" resname="Consts_SNameGreen">
         <source>"Green"</source>
@@ -5747,7 +5737,6 @@
           <prop prop-type="Created">40322.9419424537</prop>
           <prop prop-type="Status">3</prop>
         </prop-group>
-        <target>"Verde"</target>
       </trans-unit>
       <trans-unit id="Consts_SNameOlive" resname="Consts_SNameOlive">
         <source>"Olive"</source>
@@ -5755,7 +5744,6 @@
           <prop prop-type="Created">40322.9419424537</prop>
           <prop prop-type="Status">3</prop>
         </prop-group>
-        <target>"Verde oliva"</target>
       </trans-unit>
       <trans-unit id="Consts_SNameNavy" resname="Consts_SNameNavy">
         <source>"Navy"</source>
@@ -5763,7 +5751,6 @@
           <prop prop-type="Created">40322.9419424537</prop>
           <prop prop-type="Status">3</prop>
         </prop-group>
-        <target>"Blu scuro"</target>
       </trans-unit>
       <trans-unit id="Consts_SNamePurple" resname="Consts_SNamePurple">
         <source>"Purple"</source>
@@ -5771,7 +5758,6 @@
           <prop prop-type="Created">40322.9419424537</prop>
           <prop prop-type="Status">3</prop>
         </prop-group>
-        <target>"Porpora"</target>
       </trans-unit>
       <trans-unit id="Consts_SNameTeal" resname="Consts_SNameTeal">
         <source>"Teal"</source>
@@ -5779,7 +5765,6 @@
           <prop prop-type="Created">40322.9419424537</prop>
           <prop prop-type="Status">3</prop>
         </prop-group>
-        <target>"Foglia di tè"</target>
       </trans-unit>
       <trans-unit id="Consts_SNameGray" resname="Consts_SNameGray">
         <source>"Gray"</source>
@@ -5787,7 +5772,6 @@
           <prop prop-type="Created">40322.9419424537</prop>
           <prop prop-type="Status">3</prop>
         </prop-group>
-        <target>"Grigio scuro"</target>
       </trans-unit>
       <trans-unit id="Consts_SOutOfRange" resname="Consts_SOutOfRange">
         <source>"Value must be between %d and %d"</source>

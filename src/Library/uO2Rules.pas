@@ -151,7 +151,8 @@ type
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
     function Matches(const AField: TO2Field): Boolean;
-    function GetDisplayText(const AField: TO2Field): string;
+    function GetDisplayText(const AField: TO2Field;
+      ShowPasswords: Boolean): string;
     function GetHyperLink(const AField: TO2Field): string;
     function CheckEvents(const AField: TO2Field; Date1,
       Date2: TDateTime; UseParams: Boolean = False): Boolean;
@@ -187,7 +188,8 @@ type
     function AddRule(const Name: string): TO2Rule;
     procedure DeleteRule(const Name: string);
     function ImportRule(const ARule: TO2Rule): TO2Rule;
-    function GetDisplayText(const AField: TO2Field): string;
+    function GetDisplayText(const AField: TO2Field;
+      ShowPasswords: Boolean): string;
     function GetHyperLink(const AField: TO2Field): string;
     function CheckEvents(const AField: TO2Field; Date1,
       Date2: TDateTime; UseParams: Boolean = False): Boolean; overload;
@@ -448,11 +450,15 @@ begin
     Result := AField.FieldValue;
 end;
 
-function TO2Rule.GetDisplayText(const AField: TO2Field): string;
+function TO2Rule.GetDisplayText(const AField: TO2Field;
+  ShowPasswords: Boolean): string;
 begin
   case RuleType of
     rtPassword:
-      Result := StringOfChar(PasswordChar, Length(AField.FieldValue));
+      if ShowPasswords then
+        Result := AField.FieldValue
+      else
+        Result := StringOfChar(PasswordChar, Length(AField.FieldValue));
     rtExpirationDate, rtRecurrence:
       Result := GetEventDisplayText(AField);
     else
@@ -712,7 +718,8 @@ begin
   Result.Assign(ARule);
 end;
 
-function TO2Rules.GetDisplayText(const AField: TO2Field): string;
+function TO2Rules.GetDisplayText(const AField: TO2Field;
+  ShowPasswords: Boolean): string;
 var
   ARule: TO2Rule;
 begin
@@ -720,7 +727,7 @@ begin
   for ARule in Self do
     if ARule.Matches(AField) then
     begin
-      Result := ARule.GetDisplayText(AField);
+      Result := ARule.GetDisplayText(AField, ShowPasswords);
       if Result <> AField.FieldValue then Break;
     end;
 end;
