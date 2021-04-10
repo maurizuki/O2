@@ -5,6 +5,11 @@ O2 is open source software, released under the [Mozilla Public License Version 2
 
 ## Change log
 
+### Version 2.2.2
+- Main window, fields view: added the menu item "Show passwords" to the context menu.
+- Developed with Embarcadero® Delphi 10.3.
+- Compiled with Jedi VCL 3.50.
+
 ### Version 2.2.1
 - Some aesthetic retouches to the main window, print preview window and HTML export preview window.
 - New style sheet for the HTML export.
@@ -33,48 +38,6 @@ O2 is open source software, released under the [Mozilla Public License Version 2
 
 ### Version 2.1
 - Main window redesigned, clearer and cleaner. Click "Find" (Ctrl+F) toolbar button to show or hide the search options box (formerly filters): find by name, event, tags.
-
-### Version 2.0.7
-- Fixed a bug that prevented to save the application settings.
-- Main window default size increased to 800x600 pixels.
-
-### Version 2.0.6
-- Object properties dialog: new tag editor with shortcut menu item "Edit tags" in the object menu.
-- Object menu: new sub-menus "Add tag" (adds tag to the selected objects) and "Delete tag" (deletes tag from the selected objects).
-- Replace tag dialog, replace field name dialog and replace field value dialog: added a drop-down list to the replace-with-value field.
-- Added a prompt to delete the selected item from the recent file list if the file is not found.
-- Minor user interface improvements.
-- Updated example files.
-
-### Version 2.0.5
-- The sorting of the recent file list is now calculated by the usage count of the files.
-- Added "Clear recent file list" to hide all the recent file list items.
-- Compliance to the PortableApps.com Format 3.0 (1) specifications.
-
-### Version 2.0.4
-- The fields editor (object properties) now has a drop-down list of field values already used in other objects for the same field name.
-- Compiled with Jedi VCL version 3.45.
-
-### Version 2.0.3
-- Added the option "Only if deactivated" in the "Transparency" sub-menu to apply the transparency percentage only if the application is not active.
-- Minor bug fixes and code improvements.
-
-### Version 2.0.2
-- New HTML export preview (similar to the print preview) with new export options: include tags, include relations, include notes, include passwords.
-- The print preview fits automatically the desktop area.
-- Compiled with Jedi VCL version 3.40.
-
-### Version 2.0.1
-- Fixed bug: leading zeroes of numeric field values were deleted even if they were significant.
-- Fixed bug: "handle not valid" error message on print preview page scroll.
-- The name of the object selected in the object view is now displayed in the statusbar with the object tags.
-- The font used to display the object notes on screen and to print them is now the same and it is monospaced to prevent differences of alignment for text tabulations.
-- Minor changes to get maximum compliance to the PortableApps.com Format 2.0 (1) specifications.
-
-### Version 2.0
-- Massive code rewriting to get maximum compliance to the Unicode Standard specifications (http://unicode.org).
-
-(1) Copyright (c) John T. Haller.
 
 ## Acknowledgements
 
