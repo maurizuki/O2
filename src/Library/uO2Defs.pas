@@ -76,7 +76,7 @@ const
   ohSHA384    = TO2Hash($08);
   ohSHA512    = TO2Hash($09);
   ohTiger     = TO2Hash($0A);
-  ohDefault   = ohSHA1;
+  ohDefault   = ohSHA256;
 
 procedure GetCipherValues(Proc: TGetStrProc);
 function CipherToIdent(Cipher: Longint; var Ident: string): Boolean;
