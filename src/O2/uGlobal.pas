@@ -172,10 +172,10 @@ resourcestring
   SHashNone      = '(none)';
   SHashHaval     = 'Haval';
   SHashMD4       = 'MD4';
-  SHashMD5       = 'MD5';
+  SHashMD5       = 'MD5 [deprecated]';
   SHashRipeMD128 = 'RipeMD-128';
   SHashRipeMD160 = 'RipeMD-160';
-  SHashSHA1      = 'SHA-1';
+  SHashSHA1      = 'SHA-1 [deprecated]';
   SHashSHA256    = 'SHA-256';
   SHashSHA384    = 'SHA-384';
   SHashSHA512    = 'SHA-512';
