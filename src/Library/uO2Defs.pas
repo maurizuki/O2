@@ -78,6 +78,8 @@ const
   ohTiger     = TO2Hash($0A);
   ohDefault   = ohSHA256;
 
+  DeprecatedHashes: set of TO2Hash = [ohMD5, ohSHA1];
+
 procedure GetCipherValues(Proc: TGetStrProc);
 function CipherToIdent(Cipher: Longint; var Ident: string): Boolean;
 function IdentToCipher(const Ident: string; var Cipher: Longint): Boolean;
