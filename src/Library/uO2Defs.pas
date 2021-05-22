@@ -63,6 +63,17 @@ const
   ocTwofish  = TO2Cipher($13);
   ocDefault  = ocBlowfish;
 
+  DeprecatedCiphers: set of TO2Cipher = [
+    ocBlowfish,
+    ocDES,
+    ocIce,
+    ocThinIce,
+    ocMisty1,
+    ocRC2,
+    ocRC4,
+    ocTEA
+  ];
+
 { Supported hash algorithms IDs }
 
   ohNone      = TO2Hash($00);
@@ -78,7 +89,10 @@ const
   ohTiger     = TO2Hash($0A);
   ohDefault   = ohSHA256;
 
-  DeprecatedHashes: set of TO2Hash = [ohMD5, ohSHA1];
+  DeprecatedHashes: set of TO2Hash = [
+    ohMD5,
+    ohSHA1
+  ];
 
 procedure GetCipherValues(Proc: TGetStrProc);
 function CipherToIdent(Cipher: Longint; var Ident: string): Boolean;

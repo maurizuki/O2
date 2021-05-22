@@ -125,6 +125,7 @@ begin
   edConfPassword.Enabled := cbEncryption.ItemIndex <> 0;
   btOk.Enabled := (Length(edPassword.Text) >= 5)
     and (edPassword.Text = edConfPassword.Text)
+    and not (TCipherLookup.SelectedValue(cbEncryption) in DeprecatedCiphers)
     and not (THashLookup.SelectedValue(cbHash) in DeprecatedHashes)
     or (cbEncryption.ItemIndex = 0);
 end;
