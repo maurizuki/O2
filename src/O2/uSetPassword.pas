@@ -36,6 +36,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure cbEncryptionChange(Sender: TObject);
+    procedure cbHashChange(Sender: TObject);
     procedure edPasswordChange(Sender: TObject);
   private
     procedure EnableControls;
@@ -104,6 +105,11 @@ begin
   EnableControls;
 end;
 
+procedure TSetPasswordDlg.cbHashChange(Sender: TObject);
+begin
+  EnableControls;
+end;
+
 procedure TSetPasswordDlg.edPasswordChange(Sender: TObject);
 begin
   EnableControls;
@@ -119,6 +125,8 @@ begin
   edConfPassword.Enabled := cbEncryption.ItemIndex <> 0;
   btOk.Enabled := (Length(edPassword.Text) >= 5)
     and (edPassword.Text = edConfPassword.Text)
+    and not (TCipherLookup.SelectedValue(cbEncryption) in DeprecatedCiphers)
+    and not (THashLookup.SelectedValue(cbHash) in DeprecatedHashes)
     or (cbEncryption.ItemIndex = 0);
 end;
 

@@ -151,6 +151,10 @@ object MainForm: TMainForm
       object tsNotes: TTabSheet
         Caption = 'Notes'
         ImageIndex = 1
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object Notes: TMemo
           AlignWithMargins = True
           Left = 3
@@ -172,6 +176,10 @@ object MainForm: TMainForm
       object tsRelations: TTabSheet
         Caption = 'Relations'
         ImageIndex = 2
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object RelationsView: TListView
           AlignWithMargins = True
           Left = 3
@@ -207,6 +215,10 @@ object MainForm: TMainForm
       object tsRules: TTabSheet
         Caption = 'Rules'
         ImageIndex = 3
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object RulesView: TListView
           AlignWithMargins = True
           Left = 3

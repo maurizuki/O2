@@ -62,6 +62,7 @@ object SetPasswordDlg: TSetPasswordDlg
     ProtectPassword = True
     ThemedPassword = True
     TabOrder = 2
+    Text = ''
     OnChange = edPasswordChange
   end
   object edConfPassword: TJvEdit
@@ -72,6 +73,7 @@ object SetPasswordDlg: TSetPasswordDlg
     ProtectPassword = True
     ThemedPassword = True
     TabOrder = 3
+    Text = ''
     OnChange = edPasswordChange
   end
   object btOk: TButton
@@ -85,7 +87,6 @@ object SetPasswordDlg: TSetPasswordDlg
     Enabled = False
     ModalResult = 1
     TabOrder = 4
-    ExplicitTop = 200
   end
   object btCancel: TButton
     Left = 131
@@ -97,7 +98,6 @@ object SetPasswordDlg: TSetPasswordDlg
     Caption = 'Annulla'
     ModalResult = 2
     TabOrder = 5
-    ExplicitTop = 200
   end
   object cbEncryption: TComboBox
     Left = 12
@@ -115,5 +115,6 @@ object SetPasswordDlg: TSetPasswordDlg
     Height = 21
     Style = csDropDownList
     TabOrder = 1
+    OnChange = cbHashChange
   end
 end

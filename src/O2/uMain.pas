@@ -623,7 +623,7 @@ uses
   xmldom, msxmldom, JclFileUtils,
   uAppFiles, uUtils, uShellUtils, uPAFConsts, uAbout, uGetPassword,
   uSetPassword, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
-  uReplaceDlg, uPrintPreview, uHTMLExport, uXmlStorage, uO2Xml;
+  uReplaceDlg, uPrintPreview, uHTMLExport, uXmlStorage, uO2Xml, uO2Defs;
 
 {$R *.dfm}
 
@@ -1108,7 +1108,9 @@ end;
 
 procedure TMainForm.SaveFileExecute(Sender: TObject);
 begin
-  if O2FileName = '' then
+  if (O2FileName = '')
+    or O2File.Encrypted and ((O2File.Cipher in DeprecatedCiphers)
+    or (O2File.Hash in DeprecatedHashes)) then
     SaveFileAs.Execute
   else
     SaveToFile(O2FileName);
