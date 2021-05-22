@@ -1109,7 +1109,8 @@ end;
 procedure TMainForm.SaveFileExecute(Sender: TObject);
 begin
   if (O2FileName = '')
-    or O2File.Encrypted and (O2File.Hash in DeprecatedHashes) then
+    or O2File.Encrypted and ((O2File.Cipher in DeprecatedCiphers)
+    or (O2File.Hash in DeprecatedHashes)) then
     SaveFileAs.Execute
   else
     SaveToFile(O2FileName);

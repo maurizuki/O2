@@ -5,9 +5,9 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">44333.7726157407</prop>
-        <prop prop-type="OrigDateTime">44333.7725694444</prop>
-        <prop prop-type="XlatDateTime">41181.4385648148</prop>
+        <prop prop-type="SelfDateTime">44338.6390277778</prop>
+        <prop prop-type="OrigDateTime">0</prop>
+        <prop prop-type="XlatDateTime">44335.8028703704</prop>
         <prop prop-type="Translated">829</prop>
         <prop prop-type="UnTranslated">0</prop>
       </prop-group>
@@ -181,11 +181,19 @@
         <target>"Prossimi 15 giorni"</target>
       </trans-unit>
       <trans-unit id="uGlobal_SCipherRC4" resname="uGlobal_SCipherRC4">
-        <source>"RC4"</source>
+        <source>"RC4 [deprecated]"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40178.7452388889</prop>
           <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"RC4 [deprecato]"</target>
+        <alt-trans>
+          <source>"RC4"</source>
+          <target>"RC4"</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">44338.5512158681</prop>
+          </prop-group>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="uGlobal_SCipherRC5" resname="uGlobal_SCipherRC5">
         <source>"RC5"</source>
@@ -216,11 +224,19 @@
         </prop-group>
       </trans-unit>
       <trans-unit id="uGlobal_SCipherTEA" resname="uGlobal_SCipherTEA">
-        <source>"TEA"</source>
+        <source>"TEA [deprecated]"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40178.7452388889</prop>
           <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"TEA [deprecato]"</target>
+        <alt-trans>
+          <source>"TEA"</source>
+          <target>"TEA"</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">44338.5512158681</prop>
+          </prop-group>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="uGlobal_SCipherTwofish" resname="uGlobal_SCipherTwofish">
         <source>"Twofish"</source>
@@ -341,11 +357,19 @@
         <target>"Il cambiamento avrà effetto al prossimo avvio dell'applicazione."</target>
       </trans-unit>
       <trans-unit id="uGlobal_SCipherBlowfish" resname="uGlobal_SCipherBlowfish">
-        <source>"Blowfish"</source>
+        <source>"Blowfish [deprecated]"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40178.7452388889</prop>
           <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Blowfish [deprecato]"</target>
+        <alt-trans>
+          <source>"Blowfish"</source>
+          <target>"Blowfish"</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">44338.5512158681</prop>
+          </prop-group>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="uGlobal_SCipherCast128" resname="uGlobal_SCipherCast128">
         <source>"Cast-128"</source>
@@ -362,11 +386,19 @@
         </prop-group>
       </trans-unit>
       <trans-unit id="uGlobal_SCipherDES" resname="uGlobal_SCipherDES">
-        <source>"DES"</source>
+        <source>"DES [deprecated]"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40178.7452388889</prop>
           <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"DES [deprecato]"</target>
+        <alt-trans>
+          <source>"DES"</source>
+          <target>"DES"</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">44338.5512158681</prop>
+          </prop-group>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="uGlobal_SCipher3DES" resname="uGlobal_SCipher3DES">
         <source>"3DES"</source>
@@ -376,18 +408,34 @@
         </prop-group>
       </trans-unit>
       <trans-unit id="uGlobal_SCipherIce" resname="uGlobal_SCipherIce">
-        <source>"Ice"</source>
+        <source>"Ice [deprecated]"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40178.7452388889</prop>
           <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Ice [deprecato]"</target>
+        <alt-trans>
+          <source>"Ice"</source>
+          <target>"Ice"</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">44338.5512158681</prop>
+          </prop-group>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="uGlobal_SCipherThinIce" resname="uGlobal_SCipherThinIce">
-        <source>"Thin Ice"</source>
+        <source>"Thin Ice [deprecated]"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40178.7452388889</prop>
           <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Thin Ice [deprecato]"</target>
+        <alt-trans>
+          <source>"Thin Ice"</source>
+          <target>"Thin Ice"</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">44338.5512158681</prop>
+          </prop-group>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="uGlobal_SCipherIce2" resname="uGlobal_SCipherIce2">
         <source>"Ice 2"</source>
@@ -411,18 +459,34 @@
         </prop-group>
       </trans-unit>
       <trans-unit id="uGlobal_SCipherMisty1" resname="uGlobal_SCipherMisty1">
-        <source>"Misty1"</source>
+        <source>"Misty1 [deprecated]"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40178.7452388889</prop>
           <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"Misty1 [deprecato]"</target>
+        <alt-trans>
+          <source>"Misty1"</source>
+          <target>"Misty1"</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">44338.5512158681</prop>
+          </prop-group>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="uGlobal_SCipherRC2" resname="uGlobal_SCipherRC2">
-        <source>"RC2"</source>
+        <source>"RC2 [deprecated]"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40178.7452388889</prop>
           <prop prop-type="Status">1</prop>
         </prop-group>
+        <target>"RC2 [deprecato]"</target>
+        <alt-trans>
+          <source>"RC2"</source>
+          <target>"RC2"</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">44338.5512158681</prop>
+          </prop-group>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="uGlobal_SOpenFileFilter" resname="uGlobal_SOpenFileFilter">
         <source>"O2 file|*.o2|Any file|*.*"</source>
