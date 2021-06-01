@@ -1,7 +1,12 @@
 # O2
 
-Welcome to O2, a new way to store and organize your personal data.  
+Welcome to O2, a new way to store and organize your personal data.
+
 O2 is open source software, released under the [Mozilla Public License Version 2.0](http://mozilla.org/MPL/2.0/).
+
+## Getting started
+
+In order to start to use O2, please read the [*Getting started* section of the wiki](https://github.com/maurizuki/O2/wiki#getting-started).
 
 ## Change log
 
