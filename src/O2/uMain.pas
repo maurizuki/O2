@@ -546,6 +546,7 @@ type
     procedure PasswordQuery(Sender: TObject; var APassword: string;
       var Acknowledge: Boolean);
     procedure Initialize;
+    procedure InitializeSearch;
     procedure LoadLanguageList;
     procedure DecodeCommandLine(out ACmdLineAction: TCmdLineAction;
       out ACmdLineFileName, APortablePath: string);
@@ -1427,10 +1428,7 @@ end;
 
 procedure TMainForm.ClearSearchExecute(Sender: TObject);
 begin
-  FindByName.Clear;
-  FindByEvent.ItemIndex := 0;
-  FindByTag.ClearSelection;
-  FindByRule.ClearSelection;
+  InitializeSearch;
   NotifyChanges([ncObjects]);
 end;
 
@@ -1542,9 +1540,16 @@ end;
 
 procedure TMainForm.Initialize;
 begin
+  InitializeSearch;
+  NotifyChanges([ncObjects, ncRules, ncTagList, ncRuleList]);
+end;
+
+procedure TMainForm.InitializeSearch;
+begin
   FindByName.Clear;
   FindByEvent.ItemIndex := 0;
-  NotifyChanges([ncObjects, ncRules, ncTagList, ncRuleList]);
+  FindByTag.ClearSelection;
+  FindByRule.ClearSelection;
 end;
 
 procedure TMainForm.LoadLanguageList;
