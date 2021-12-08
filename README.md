@@ -15,6 +15,9 @@ In order to start to use O2, please read the [*Getting started* section of the w
 
 ## Change log
 
+### Version 2.2.4
+- Fixed: the selections of the search options "Find by tag" and "Find by rule" aren't initialized opening another file.
+
 ### Version 2.2.3
 - Deprecated cipher and hash algorithms: the cipher algorithms Blowfish, DES, Ice, Thin Ice, Misty1, RC2, RC4, TEA and the hash algorithms MD5 and SHA-1 have been deprecated due to evidences of their lack of security. It's still possible to open files encrypted using the deprecated algorithms, but it's no longer possible to save files encrypted with them.
 
