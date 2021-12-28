@@ -24,6 +24,7 @@ object GetPasswordDlg: TGetPasswordDlg
     ProtectPassword = True
     ThemedPassword = True
     TabOrder = 0
+    Text = ''
     OnChange = edPasswordChange
   end
   object btOk: TButton

@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2021 the initial Contributor. All rights reserved.              }
+{ 2004-2022 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -20,7 +20,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, ToolWin, Menus, ImgList, ActnList, OleCtrls, SHDocVw,
-  JvStringHolder, uO2File, uO2Objects, uO2Rules, uO2Relations;
+  JvStringHolder, uO2File, uO2Objects, uO2Rules, uO2Relations, System.ImageList,
+  System.Actions;
 
 type
   TExportToHTMLOption = (xoIncludeIndex, xoIncludeTags, xoIncludeNotes,
