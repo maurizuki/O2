@@ -24,10 +24,10 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, ToolWin, ImgList, ActnList, Menus, XPMan, AppEvnts,
-  StdCtrls, ExtCtrls, FileCtrl, Types, JvComponentBase, JvDragDrop,
-  JvUrlListGrabber, JvUrlGrabbers,
-  uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist,
-  System.ImageList, System.Actions;
+  StdCtrls, ExtCtrls, FileCtrl, Types, System.ImageList, System.Actions,
+  REST.Client, Data.Bind.Components, Data.Bind.ObjectScope,
+  JvComponentBase, JvDragDrop,
+  uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist;
 
 type
   TCmdLineAction = (caNone, caOpenFile);
@@ -230,7 +230,6 @@ type
     New1: TMenuItem;
     Newobject1: TMenuItem;
     Newrule2: TMenuItem;
-    HTTP: TJvHttpUrlGrabber;
     N23: TMenuItem;
     NewWindow: TAction;
     N18: TMenuItem;
@@ -339,6 +338,9 @@ type
     Documentation1: TMenuItem;
     N30: TMenuItem;
     Showpasswords1: TMenuItem;
+    CheckForUpdatesRESTClient: TRESTClient;
+    CheckForUpdatesRequest: TRESTRequest;
+    CheckForUpdatesResponse: TRESTResponse;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -506,8 +508,6 @@ type
       var CanClose: Boolean);
     procedure DragDropDrop(Sender: TObject; Pos: TPoint;
       Value: TStrings);
-    procedure HTTPDoneStream(Sender: TObject; Stream: TStream;
-      StreamSize: Integer; Url: string);
   private
     FFile: TO2File;
     FFileName: string;
@@ -621,7 +621,7 @@ implementation
 
 uses
   TypInfo, StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, XMLDoc, XMLIntf,
-  xmldom, msxmldom, JclFileUtils,
+  xmldom, msxmldom, System.JSON, JclFileUtils,
   uAppFiles, uUtils, uShellUtils, uPAFConsts, uAbout, uGetPassword,
   uSetPassword, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
   uReplaceDlg, uPrintPreview, uHTMLExport, uXmlStorage, uO2Xml, uO2Defs;
@@ -1284,8 +1284,64 @@ end;
 
 procedure TMainForm.CheckForUpdatesNowExecute(Sender: TObject);
 begin
-  HTTP.Url := LatestVersionURL;
-  HTTP.Start;
+  CheckForUpdatesRequest.ExecuteAsync(
+    procedure
+    const
+      DebugOutputFmt = 'Application Version Check: Application ID: %s. '
+        + 'Current Version: %d.%d.%d.%d. Available Version %d.%d.%d.%d. '
+        + 'Download URL: %s.';
+    var
+      MajorVersion, MinorVersion, Release, Build: Word;
+      AppUpdate: TAppUpdate;
+      DebugOutput: string;
+    begin
+      with TJclFileVersionInfo.Create(AppFiles.FullPath[IdAppExe]) do
+      try
+        VersionExtractFileInfo(FixedInfo,
+          MajorVersion, MinorVersion, Release, Build);
+      finally
+        Free;
+      end;
+
+      AppUpdate := TAppUpdate.Create;
+      try
+        AppUpdate.AppName := 'O2';
+        AppUpdate.LoadFromJSON(CheckForUpdatesResponse.JSONValue);
+
+        DebugOutput := Format(DebugOutputFmt, [AppUpdate.AppName,
+          MajorVersion, MinorVersion, Release, Build,
+          AppUpdate.AppVersion.MajorVersion, AppUpdate.AppVersion.MinorVersion,
+          AppUpdate.AppVersion.Release, AppUpdate.AppVersion.Build,
+          AppUpdate.DownloadURL]);
+        OutputDebugString(PChar(DebugOutput));
+
+        if AppUpdate.AppVersion.Compare(
+          MajorVersion, MinorVersion, Release, Build) = GreaterThanValue then
+        begin
+          if YesNoBox(Format(SDownloadUpdatesQuery,
+            [AppUpdate.AppVersion.MajorVersion,
+            AppUpdate.AppVersion.MinorVersion,
+            AppUpdate.AppVersion.Release])) then
+            ShellOpen(AppUpdate.DownloadURL);
+        end
+        else if not CheckForUpdatesSilent then
+          InfoBox(SNoAvailableUpdates);
+      except
+        if not CheckForUpdatesSilent then
+          ErrorBox(SCannotCheckForUpdates);
+      end;
+      AppUpdate.Free;
+
+      CheckForUpdatesSilent := False;
+    end,
+    True,
+    True,
+    procedure (Obj: TObject)
+    begin
+      if not CheckForUpdatesSilent then
+        ErrorBox(SCannotCheckForUpdates);
+    end
+  );
 end;
 
 procedure TMainForm.CheckForUpdatesPeriodicallyExecute(Sender: TObject);
@@ -3327,60 +3383,6 @@ procedure TMainForm.DragDropDrop(Sender: TObject; Pos: TPoint;
   Value: TStrings);
 begin
   if (Value.Count > 0) and CanCloseFile then LoadFromFile(Value[0]);
-end;
-
-procedure TMainForm.HTTPDoneStream(Sender: TObject; Stream: TStream;
-  StreamSize: Integer; Url: string);
-const
-  DebugOutputFmt = 'Application Version Check: Application ID: %s. '
-    + 'Current Version: %d.%d.%d.%d. Available Version %d.%d.%d.%d. '
-    + 'Download URL: %s.';
-var
-  MajorVersion, MinorVersion, Release, Build: Word;
-  AppUpdate: TAppUpdate;
-  DebugOutput: string;
-begin
-  with TJclFileVersionInfo.Create(AppFiles.FullPath[IdAppExe]) do
-  try
-    VersionExtractFileInfo(FixedInfo,
-      MajorVersion, MinorVersion, Release, Build);
-  finally
-    Free;
-  end;
-
-  AppUpdate := TAppUpdate.Create;
-  try
-    with TO2XmlReader.Create(AppUpdate) do
-    try
-      LoadFromStream(Stream);
-    finally
-      Free;
-    end;
-
-    DebugOutput := Format(DebugOutputFmt, [AppUpdate.AppName,
-      MajorVersion, MinorVersion, Release, Build,
-      AppUpdate.AppVersion.MajorVersion, AppUpdate.AppVersion.MinorVersion,
-      AppUpdate.AppVersion.Release, AppUpdate.AppVersion.Build,
-      AppUpdate.DownloadURL]);
-    OutputDebugString(PChar(DebugOutput));
-
-    if AppUpdate.AppVersion.Compare(
-      MajorVersion, MinorVersion, Release, Build) = GreaterThanValue then
-    begin
-      if YesNoBox(Format(SDownloadUpdatesQuery,
-        [AppUpdate.AppVersion.MajorVersion, AppUpdate.AppVersion.MinorVersion,
-        AppUpdate.AppVersion.Release, AppUpdate.AppVersion.Build])) then
-        ShellOpen(AppUpdate.DownloadURL);
-    end
-    else if not CheckForUpdatesSilent then
-      InfoBox(SNoAvailableUpdates);
-  except
-    if not CheckForUpdatesSilent then
-      ErrorBox(SCannotCheckForUpdates);
-  end;
-  AppUpdate.Free;
-
-  CheckForUpdatesSilent := False;
 end;
 
 procedure TMainForm.FillObjList(const Objects: TO2ObjectList);

@@ -22,7 +22,6 @@ uses
 
 const
   DefaultFileExt = 'o2';
-  LatestVersionURL = 'http://o2project.sourceforge.net/upd8r.xml';
 
 { Application file names and paths }
 
@@ -141,7 +140,7 @@ resourcestring
   SReplaceRoleDlgReplaceLabel = '&New role:';
   SCannotCheckForUpdates = 'Cannot check for updates.';
   SNoAvailableUpdates = 'No available updates.';
-  SDownloadUpdatesQuery = 'Version %d.%d.%d.%d is available. Download?';
+  SDownloadUpdatesQuery = 'Version %d.%d.%d is available. Download?';
   SApplyAtNextStartup = 'Change will take effect at next application startup.';
 
 { Ciphers }
