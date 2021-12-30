@@ -1699,7 +1699,7 @@ BEGIN
 	System_JSONConsts_SInvalidCharacterAfterProperty,	L"Invalid character after parsing property name. Expected ':' but got: %s"
 	System_JSONConsts_SInvalidCloseToken,	L"Not a valid close JsonToken: %s"
 	System_JSONConsts_SInvalidJavascriptProperty,	L"Invalid JavaScript property identifier character: %s."
-	System_JSONConsts_SInvalidJavascriptQuote,	L"Invalid JavaScript string quote character. Valid quote characters are ' and """L""
+	System_JSONConsts_SInvalidJavascriptQuote,	L"Invalid JavaScript string quote character. Valid quote characters are ' and """
 	System_JSONConsts_SInvalidJsonToken,	L"Invalid JsonToken: %s"
 	System_JSONConsts_SInvalidObjectId,	L"An ObjectId must be 12 bytes"
 	System_JSONConsts_SInvalidPropertyCharacter,	L"Invalid property identifier character: %s"

@@ -1031,49 +1031,49 @@ object MainForm: TMainForm
     object WebSite: TAction
       Category = 'Help'
       Caption = 'Sito web'
-      Hint = 'http://o2project.sourceforge.net/redir.html?id=home'
+      Hint = 'https://maurizuki.github.io/O2'
       OnExecute = WebExecute
       OnUpdate = ActionUpdate
     end
     object WebProject: TAction
       Category = 'Help'
       Caption = 'Pagina del progetto'
-      Hint = 'http://o2project.sourceforge.net/redir.html?id=project'
+      Hint = 'https://github.com/maurizuki/O2'
       OnExecute = WebExecute
       OnUpdate = ActionUpdate
     end
     object WebNews: TAction
       Category = 'Help'
       Caption = 'Notizie'
-      Hint = 'http://o2project.sourceforge.net/redir.html?id=news'
+      Hint = 'https://github.com/maurizuki/O2/releases'
       OnExecute = WebExecute
       OnUpdate = ActionUpdate
     end
     object WebDocs: TAction
       Category = 'Help'
       Caption = 'Documentazione'
-      Hint = 'http://o2project.sourceforge.net/redir.html?id=docs'
+      Hint = 'https://github.com/maurizuki/O2/wiki'
       OnExecute = WebExecute
       OnUpdate = ActionUpdate
     end
     object WebSupportRequests: TAction
       Category = 'Help'
       Caption = 'Richieste di supporto'
-      Hint = 'http://o2project.sourceforge.net/redir.html?id=support-requests'
+      Hint = 'https://github.com/maurizuki/O2/issues'
       OnExecute = WebExecute
       OnUpdate = ActionUpdate
     end
     object WebFeatureRequests: TAction
       Category = 'Help'
       Caption = 'Richieste nuove funzionalit'#224
-      Hint = 'http://o2project.sourceforge.net/redir.html?id=feature-requests'
+      Hint = 'https://github.com/maurizuki/O2/labels/enhancement'
       OnExecute = WebExecute
       OnUpdate = ActionUpdate
     end
     object WebBugTracker: TAction
       Category = 'Help'
       Caption = 'Segnalazioni di errore'
-      Hint = 'http://o2project.sourceforge.net/redir.html?id=bug-reports'
+      Hint = 'https://github.com/maurizuki/O2/labels/bug'
       OnExecute = WebExecute
       OnUpdate = ActionUpdate
     end
