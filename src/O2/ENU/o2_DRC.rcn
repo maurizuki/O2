@@ -5,10 +5,10 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">44566.6534027778</prop>
+        <prop prop-type="SelfDateTime">44611.7671759259</prop>
         <prop prop-type="OrigDateTime">0</prop>
-        <prop prop-type="XlatDateTime">44560.6152083333</prop>
-        <prop prop-type="Translated">1128</prop>
+        <prop prop-type="XlatDateTime">44588.4124305556</prop>
+        <prop prop-type="Translated">1130</prop>
         <prop prop-type="UnTranslated">0</prop>
       </prop-group>
     </header>
@@ -12114,6 +12114,20 @@
         <source>"%d exception(s):"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44566.6488796412</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="uGlobal_SPrintPreviewZoom" resname="uGlobal_SPrintPreviewZoom">
+        <source>"Zoom"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44611.7666046643</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="uGlobal_SHTMLExportStyle" resname="uGlobal_SHTMLExportStyle">
+        <source>"Style"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44611.7666046643</prop>
           <prop prop-type="Status">1</prop>
         </prop-group>
       </trans-unit>

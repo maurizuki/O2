@@ -112,7 +112,6 @@ resourcestring
   SImportFileFilter = 'O2 file|*.o2|XML file|*.xml';
   SImportSettingsFileFilter = 'O2 settings file|*.xml|Any file|*.*';
   SSaveFileFilter = 'O2 file|*.o2|Any file|*.*';
-//  SExportFileFilter = 'O2 file|*.o2|XML file|*.xml|HTML file (with index)|*.html;*.htm|HTML file (without index)|*.html;*.htm';
   SExportFileFilter = 'O2 file|*.o2|XML file|*.xml';
   SExportSettingsFileFilter = 'O2 settings file|*.xml|Any file|*.*';
   SDeleteObjectsQuery = 'Delete selected objects?';
@@ -142,6 +141,8 @@ resourcestring
   SNoAvailableUpdates = 'No available updates.';
   SDownloadUpdatesQuery = 'Version %d.%d.%d is available. Download?';
   SApplyAtNextStartup = 'Change will take effect at next application startup.';
+  SPrintPreviewZoom = 'Zoom';
+  SHTMLExportStyle = 'Style';
 
 { Ciphers }
 

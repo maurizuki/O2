@@ -94,10 +94,8 @@ uses
   Windows, Forms, SysUtils, Math, CommCtrl, Registry, System.RegularExpressions;
 
 const
-//LocaleOverrideKey = 'Software\Borland\Locales';
-//LocaleOverrideKey = 'Software\CodeGear\Locales';
-  LocaleOverrideKey = 'Software\Embarcadero\Locales';
-  SettingsOverrideKey = 'Software\O2\Settings';
+  LocaleOverrideKey = 'SOFTWARE\Embarcadero\Locales';
+  SettingsOverrideKey = 'SOFTWARE\O2\Settings';
 
 function MsgBox(const Text: string; Flags: Integer): Integer;
 begin

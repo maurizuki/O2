@@ -8,94 +8,96 @@
   resources were bound to the produced executable.
 */
 
-#define Vcl_OleConst_SCannotActivate 64400
-#define Vcl_OleConst_SNoWindowHandle 64401
-#define Vcl_OleConst_SInvalidLicense 64402
-#define Vcl_OleConst_SNotLicensed 64403
-#define Vcl_OleConst_sNoRunningObject 64404
-#define Vcl_EdgeConst_SWebViewFailure 64405
-#define Vcl_EdgeConst_SNoWebView 64406
-#define IEConst_sNotSupportedByEdge 64407
-#define uRulePropsDlg_SMaskHelp02 64416
-#define uRulePropsDlg_SMaskHelp03 64417
-#define uRulePropsDlg_SMaskHelp04 64418
-#define uRulePropsDlg_SMaskHelp05 64419
-#define uRulePropsDlg_SMaskHelp06 64420
-#define uRulePropsDlg_SMaskHelp07 64421
-#define uRulePropsDlg_SMaskHelp08 64422
-#define uRulePropsDlg_SMaskHelp09 64423
-#define uRulePropsDlg_SMaskHelp10 64424
-#define uRulePropsDlg_SMaskHelp11 64425
-#define uRulePropsDlg_SMaskHelp12 64426
-#define uRulePropsDlg_SMaskHelp13 64427
-#define uRulePropsDlg_SMaskHelp14 64428
-#define uRulePropsDlg_SMaskHelp15 64429
-#define uRulePropsDlg_SMaskHelp16 64430
-#define Vcl_OleConst_SBadPropValue 64431
-#define uGlobal_SEventNext90days 64432
-#define uGlobal_SEventNext180days 64433
-#define uGlobal_SEventNext365days 64434
-#define System_RegularExpressionsConsts_SRegExMissingExpression 64435
-#define System_RegularExpressionsConsts_SRegExExpressionError 64436
-#define System_RegularExpressionsConsts_SRegExStudyError 64437
-#define System_RegularExpressionsConsts_SRegExMatchRequired 64438
-#define System_RegularExpressionsConsts_SRegExStringsRequired 64439
-#define System_RegularExpressionsConsts_SRegExInvalidIndexType 64440
-#define System_RegularExpressionsConsts_SRegExIndexOutOfBounds 64441
-#define System_RegularExpressionsConsts_SRegExInvalidGroupName 64442
-#define Data_DBConsts_SBcdOverflow 64443
-#define Data_DBConsts_SInvalidBcdValue 64444
-#define Data_DBConsts_SCouldNotParseTimeStamp 64445
-#define Data_DBConsts_SInvalidSqlTimeStamp 64446
-#define uRulePropsDlg_SMaskHelp01 64447
-#define uGlobal_SRulePassword 64448
-#define uGlobal_SRuleExpirationDate 64449
-#define uGlobal_SRuleRecurrence 64450
-#define uGlobal_SRuleHighlight 64451
-#define uGlobal_SEventAll 64452
-#define uGlobal_SEventAllEvents 64453
-#define uGlobal_SEventCustom 64454
-#define uGlobal_SEventToday 64455
-#define uGlobal_SEventTomorrow 64456
-#define uGlobal_SEventThisWeek 64457
-#define uGlobal_SEventThisMonth 64458
-#define uGlobal_SEventThisYear 64459
-#define uGlobal_SEventNext7days 64460
-#define uGlobal_SEventNext15days 64461
-#define uGlobal_SEventNext30days 64462
-#define uGlobal_SEventNext60days 64463
-#define uGlobal_SCipherRijndael 64464
-#define uGlobal_SCipherSerpent 64465
-#define uGlobal_SCipherTEA 64466
-#define uGlobal_SCipherTwofish 64467
-#define uGlobal_SHashNone 64468
-#define uGlobal_SHashHaval 64469
-#define uGlobal_SHashMD4 64470
-#define uGlobal_SHashMD5 64471
-#define uGlobal_SHashRipeMD128 64472
-#define uGlobal_SHashSHA1 64473
-#define uGlobal_SHashSHA256 64474
-#define uGlobal_SHashSHA384 64475
-#define uGlobal_SHashSHA512 64476
-#define uGlobal_SHashTiger 64477
-#define uGlobal_SRuleHyperLink 64478
-#define uGlobal_SRuleEmail 64479
-#define uGlobal_SCipherNone 64480
-#define uGlobal_SCipherBlowfish 64481
-#define uGlobal_SCipherCast128 64482
-#define uGlobal_SCipherCast256 64483
-#define uGlobal_SCipherDES 64484
-#define uGlobal_SCipher3DES 64485
-#define uGlobal_SCipherIce 64486
-#define uGlobal_SCipherThinIce 64487
-#define uGlobal_SCipherIce2 64488
-#define uGlobal_SCipherIDEA 64489
-#define uGlobal_SCipherMARS 64490
-#define uGlobal_SCipherMisty1 64491
-#define uGlobal_SCipherRC2 64492
-#define uGlobal_SCipherRC4 64493
-#define uGlobal_SCipherRC5 64494
-#define uGlobal_SCipherRC6 64495
+#define uRulePropsDlg_SMaskHelp16 64400
+#define Vcl_OleConst_SBadPropValue 64401
+#define Vcl_OleConst_SCannotActivate 64402
+#define Vcl_OleConst_SNoWindowHandle 64403
+#define Vcl_OleConst_SInvalidLicense 64404
+#define Vcl_OleConst_SNotLicensed 64405
+#define Vcl_OleConst_sNoRunningObject 64406
+#define Vcl_EdgeConst_SWebViewFailure 64407
+#define Vcl_EdgeConst_SNoWebView 64408
+#define IEConst_sNotSupportedByEdge 64409
+#define Data_DBConsts_SInvalidSqlTimeStamp 64416
+#define uRulePropsDlg_SMaskHelp01 64417
+#define uRulePropsDlg_SMaskHelp02 64418
+#define uRulePropsDlg_SMaskHelp03 64419
+#define uRulePropsDlg_SMaskHelp04 64420
+#define uRulePropsDlg_SMaskHelp05 64421
+#define uRulePropsDlg_SMaskHelp06 64422
+#define uRulePropsDlg_SMaskHelp07 64423
+#define uRulePropsDlg_SMaskHelp08 64424
+#define uRulePropsDlg_SMaskHelp09 64425
+#define uRulePropsDlg_SMaskHelp10 64426
+#define uRulePropsDlg_SMaskHelp11 64427
+#define uRulePropsDlg_SMaskHelp12 64428
+#define uRulePropsDlg_SMaskHelp13 64429
+#define uRulePropsDlg_SMaskHelp14 64430
+#define uRulePropsDlg_SMaskHelp15 64431
+#define uGlobal_SEventNext30days 64432
+#define uGlobal_SEventNext60days 64433
+#define uGlobal_SEventNext90days 64434
+#define uGlobal_SEventNext180days 64435
+#define uGlobal_SEventNext365days 64436
+#define System_RegularExpressionsConsts_SRegExMissingExpression 64437
+#define System_RegularExpressionsConsts_SRegExExpressionError 64438
+#define System_RegularExpressionsConsts_SRegExStudyError 64439
+#define System_RegularExpressionsConsts_SRegExMatchRequired 64440
+#define System_RegularExpressionsConsts_SRegExStringsRequired 64441
+#define System_RegularExpressionsConsts_SRegExInvalidIndexType 64442
+#define System_RegularExpressionsConsts_SRegExIndexOutOfBounds 64443
+#define System_RegularExpressionsConsts_SRegExInvalidGroupName 64444
+#define Data_DBConsts_SBcdOverflow 64445
+#define Data_DBConsts_SInvalidBcdValue 64446
+#define Data_DBConsts_SCouldNotParseTimeStamp 64447
+#define uGlobal_SRuleHyperLink 64448
+#define uGlobal_SRuleEmail 64449
+#define uGlobal_SRulePassword 64450
+#define uGlobal_SRuleExpirationDate 64451
+#define uGlobal_SRuleRecurrence 64452
+#define uGlobal_SRuleHighlight 64453
+#define uGlobal_SEventAll 64454
+#define uGlobal_SEventAllEvents 64455
+#define uGlobal_SEventCustom 64456
+#define uGlobal_SEventToday 64457
+#define uGlobal_SEventTomorrow 64458
+#define uGlobal_SEventThisWeek 64459
+#define uGlobal_SEventThisMonth 64460
+#define uGlobal_SEventThisYear 64461
+#define uGlobal_SEventNext7days 64462
+#define uGlobal_SEventNext15days 64463
+#define uGlobal_SCipherRC5 64464
+#define uGlobal_SCipherRC6 64465
+#define uGlobal_SCipherRijndael 64466
+#define uGlobal_SCipherSerpent 64467
+#define uGlobal_SCipherTEA 64468
+#define uGlobal_SCipherTwofish 64469
+#define uGlobal_SHashNone 64470
+#define uGlobal_SHashHaval 64471
+#define uGlobal_SHashMD4 64472
+#define uGlobal_SHashMD5 64473
+#define uGlobal_SHashRipeMD128 64474
+#define uGlobal_SHashSHA1 64475
+#define uGlobal_SHashSHA256 64476
+#define uGlobal_SHashSHA384 64477
+#define uGlobal_SHashSHA512 64478
+#define uGlobal_SHashTiger 64479
+#define uGlobal_SPrintPreviewZoom 64480
+#define uGlobal_SHTMLExportStyle 64481
+#define uGlobal_SCipherNone 64482
+#define uGlobal_SCipherBlowfish 64483
+#define uGlobal_SCipherCast128 64484
+#define uGlobal_SCipherCast256 64485
+#define uGlobal_SCipherDES 64486
+#define uGlobal_SCipher3DES 64487
+#define uGlobal_SCipherIce 64488
+#define uGlobal_SCipherThinIce 64489
+#define uGlobal_SCipherIce2 64490
+#define uGlobal_SCipherIDEA 64491
+#define uGlobal_SCipherMARS 64492
+#define uGlobal_SCipherMisty1 64493
+#define uGlobal_SCipherRC2 64494
+#define uGlobal_SCipherRC4 64495
 #define uGlobal_SReplaceTagDlgTitle 64496
 #define uGlobal_SReplaceTagDlgSearchLabel 64497
 #define uGlobal_SReplaceTagDlgReplaceLabel 64498
@@ -1138,6 +1140,8 @@
 #define System_SysConst_STooManyOpenFiles 65535
 STRINGTABLE
 BEGIN
+	uRulePropsDlg_SMaskHelp16,	L"A question mark matches a single arbitrary character."
+	Vcl_OleConst_SBadPropValue,	L"'%s' is not a valid property value"
 	Vcl_OleConst_SCannotActivate,	L"OLE control activation failed"
 	Vcl_OleConst_SNoWindowHandle,	L"Could not obtain OLE control window handle"
 	Vcl_OleConst_SInvalidLicense,	L"License information for %s is invalid"
@@ -1146,6 +1150,8 @@ BEGIN
 	Vcl_EdgeConst_SWebViewFailure,	L"Failed to create Edge browser control"
 	Vcl_EdgeConst_SNoWebView,	L"The underlying WebView2 control is not initialized"
 	IEConst_sNotSupportedByEdge,	L"Operation not supported by Edge WebView2 control"
+	Data_DBConsts_SInvalidSqlTimeStamp,	L"Invalid SQL date/time values"
+	uRulePropsDlg_SMaskHelp01,	L"Valid field name mask and field value mask consist of literal characters, sets, and wildcards."
 	uRulePropsDlg_SMaskHelp02,	L"Each literal character must match a single character in the field name or value."
 	uRulePropsDlg_SMaskHelp03,	L"The comparison to literal characters is case-insensitive."
 	uRulePropsDlg_SMaskHelp04,	L"Each set begins with an opening bracket ([) and ends with a closing bracket (])."
@@ -1160,8 +1166,8 @@ BEGIN
 	uRulePropsDlg_SMaskHelp13,	L"If the first character after the opening bracket of a set is an exclamation point (!), then the set matches any character that is not in the set."
 	uRulePropsDlg_SMaskHelp14,	L"Wildcards are asterisks (*) or question marks (?)."
 	uRulePropsDlg_SMaskHelp15,	L"An asterisk matches any number of characters."
-	uRulePropsDlg_SMaskHelp16,	L"A question mark matches a single arbitrary character."
-	Vcl_OleConst_SBadPropValue,	L"'%s' is not a valid property value"
+	uGlobal_SEventNext30days,	L"Next 30 days"
+	uGlobal_SEventNext60days,	L"Next 60 days"
 	uGlobal_SEventNext90days,	L"Next 90 days"
 	uGlobal_SEventNext180days,	L"Next 180 days"
 	uGlobal_SEventNext365days,	L"Next 365 days"
@@ -1176,8 +1182,8 @@ BEGIN
 	Data_DBConsts_SBcdOverflow,	L"BCD overflow"
 	Data_DBConsts_SInvalidBcdValue,	L"%s is not a valid BCD value"
 	Data_DBConsts_SCouldNotParseTimeStamp,	L"Could not parse SQL TimeStamp string"
-	Data_DBConsts_SInvalidSqlTimeStamp,	L"Invalid SQL date/time values"
-	uRulePropsDlg_SMaskHelp01,	L"Valid field name mask and field value mask consist of literal characters, sets, and wildcards."
+	uGlobal_SRuleHyperLink,	L"Internet link"
+	uGlobal_SRuleEmail,	L"E-mail address"
 	uGlobal_SRulePassword,	L"Password"
 	uGlobal_SRuleExpirationDate,	L"Expiration date"
 	uGlobal_SRuleRecurrence,	L"Recurrence"
@@ -1192,8 +1198,8 @@ BEGIN
 	uGlobal_SEventThisYear,	L"This year"
 	uGlobal_SEventNext7days,	L"Next 7 days"
 	uGlobal_SEventNext15days,	L"Next 15 days"
-	uGlobal_SEventNext30days,	L"Next 30 days"
-	uGlobal_SEventNext60days,	L"Next 60 days"
+	uGlobal_SCipherRC5,	L"RC5"
+	uGlobal_SCipherRC6,	L"RC6"
 	uGlobal_SCipherRijndael,	L"Rijndael (AES)"
 	uGlobal_SCipherSerpent,	L"Serpent"
 	uGlobal_SCipherTEA,	L"TEA [deprecated]"
@@ -1208,8 +1214,8 @@ BEGIN
 	uGlobal_SHashSHA384,	L"SHA-384"
 	uGlobal_SHashSHA512,	L"SHA-512"
 	uGlobal_SHashTiger,	L"Tiger"
-	uGlobal_SRuleHyperLink,	L"Internet link"
-	uGlobal_SRuleEmail,	L"E-mail address"
+	uGlobal_SPrintPreviewZoom,	L"Zoom"
+	uGlobal_SHTMLExportStyle,	L"Style"
 	uGlobal_SCipherNone,	L"(none)"
 	uGlobal_SCipherBlowfish,	L"Blowfish [deprecated]"
 	uGlobal_SCipherCast128,	L"Cast-128"
@@ -1224,8 +1230,6 @@ BEGIN
 	uGlobal_SCipherMisty1,	L"Misty1 [deprecated]"
 	uGlobal_SCipherRC2,	L"RC2 [deprecated]"
 	uGlobal_SCipherRC4,	L"RC4 [deprecated]"
-	uGlobal_SCipherRC5,	L"RC5"
-	uGlobal_SCipherRC6,	L"RC6"
 	uGlobal_SReplaceTagDlgTitle,	L"Replace tag"
 	uGlobal_SReplaceTagDlgSearchLabel,	L"&Tag:"
 	uGlobal_SReplaceTagDlgReplaceLabel,	L"&New tag:"

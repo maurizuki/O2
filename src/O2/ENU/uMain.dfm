@@ -5125,6 +5125,7 @@ object MainForm: TMainForm
     Top = 72
   end
   object CheckForUpdatesRequest: TRESTRequest
+    AssignedValues = [rvAccept]
     Accept = 'application/vnd.github.v3+json'
     Client = CheckForUpdatesRESTClient
     Params = <

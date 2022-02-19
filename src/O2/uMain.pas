@@ -624,7 +624,8 @@ uses
   xmldom, msxmldom, System.JSON, JclFileUtils,
   uAppFiles, uUtils, uShellUtils, uPAFConsts, uAbout, uGetPassword,
   uSetPassword, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
-  uReplaceDlg, uPrintPreview, uHTMLExport, uXmlStorage, uO2Xml, uO2Defs;
+  uReplaceDlg, uPrintPreview, uHTMLExport, uXmlStorage, uO2Xml, uO2Defs,
+  uBrowserEmulation;
 
 {$R *.dfm}
 
@@ -776,6 +777,8 @@ begin
   ExportSettingsDlg.Filter := SExportSettingsFileFilter;
 
   ActiveControl := ObjectsView;
+
+  SetBrowserEmulation(ExtractFileName(Application.ExeName), IE11Default);
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);

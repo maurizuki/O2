@@ -193,7 +193,7 @@ end;
 
 procedure TPrintPreview.SetZoomCaption(Action: TCustomAction);
 begin
-  PreviewZoom.Caption := 'Zoom (' + Action.Caption + ')';
+  PreviewZoom.Caption := Format('%s (%s)', [SPrintPreviewZoom, Action.Caption]);
 end;
 
 procedure TPrintPreview.FormCreate(Sender: TObject);
