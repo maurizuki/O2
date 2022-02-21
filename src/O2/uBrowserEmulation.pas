@@ -74,7 +74,7 @@ procedure SetBrowserEmulation(const ExeName: string; Value: TBrowserEmulation);
 implementation
 
 uses
-  Registry;
+  Registry, Windows;
 
 const
   BrowserEmulationKey = 'SOFTWARE\Microsoft\Internet Explorer\Main\FeatureControl\FEATURE_BROWSER_EMULATION';
@@ -85,6 +85,10 @@ var
 begin
   Reg := TRegistry.Create;
   try
+    if Reg.OpenKey(BrowserEmulationKey, True) then
+      Reg.WriteInteger(ExeName, Value);
+
+    Reg.RootKey := HKEY_LOCAL_MACHINE;
     if Reg.OpenKey(BrowserEmulationKey, True) then
       Reg.WriteInteger(ExeName, Value);
   finally
