@@ -52,23 +52,42 @@ type
     ToolButton1: TToolButton;
     ToolButton2: TToolButton;
     WebBrowser: TWebBrowser;
-    HTMLPage: TJvStrHolder;
-    HTMLObject: TJvStrHolder;
+    DefaultStyle: TJvStrHolder;
     ExportDialog: TSaveDialog;
+    ToolButton3: TToolButton;
+    StyleMenu: TPopupMenu;
+    HTMLStyle: TAction;
+    BlueWaterStyle: TAction;
+    MatchaStyle: TAction;
+    SakuraStyle: TAction;
+    BlueWater1: TMenuItem;
+    Matcha1: TMenuItem;
+    Sakura1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure ActionUpdate(Sender: TObject);
     procedure ExportFileExecute(Sender: TObject);
     procedure OptionExecute(Sender: TObject);
+    procedure StyleExecute(Sender: TObject);
+    procedure StyleUpdate(Sender: TObject);
+    procedure ExportDialogCanClose(Sender: TObject; var CanClose: Boolean);
   private
     FFileName: string;
     FTitle: string;
     FO2File: TO2File;
     FObjects: TO2ObjectList;
+    FStyleIndex: Integer;
+    procedure SetStyleIndex(const Value: Integer);
+    procedure SetStyleCaption(Action: TCustomAction);
   protected
-    function ObjectToHTML(const AObject: TO2Object;
-      const O2File: TO2File): string;
+    procedure AppendObjectIndex(const SB: TStringBuilder);
+    procedure AppendObjectList(const SB: TStringBuilder);
+    procedure AppendTagList(const SB: TStringBuilder; const Obj: TO2Object);
+    procedure AppendFieldList(const SB: TStringBuilder; const Obj: TO2Object);
+    procedure AppendRelationList(const SB: TStringBuilder;
+      const Obj: TO2Object);
     function ExportToHTML: string;
     procedure RefreshPreview;
+    property StyleIndex: Integer read FStyleIndex write SetStyleIndex;
   public
     class procedure IncludeOption(var Options: TExportToHTMLOptions;
       AOption: TExportToHTMLOption; Include: Boolean);
@@ -87,15 +106,24 @@ var
 implementation
 
 uses
-  JclFileUtils, uGlobal, uAppFiles, uStuffHTML;
+  System.Generics.Collections, JclFileUtils, uGlobal, uAppFiles, uStuffHTML,
+  uUtils;
 
 {$R *.dfm}
 
+type
+  TDefaultStylePalette = record
+    LinkColor: string;
+    BorderColor: string;
+    AltBgColor: string;
+  end;
+
 const
-  HTMLIndexItem = '<div class="O2IndexItem"><a href="#i%d">%s</a></div>'#13#10;
-  HTMLObjectField = '<tr><td class="O2FieldName">%s</td><td class="O2FieldValue" colspan="2">%s</td></tr>'#13#10;
-  HTMLObjectRelation = '<tr><td class="O2RelationObject" colspan="2"><a href="#i%d">%s</a></td><td class="O2RelationRole">%s</td></tr>'#13#10;
-  HTMLObjectText = '<tr><td class="O2ObjectNotes" colspan="3">%s</td></tr>'#13#10;
+  Palettes: array [0..2] of TDefaultStylePalette = (
+    ( LinkColor: '#0d6efd'; BorderColor: '#9ec5fe'; AltBgColor: '#f4f8ff' ),
+    ( LinkColor: '#a1952e'; BorderColor: '#d5e3c0'; AltBgColor: '#f1f6ea' ),
+    ( LinkColor: '#c3829e'; BorderColor: '#fcc9b9'; AltBgColor: '#fff5f2' )
+  );
 
 function EncodeHTML(const S: string): string;
 begin
@@ -147,6 +175,7 @@ begin
     Form.IncludePasswords.Checked := xoIncludePasswords in Options;
 
     Form.RefreshPreview;
+    Form.BlueWaterStyle.Execute;
     Form.ShowModal;
 
     THTMLExport.IncludeOption(Options, xoIncludeIndex,
@@ -164,112 +193,238 @@ begin
   end;
 end;
 
-function THTMLExport.ObjectToHTML(const AObject: TO2Object;
-  const O2File: TO2File): string;
+procedure THTMLExport.RefreshPreview;
+begin
+  StuffHTML(WebBrowser.DefaultInterface, ExportToHTML);
+end;
+
+procedure THTMLExport.SetStyleIndex(const Value: Integer);
+begin
+  if FStyleIndex <> Value then
+  begin
+    FStyleIndex := Value;
+    RefreshPreview;
+  end;
+end;
+
+procedure THTMLExport.SetStyleCaption(Action: TCustomAction);
+begin
+  HTMLStyle.Caption := Format('%s (%s)', [SHTMLExportStyle, Action.Caption]);
+end;
+
+procedure THTMLExport.AppendObjectIndex(const SB: TStringBuilder);
 var
-  ObjFields, ObjRelations, FieldValue: string;
-  AObjRelations: TO2ObjRelations;
-  AObjRelation: TO2ObjRelation;
+  I: Integer;
+begin
+  SB.Append('<div class="object-index"><ul>');
+
+  for I := 0 to Objects.Count - 1 do
+  begin
+    if I mod 2 = 0 then
+      SB.Append('<li>')
+    else
+      SB.Append('<li class="alt-bg">');
+
+    SB.AppendFormat('<a href="#%d">%s</a>',
+      [Objects[I].Index, EncodeHTML(Objects[I].Name)]);
+
+    SB.Append('</li>');
+  end;
+
+  SB.Append('</ul></div>');
+end;
+
+procedure THTMLExport.AppendObjectList(const SB: TStringBuilder);
+var
+  I: Integer;
+begin
+    SB.Append('<div class="object-list">');
+
+    for I := 0 to Objects.Count - 1 do
+    begin
+      SB.AppendFormat('<a name="%d"></a>', [Objects[I].Index])
+        .Append('<div class="object-item"><h2>')
+        .Append(EncodeHTML(Objects[I].Name)).Append('</h2>');
+
+      if IncludeTags.Checked then AppendTagList(SB, Objects[I]);
+
+      AppendFieldList(SB, Objects[I]);
+
+      if IncludeRelations.Checked then AppendRelationList(SB, Objects[I]);
+
+      if IncludeNotes.Checked and (Objects[I].Text.Count > 0) then
+        SB.Append('<div class="notes">')
+          .Append(TextToHTML(Objects[I].Text)).Append('</div>');
+
+      SB.Append('</div>');
+    end;
+
+    SB.Append('</div>');
+end;
+
+procedure THTMLExport.AppendTagList(const SB: TStringBuilder;
+  const Obj: TO2Object);
+var
+  Tags: TStringList;
+  ATag: string;
+begin
+  Tags := TStringList.Create;
+  try
+    Obj.GetTags(Tags);
+
+    if Tags.Count > 0 then
+    begin
+      SB.Append('<div class="tag-list">');
+
+      for ATag in Tags do
+        SB.Append('<div class="tag-item">')
+          .Append(EncodeHTML(ATag)).Append('</div>');
+
+      SB.Append('</div>');
+    end;
+  finally
+    Tags.Free;
+  end;
+end;
+
+procedure THTMLExport.AppendFieldList(const SB: TStringBuilder;
+  const Obj: TO2Object);
+var
+  Fields: TList<TO2Field>;
   AField: TO2Field;
   ARule: TO2Rule;
+  I: Integer;
 begin
-  ObjFields := '';
-  for AField in AObject.Fields do
-  begin
-    if IncludePasswords.Checked
-      or not Assigned(O2File.Rules.FindFirstRule(AField, [rtPassword])) then
+  Fields := TList<TO2Field>.Create;
+  try
+    for AField in Obj.Fields do
+      if IncludePasswords.Checked
+        or not Assigned(O2File.Rules.FindFirstRule(AField, [rtPassword])) then
+        Fields.Add(AField);
+
+    if Fields.Count > 0 then
     begin
-      ARule := O2File.Rules.FindFirstRule(AField, [rtHyperLink, rtEmail]);
-      if Assigned(ARule) then
-        case ARule.RuleType of
-          rtHyperLink:
-            FieldValue := Format('<a href="%s">%s</a>',
-              [ARule.GetHyperLink(AField), EncodeHTML(AField.FieldValue)]);
-          rtEmail:
-            FieldValue := Format('<a href="mailto:%s">%s</a>',
-              [AField.FieldValue, EncodeHTML(AField.FieldValue)]);
-        end
-      else
-        FieldValue := EncodeHTML(AField.FieldValue);
+      SB.Append('<div class="field-list">');
 
-      ObjFields := ObjFields + Format(HTMLObjectField,
-        [EncodeHTML(AField.FieldName), FieldValue]);
+      for I := 0 to Fields.Count - 1 do
+      begin
+        if I mod 2 = 0 then
+          SB.Append('<div class="field-item">')
+        else
+          SB.Append('<div class="field-item alt-bg">');
+
+        SB.Append('<div class="field-name">')
+          .Append(EncodeHTML(Fields[I].FieldName)).Append('</div>');
+
+        SB.Append('<div class="field-value">');
+        ARule := O2File.Rules.FindFirstRule(Fields[I], [rtHyperLink, rtEmail]);
+        if Assigned(ARule) then
+          case ARule.RuleType of
+            rtHyperLink:
+              SB.AppendFormat('<a href="%s">%s</a>',
+                [ARule.GetHyperLink(Fields[I]),
+                EncodeHTML(Fields[I].FieldValue)]);
+            rtEmail:
+              SB.AppendFormat('<a href="mailto:%s">%s</a>',
+                [Fields[I].FieldValue, EncodeHTML(Fields[I].FieldValue)]);
+          end
+        else
+          SB.Append(EncodeHTML(Fields[I].FieldValue));
+        SB.Append('</div>');
+
+        SB.Append('</div>');
+      end;
+
+      SB.Append('</div>');
     end;
+  finally
+    Fields.Free;
   end;
+end;
 
-  ObjRelations := '';
-  if IncludeRelations.Checked then
-  begin
-    AObjRelations := O2File.Relations.GetObjectRelations(AObject);
-    try
+procedure THTMLExport.AppendRelationList(const SB: TStringBuilder;
+  const Obj: TO2Object);
+var
+  AObjRelations: TO2ObjRelations;
+  I: Integer;
+begin
+  AObjRelations := O2File.Relations.GetObjectRelations(Obj);
+  try
+    if AObjRelations.Count > 0 then
+    begin
+      SB.Append('<div class="relation-list">');
+
       AObjRelations.SortByObjName;
-      for AObjRelation in AObjRelations do
-        if Assigned(AObjRelation.Obj) then
-          ObjRelations := ObjRelations + Format(HTMLObjectRelation,
-            [AObjRelation.Obj.Index, EncodeHTML(AObjRelation.Obj.Name),
-            EncodeHTML(EncodeHTML(AObjRelation.Role))]);
-    finally
-      AObjRelations.Free;
+      for I := 0 to AObjRelations.Count - 1 do
+        if Assigned(AObjRelations[I].Obj) then
+        begin
+          if I mod 2 = 0 then
+            SB.Append('<div class="relation-item">')
+          else
+            SB.Append('<div class="relation-item alt-bg">');
+
+          SB.Append('<div class="relation-object">')
+            .AppendFormat('<a href="#%d">', [AObjRelations[I].Obj.Index])
+            .Append(EncodeHTML(AObjRelations[I].Obj.Name)).Append('</a></div>');
+
+          SB.Append('<div class="relation-role">')
+            .Append(EncodeHTML(AObjRelations[I].Role)).Append('</div>');
+
+          SB.Append('</div>');
+        end;
+
+      SB.Append('</div>');
     end;
+  finally
+    AObjRelations.Free;
   end;
-
-  HTMLObject.MacroByName('objIndex').Value := Format('"i%d"', [AObject.Index]);
-  HTMLObject.MacroByName('objName').Value := EncodeHTML(AObject.Name);
-
-  if IncludeTags.Checked and (AObject.Tag <> '') then
-    HTMLObject.MacroByName('objTags').Value :=
-      Format(HTMLObjectField, [STags, EncodeHTML(AObject.Tag)])
-  else
-    HTMLObject.MacroByName('objTags').Value := '';
-
-  HTMLObject.MacroByName('objFields').Value := ObjFields;
-  HTMLObject.MacroByName('objRelations').Value := ObjRelations;
-
-  if IncludeNotes.Checked and (AObject.Text.Count > 0) then
-    HTMLObject.MacroByName('objText').Value :=
-      Format(HTMLObjectText, [TextToHTML(AObject.Text)])
-  else
-    HTMLObject.MacroByName('objText').Value := '';
-
-  Result := HTMLObject.ExpandMacros;
 end;
 
 function THTMLExport.ExportToHTML: string;
 var
   VersionInfo: TJclFileVersionInfo;
-  IndexHTML, ObjectsHTML: string;
-  AObject: TO2Object;
+  SB: TStringBuilder;
 begin
-  IndexHTML := '';
-  ObjectsHTML := '';
-  for AObject in Objects do
-  begin
-    if IncludeIndex.Checked then
-      IndexHTML := IndexHTML +
-        Format(HTMLIndexItem, [AObject.Index, EncodeHTML(AObject.Name)]);
-    ObjectsHTML := ObjectsHTML + ObjectToHTML(AObject, O2File);
-  end;
-
-  HTMLPage.MacroByName('docTitle').Value := Title;
-  HTMLPage.MacroByName('description').Value := '"' + O2File.Description + '"';
-  HTMLPage.MacroByName('author').Value := '"' + O2File.Author + '"';
-  HTMLPage.MacroByName('docIndex').Value := IndexHTML;
-  HTMLPage.MacroByName('objects').Value := ObjectsHTML;
+  DefaultStyle.MacroByName('link-color').Value :=
+    Palettes[StyleIndex].LinkColor;
+  DefaultStyle.MacroByName('border-color').Value :=
+    Palettes[StyleIndex].BorderColor;
+  DefaultStyle.MacroByName('alt-bg-color').Value :=
+    Palettes[StyleIndex].AltBgColor;
 
   VersionInfo := TJclFileVersionInfo.Create(AppFiles.FullPath[IdAppExe]);
   try
-    HTMLPage.MacroByName('generator').Value := '"' + VersionInfo.ProductName
-      + ' ' + VersionInfo.BinFileVersion + '"';
+    SB := TStringBuilder.Create;
+    try
+      SB.AppendLine('<!DOCTYPE html>')
+        .AppendLine('<html>')
+        .AppendLine('<head>')
+        .AppendFormat('<meta name="generator" content="%s %s">',
+          [VersionInfo.ProductName, VersionInfo.BinFileVersion])
+        .AppendFormat('<meta name="description" content="%s">',
+          [O2File.Description])
+        .AppendFormat('<meta name="author" content="%s">', [O2File.Author])
+        .AppendLine('<style>')
+        .AppendLine(DefaultStyle.ExpandMacros)
+        .AppendLine('</style>')
+        .Append('<title>').Append(EncodeHTML(Title)).AppendLine('</title>')
+        .AppendLine('</head>')
+        .Append('<body><div class="container">')
+        .Append('<h1>').Append(EncodeHTML(Title)).Append('</h1>');
+
+      if IncludeIndex.Checked then AppendObjectIndex(SB);
+
+      AppendObjectList(SB);
+
+      SB.AppendLine('</div></body>').Append('</html>');
+
+      Result := SB.ToString;
+    finally
+      SB.Free;
+    end;
   finally
     VersionInfo.Free;
   end;
-
-  Result := HTMLPage.ExpandMacros;
-end;
-
-procedure THTMLExport.RefreshPreview;
-begin
-  StuffHTML(WebBrowser.DefaultInterface, ExportToHTML);
 end;
 
 procedure THTMLExport.FormCreate(Sender: TObject);
@@ -307,6 +462,24 @@ procedure THTMLExport.OptionExecute(Sender: TObject);
 begin
   TAction(Sender).Checked := not TAction(Sender).Checked;
   RefreshPreview;
+end;
+
+procedure THTMLExport.StyleExecute(Sender: TObject);
+begin
+  StyleIndex := TComponent(Sender).Tag;
+  SetStyleCaption(TCustomAction(Sender));
+end;
+
+procedure THTMLExport.StyleUpdate(Sender: TObject);
+begin
+  TAction(Sender).Checked := StyleIndex = TComponent(Sender).Tag;
+end;
+
+procedure THTMLExport.ExportDialogCanClose(Sender: TObject;
+  var CanClose: Boolean);
+begin
+  CanClose := not FileExists(ExportDialog.FileName)
+    or YesNoBox(SFileOverwriteQuery);
 end;
 
 end.

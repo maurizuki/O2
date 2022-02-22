@@ -18,7 +18,7 @@ unit uUtils;
 interface
 
 uses
-  Classes, Types, Controls, ComCtrls, Menus;
+  Classes, Types, Controls, ComCtrls, Menus, System.JSON;
 
 type
   TAppVersion = class(TPersistent)
@@ -54,6 +54,7 @@ type
   public
     constructor Create;
     destructor Destroy; override;
+    procedure LoadFromJSON(const JSON: TJSONValue);
   published
     property AppName: string read FAppName write FAppName;
     property AppVersion: TAppVersion read FAppVersion write SetAppVersion;
@@ -90,13 +91,11 @@ function GetSettingsOverride(const FileName: string; out Path: string): Boolean;
 implementation
 
 uses
-  Windows, Forms, SysUtils, Math, CommCtrl, Registry;
+  Windows, Forms, SysUtils, Math, CommCtrl, Registry, System.RegularExpressions;
 
 const
-//LocaleOverrideKey = 'Software\Borland\Locales';
-//LocaleOverrideKey = 'Software\CodeGear\Locales';
-  LocaleOverrideKey = 'Software\Embarcadero\Locales';
-  SettingsOverrideKey = 'Software\O2\Settings';
+  LocaleOverrideKey = 'SOFTWARE\Embarcadero\Locales';
+  SettingsOverrideKey = 'SOFTWARE\O2\Settings';
 
 function MsgBox(const Text: string; Flags: Integer): Integer;
 begin
@@ -357,6 +356,26 @@ end;
 procedure TAppUpdate.SetAppVersion(const Value: TAppVersion);
 begin
   FAppVersion.Assign(Value);
+end;
+
+procedure TAppUpdate.LoadFromJSON(const JSON: TJSONValue);
+const
+  AppVersionPattern =
+    '^v(?<MajorVersion>[0-9]+)\.(?<MinorVersion>[0-9]+)\.(?<Release>[0-9]+)$';
+var
+  RegEx: TRegEx;
+  Match: TMatch;
+begin
+    RegEx := TRegEx.Create(AppVersionPattern);
+    Match := RegEx.Match(JSON.GetValue<string>('tag_name'));
+    AppVersion.MajorVersion :=
+      StrToIntDef(Match.Groups['MajorVersion'].Value, 0);
+    AppVersion.MinorVersion :=
+      StrToIntDef(Match.Groups['MinorVersion'].Value, 0);
+    AppVersion.Release :=
+      StrToIntDef(Match.Groups['Release'].Value, 0);
+    AppVersion.Build := 0;
+    DownloadURL := JSON.GetValue<string>('html_url');
 end;
 
 end.

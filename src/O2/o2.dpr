@@ -36,7 +36,8 @@ uses
   uXmlStorage in 'uXmlStorage.pas',
   uHTMLExport in 'uHTMLExport.pas' {HTMLExport},
   uStuffHTML in 'uStuffHTML.pas',
-  uMRUList in 'uMRUList.pas';
+  uMRUList in 'uMRUList.pas',
+  uBrowserEmulation in 'uBrowserEmulation.pas';
 
 {$R *.res}
 

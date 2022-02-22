@@ -5,10 +5,10 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">44558.6410185185</prop>
-        <prop prop-type="OrigDateTime">44558.6409953704</prop>
-        <prop prop-type="XlatDateTime">44558.6312268519</prop>
-        <prop prop-type="Translated">829</prop>
+        <prop prop-type="SelfDateTime">44614.7565740741</prop>
+        <prop prop-type="OrigDateTime">44614.7565740741</prop>
+        <prop prop-type="XlatDateTime">44588.4124305556</prop>
+        <prop prop-type="Translated">1130</prop>
         <prop prop-type="UnTranslated">0</prop>
       </prop-group>
     </header>
@@ -315,11 +315,18 @@
         </prop-group>
       </trans-unit>
       <trans-unit id="uGlobal_SDownloadUpdatesQuery" resname="uGlobal_SDownloadUpdatesQuery">
-        <source>"Version %d.%d.%d.%d is available. Download?"</source>
+        <source>"Version %d.%d.%d is available. Download?"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40178.744837419</prop>
           <prop prop-type="Status">1</prop>
         </prop-group>
+        <alt-trans>
+          <source>"Version %d.%d.%d.%d is available. Download?"</source>
+          <target>"Version %d.%d.%d.%d is available. Download?"</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">44560.5616108912</prop>
+          </prop-group>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="uGlobal_SApplyAtNextStartup" resname="uGlobal_SApplyAtNextStartup">
         <source>"Change will take effect at next application startup."</source>
@@ -1830,14 +1837,14 @@
         <source>"JEDI-VCL"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40178.7448375926</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="JvResources_RsDefaultOutputFileName" resname="JvResources_RsDefaultOutputFileName">
         <source>"output.txt"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40178.7448375926</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="JclResources_RsEReplacementChar" resname="JclResources_RsEReplacementChar">
@@ -2040,14 +2047,14 @@
         <source>"File \"%s\" not found"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40178.7448375926</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="JvResources_RsEGrabberNotStopped" resname="JvResources_RsEGrabberNotStopped">
         <source>"The grabber is not stopped, you cannot change its URL."</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40178.7448375926</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="JvResources_RsClScrollBar" resname="JvResources_RsClScrollBar">
@@ -5246,14 +5253,14 @@
         <source>"There is no grabber capable of handling URL: %s"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40322.9418346644</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="JvResources_RsEAtLeastOneGrabberRunning" resname="JvResources_RsEAtLeastOneGrabberRunning">
         <source>"There is at least one grabber running, you cannot change the URLs."</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40322.9418346644</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="XMLConst_SNoAttributes" resname="XMLConst_SNoAttributes">
@@ -8382,7 +8389,7 @@
         <source>"Invalid image"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44198.7421802662</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SScanLine" resname="Vcl_Consts_SScanLine">
@@ -9957,6 +9964,2170 @@
         <source>"Disk full"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44198.742180625</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RegularExpressionsConsts_SRegExMissingExpression" resname="System_RegularExpressionsConsts_SRegExMissingExpression">
+        <source>"A regular expression specified in RegEx is required"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RegularExpressionsConsts_SRegExExpressionError" resname="System_RegularExpressionsConsts_SRegExExpressionError">
+        <source>"Error in regular expression at offset %d: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RegularExpressionsConsts_SRegExStudyError" resname="System_RegularExpressionsConsts_SRegExStudyError">
+        <source>"Error studying the regex: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RegularExpressionsConsts_SRegExMatchRequired" resname="System_RegularExpressionsConsts_SRegExMatchRequired">
+        <source>"Successful match required"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RegularExpressionsConsts_SRegExStringsRequired" resname="System_RegularExpressionsConsts_SRegExStringsRequired">
+        <source>"Strings parameter cannot be nil"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RegularExpressionsConsts_SRegExInvalidIndexType" resname="System_RegularExpressionsConsts_SRegExInvalidIndexType">
+        <source>"Invalid index type"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RegularExpressionsConsts_SRegExIndexOutOfBounds" resname="System_RegularExpressionsConsts_SRegExIndexOutOfBounds">
+        <source>"Index out of bounds (%d)"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RegularExpressionsConsts_SRegExInvalidGroupName" resname="System_RegularExpressionsConsts_SRegExInvalidGroupName">
+        <source>"Invalid group name (%s)"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="REST_Consts_sParameterKind" resname="REST_Consts_sParameterKind">
+        <source>"Kind"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="REST_Consts_sOperationNotAllowedOnActiveComponent" resname="REST_Consts_sOperationNotAllowedOnActiveComponent">
+        <source>"Operation not allowed on active %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="REST_Consts_sResponseContentIsNotJSON" resname="REST_Consts_sResponseContentIsNotJSON">
+        <source>"Response content is not valid JSON"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="REST_Consts_sResponseContentIsEmpty" resname="REST_Consts_sResponseContentIsEmpty">
+        <source>"Response content is empty"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="REST_Consts_sResponseInvalidRootElement" resname="REST_Consts_sResponseInvalidRootElement">
+        <source>"Response RootElement, \"%s\",  is not a valid path for the response JSON"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="REST_Consts_sNoClientAttached" resname="REST_Consts_sNoClientAttached">
+        <source>"Request has no client component"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="REST_Consts_sUnknownRequestMethod" resname="REST_Consts_sUnknownRequestMethod">
+        <source>"Unknown request-method. Cannot execute request."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="REST_Consts_sRESTRequestFailed" resname="REST_Consts_sRESTRequestFailed">
+        <source>"REST request failed: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sToVariantDesc" resname="System_Bindings_Consts_sToVariantDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sToNotifyEventDesc" resname="System_Bindings_Consts_sToNotifyEventDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sFormatDesc" resname="System_Bindings_Consts_sFormatDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sUpperCaseDesc" resname="System_Bindings_Consts_sUpperCaseDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sLowerCaseDesc" resname="System_Bindings_Consts_sLowerCaseDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Data_Bind_Consts_sNameAttr" resname="Data_Bind_Consts_sNameAttr">
+        <source>"Name"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Data_Bind_Consts_sValueAttr" resname="Data_Bind_Consts_sValueAttr">
+        <source>"Value"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Data_Bind_Consts_sIDAttr" resname="Data_Bind_Consts_sIDAttr">
+        <source>"ID"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Data_Bind_Consts_sNotImplemented" resname="Data_Bind_Consts_sNotImplemented">
+        <source>"Not implemented"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Data_Bind_Consts_SNotEditing" resname="Data_Bind_Consts_SNotEditing">
+        <source>"Not editing"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Data_Bind_Consts_sNoBindsourceAdapter" resname="Data_Bind_Consts_sNoBindsourceAdapter">
+        <source>"No adapter"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Data_Bind_Consts_sDataSourceReadOnly" resname="Data_Bind_Consts_sDataSourceReadOnly">
+        <source>"Cannot modify a read-only data source"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Data_Bind_Consts_sDataSourceClosed" resname="Data_Bind_Consts_sDataSourceClosed">
+        <source>"Cannot perform this operation on a closed dataset"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Data_Bind_Consts_sUnknownEditor" resname="Data_Bind_Consts_sUnknownEditor">
+        <source>"Unknown editor: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="REST_Consts_sParameterName" resname="REST_Consts_sParameterName">
+        <source>"Name"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="REST_Consts_sParameterValue" resname="REST_Consts_sParameterValue">
+        <source>"Value"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sIntToVariantDesc" resname="System_Bindings_Consts_sIntToVariantDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sBoolToVariant" resname="System_Bindings_Consts_sBoolToVariant">
+        <source>"BoolToVariant"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sBoolToVariantDesc" resname="System_Bindings_Consts_sBoolToVariantDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sVariantToBool" resname="System_Bindings_Consts_sVariantToBool">
+        <source>"VariantToBool"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sVariantToBoolDesc" resname="System_Bindings_Consts_sVariantToBoolDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sStrToFloat" resname="System_Bindings_Consts_sStrToFloat">
+        <source>"StrToFloat"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sStrToFloatDesc" resname="System_Bindings_Consts_sStrToFloatDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sFloatToInteger" resname="System_Bindings_Consts_sFloatToInteger">
+        <source>"FloatToInteger"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sFloatToIntegerDesc" resname="System_Bindings_Consts_sFloatToIntegerDesc">
+        <source>"Convert float to integer using Round()"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sTStringsToString" resname="System_Bindings_Consts_sTStringsToString">
+        <source>"TStringsToString"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sTStringToStringDesc" resname="System_Bindings_Consts_sTStringToStringDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sStringToTStrings" resname="System_Bindings_Consts_sStringToTStrings">
+        <source>"StringToTStrings"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sStringToTStringsDesc" resname="System_Bindings_Consts_sStringToTStringsDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sStringToChar" resname="System_Bindings_Consts_sStringToChar">
+        <source>"StringToChar"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032775579</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sStringToCharDesc" resname="System_Bindings_Consts_sStringToCharDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sToStrDesc" resname="System_Bindings_Consts_sToStrDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sTDateTimeToStrDesc" resname="System_Bindings_Consts_sTDateTimeToStrDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sStrToTDate" resname="System_Bindings_Consts_sStrToTDate">
+        <source>"TStrTDate"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sStrToTDateDesc" resname="System_Bindings_Consts_sStrToTDateDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sStrToTTime" resname="System_Bindings_Consts_sStrToTTime">
+        <source>"TStrTTime"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sStrToTTimeDesc" resname="System_Bindings_Consts_sStrToTTimeDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sNilToString" resname="System_Bindings_Consts_sNilToString">
+        <source>"NilToString"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sNilToStringDesc" resname="System_Bindings_Consts_sNilToStringDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sNilToBoolean" resname="System_Bindings_Consts_sNilToBoolean">
+        <source>"NilToBoolean"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sNilToBooleanDesc" resname="System_Bindings_Consts_sNilToBooleanDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sNilToVariant" resname="System_Bindings_Consts_sNilToVariant">
+        <source>"NilToVariant"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sNilToVariantDesc" resname="System_Bindings_Consts_sNilToVariantDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sStringToVariant" resname="System_Bindings_Consts_sStringToVariant">
+        <source>"StringToVariant"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sStringToVariantDesc" resname="System_Bindings_Consts_sStringToVariantDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sFloatToVariant" resname="System_Bindings_Consts_sFloatToVariant">
+        <source>"FloatToVariant"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sFloatToVariantDesc" resname="System_Bindings_Consts_sFloatToVariantDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sIntToVariant" resname="System_Bindings_Consts_sIntToVariant">
+        <source>"IntToVariant"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sPersistentToStringDesc" resname="System_Bindings_Consts_sPersistentToStringDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sBoolToString" resname="System_Bindings_Consts_sBoolToString">
+        <source>"BoolToString"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sBoolToStringDesc" resname="System_Bindings_Consts_sBoolToStringDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sStringToBool" resname="System_Bindings_Consts_sStringToBool">
+        <source>"StringToBool"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sStringToBoolDesc" resname="System_Bindings_Consts_sStringToBoolDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sNilToNumber" resname="System_Bindings_Consts_sNilToNumber">
+        <source>"NilToNumber"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sNilToNumberDesc" resname="System_Bindings_Consts_sNilToNumberDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sIntegerToString" resname="System_Bindings_Consts_sIntegerToString">
+        <source>"IntegerToString"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sIntegerToStringDesc" resname="System_Bindings_Consts_sIntegerToStringDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sStringToInteger" resname="System_Bindings_Consts_sStringToInteger">
+        <source>"StringToInteger"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sStringToIntegerDesc" resname="System_Bindings_Consts_sStringToIntegerDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sFloatToString" resname="System_Bindings_Consts_sFloatToString">
+        <source>"FloatToString"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sFloatToStringDesc" resname="System_Bindings_Consts_sFloatToStringDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sStrToTDateTime" resname="System_Bindings_Consts_sStrToTDateTime">
+        <source>"StrToTDateTime"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sStrToTDateTimeDesc" resname="System_Bindings_Consts_sStrToTDateTimeDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sTDateTimeToStr" resname="System_Bindings_Consts_sTDateTimeToStr">
+        <source>"TDateTimeToStr"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sScopeClassNotRegistered" resname="System_Bindings_Consts_sScopeClassNotRegistered">
+        <source>"Scope class %s not registered"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sScopeClassAlreadyRegistered" resname="System_Bindings_Consts_sScopeClassAlreadyRegistered">
+        <source>"Scope class %s is already registered"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sInvalidCustomWrapper" resname="System_Bindings_Consts_sInvalidCustomWrapper">
+        <source>"The given custom wrapper does not support %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sPropertyNotFound" resname="System_Bindings_Consts_sPropertyNotFound">
+        <source>"Property %s not found"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sNoGetterOrSetter" resname="System_Bindings_Consts_sNoGetterOrSetter">
+        <source>"Need at least a getter or a setter."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sUpdateOutputLocFailed" resname="System_Bindings_Consts_sUpdateOutputLocFailed">
+        <source>"Unable to recompile output expression for %s (%s)"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sNoOutputScopes" resname="System_Bindings_Consts_sNoOutputScopes">
+        <source>"An output scope is required"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sVirtualMemberReadOnly" resname="System_Bindings_Consts_sVirtualMemberReadOnly">
+        <source>"Virtual members are read-only."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sConvertWrapperFail" resname="System_Bindings_Consts_sConvertWrapperFail">
+        <source>"Cannot convert wrapper. It does not support %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sNilToTDateTime" resname="System_Bindings_Consts_sNilToTDateTime">
+        <source>"NilToDateTime"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sNilToTDateTimeDesc" resname="System_Bindings_Consts_sNilToTDateTimeDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sNilToTStrings" resname="System_Bindings_Consts_sNilToTStrings">
+        <source>"NilToTStrings"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sNilToTStringsDesc" resname="System_Bindings_Consts_sNilToTStringsDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sPersistentToPersistent" resname="System_Bindings_Consts_sPersistentToPersistent">
+        <source>"PersistentToPersistent"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sPersistentToPersistentDesc" resname="System_Bindings_Consts_sPersistentToPersistentDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sPersistentToString" resname="System_Bindings_Consts_sPersistentToString">
+        <source>"PersistentToString"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sParserUnexpected" resname="System_Bindings_Consts_sParserUnexpected">
+        <source>"Expected %s but got %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sInvalidFloatingPt" resname="System_Bindings_Consts_sInvalidFloatingPt">
+        <source>"Invalid floating-point constant - expected one or more digits after \".\""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sInvalidFloatingPtExpt" resname="System_Bindings_Consts_sInvalidFloatingPtExpt">
+        <source>"Invalid floating-point constant - expected one or more digits as part of exponent"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sUnterminatedString" resname="System_Bindings_Consts_sUnterminatedString">
+        <source>"Unterminated string found"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sInvalidOperator" resname="System_Bindings_Consts_sInvalidOperator">
+        <source>"Invalid operator in source (%s%s)"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <alt-trans>
+          <source>"Invalid operator in source (%s)"</source>
+          <target>"Invalid operator in source (%s)"</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">44566.6072124306</prop>
+          </prop-group>
+        </alt-trans>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sInvalidOperatorNum" resname="System_Bindings_Consts_sInvalidOperatorNum">
+        <source>"Invalid character in source (#%d)"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sExpectedEOF" resname="System_Bindings_Consts_sExpectedEOF">
+        <source>"Expected EOF - trailing text in expression"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sTooManyArgs" resname="System_Bindings_Consts_sTooManyArgs">
+        <source>"Too many arguments"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sExpectedIdentifier" resname="System_Bindings_Consts_sExpectedIdentifier">
+        <source>"Expected an identifier, number or string"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sExpressionTooComplex" resname="System_Bindings_Consts_sExpressionTooComplex">
+        <source>"Expression too complex (too many constants)"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032777315</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sEvalStackOverflow" resname="System_Bindings_Consts_sEvalStackOverflow">
+        <source>"Stack underflow"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sLookupError" resname="System_Bindings_Consts_sLookupError">
+        <source>"Couldn't find %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sInvokeError" resname="System_Bindings_Consts_sInvokeError">
+        <source>"Tried to invoke non-function / non-indexed-property"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sUnsupportedWrapper" resname="System_Bindings_Consts_sUnsupportedWrapper">
+        <source>"Cannot determine value because the wrapper does not support IValue"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sUnsupportedGroup" resname="System_Bindings_Consts_sUnsupportedGroup">
+        <source>"Cannot find result wrapper because the member wrapper does not support IGroup"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sObjectTypeNotRegistered" resname="System_Bindings_Consts_sObjectTypeNotRegistered">
+        <source>"Object type %s not registered"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sOutputIsReadOnly" resname="System_Bindings_Consts_sOutputIsReadOnly">
+        <source>"Output expression evaluates a read only value"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sUnavailNotifier" resname="System_Bindings_Consts_sUnavailNotifier">
+        <source>"Unable to create notifier"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sConversionUnavailable" resname="System_Bindings_Consts_sConversionUnavailable">
+        <source>"No conversion is available from type %s to %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sConverterNotFound" resname="System_Bindings_Consts_sConverterNotFound">
+        <source>"Unable to cast or find converters between types %s and %s."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sConverterIDNotFound" resname="System_Bindings_Consts_sConverterIDNotFound">
+        <source>"Converter ID must be specified"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sConverterIDNotRegistered" resname="System_Bindings_Consts_sConverterIDNotRegistered">
+        <source>"No converter with the name %s has been registered"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sDuplicatedConverterType" resname="System_Bindings_Consts_sDuplicatedConverterType">
+        <source>"The converter named \"%s\" with an identical input type (%s) and output type (%s) has already been added"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sDuplicatedMethodName" resname="System_Bindings_Consts_sDuplicatedMethodName">
+        <source>"A method with name %s already exists"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sMethodNotFound" resname="System_Bindings_Consts_sMethodNotFound">
+        <source>"No method with the name %s has been registered"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sMismatchArgCount" resname="System_Bindings_Consts_sMismatchArgCount">
+        <source>"Wrong number of args: expected %d, got %d"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sAddOpFail" resname="System_Bindings_Consts_sAddOpFail">
+        <source>"Don't know how to add \"%s\" and \"%s\""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sSubtractOpFail" resname="System_Bindings_Consts_sSubtractOpFail">
+        <source>"Don't know how to subtract \"%s\" and \"%s\""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sMultiplyOpFail" resname="System_Bindings_Consts_sMultiplyOpFail">
+        <source>"Don't know how to multiply \"%s\" and \"%s\""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sDivideOpFail" resname="System_Bindings_Consts_sDivideOpFail">
+        <source>"Don't know how to divide \"%s\" and \"%s\""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sNegateOpFail" resname="System_Bindings_Consts_sNegateOpFail">
+        <source>"Don't know how to negate \"%s\""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sCompareOpFail" resname="System_Bindings_Consts_sCompareOpFail">
+        <source>"Don't know how to compare \"%s\" and \"%s\""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpRequestRemoveHeaderError" resname="System_NetConsts_SNetHttpRequestRemoveHeaderError">
+        <source>"Error removing header: (%d) %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpRequestReadDataError" resname="System_NetConsts_SNetHttpRequestReadDataError">
+        <source>"Error reading data: (%d) %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpRequestSetTimeoutError" resname="System_NetConsts_SNetHttpRequestSetTimeoutError">
+        <source>"Error setting timeout for the request: (%d) %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SMimeDuplicateType" resname="System_NetConsts_SMimeDuplicateType">
+        <source>"Pair of extension and mime type already exists"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SMimeTypeEmpty" resname="System_NetConsts_SMimeTypeEmpty">
+        <source>"Mime type cannot be empty"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sMaxArgsExceeded" resname="System_Bindings_Consts_sMaxArgsExceeded">
+        <source>"Maximum number of arguments allowed exceeded (%d)"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sFormatArgError" resname="System_Bindings_Consts_sFormatArgError">
+        <source>"Expected at least one variable for Format() call"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sFormatExpectedStr" resname="System_Bindings_Consts_sFormatExpectedStr">
+        <source>"First argument to Format() must be a string"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sFormatUnexpectedType" resname="System_Bindings_Consts_sFormatUnexpectedType">
+        <source>"Unsupported Format() type found: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sUnexpectedArgCount" resname="System_Bindings_Consts_sUnexpectedArgCount">
+        <source>"Expected %d arguments, but received %d"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sToStrArgCount" resname="System_Bindings_Consts_sToStrArgCount">
+        <source>"Expected 1 argument to ToStr"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sOwnerNotFound" resname="System_Bindings_Consts_sOwnerNotFound">
+        <source>"Owner cannot be Nil."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sScopeObjNull" resname="System_Bindings_Consts_sScopeObjNull">
+        <source>"Scope obj cannot be Nil."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sUncompiledExpression" resname="System_Bindings_Consts_sUncompiledExpression">
+        <source>"The expression has not been compiled yet."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sUnsupportedManager" resname="System_Bindings_Consts_sUnsupportedManager">
+        <source>"Manager does not support IBindingNotification."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sClassTypeNotFound" resname="System_Bindings_Consts_sClassTypeNotFound">
+        <source>"ClassType must be specified."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetUriParamNotFound" resname="System_NetConsts_SNetUriParamNotFound">
+        <source>"Parameter \"%s\" not found"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpMaxRedirections" resname="System_NetConsts_SNetHttpMaxRedirections">
+        <source>"Maximum number of redirections (%d) exceeded"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpGetServerCertificate" resname="System_NetConsts_SNetHttpGetServerCertificate">
+        <source>"Error getting Server Certificate"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpInvalidServerCertificate" resname="System_NetConsts_SNetHttpInvalidServerCertificate">
+        <source>"Server Certificate Invalid or not present"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpServerCertificateNotAccepted" resname="System_NetConsts_SNetHttpServerCertificateNotAccepted">
+        <source>"Server Certificate not accepted"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpEmptyCertificateList" resname="System_NetConsts_SNetHttpEmptyCertificateList">
+        <source>"Empty certificate list"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpUnspecifiedCertificate" resname="System_NetConsts_SNetHttpUnspecifiedCertificate">
+        <source>"Unspecified certificate from client"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpRejectedCertificate" resname="System_NetConsts_SNetHttpRejectedCertificate">
+        <source>"Client rejected the certificate"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpClientUnknownError" resname="System_NetConsts_SNetHttpClientUnknownError">
+        <source>"Execution of request terminated with unknown error"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpHeadersError" resname="System_NetConsts_SNetHttpHeadersError">
+        <source>"Error querying headers: (%d) %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpClientHandleError" resname="System_NetConsts_SNetHttpClientHandleError">
+        <source>"Error obtaining session handle"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpClientSendError" resname="System_NetConsts_SNetHttpClientSendError">
+        <source>"Error sending data: (%d) %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpClientReceiveError" resname="System_NetConsts_SNetHttpClientReceiveError">
+        <source>"Error receiving data: (%d) %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpRequestConnectError" resname="System_NetConsts_SNetHttpRequestConnectError">
+        <source>"Error connecting to server: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpRequestOpenError" resname="System_NetConsts_SNetHttpRequestOpenError">
+        <source>"Error opening request: (%d) %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpRequestAddHeaderError" resname="System_NetConsts_SNetHttpRequestAddHeaderError">
+        <source>"Error adding header: (%d) %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedExtJSONToken" resname="System_JSONConsts_SUnexpectedExtJSONToken">
+        <source>"Unexpected token when reading Extended JSON value %s. Expected token: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SJSONPathUnexpectedRootChar" resname="System_JSONConsts_SJSONPathUnexpectedRootChar">
+        <source>"Unexpected char for root element: ."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SJSONPathEndedOpenBracket" resname="System_JSONConsts_SJSONPathEndedOpenBracket">
+        <source>"Path ended with an open bracket"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SJSONPathEndedOpenString" resname="System_JSONConsts_SJSONPathEndedOpenString">
+        <source>"Path ended with an open string"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SJSONPathInvalidArrayIndex" resname="System_JSONConsts_SJSONPathInvalidArrayIndex">
+        <source>"Invalid index for array: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SJSONPathUnexpectedIndexedChar" resname="System_JSONConsts_SJSONPathUnexpectedIndexedChar">
+        <source>"Unexpected character while parsing indexer: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SJSONPathDotsEmptyName" resname="System_JSONConsts_SJSONPathDotsEmptyName">
+        <source>"Empty name not allowed in dot notation, use ['']"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SSchemeAlreadyRegistered" resname="System_NetConsts_SSchemeAlreadyRegistered">
+        <source>"Scheme \"%s\" already registered for %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SSchemeNotRegistered" resname="System_NetConsts_SSchemeNotRegistered">
+        <source>"Scheme \"%s\" is not registered"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032779167</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SCredentialInvalidUserPassword" resname="System_NetConsts_SCredentialInvalidUserPassword">
+        <source>"Credential without user and password"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetPlatformFunctionNotImplemented" resname="System_NetConsts_SNetPlatformFunctionNotImplemented">
+        <source>"Platform-dependant function not implemented"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetSchemeFunctionNotImplemented" resname="System_NetConsts_SNetSchemeFunctionNotImplemented">
+        <source>"Scheme-dependant function not implemented"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetUriMethodAlreadyAssigned" resname="System_NetConsts_SNetUriMethodAlreadyAssigned">
+        <source>"Method already assigned"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetUriURLAlreadyAssigned" resname="System_NetConsts_SNetUriURLAlreadyAssigned">
+        <source>"URL already assigned"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetUriIndexOutOfRange" resname="System_NetConsts_SNetUriIndexOutOfRange">
+        <source>"Parameter index (%d) out of range (%d..%d)"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetUriInvalid" resname="System_NetConsts_SNetUriInvalid">
+        <source>"Invalid URL: \"%s\""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedJsonContent" resname="System_JSONConsts_SUnexpectedJsonContent">
+        <source>"Unexpected content while parsing JSON"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedState" resname="System_JSONConsts_SUnexpectedState">
+        <source>"Unexpected state: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedTokenDate" resname="System_JSONConsts_SUnexpectedTokenDate">
+        <source>"Error reading date. Unexpected token: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedTokenDateConstructorExpEnd" resname="System_JSONConsts_SUnexpectedTokenDateConstructorExpEnd">
+        <source>"Unexpected token when reading date constructor. Expected EndConstructor, got %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedTokenDateConstructorExpInt" resname="System_JSONConsts_SUnexpectedTokenDateConstructorExpInt">
+        <source>"Unexpected token when reading date constructor. Expected Integer, got %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedTokenDouble" resname="System_JSONConsts_SUnexpectedTokenDouble">
+        <source>"Error reading double. Unexpected token: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedTokenInteger" resname="System_JSONConsts_SUnexpectedTokenInteger">
+        <source>"Error reading integer. Unexpected token: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedTokenReadBytes" resname="System_JSONConsts_SUnexpectedTokenReadBytes">
+        <source>"Unexpected token when reading bytes: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedTokenString" resname="System_JSONConsts_SUnexpectedTokenString">
+        <source>"Error reading string. Unexpected token: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedTypeOnEnd" resname="System_JSONConsts_SUnexpectedTypeOnEnd">
+        <source>"Unexpected type when writing end: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedUnicodeCharEnd" resname="System_JSONConsts_SUnexpectedUnicodeCharEnd">
+        <source>"Unexpected end while parsing unicode character"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedUnquotedPropertyEnd" resname="System_JSONConsts_SUnexpectedUnquotedPropertyEnd">
+        <source>"Unexpected end while parsing unquoted property name"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnknowContainerType" resname="System_JSONConsts_SUnknowContainerType">
+        <source>"Unknown JsonType: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnsupportedType" resname="System_JSONConsts_SUnsupportedType">
+        <source>"Unsupported type: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnterminatedString" resname="System_JSONConsts_SUnterminatedString">
+        <source>"Unterminated string. Expected delimiter: %s."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SWhitespaceOnly" resname="System_JSONConsts_SWhitespaceOnly">
+        <source>"Only white space characters should be used."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SParseErrorNegativeInfinity" resname="System_JSONConsts_SParseErrorNegativeInfinity">
+        <source>"Cannot read Infinity value"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SParseErrorNull" resname="System_JSONConsts_SParseErrorNull">
+        <source>"Error parsing null value."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SParseErrorPositiveInfinity" resname="System_JSONConsts_SParseErrorPositiveInfinity">
+        <source>"Cannot read -Infinity value"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SParseErrorUndefined" resname="System_JSONConsts_SParseErrorUndefined">
+        <source>"Error parsing undefined value"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SReaderAdditionalText" resname="System_JSONConsts_SReaderAdditionalText">
+        <source>"Additional text encountered after finished reading JSON content: %s."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SReaderMaxDepthExceeded" resname="System_JSONConsts_SReaderMaxDepthExceeded">
+        <source>"The reader's MaxDepth of %s has been exceeded."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_STokenInStateInvalid" resname="System_JSONConsts_STokenInStateInvalid">
+        <source>"Token %s in state %s would result in an invalid JSON object."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpecteCharAfterValue" resname="System_JSONConsts_SUnexpecteCharAfterValue">
+        <source>"After parsing a value an unexpected character was encountered: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedBytesEnd" resname="System_JSONConsts_SUnexpectedBytesEnd">
+        <source>"Unexpected end when reading bytes."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedCharConstructor" resname="System_JSONConsts_SUnexpectedCharConstructor">
+        <source>"Unexpected character while parsing constructor: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedCharNumber" resname="System_JSONConsts_SUnexpectedCharNumber">
+        <source>"Unexpected character encountered while parsing number: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedCharValue" resname="System_JSONConsts_SUnexpectedCharValue">
+        <source>"Unexpected character encountered while parsing value: %s."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedCommentEnd" resname="System_JSONConsts_SUnexpectedCommentEnd">
+        <source>"Unexpected end while parsing comment"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedConstructorEnd" resname="System_JSONConsts_SUnexpectedConstructorEnd">
+        <source>"Unexpected end while parsing constructor."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedEnd" resname="System_JSONConsts_SUnexpectedEnd">
+        <source>"Unexpected end"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUnexpectedEndConstructorDate" resname="System_JSONConsts_SUnexpectedEndConstructorDate">
+        <source>"Unexpected end when reading date constructor"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SInputInvalidInteger" resname="System_JSONConsts_SInputInvalidInteger">
+        <source>"Input string %s is not a valid integer"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SInputInvalidNumber" resname="System_JSONConsts_SInputInvalidNumber">
+        <source>"Input string %s is not a valid number"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SInvalidCharacterAfterProperty" resname="System_JSONConsts_SInvalidCharacterAfterProperty">
+        <source>"Invalid character after parsing property name. Expected ':' but got: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SInvalidCloseToken" resname="System_JSONConsts_SInvalidCloseToken">
+        <source>"Not a valid close JsonToken: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SInvalidJavascriptProperty" resname="System_JSONConsts_SInvalidJavascriptProperty">
+        <source>"Invalid JavaScript property identifier character: %s."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SInvalidJavascriptQuote" resname="System_JSONConsts_SInvalidJavascriptQuote">
+        <source>"Invalid JavaScript string quote character. Valid quote characters are ' and \\"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Invalid JavaScript string quote character. Valid quote characters are ' and \""</target>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SInvalidJsonToken" resname="System_JSONConsts_SInvalidJsonToken">
+        <source>"Invalid JsonToken: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SInvalidObjectId" resname="System_JSONConsts_SInvalidObjectId">
+        <source>"An ObjectId must be 12 bytes"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SInvalidPropertyCharacter" resname="System_JSONConsts_SInvalidPropertyCharacter">
+        <source>"Invalid property identifier character: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SInvalidState" resname="System_JSONConsts_SInvalidState">
+        <source>"Invalid state: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SInvalidTokenForContainer" resname="System_JSONConsts_SInvalidTokenForContainer">
+        <source>"JsonToken %s is not valid for closing JsonType %s."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SNoTokenForType" resname="System_JSONConsts_SNoTokenForType">
+        <source>"No close token for type %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SNoTokenToClose" resname="System_JSONConsts_SNoTokenToClose">
+        <source>"No token to close."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SParseErrorBoolean" resname="System_JSONConsts_SParseErrorBoolean">
+        <source>"Error parsing boolean value."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SParseErrorComment" resname="System_JSONConsts_SParseErrorComment">
+        <source>"Error parsing comment. Expected: *, got %s."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SParseErrorNan" resname="System_JSONConsts_SParseErrorNan">
+        <source>"Cannot read NaN value."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SObjectExpectedForField" resname="System_JSONConsts_SObjectExpectedForField">
+        <source>"JSON object expected for field %s in JSON %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SInvalidJSONFieldType" resname="System_JSONConsts_SInvalidJSONFieldType">
+        <source>"Un-marshaled array cannot be set as a field value. A reverter may be missing for field %s of %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SNoValueConversionForField" resname="System_JSONConsts_SNoValueConversionForField">
+        <source>"Internal: Value %s cannot be converted to be assigned to field %s in type %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SInvalidTypeForField" resname="System_JSONConsts_SInvalidTypeForField">
+        <source>"Cannot set value for field %s as it is expected to be an array instead of %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SNoConversionAvailableForValue" resname="System_JSONConsts_SNoConversionAvailableForValue">
+        <source>"Value %s cannot be converted into %s. You may use a user-defined reverter"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SValueNotFound" resname="System_JSONConsts_SValueNotFound">
+        <source>"Value '%s' not found"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SCannotConvertJSONValueToType" resname="System_JSONConsts_SCannotConvertJSONValueToType">
+        <source>"Conversion from %0:s to %1:s is not supported"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SCannotAddJSONValue" resname="System_JSONConsts_SCannotAddJSONValue">
+        <source>"Value %s cannot be added to %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SBadEscapeSequence" resname="System_JSONConsts_SBadEscapeSequence">
+        <source>"Bad JSON escape sequence: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032781019</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SErrorConvertStringToDatetime" resname="System_JSONConsts_SErrorConvertStringToDatetime">
+        <source>"Could not convert string to DateTime: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SErrorConvertStringToDouble" resname="System_JSONConsts_SErrorConvertStringToDouble">
+        <source>"Could not convert string to double: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SErrorConvertStringToInteger" resname="System_JSONConsts_SErrorConvertStringToInteger">
+        <source>"Could not convert string to integer: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SFormatMessageLinePos" resname="System_JSONConsts_SFormatMessageLinePos">
+        <source>", line %d, position %d"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SFormatMessagePath" resname="System_JSONConsts_SFormatMessagePath">
+        <source>"Path '%s'"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SIdentationGreaterThanZero" resname="System_JSONConsts_SIdentationGreaterThanZero">
+        <source>"Indentation value must be greater than 0"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SInputInvalidDouble" resname="System_JSONConsts_SInputInvalidDouble">
+        <source>"Input string %s is not a valid double"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SFieldExpected" resname="System_JSONConsts_SFieldExpected">
+        <source>"Internal: Field %s conversion is incomplete"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SArrayExpected" resname="System_JSONConsts_SArrayExpected">
+        <source>"Internal: Array expected instead of %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SValueExpected" resname="System_JSONConsts_SValueExpected">
+        <source>"Internal: JSON value expected instead of %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SNoArray" resname="System_JSONConsts_SNoArray">
+        <source>"Internal: Array expected instead of nil"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SInvalidContext" resname="System_JSONConsts_SInvalidContext">
+        <source>"Internal: Current context cannot accept a value"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SObjectExpectedForPair" resname="System_JSONConsts_SObjectExpectedForPair">
+        <source>"Internal: Object context expected when processing a pair"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SInvalidContextForPair" resname="System_JSONConsts_SInvalidContextForPair">
+        <source>"Internal: Current context cannot accept a pair"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SNoConversionForType" resname="System_JSONConsts_SNoConversionForType">
+        <source>"Internal: No conversion possible for type: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SInconsistentConversion" resname="System_JSONConsts_SInconsistentConversion">
+        <source>"Internal: Conversion failed, converted object is most likely incomplete"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_STypeNotSupported" resname="System_JSONConsts_STypeNotSupported">
+        <source>"Internal: Type %s is not currently supported"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SNoTypeInterceptorExpected" resname="System_JSONConsts_SNoTypeInterceptorExpected">
+        <source>"Field attribute should provide a field interceptor instead of a type one on field %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_STooMuchNesting" resname="System_JSONConsts_STooMuchNesting">
+        <source>"The nesting level of JSON arrays / objects is greater than %d"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SCannotCreateType" resname="System_JSONConsts_SCannotCreateType">
+        <source>"Internal: Cannot instantiate type %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SObjectExpectedInArray" resname="System_JSONConsts_SObjectExpectedInArray">
+        <source>"Object expected at position %d in JSON array %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SStringExpectedInArray" resname="System_JSONConsts_SStringExpectedInArray">
+        <source>"String expected at position %d in JSON array %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SArrayExpectedForField" resname="System_JSONConsts_SArrayExpectedForField">
+        <source>"JSON array expected for field %s in JSON %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUTF8Start" resname="System_JSONConsts_SUTF8Start">
+        <source>"UTF8: A start byte not followed by enough continuation bytes"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUTF8UnexpectedByte" resname="System_JSONConsts_SUTF8UnexpectedByte">
+        <source>"UTF8: An unexpected continuation byte in %d-byte UTF8"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SUTF8InvalidHeaderByte" resname="System_JSONConsts_SUTF8InvalidHeaderByte">
+        <source>"UTF8: Type cannot be determined out of header byte"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SJSONSyntaxError" resname="System_JSONConsts_SJSONSyntaxError">
+        <source>"The input value is not a valid JSON"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SJSONLocation" resname="System_JSONConsts_SJSONLocation">
+        <source>". Path '%s', line %d, position %d (offset %d)"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_JSONConsts_SFieldValueMissing" resname="System_JSONConsts_SFieldValueMissing">
+        <source>"Internal: Field %s has no serialized value"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_sErrorDecodingURLText" resname="System_RTLConsts_sErrorDecodingURLText">
+        <source>"Error decoding URL style (%%XX) encoded string at position %d"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_sInvalidURLEncodedChar" resname="System_RTLConsts_sInvalidURLEncodedChar">
+        <source>"Invalid URL encoded character (%s) at position %d"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_sInvalidTaskConstruction" resname="System_RTLConsts_sInvalidTaskConstruction">
+        <source>"Cannot construct an ITask in this manner"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_sWaitNilTask" resname="System_RTLConsts_sWaitNilTask">
+        <source>"At least one task in array nil"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_sCannotStartCompletedTask" resname="System_RTLConsts_sCannotStartCompletedTask">
+        <source>"Cannot start a task that has already completed"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_sOneOrMoreTasksCancelled" resname="System_RTLConsts_sOneOrMoreTasksCancelled">
+        <source>"One or more tasks were cancelled"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_sDefaultAggregateExceptionMsg" resname="System_RTLConsts_sDefaultAggregateExceptionMsg">
+        <source>"One or more errors occurred"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_SUnbalancedOperation" resname="System_RTLConsts_SUnbalancedOperation">
+        <source>"Unbalanced stack or queue operation"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_sCountdownAlreadyZero" resname="System_RTLConsts_sCountdownAlreadyZero">
+        <source>"Countdown already reached zero (0)"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_sSameArrays" resname="System_RTLConsts_sSameArrays">
+        <source>"Source and Destination arrays must not be the same"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_sInvalidResetCount" resname="System_RTLConsts_sInvalidResetCount">
+        <source>"Invalid Reset Count: %d"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_sInvalidInitialCount" resname="System_RTLConsts_sInvalidInitialCount">
+        <source>"Invalid Count: %d"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_sInvalidDecrementCount" resname="System_RTLConsts_sInvalidDecrementCount">
+        <source>"Invalid Decrement Count: %d"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_sInvalidIncrementCount" resname="System_RTLConsts_sInvalidIncrementCount">
+        <source>"Invalid Increment Count: %d"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_sInvalidDecrementOperation" resname="System_RTLConsts_sInvalidDecrementOperation">
+        <source>"Decrement amount will cause invalid results: Count: %d, CurCount: %d"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_sInvalidIncrementOperation" resname="System_RTLConsts_sInvalidIncrementOperation">
+        <source>"Count already max: Amount: %d, CurCount: %d"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_SInvalidString" resname="System_RTLConsts_SInvalidString">
+        <source>"Invalid string constant"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_SysConst_SOperationCancelled" resname="System_SysConst_SOperationCancelled">
+        <source>"Operation Cancelled"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_SysConst_SInvalidInteger2" resname="System_SysConst_SInvalidInteger2">
+        <source>"'%s' is not a valid integer value for %s type"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_SysConst_SInvalidFloat2" resname="System_SysConst_SInvalidFloat2">
+        <source>"'%s' is not a valid floating point value for %s type"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_SysConst_SInvalidBoolean" resname="System_SysConst_SInvalidBoolean">
+        <source>"'%s' is not a valid boolean value"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44560.6032782755</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Vcl_EdgeConst_SWebViewFailure" resname="Vcl_EdgeConst_SWebViewFailure">
+        <source>"Failed to create Edge browser control"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.64887875</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Vcl_EdgeConst_SNoWebView" resname="Vcl_EdgeConst_SNoWebView">
+        <source>"The underlying WebView2 control is not initialized"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.64887875</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="IEConst_sNotSupportedByEdge" resname="IEConst_sNotSupportedByEdge">
+        <source>"Operation not supported by Edge WebView2 control"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.64887875</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sBoolToInteger" resname="System_Bindings_Consts_sBoolToInteger">
+        <source>"BoolToInteger"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.648878912</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sBoolToIntegerDesc" resname="System_Bindings_Consts_sBoolToIntegerDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.648878912</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sIntegerToBool" resname="System_Bindings_Consts_sIntegerToBool">
+        <source>"IntegerToBool"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.648878912</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sIntegerToBoolDesc" resname="System_Bindings_Consts_sIntegerToBoolDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.648878912</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sBoolToFloat" resname="System_Bindings_Consts_sBoolToFloat">
+        <source>"BoolToFloat"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.648878912</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sBoolToFloatDesc" resname="System_Bindings_Consts_sBoolToFloatDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.648878912</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sFloatToBool" resname="System_Bindings_Consts_sFloatToBool">
+        <source>"FloatToBool"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.648878912</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sFloatToBoolDesc" resname="System_Bindings_Consts_sFloatToBoolDesc">
+        <source>""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.648878912</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sBoolOpFail" resname="System_Bindings_Consts_sBoolOpFail">
+        <source>"Don't know how to perform boolean operation on \"%s\" and \"%s\""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.6488790972</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sBoolNegateOpFail" resname="System_Bindings_Consts_sBoolNegateOpFail">
+        <source>"Don't know how to perform boolean negation of \"%s\""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.6488790972</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_Bindings_Consts_sDuplicatedConverterType2" resname="System_Bindings_Consts_sDuplicatedConverterType2">
+        <source>"The converter \"%s\" duplicates coverter \"%s(%s, %s)\""</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.6488790972</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpCertFileOpenError" resname="System_NetConsts_SNetHttpCertFileOpenError">
+        <source>"Error opening certificate file: (%d) %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.6488790972</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SNetHttpCertNotFoundError" resname="System_NetConsts_SNetHttpCertNotFoundError">
+        <source>"Certificate is not found in file: (%d) %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.6488790972</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SMimeValueEmpty" resname="System_NetConsts_SMimeValueEmpty">
+        <source>"Value name cannot be empty"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.6488790972</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_NetConsts_SMimeWeightOutOfRange" resname="System_NetConsts_SMimeWeightOutOfRange">
+        <source>"Quality weight is out of range"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.6488790972</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_SWindowsServer2019" resname="System_RTLConsts_SWindowsServer2019">
+        <source>"Windows Server 2019"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.6488796412</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_SWinRTInstanceError" resname="System_RTLConsts_SWinRTInstanceError">
+        <source>"Cannot create instance of class %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.6488796412</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_SInvalidCharsInFileName" resname="System_RTLConsts_SInvalidCharsInFileName">
+        <source>"Invalid characters in file name"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.6488796412</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_SPathTooLong" resname="System_RTLConsts_SPathTooLong">
+        <source>"The specified path is too long"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.6488796412</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_SysConst_SAggregateException" resname="System_SysConst_SAggregateException">
+        <source>"%d exception(s):"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44566.6488796412</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="uGlobal_SPrintPreviewZoom" resname="uGlobal_SPrintPreviewZoom">
+        <source>"Zoom"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44611.7666046643</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="uGlobal_SHTMLExportStyle" resname="uGlobal_SHTMLExportStyle">
+        <source>"Style"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44611.7666046643</prop>
           <prop prop-type="Status">1</prop>
         </prop-group>
       </trans-unit>

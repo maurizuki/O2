@@ -32,6 +32,7 @@ InfoBeforeFile={#ReadmeDir}\{#ReadmeFile}
 WizardSmallImageFile={#SetupDir}\WizardSmallImage.bmp
 ChangesAssociations=true
 WizardStyle=modern
+UninstallDisplayIcon={app}\{#AppExeFile},0
 
 [Languages]
 Name: en; MessagesFile: compiler:Default.isl

@@ -151,10 +151,6 @@ object MainForm: TMainForm
       object tsNotes: TTabSheet
         Caption = 'Notes'
         ImageIndex = 1
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object Notes: TMemo
           AlignWithMargins = True
           Left = 3
@@ -176,10 +172,6 @@ object MainForm: TMainForm
       object tsRelations: TTabSheet
         Caption = 'Relations'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object RelationsView: TListView
           AlignWithMargins = True
           Left = 3
@@ -215,10 +207,6 @@ object MainForm: TMainForm
       object tsRules: TTabSheet
         Caption = 'Rules'
         ImageIndex = 3
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object RulesView: TListView
           AlignWithMargins = True
           Left = 3
@@ -1043,49 +1031,49 @@ object MainForm: TMainForm
     object WebSite: TAction
       Category = 'Help'
       Caption = 'Web site'
-      Hint = 'http://o2project.sourceforge.net/redir.html?id=home'
+      Hint = 'https://maurizuki.github.io/O2'
       OnExecute = WebExecute
       OnUpdate = ActionUpdate
     end
     object WebProject: TAction
       Category = 'Help'
       Caption = 'Project page'
-      Hint = 'http://o2project.sourceforge.net/redir.html?id=project'
+      Hint = 'https://github.com/maurizuki/O2'
       OnExecute = WebExecute
       OnUpdate = ActionUpdate
     end
     object WebNews: TAction
       Category = 'Help'
       Caption = 'News'
-      Hint = 'http://o2project.sourceforge.net/redir.html?id=news'
+      Hint = 'https://github.com/maurizuki/O2/releases'
       OnExecute = WebExecute
       OnUpdate = ActionUpdate
     end
     object WebDocs: TAction
       Category = 'Help'
       Caption = 'Documentation'
-      Hint = 'http://o2project.sourceforge.net/redir.html?id=docs'
+      Hint = 'https://github.com/maurizuki/O2/wiki'
       OnExecute = WebExecute
       OnUpdate = ActionUpdate
     end
     object WebSupportRequests: TAction
       Category = 'Help'
       Caption = 'Support requests'
-      Hint = 'http://o2project.sourceforge.net/redir.html?id=support-requests'
+      Hint = 'https://github.com/maurizuki/O2/issues'
       OnExecute = WebExecute
       OnUpdate = ActionUpdate
     end
     object WebFeatureRequests: TAction
       Category = 'Help'
       Caption = 'Feature requests'
-      Hint = 'http://o2project.sourceforge.net/redir.html?id=feature-requests'
+      Hint = 'https://github.com/maurizuki/O2/labels/enhancement'
       OnExecute = WebExecute
       OnUpdate = ActionUpdate
     end
     object WebBugTracker: TAction
       Category = 'Help'
       Caption = 'Bug reports'
-      Hint = 'http://o2project.sourceforge.net/redir.html?id=bug-reports'
+      Hint = 'https://github.com/maurizuki/O2/labels/bug'
       OnExecute = WebExecute
       OnUpdate = ActionUpdate
     end
@@ -5037,17 +5025,6 @@ object MainForm: TMainForm
       Action = NewWindow
     end
   end
-  object HTTP: TJvHttpUrlGrabber
-    FileName = 'output.txt'
-    OutputMode = omStream
-    Agent = 'O2'
-    Port = 0
-    ProxyAddresses = 'proxyserver'
-    ProxyIgnoreList = '<local>'
-    OnDoneStream = HTTPDoneStream
-    Left = 392
-    Top = 72
-  end
   object RelationMenu: TPopupMenu
     Left = 136
     Top = 72
@@ -5138,5 +5115,41 @@ object MainForm: TMainForm
     object Invertselection4: TMenuItem
       Action = FindByRuleInvertSelection
     end
+  end
+  object CheckForUpdatesRESTClient: TRESTClient
+    Accept = 'application/vnd.github.v3+json'
+    AcceptCharset = 'utf-8, *;q=0.8'
+    BaseURL = 'https://api.github.com'
+    Params = <>
+    Left = 392
+    Top = 72
+  end
+  object CheckForUpdatesRequest: TRESTRequest
+    AssignedValues = [rvAccept]
+    Accept = 'application/vnd.github.v3+json'
+    Client = CheckForUpdatesRESTClient
+    Params = <
+      item
+        Kind = pkURLSEGMENT
+        Name = 'owner'
+        Options = [poAutoCreated]
+        Value = 'maurizuki'
+      end
+      item
+        Kind = pkURLSEGMENT
+        Name = 'repo'
+        Options = [poAutoCreated]
+        Value = 'O2'
+      end>
+    Resource = 'repos/{owner}/{repo}/releases/latest'
+    Response = CheckForUpdatesResponse
+    SynchronizedEvents = False
+    Left = 424
+    Top = 72
+  end
+  object CheckForUpdatesResponse: TRESTResponse
+    ContentType = 'application/json'
+    Left = 456
+    Top = 72
   end
 end
