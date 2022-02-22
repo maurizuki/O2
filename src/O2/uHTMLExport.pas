@@ -69,6 +69,7 @@ type
     procedure OptionExecute(Sender: TObject);
     procedure StyleExecute(Sender: TObject);
     procedure StyleUpdate(Sender: TObject);
+    procedure ExportDialogCanClose(Sender: TObject; var CanClose: Boolean);
   private
     FFileName: string;
     FTitle: string;
@@ -105,7 +106,8 @@ var
 implementation
 
 uses
-  System.Generics.Collections, JclFileUtils, uGlobal, uAppFiles, uStuffHTML;
+  System.Generics.Collections, JclFileUtils, uGlobal, uAppFiles, uStuffHTML,
+  uUtils;
 
 {$R *.dfm}
 
@@ -471,6 +473,13 @@ end;
 procedure THTMLExport.StyleUpdate(Sender: TObject);
 begin
   TAction(Sender).Checked := StyleIndex = TComponent(Sender).Tag;
+end;
+
+procedure THTMLExport.ExportDialogCanClose(Sender: TObject;
+  var CanClose: Boolean);
+begin
+  CanClose := not FileExists(ExportDialog.FileName)
+    or YesNoBox(SFileOverwriteQuery);
 end;
 
 end.

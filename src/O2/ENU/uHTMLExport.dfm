@@ -1251,6 +1251,7 @@ object HTMLExport: THTMLExport
   object ExportDialog: TSaveDialog
     DefaultExt = 'html'
     Filter = 'HTML file|*.html;*.htm'
+    OnCanClose = ExportDialogCanClose
     Left = 208
     Top = 48
   end

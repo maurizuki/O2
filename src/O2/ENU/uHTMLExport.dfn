@@ -5,10 +5,10 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">44611.7598611111</prop>
-        <prop prop-type="OrigDateTime">44611.7558564815</prop>
+        <prop prop-type="SelfDateTime">44614.7569212963</prop>
+        <prop prop-type="OrigDateTime">44614.7556018519</prop>
         <prop prop-type="XlatDateTime">41181.3969444444</prop>
-        <prop prop-type="Translated">266</prop>
+        <prop prop-type="Translated">267</prop>
         <prop prop-type="UnTranslated">0</prop>
       </prop-group>
     </header>
@@ -2734,12 +2734,22 @@
           <prop prop-type="Localize">1</prop>
         </prop-group>
       </trans-unit>
+      <trans-unit id="O:HTMLExport.O:ExportDialog.OnCanClose" resname="O:HTMLExport.O:ExportDialog.OnCanClose">
+        <source>ExportDialogCanClose</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44614.756575463</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">253</prop>
+          <prop prop-type="Type">TSaveDialog</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
       <trans-unit id="O:HTMLExport.O:ExportDialog.Left" resname="O:HTMLExport.O:ExportDialog.Left">
         <source>208</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40608.4483843287</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">253</prop>
+          <prop prop-type="Order">254</prop>
           <prop prop-type="Type">TSaveDialog</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
@@ -2756,7 +2766,7 @@
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40608.4483843287</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">254</prop>
+          <prop prop-type="Order">255</prop>
           <prop prop-type="Type">TSaveDialog</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
@@ -2766,7 +2776,7 @@
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44611.7585088773</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">255</prop>
+          <prop prop-type="Order">256</prop>
           <prop prop-type="Type">TPopupMenu</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
@@ -2776,7 +2786,7 @@
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44611.7585088773</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">256</prop>
+          <prop prop-type="Order">257</prop>
           <prop prop-type="Type">TPopupMenu</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
@@ -2786,7 +2796,7 @@
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44611.7585088773</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">257</prop>
+          <prop prop-type="Order">258</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
@@ -2796,7 +2806,7 @@
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44611.7585088773</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">258</prop>
+          <prop prop-type="Order">259</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
@@ -2806,7 +2816,7 @@
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44611.7585088773</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">259</prop>
+          <prop prop-type="Order">260</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
@@ -2816,7 +2826,7 @@
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44611.7585088773</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">260</prop>
+          <prop prop-type="Order">261</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
@@ -2826,7 +2836,7 @@
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44611.7585088773</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">261</prop>
+          <prop prop-type="Order">262</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
@@ -2836,7 +2846,7 @@
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44611.7585088773</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">262</prop>
+          <prop prop-type="Order">263</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
@@ -2846,7 +2856,7 @@
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44611.7585088773</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">263</prop>
+          <prop prop-type="Order">264</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
@@ -2856,7 +2866,7 @@
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44611.7585088773</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">264</prop>
+          <prop prop-type="Order">265</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
@@ -2866,7 +2876,7 @@
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44611.7585088773</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">265</prop>
+          <prop prop-type="Order">266</prop>
           <prop prop-type="Type">TMenuItem</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
