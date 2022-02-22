@@ -120,7 +120,7 @@ const
   Palettes: array [0..2] of TDefaultStylePalette = (
     ( LinkColor: '#0d6efd'; BorderColor: '#9ec5fe'; AltBgColor: '#f4f8ff' ),
     ( LinkColor: '#a1952e'; BorderColor: '#d5e3c0'; AltBgColor: '#f1f6ea' ),
-    ( LinkColor: '#c3829e'; BorderColor: '#fcc9b9'; AltBgColor: '#fffaf8' )
+    ( LinkColor: '#c3829e'; BorderColor: '#fcc9b9'; AltBgColor: '#fff5f2' )
   );
 
 function EncodeHTML(const S: string): string;
