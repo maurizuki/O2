@@ -15,6 +15,12 @@ In order to start to use O2, please read the [*Getting started* section of the w
 
 ## Change log
 
+### Version 2.2.5
+-	Export to HTML: new page style in three flavors.
+- Check for updates: integration with the GitHub REST API.
+- Minor improvements.
+- Developed with Embarcadero® Delphi 10.4.
+
 ### Version 2.2.4
 - Fixed: the selections of the search options "Find by tag" and "Find by rule" aren't initialized opening another file.
 
