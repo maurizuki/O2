@@ -28,19 +28,20 @@
 			<Options Name="Evidence"></Options>
 			<Options Name="KeyFile"></Options>
 			<Options Name="KeyName"></Options>
-		</Options>  <FileList>
-      <File FileName="uAbout.dfm" ContainerId="W32Form" ModuleName="uAbout.dfm"/>
-      <File FileName="uFilePropsDlg.dfm" ContainerId="W32Form" ModuleName="uFilePropsDlg.dfm"/>
-      <File FileName="uGetPassword.dfm" ContainerId="W32Form" ModuleName="uGetPassword.dfm"/>
-      <File FileName="uMain.dfm" ContainerId="W32Form" ModuleName="uMain.dfm"/>
-      <File FileName="uObjPropsDlg.dfm" ContainerId="W32Form" ModuleName="uObjPropsDlg.dfm"/>
-      <File FileName="uPrintPreview.dfm" ContainerId="W32Form" ModuleName="uPrintPreview.dfm"/>
-      <File FileName="uRelationPropsDlg.dfm" ContainerId="W32Form" ModuleName="uRelationPropsDlg.dfm"/>
-      <File FileName="uReplaceDlg.dfm" ContainerId="W32Form" ModuleName="uReplaceDlg.dfm"/>
-      <File FileName="uRulePropsDlg.dfm" ContainerId="W32Form" ModuleName="uRulePropsDlg.dfm"/>
-      <File FileName="uSetPassword.dfm" ContainerId="W32Form" ModuleName="uSetPassword.dfm"/>
-      <File FileName="o2_DRC.rc" ContainerId="W32RC" ModuleName="o2_DRC.rc"/>
-      <File FileName="uHTMLExport.dfm" ContainerId="W32Form" ModuleName="uHTMLExport.dfm"/>
-    </FileList>
-  </W32ResourceDLL.Personality>
+		</Options>
+		<FileList>
+			<File FileName="uAbout.dfm" ContainerId="W32Form" ModuleName="uAbout.dfm"/>
+			<File FileName="uFilePropsDlg.dfm" ContainerId="W32Form" ModuleName="uFilePropsDlg.dfm"/>
+			<File FileName="uGetPassword.dfm" ContainerId="W32Form" ModuleName="uGetPassword.dfm"/>
+			<File FileName="uMain.dfm" ContainerId="W32Form" ModuleName="uMain.dfm"/>
+			<File FileName="uObjPropsDlg.dfm" ContainerId="W32Form" ModuleName="uObjPropsDlg.dfm"/>
+			<File FileName="uPrintPreview.dfm" ContainerId="W32Form" ModuleName="uPrintPreview.dfm"/>
+			<File FileName="uRelationPropsDlg.dfm" ContainerId="W32Form" ModuleName="uRelationPropsDlg.dfm"/>
+			<File FileName="uReplaceDlg.dfm" ContainerId="W32Form" ModuleName="uReplaceDlg.dfm"/>
+			<File FileName="uRulePropsDlg.dfm" ContainerId="W32Form" ModuleName="uRulePropsDlg.dfm"/>
+			<File FileName="uSetPassword.dfm" ContainerId="W32Form" ModuleName="uSetPassword.dfm"/>
+			<File FileName="o2_DRC.rc" ContainerId="W32RC" ModuleName="o2_DRC.rc"/>
+			<File FileName="uHTMLExport.dfm" ContainerId="W32Form" ModuleName="uHTMLExport.dfm"/>
+		</FileList>
+	</W32ResourceDLL.Personality>
 </BorlandProject>
