@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript">
+let locations = {
+	"home":				"https://maurizuki.github.io/O2",
+	"project":			"https://github.com/maurizuki/O2",
+	"news":				"https://github.com/maurizuki/O2/releases",
+	"news-rss":			"https://sourceforge.net/p/o2project/news/feed.rss",
+	"news-atom":		"https://sourceforge.net/p/o2project/news/feed.atom",
+	"support":			"https://github.com/maurizuki/O2/issues",
+	"docs":				"https://github.com/maurizuki/O2/wiki",
+	"support-requests":	"https://github.com/maurizuki/O2/issues",
+	"feature-requests":	"https://github.com/maurizuki/O2/labels/enhancement",
+	"bug-reports":		"https://github.com/maurizuki/O2/labels/bug",
+	"code":				"https://github.com/maurizuki/O2",
+	"files":			"https://github.com/maurizuki/O2/releases",
+	"current":			"https://github.com/maurizuki/O2/releases/latest",
+	"current-portable":	"https://github.com/maurizuki/O2/releases/latest",
+	"contact":			"https://github.com/maurizuki"
+};
+let params = new URLSearchParams(window.location.search);
+let to = locations[params.get("id")];
+window.location = to || "https://http.cat/404";
+</script>
+<noscript>JavaScript is disabled or is not supported by the browser.</noscript>
+</head>
+</html>
