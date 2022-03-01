@@ -1,5 +1,3 @@
-#expr Exec(AddBackslash(SourcePath) + "preprocess.bat")
-
 #define AppName "O2"
 #define AppVersion GetFileProductVersion("..\src\O2\O2.exe")
 #define Copyright "(C) 2004-2022 Maurizio Basaglia. All rights reserved."
