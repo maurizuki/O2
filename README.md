@@ -1,6 +1,7 @@
 # O2
 
 [![release](https://img.shields.io/github/v/release/maurizuki/O2)](https://github.com/maurizuki/O2/releases/latest)
+[![release date](https://img.shields.io/github/release-date/maurizuki/O2)](https://github.com/maurizuki/O2/releases/latest)
 [![issues](https://img.shields.io/github/issues/maurizuki/O2)](https://github.com/maurizuki/O2/issues)
 [![sourceforge.net downloads](https://img.shields.io/sourceforge/dt/o2project?logo=sourceforge)](https://github.com/maurizuki/O2/releases/latest)
 [![github downloads](https://img.shields.io/github/downloads/maurizuki/O2/total?logo=github)](https://github.com/maurizuki/O2/releases/latest)
