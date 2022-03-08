@@ -253,8 +253,8 @@ begin
       if IncludeRelations.Checked then AppendRelationList(SB, Objects[I]);
 
       if IncludeNotes.Checked and (Objects[I].Text.Count > 0) then
-        SB.Append('<div class="notes">')
-          .Append(TextToHTML(Objects[I].Text)).Append('</div>');
+        SB.Append('<div class="notes"><pre>')
+          .Append(TextToHTML(Objects[I].Text)).Append('</pre></div>');
 
       SB.Append('</div>');
     end;

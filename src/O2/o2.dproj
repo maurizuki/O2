@@ -87,8 +87,8 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_DependencyCheckOutputName>o2.exe</DCC_DependencyCheckOutputName>
         <SanitizedProjectName>o2</SanitizedProjectName>
-        <VerInfo_Build>477</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.2.5.477;InternalName=O2;LegalCopyright=(C) 2004-2022 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.2.5;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
+        <VerInfo_Build>478</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.2.5.478;InternalName=O2;LegalCopyright=(C) 2004-2022 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.2.5;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_Release>5</VerInfo_Release>
     </PropertyGroup>
