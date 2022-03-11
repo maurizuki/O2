@@ -22,18 +22,17 @@ object RulePropsDlg: TRulePropsDlg
   TextHeight = 13
   object btOk: TButton
     Left = 199
-    Top = 394
+    Top = 397
     Width = 75
     Height = 25
     Action = OK
     Anchors = [akRight, akBottom]
     Default = True
     TabOrder = 1
-    ExplicitLeft = 209
   end
   object btCancel: TButton
     Left = 280
-    Top = 395
+    Top = 397
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -41,7 +40,6 @@ object RulePropsDlg: TRulePropsDlg
     Caption = 'Cancel'
     ModalResult = 2
     TabOrder = 2
-    ExplicitLeft = 290
   end
   object PageControl1: TPageControl
     Left = 6
@@ -51,13 +49,8 @@ object RulePropsDlg: TRulePropsDlg
     ActivePage = tsGeneral
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 0
-    ExplicitWidth = 359
     object tsGeneral: TTabSheet
       Caption = 'General'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 348
-      ExplicitHeight = 0
       object Label1: TLabel
         Left = 8
         Top = 12
@@ -136,10 +129,6 @@ object RulePropsDlg: TRulePropsDlg
     object tsDisplay: TTabSheet
       Caption = 'Display'
       ImageIndex = 5
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 348
-      ExplicitHeight = 0
       object Label12: TLabel
         Left = 8
         Top = 12
@@ -169,10 +158,6 @@ object RulePropsDlg: TRulePropsDlg
     object tsHyperLink: TTabSheet
       Caption = 'Internet link'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 348
-      ExplicitHeight = 0
       object Label7: TLabel
         Left = 8
         Top = 12
@@ -202,10 +187,6 @@ object RulePropsDlg: TRulePropsDlg
     object tsDateFormat: TTabSheet
       Caption = 'Date format'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 348
-      ExplicitHeight = 0
       object Label8: TLabel
         Left = 8
         Top = 12
@@ -241,10 +222,6 @@ object RulePropsDlg: TRulePropsDlg
     object tsCustomFilter: TTabSheet
       Caption = 'Custom interval'
       ImageIndex = 4
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 348
-      ExplicitHeight = 0
       object Label10: TLabel
         Left = 8
         Top = 12
@@ -283,10 +260,6 @@ object RulePropsDlg: TRulePropsDlg
     object tsHighlight: TTabSheet
       Caption = 'Highlight'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 348
-      ExplicitHeight = 0
       object Label5: TLabel
         Left = 8
         Top = 12

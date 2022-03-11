@@ -24,6 +24,12 @@ uses
   System.Actions;
 
 type
+  TStringBuilderHelper = class helper for TStringBuilder
+  public
+    function AppendHTML(const S: string): TStringBuilder; overload;
+    function AppendHTML(const Lines: TStrings): TStringBuilder; overload;
+  end;
+
   TExportToHTMLOption = (xoIncludeIndex, xoIncludeTags, xoIncludeNotes,
     xoIncludeRelations, xoIncludePasswords);
   TExportToHTMLOptions = set of TExportToHTMLOption;
@@ -132,13 +138,20 @@ begin
   Result := StringReplace(Result, '>', '&gt;', [rfReplaceAll]);
 end;
 
-function TextToHTML(const Text: TStrings): string;
+{ TStringBuilderHelper }
+
+function TStringBuilderHelper.AppendHTML(const S: string): TStringBuilder;
+begin
+  Result := Self.Append(EncodeHTML(S));
+end;
+
+function TStringBuilderHelper.AppendHTML(const Lines: TStrings): TStringBuilder;
 var
   S: string;
 begin
-  Result := '';
-  for S in Text do
-    Result := Result + EncodeHTML(S) + '<br>';
+  Self.Append('<pre>');
+  for S in Lines do Self.Append(EncodeHTML(S)).Append('<br>');
+  Result := Self.Append('</pre>');
 end;
 
 { THTMLExport }
@@ -225,8 +238,8 @@ begin
     else
       SB.Append('<li class="alt-bg">');
 
-    SB.AppendFormat('<a href="#%d">%s</a>',
-      [Objects[I].Index, EncodeHTML(Objects[I].Name)]);
+    SB.AppendFormat('<a href="#%d">', [Objects[I].Index])
+      .AppendHTML(Objects[I].Name).Append('</a>');
 
     SB.Append('</li>');
   end;
@@ -244,7 +257,7 @@ begin
     begin
       SB.AppendFormat('<a name="%d"></a>', [Objects[I].Index])
         .Append('<div class="object-item"><h2>')
-        .Append(EncodeHTML(Objects[I].Name)).Append('</h2>');
+        .AppendHTML(Objects[I].Name).Append('</h2>');
 
       if IncludeTags.Checked then AppendTagList(SB, Objects[I]);
 
@@ -253,8 +266,8 @@ begin
       if IncludeRelations.Checked then AppendRelationList(SB, Objects[I]);
 
       if IncludeNotes.Checked and (Objects[I].Text.Count > 0) then
-        SB.Append('<div class="notes"><pre>')
-          .Append(TextToHTML(Objects[I].Text)).Append('</pre></div>');
+        SB.Append('<div class="notes">')
+          .AppendHTML(Objects[I].Text).Append('</div>');
 
       SB.Append('</div>');
     end;
@@ -278,7 +291,7 @@ begin
 
       for ATag in Tags do
         SB.Append('<div class="tag-item">')
-          .Append(EncodeHTML(ATag)).Append('</div>');
+          .AppendHTML(ATag).Append('</div>');
 
       SB.Append('</div>');
     end;
@@ -314,22 +327,21 @@ begin
           SB.Append('<div class="field-item alt-bg">');
 
         SB.Append('<div class="field-name">')
-          .Append(EncodeHTML(Fields[I].FieldName)).Append('</div>');
+          .AppendHTML(Fields[I].FieldName).Append('</div>');
 
         SB.Append('<div class="field-value">');
         ARule := O2File.Rules.FindFirstRule(Fields[I], [rtHyperLink, rtEmail]);
         if Assigned(ARule) then
           case ARule.RuleType of
             rtHyperLink:
-              SB.AppendFormat('<a href="%s">%s</a>',
-                [ARule.GetHyperLink(Fields[I]),
-                EncodeHTML(Fields[I].FieldValue)]);
+              SB.AppendFormat('<a href="%s">', [ARule.GetHyperLink(Fields[I])])
+                .AppendHTML(Fields[I].FieldValue).Append('</a>');
             rtEmail:
-              SB.AppendFormat('<a href="mailto:%s">%s</a>',
-                [Fields[I].FieldValue, EncodeHTML(Fields[I].FieldValue)]);
+              SB.AppendFormat('<a href="mailto:%s">', [Fields[I].FieldValue])
+                .AppendHTML(Fields[I].FieldValue).Append('</a>');
           end
         else
-          SB.Append(EncodeHTML(Fields[I].FieldValue));
+          SB.AppendHTML(Fields[I].FieldValue);
         SB.Append('</div>');
 
         SB.Append('</div>');
@@ -365,10 +377,10 @@ begin
 
           SB.Append('<div class="relation-object">')
             .AppendFormat('<a href="#%d">', [AObjRelations[I].Obj.Index])
-            .Append(EncodeHTML(AObjRelations[I].Obj.Name)).Append('</a></div>');
+            .AppendHTML(AObjRelations[I].Obj.Name).Append('</a></div>');
 
           SB.Append('<div class="relation-role">')
-            .Append(EncodeHTML(AObjRelations[I].Role)).Append('</div>');
+            .AppendHTML(AObjRelations[I].Role).Append('</div>');
 
           SB.Append('</div>');
         end;
@@ -407,10 +419,10 @@ begin
         .AppendLine('<style>')
         .AppendLine(DefaultStyle.ExpandMacros)
         .AppendLine('</style>')
-        .Append('<title>').Append(EncodeHTML(Title)).AppendLine('</title>')
+        .Append('<title>').AppendHTML(Title).AppendLine('</title>')
         .AppendLine('</head>')
         .Append('<body><div class="container">')
-        .Append('<h1>').Append(EncodeHTML(Title)).Append('</h1>');
+        .Append('<h1>').AppendHTML(Title).Append('</h1>');
 
       if IncludeIndex.Checked then AppendObjectIndex(SB);
 
