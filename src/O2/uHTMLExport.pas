@@ -25,6 +25,8 @@ uses
 
 type
   TStringBuilderHelper = class helper for TStringBuilder
+  private
+    class function EncodeHTML(const S: string): string;
   public
     function AppendHTML(const S: string): TStringBuilder; overload;
     function AppendHTML(const Lines: TStrings): TStringBuilder; overload;
@@ -131,14 +133,14 @@ const
     ( LinkColor: '#c3829e'; BorderColor: '#fcc9b9'; AltBgColor: '#fff5f2' )
   );
 
-function EncodeHTML(const S: string): string;
+{ TStringBuilderHelper }
+
+class function TStringBuilderHelper.EncodeHTML(const S: string): string;
 begin
   Result := StringReplace(S, '&', '&amp;', [rfReplaceAll]);
   Result := StringReplace(Result, '<', '&lt;', [rfReplaceAll]);
   Result := StringReplace(Result, '>', '&gt;', [rfReplaceAll]);
 end;
-
-{ TStringBuilderHelper }
 
 function TStringBuilderHelper.AppendHTML(const S: string): TStringBuilder;
 begin

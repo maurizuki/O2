@@ -77,8 +77,6 @@ procedure LVSelectItemsByData(const LV: TListView; const List: TList);
 procedure LVResizeColumns(const LV: TListView); overload;
 procedure LVResizeColumns(const LV: TListView; ColumnIndex: Integer); overload;
 
-procedure DropDownMenu(AControl: TControl; APopupMenu: TPopupMenu);
-
 function GetFileSize(const FileName: string): Integer;
 
 function GetLanguageName(LangId: Word): string;
@@ -209,14 +207,6 @@ begin
     if I <> ColumnIndex then
       Dec(Width, SendMessage(LV.Handle, LVM_GETCOLUMNWIDTH, I, 0));
   TListColumn(LV.Columns[ColumnIndex]).Width := Width;
-end;
-
-procedure DropDownMenu(AControl: TControl; APopupMenu: TPopupMenu);
-var
-  P: TPoint;
-begin
-  with AControl do P := Parent.ClientToScreen(Point(Left, Top + Height));
-  APopupMenu.Popup(P.X, P.Y);
 end;
 
 function GetFileSize(const FileName: string): Integer;
