@@ -625,7 +625,7 @@ uses
   uAppFiles, uUtils, uShellUtils, uPAFConsts, uAbout, uGetPassword,
   uSetPassword, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
   uReplaceDlg, uPrintPreview, uHTMLExport, uXmlStorage, uO2Xml, uO2Defs,
-  uBrowserEmulation;
+  uBrowserEmulation, uCtrlHelpers;
 
 {$R *.dfm}
 
@@ -2057,22 +2057,22 @@ end;
 
 procedure TMainForm.ResizeObjectsViewColumns;
 begin
-  LVResizeColumns(ObjectsView, 1);
+  ObjectsView.ResizeColumns(1);
 end;
 
 procedure TMainForm.ResizeFieldsViewColumns;
 begin
-  LVResizeColumns(FieldsView, 1);
+  FieldsView.ResizeColumns(1);
 end;
 
 procedure TMainForm.ResizeRelationsViewColumns;
 begin
-  LVResizeColumns(RelationsView, 0);
+  RelationsView.ResizeColumns(0);
 end;
 
 procedure TMainForm.ResizeRulesViewColumns;
 begin
-  LVResizeColumns(RulesView);
+  RulesView.ResizeColumns;
 end;
 
 procedure TMainForm.UpdateObjectsView;
@@ -2145,7 +2145,7 @@ begin
 end;
 
 begin
-  Selection := LVListSelectedItemsData(ObjectsView);
+  Selection := ObjectsView.ListSelectedItemsData;
   try
     UseParams := False;
     if FindByEvent.ItemIndex <> -1 then
@@ -2230,7 +2230,7 @@ begin
       ObjectsView.AlphaSort;
 
       ResizeObjectsViewColumns;
-      LVSelectItemsByData(ObjectsView, Selection);
+      ObjectsView.SelectItemsByData(Selection);
     finally
       ObjectsView.Items.EndUpdate;
     end;
@@ -2244,7 +2244,7 @@ var
   AField: TO2Field;
   Selection: TList;
 begin
-  Selection := LVListSelectedItemsData(FieldsView);
+  Selection := FieldsView.ListSelectedItemsData;
   try
     FieldsView.Items.BeginUpdate;
     try
@@ -2253,7 +2253,7 @@ begin
         for AField in TO2Object(ObjectsView.Selected.Data).Fields do
           FieldToListItem(AField, nil);
       ResizeFieldsViewColumns;
-      LVSelectItemsByData(FieldsView, Selection);
+      FieldsView.SelectItemsByData(Selection);
     finally
       FieldsView.Items.EndUpdate;
     end;
@@ -2283,7 +2283,7 @@ var
   ObjRelations: TO2ObjRelations;
   Selection: TList;
 begin
-  Selection := LVListSelectedItemsData(RelationsView);
+  Selection := RelationsView.ListSelectedItemsData;
   try
     RelationsView.Items.BeginUpdate;
     try
@@ -2300,7 +2300,7 @@ begin
         end;
       end;
       ResizeRelationsViewColumns;
-      LVSelectItemsByData(RelationsView, Selection);
+      RelationsView.SelectItemsByData(Selection);
     finally
       RelationsView.Items.EndUpdate;
     end;
@@ -2314,14 +2314,14 @@ var
   ARule: TO2Rule;
   Selection: TList;
 begin
-  Selection := LVListSelectedItemsData(RulesView);
+  Selection := RulesView.ListSelectedItemsData;
   try
     RulesView.Items.BeginUpdate;
     try
       RulesView.Clear;
       for ARule in O2File.Rules do RuleToListItem(ARule, nil);
       ResizeRulesViewColumns;
-      LVSelectItemsByData(RulesView, Selection);
+      RulesView.SelectItemsByData(Selection);
       if Assigned(RulesView.Selected) then
       begin
         RulesView.Selected.Focused := True;
@@ -2719,7 +2719,7 @@ procedure TMainForm.DeleteObjectExecute(Sender: TObject);
 begin
   if YesNoBox(SDeleteObjectsQuery) then
   begin
-    LVFreeSelectedItemsData(ObjectsView);
+    ObjectsView.FreeSelectedItemsData;
     ObjectsView.DeleteSelected;
   end;
 end;
@@ -2741,7 +2741,7 @@ end;
 
 procedure TMainForm.InvertSelectionExecute(Sender: TObject);
 begin
-  LVInvertSelection(ObjectsView);
+  ObjectsView.InvertSelection;
 end;
 
 procedure TMainForm.ObjectTagsExecute(Sender: TObject);
@@ -3166,7 +3166,7 @@ procedure TMainForm.DeleteRelationExecute(Sender: TObject);
 begin
   if YesNoBox(SDeleteRelationQuery) then
   begin
-    LVFreeSelectedItemsData(RelationsView);
+    RelationsView.FreeSelectedItemsData;
     RelationsView.DeleteSelected;
   end;
 end;
@@ -3268,7 +3268,7 @@ procedure TMainForm.DeleteRuleExecute(Sender: TObject);
 begin
   if YesNoBox(SDeleteRuleQuery) then
   begin
-    LVFreeSelectedItemsData(RulesView);
+    RulesView.FreeSelectedItemsData;
     RulesView.DeleteSelected;
     NotifyChanges([ncObjects, ncRuleList]);
   end;
@@ -3320,7 +3320,7 @@ end;
 
 procedure TMainForm.InvertRulesSelectionExecute(Sender: TObject);
 begin
-  LVInvertSelection(RulesView);
+  RulesView.InvertSelection;
 end;
 
 procedure TMainForm.RulePropsExecute(Sender: TObject);
