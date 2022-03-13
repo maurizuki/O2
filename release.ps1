@@ -8,7 +8,7 @@ upx --compress-icons=0 $AppExeFilePath
 
 # Build the installer file
 
-iscc.exe $SetupScriptFilePath
+iscc $SetupScriptFilePath
 
 # Generate the version information file
 
