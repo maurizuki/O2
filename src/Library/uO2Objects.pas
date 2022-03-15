@@ -18,7 +18,7 @@ unit uO2Objects;
 interface
 
 uses
-  Classes, Contnrs, SysUtils, System.Types, uO2Classes;
+  Classes, Contnrs, SysUtils, Types, System.Generics.Collections, uO2Classes;
 
 type
   TO2Field = class(TO2CollectionItem)
@@ -109,26 +109,9 @@ type
     property Objects[Index: Integer]: TO2Object read GetObjects; default;
   end;
 
-  TO2ObjectListEnumerator = class(TListEnumerator)
-  public
-    function GetCurrent: TO2Object;
-    property Current: TO2Object read GetCurrent;
-  end;
-
-  TO2ObjectList = class(TObjectList)
-  private
-    function GetItem(Index: Integer): TO2Object;
-    procedure SetItem(Index: Integer; AObject: TO2Object);
+  TO2ObjectList = class(TObjectList<TO2Object>)
   public
     constructor Create;
-    function Add(AObject: TO2Object): Integer;
-    function Extract(AObject: TO2Object): TO2Object;
-    function Remove(AObject: TO2Object): Integer;
-    function GetEnumerator: TO2ObjectListEnumerator;
-    function IndexOf(AObject: TO2Object): Integer;
-    procedure Insert(Index: Integer; AObject: TO2Object);
-    function First: TO2Object;
-    function Last: TO2Object;
     procedure GetFieldNames(const List: TStrings);
     procedure GetTags(const List: TStrings);
     procedure AddTag(const Tag: string);
@@ -136,8 +119,6 @@ type
     function ReplaceFieldName(const FieldName, NewFieldName: string): Integer;
     procedure ReplaceFieldValue(const FieldName, NewFieldValue: string);
     procedure ReplaceTag(const Tag, NewTag: string);
-    property Items[Index: Integer]: TO2Object
-      read GetItem write SetItem; default;
   end;
 
 implementation
@@ -579,68 +560,11 @@ begin
   end;
 end;
 
-{ TO2ObjectListEnumerator }
-
-function TO2ObjectListEnumerator.GetCurrent: TO2Object;
-begin
-  Result := inherited GetCurrent;
-end;
-
 { TO2ObjectList }
 
 constructor TO2ObjectList.Create;
 begin
   inherited Create(False);
-end;
-
-function TO2ObjectList.GetItem(Index: Integer): TO2Object;
-begin
-  Result := TO2Object(inherited Items[Index]);
-end;
-
-procedure TO2ObjectList.SetItem(Index: Integer; AObject: TO2Object);
-begin
-  inherited Items[Index] := AObject;
-end;
-
-function TO2ObjectList.Add(AObject: TO2Object): Integer;
-begin
-  Result := inherited Add(AObject);
-end;
-
-function TO2ObjectList.Extract(AObject: TO2Object): TO2Object;
-begin
-  Result := TO2Object(inherited Extract(AObject));
-end;
-
-function TO2ObjectList.Remove(AObject: TO2Object): Integer;
-begin
-  Result := inherited Remove(AObject);
-end;
-
-function TO2ObjectList.GetEnumerator: TO2ObjectListEnumerator;
-begin
-  Result := TO2ObjectListEnumerator.Create(Self);
-end;
-
-function TO2ObjectList.IndexOf(AObject: TO2Object): Integer;
-begin
-  Result := inherited IndexOf(AObject);
-end;
-
-procedure TO2ObjectList.Insert(Index: Integer; AObject: TO2Object);
-begin
-  inherited Insert(Index, AObject);
-end;
-
-function TO2ObjectList.First: TO2Object;
-begin
-  Result := TO2Object(inherited First);
-end;
-
-function TO2ObjectList.Last: TO2Object;
-begin
-  Result := TO2Object(inherited Last);
 end;
 
 procedure TO2ObjectList.GetFieldNames(const List: TStrings);

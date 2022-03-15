@@ -21,7 +21,7 @@ uses
   Classes;
 
 type
-  TAppFile = class(TObject)
+  TAppFile = class
   private
     FFileName: string;
     FPath: string;
@@ -56,7 +56,7 @@ type
     property OnGetData: TGetDataEvent read FOnGetData write FOnGetData;
   end;
 
-  TAppFiles = class(TObject)
+  TAppFiles = class
   private
     FFiles: TStrings;
     function GetFiles(IndexOrName: Variant): TAppFile;

@@ -21,7 +21,7 @@ uses
   Classes, System.Generics.Collections;
 
 type
-  TMRUItem = class(TObject)
+  TMRUItem = class
   private
     FItem: string;
     FCount: Integer;
