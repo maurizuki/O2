@@ -87,10 +87,10 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_DependencyCheckOutputName>o2.exe</DCC_DependencyCheckOutputName>
         <SanitizedProjectName>o2</SanitizedProjectName>
-        <VerInfo_Build>481</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.2.5.481;InternalName=O2;LegalCopyright=(C) 2004-2022 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.2.5;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
+        <VerInfo_Build>482</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.2.6.482;InternalName=O2;LegalCopyright=(C) 2004-2022 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.2.6;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
-        <VerInfo_Release>5</VerInfo_Release>
+        <VerInfo_Release>6</VerInfo_Release>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <Version>7.0</Version>
@@ -103,8 +103,8 @@
         <VerInfo_Debug>true</VerInfo_Debug>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_Build>462</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.2.5.462;InternalName=O2;LegalCopyright=(C) 2004-2022 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.2.5;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
-        <VerInfo_Release>5</VerInfo_Release>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.2.6.462;InternalName=O2;LegalCopyright=(C) 2004-2022 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.2.6;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
+        <VerInfo_Release>6</VerInfo_Release>
     </PropertyGroup>
     <ProjectExtensions>
         <Borland.Personality>Delphi.Personality.12</Borland.Personality>
