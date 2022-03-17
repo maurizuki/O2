@@ -18,10 +18,10 @@ unit uMRUList;
 interface
 
 uses
-  Classes, Contnrs;
+  Classes, System.Generics.Collections;
 
 type
-  TMRUItem = class(TObject)
+  TMRUItem = class
   private
     FItem: string;
     FCount: Integer;
@@ -31,21 +31,9 @@ type
     property Count: Integer read FCount write FCount;
   end;
 
-  TMRUListEnumerator = class(TListEnumerator)
-  public
-    function GetCurrent: TMRUItem;
-    property Current: TMRUItem read GetCurrent;
-  end;
-
-  TMRUList = class(TObjectList)
-  private
-    function GetItem(Index: Integer): TMRUItem;
-    procedure SetItem(Index: Integer; AObject: TMRUItem);
+  TMRUList = class(TObjectList<TMRUItem>)
   public
     function AddItem(Item: string): Integer;
-    function GetEnumerator: TMRUListEnumerator;
-    property Items[Index: Integer]: TMRUItem
-      read GetItem write SetItem; default;
   end;
 
 implementation
@@ -61,24 +49,7 @@ begin
   FCount := ACount;
 end;
 
-{ TMRUListEnumerator }
-
-function TMRUListEnumerator.GetCurrent: TMRUItem;
-begin
-  Result := inherited GetCurrent;
-end;
-
 { TMRUList }
-
-function TMRUList.GetItem(Index: Integer): TMRUItem;
-begin
-  Result := TMRUItem(inherited Items[Index]);
-end;
-
-procedure TMRUList.SetItem(Index: Integer; AObject: TMRUItem);
-begin
-  inherited Items[Index] := AObject;
-end;
 
 function TMRUList.AddItem(Item: string): Integer;
 var
@@ -101,11 +72,6 @@ begin
     Move(Result, Pred(Result));
     Dec(Result);
   end;
-end;
-
-function TMRUList.GetEnumerator: TMRUListEnumerator;
-begin
-  Result := TMRUListEnumerator.Create(Self);
 end;
 
 end.

@@ -33,10 +33,6 @@ object ObjPropsDlg: TObjPropsDlg
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Generale'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       DesignSize = (
         341
         344)
@@ -109,10 +105,6 @@ object ObjPropsDlg: TObjPropsDlg
     object TabSheet2: TTabSheet
       Caption = 'Campi'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       DesignSize = (
         341
         344)
@@ -222,10 +214,6 @@ object ObjPropsDlg: TObjPropsDlg
     object TabSheet3: TTabSheet
       Caption = 'Note'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       DesignSize = (
         341
         344)

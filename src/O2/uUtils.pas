@@ -18,7 +18,7 @@ unit uUtils;
 interface
 
 uses
-  Classes, Types, Controls, ComCtrls, Menus, System.JSON;
+  Classes, Types, JSON;
 
 type
   TAppVersion = class(TPersistent)
@@ -70,15 +70,6 @@ function YesNoWarningBox(const Text: string): Boolean; inline;
 function YesNoCancelBox(const Text: string): Integer; inline;
 function AbortRetryIgnoreBox(const Text: string): Integer; inline;
 
-procedure LVInvertSelection(const LV: TListView);
-procedure LVFreeSelectedItemsData(const LV: TListView);
-function LVListSelectedItemsData(const LV: TListView): TList;
-procedure LVSelectItemsByData(const LV: TListView; const List: TList);
-procedure LVResizeColumns(const LV: TListView); overload;
-procedure LVResizeColumns(const LV: TListView; ColumnIndex: Integer); overload;
-
-procedure DropDownMenu(AControl: TControl; APopupMenu: TPopupMenu);
-
 function GetFileSize(const FileName: string): Integer;
 
 function GetLanguageName(LangId: Word): string;
@@ -91,7 +82,7 @@ function GetSettingsOverride(const FileName: string; out Path: string): Boolean;
 implementation
 
 uses
-  Windows, Forms, SysUtils, Math, CommCtrl, Registry, System.RegularExpressions;
+  Windows, Forms, SysUtils, Math, Registry, RegularExpressions;
 
 const
   LocaleOverrideKey = 'SOFTWARE\Embarcadero\Locales';
@@ -136,87 +127,6 @@ end;
 function AbortRetryIgnoreBox(const Text: string): Integer;
 begin
   Result := MsgBox(Text, MB_ICONWARNING or MB_ABORTRETRYIGNORE);
-end;
-
-procedure LVInvertSelection(const LV: TListView);
-var
-  Item: TListItem;
-begin
-  LV.Items.BeginUpdate;
-  try
-    for Item in LV.Items do Item.Selected := not Item.Selected;
-  finally
-    LV.Items.EndUpdate;
-  end;
-end;
-
-procedure LVFreeSelectedItemsData(const LV: TListView);
-var
-  Item: TListItem;
-begin
-  for Item in LV.Items do
-    if Item.Selected then
-    begin
-      TObject(Item.Data).Free;
-      Item.Data := nil;
-    end;
-end;
-
-function LVListSelectedItemsData(const LV: TListView): TList;
-var
-  Item: TListItem;
-begin
-  Result := TList.Create;
-  for Item in LV.Items do
-    if Item.Selected then
-      Result.Add(Item.Data);
-end;
-
-procedure LVSelectItemsByData(const LV: TListView; const List: TList);
-var
-  Item: TListItem;
-  Data: Pointer;
-begin
-  for Data in List do
-  begin
-    Item := LV.FindData(0, Data, True, False);
-    if Assigned(Item) then Item.Selected := True;
-  end;
-end;
-
-procedure LVResizeColumns(const LV: TListView);
-var
-  I, Width, Count, ColumnWidth: Integer;
-begin
-  Width := LV.ClientWidth;
-  Count := LV.Columns.Count;
-  ColumnWidth := Width div Count;
-  for I := 0 to Count - 2 do
-  begin
-    TListColumn(LV.Columns[I]).Width := ColumnWidth;
-    Dec(Width, ColumnWidth);
-  end;
-  TListColumn(LV.Columns[Count - 1]).Width := Width;
-end;
-
-procedure LVResizeColumns(const LV: TListView; ColumnIndex: Integer);
-var
-  I, Width, Count: Integer;
-begin
-  Width := LV.ClientWidth;
-  Count := LV.Columns.Count;
-  for I := 0 to Count - 1 do
-    if I <> ColumnIndex then
-      Dec(Width, SendMessage(LV.Handle, LVM_GETCOLUMNWIDTH, I, 0));
-  TListColumn(LV.Columns[ColumnIndex]).Width := Width;
-end;
-
-procedure DropDownMenu(AControl: TControl; APopupMenu: TPopupMenu);
-var
-  P: TPoint;
-begin
-  with AControl do P := Parent.ClientToScreen(Point(Left, Top + Height));
-  APopupMenu.Popup(P.X, P.Y);
 end;
 
 function GetFileSize(const FileName: string): Integer;

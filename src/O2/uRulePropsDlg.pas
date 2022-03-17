@@ -119,7 +119,7 @@ var
 implementation
 
 uses
-  uGlobal, uUtils;
+  uGlobal, uCtrlHelpers;
 
 {$R *.dfm}
 
@@ -331,12 +331,12 @@ end;
 
 procedure TRulePropsDlg.btDisplayMacrosClick(Sender: TObject);
 begin
-  DropDownMenu(btDisplayMacros, DisplayMacrosMenu);
+  btDisplayMacros.DropDown(DisplayMacrosMenu);
 end;
 
 procedure TRulePropsDlg.btHyperLinkMacrosClick(Sender: TObject);
 begin
-  DropDownMenu(btHyperLinkMacros, HyperLinkMacrosMenu);
+  btHyperLinkMacros.DropDown(HyperLinkMacrosMenu);
 end;
 
 end.

@@ -1126,10 +1126,10 @@ object HTMLExport: THTMLExport
         Name = 'link-color'
       end
       item
-        Name = 'border-color'
+        Name = 'alt-bg-color'
       end
       item
-        Name = 'alt-bg-color'
+        Name = 'border-color'
       end>
     Left = 16
     Top = 96
@@ -1245,7 +1245,6 @@ object HTMLExport: THTMLExport
         '6f6c6f723b'
       '096d617267696e2d746f703a202e3572656d3b'
       '0970616464696e673a202e31323572656d3b'
-      '09666f6e742d66616d696c793a206d6f6e6f73706163653b'
       '7d')
   end
   object ExportDialog: TSaveDialog

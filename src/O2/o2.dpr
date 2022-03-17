@@ -37,7 +37,8 @@ uses
   uHTMLExport in 'uHTMLExport.pas' {HTMLExport},
   uStuffHTML in 'uStuffHTML.pas',
   uMRUList in 'uMRUList.pas',
-  uBrowserEmulation in 'uBrowserEmulation.pas';
+  uBrowserEmulation in 'uBrowserEmulation.pas',
+  uCtrlHelpers in 'uCtrlHelpers.pas';
 
 {$R *.res}
 

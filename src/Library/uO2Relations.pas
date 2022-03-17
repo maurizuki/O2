@@ -18,7 +18,8 @@ unit uO2Relations;
 interface
 
 uses
-  Classes, Contnrs, SysUtils, System.Types, uO2Classes, uO2Objects;
+  Classes, Contnrs, SysUtils, Types, System.Generics.Collections,
+  System.Generics.Defaults, uO2Classes, uO2Objects;
 
 type
   TO2ObjRelation = class;
@@ -72,7 +73,7 @@ type
     property Relations[Index: Integer]: TO2Relation read GetRelations; default;
   end;
 
-  TO2ObjRelation = class(TObject)
+  TO2ObjRelation = class
   private
     FRelation: TO2Relation;
     FObject: TO2Object;
@@ -84,29 +85,20 @@ type
     property Role: string read FRole write FRole;
   end;
 
-  TO2ObjRelationsEnumerator = class(TListEnumerator)
+  TO2ObjRelations = class(TObjectList<TO2ObjRelation>)
   public
-    function GetCurrent: TO2ObjRelation;
-    property Current: TO2ObjRelation read GetCurrent;
-  end;
-
-  TO2ObjRelations = class(TObjectList)
-  private
-    function GetItem(Index: Integer): TO2ObjRelation;
-    procedure SetItem(Index: Integer; AObjRelation: TO2ObjRelation);
-  public
-    function Add(AObjRelation: TO2ObjRelation): Integer;
-    function Extract(AObjRelation: TO2ObjRelation): TO2ObjRelation;
-    function Remove(AObjRelation: TO2ObjRelation): Integer;
-    function GetEnumerator: TO2ObjRelationsEnumerator;
-    function IndexOf(AObjRelation: TO2ObjRelation): Integer;
-    procedure Insert(Index: Integer; AObjRelation: TO2ObjRelation);
-    function First: TO2ObjRelation;
-    function Last: TO2ObjRelation;
     procedure SortByObjName;
     procedure SortByRole;
-    property Items[Index: Integer]: TO2ObjRelation read GetItem
-      write SetItem; default;
+  end;
+
+  TCompareObjRelationByObjName = class(TComparer<TO2ObjRelation>)
+  public
+    function Compare(const Left, Right: TO2ObjRelation): Integer; override;
+  end;
+
+  TCompareObjRelationByRole = class(TComparer<TO2ObjRelation>)
+  public
+    function Compare(const Left, Right: TO2ObjRelation): Integer; override;
   end;
 
 implementation
@@ -369,97 +361,56 @@ begin
   FRole := '';
 end;
 
-{ TO2ObjRelationsEnumerator }
-
-function TO2ObjRelationsEnumerator.GetCurrent: TO2ObjRelation;
-begin
-  Result := inherited GetCurrent;
-end;
-
 { TO2ObjRelations }
 
-function TO2ObjRelations.GetItem(Index: Integer): TO2ObjRelation;
-begin
-  Result := TO2ObjRelation(inherited Items[Index]);
-end;
-
-procedure TO2ObjRelations.SetItem(Index: Integer; AObjRelation: TO2ObjRelation);
-begin
-  inherited Items[Index] := AObjRelation;
-end;
-
-function TO2ObjRelations.Add(
-  AObjRelation: TO2ObjRelation): Integer;
-begin
-  Result := inherited Add(AObjRelation);
-end;
-
-function TO2ObjRelations.Extract(AObjRelation: TO2ObjRelation): TO2ObjRelation;
-begin
-  Result := TO2ObjRelation(inherited Extract(AObjRelation));
-end;
-
-function TO2ObjRelations.Remove(
-  AObjRelation: TO2ObjRelation): Integer;
-begin
-  Result := inherited Remove(AObjRelation);
-end;
-
-function TO2ObjRelations.GetEnumerator: TO2ObjRelationsEnumerator;
-begin
-  Result := TO2ObjRelationsEnumerator.Create(Self);
-end;
-
-function TO2ObjRelations.IndexOf(
-  AObjRelation: TO2ObjRelation): Integer;
-begin
-  Result := inherited IndexOf(AObjRelation);
-end;
-
-procedure TO2ObjRelations.Insert(Index: Integer;
-  AObjRelation: TO2ObjRelation);
-begin
-  inherited Insert(Index, AObjRelation);
-end;
-
-function TO2ObjRelations.First: TO2ObjRelation;
-begin
-  Result := TO2ObjRelation(inherited First);
-end;
-
-function TO2ObjRelations.Last: TO2ObjRelation;
-begin
-  Result := TO2ObjRelation(inherited Last);
-end;
-
-function ListSortByObjName(Item1, Item2: Pointer): Integer;
-var
-  Name1, Name2: string;
-begin
-  if Assigned(TO2ObjRelation(Item1).Obj) then
-    Name1 := TO2ObjRelation(Item1).Obj.Name
-  else
-    Name1 := '';
-  if Assigned(TO2ObjRelation(Item2).Obj) then
-    Name2 := TO2ObjRelation(Item2).Obj.Name
-  else
-    Name2 := '';
-  Result := CompareText(Name1, Name2);
-end;
-
 procedure TO2ObjRelations.SortByObjName;
+var
+  AComparer: TCompareObjRelationByObjName;
 begin
-  Sort(ListSortByObjName);
-end;
-
-function ListSortByRole(Item1, Item2: Pointer): Integer;
-begin
-  Result := CompareText(TO2ObjRelation(Item1).Role, TO2ObjRelation(Item2).Role);
+  AComparer := TCompareObjRelationByObjName.Create;
+  try
+    Sort(AComparer);
+  finally
+    AComparer.Free;
+  end;
 end;
 
 procedure TO2ObjRelations.SortByRole;
+var
+  AComparer: TCompareObjRelationByRole;
 begin
-  Sort(ListSortByRole);
+  AComparer := TCompareObjRelationByRole.Create;
+  try
+    Sort(AComparer);
+  finally
+    AComparer.Free;
+  end;
+end;
+
+{ TCompareObjRelationByObjName }
+
+function TCompareObjRelationByObjName.Compare(const Left,
+  Right: TO2ObjRelation): Integer;
+var
+  NameLeft, NameRight: string;
+begin
+  if Assigned(TO2ObjRelation(Left).Obj) then
+    NameLeft := TO2ObjRelation(Left).Obj.Name
+  else
+    NameLeft := '';
+  if Assigned(TO2ObjRelation(Right).Obj) then
+    NameRight := TO2ObjRelation(Right).Obj.Name
+  else
+    NameRight := '';
+  Result := CompareText(NameLeft, NameRight);
+end;
+
+{ TCompareObjRelationByRole }
+
+function TCompareObjRelationByRole.Compare(const Left,
+  Right: TO2ObjRelation): Integer;
+begin
+  Result := CompareText(TO2ObjRelation(Left).Role, TO2ObjRelation(Right).Role);
 end;
 
 end.

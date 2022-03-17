@@ -19,8 +19,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ComCtrls, StdCtrls, Grids, ValEdit, ExtCtrls, uO2Objects, uUtils,
-  ActnList, Menus, System.Actions;
+  Dialogs, ComCtrls, StdCtrls, Grids, ValEdit, ExtCtrls, ActnList, Menus,
+  Actions, uO2Objects;
 
 type
   TObjPropsDlgPage = (pgGeneral, pgGeneralTags, pgFields, pgNotes);
@@ -112,7 +112,7 @@ var
 implementation
 
 uses
-  uGlobal;
+  uGlobal, uCtrlHelpers;
 
 {$R *.dfm}
 
@@ -272,7 +272,7 @@ var
   Index: Integer;
 begin
   Index := FieldsView.Selected.Index;
-  LVFreeSelectedItemsData(FieldsView);
+  FieldsView.FreeSelectedItemsData;
   UpdateFieldsView;
   if Index >= FieldsView.Items.Count then
     Index := FieldsView.Items.Count - 1;
@@ -386,7 +386,7 @@ end;
 
 procedure TObjPropsDlg.ResizeFieldsViewColumns;
 begin
-  LVResizeColumns(FieldsView, 1);
+  FieldsView.ResizeColumns(1);
 end;
 
 procedure TObjPropsDlg.UpdateFieldsView;
@@ -394,14 +394,14 @@ var
   AField: TO2Field;
   Selection: TList;
 begin
-  Selection := LVListSelectedItemsData(FieldsView);
+  Selection := FieldsView.ListSelectedItemsData;
   try
     FieldsView.Items.BeginUpdate;
     try
       FieldsView.Clear;
       for AField in Fields do FieldToListItem(AField, nil);
       ResizeFieldsViewColumns;
-      LVSelectItemsByData(FieldsView, Selection);
+      FieldsView.SelectItemsByData(Selection);
     finally
       FieldsView.Items.EndUpdate;
     end;

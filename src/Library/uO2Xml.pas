@@ -21,7 +21,7 @@ uses
   Classes, XMLDoc, XMLIntf, xmldom, msxmldom;
 
 type
-  TO2XmlFiler = class(TObject)
+  TO2XmlFiler = class
   private
     FInstance: TPersistent;
   protected

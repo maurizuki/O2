@@ -16,6 +16,10 @@ In order to start to use O2, please read the [*Getting started* section of the w
 
 ## Change log
 
+### Version 2.2.6
+- Fixed: multiple consecutive white spaces in notes are not preserved during export to HTML.
+- Minor improvements.
+
 ### Version 2.2.5
 -	Export to HTML: new page style in three flavors.
 - Check for updates: integration with the GitHub REST API.
