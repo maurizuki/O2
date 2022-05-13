@@ -12,7 +12,17 @@ O2 is open source software, released under the [Mozilla Public License Version 2
 
 ## Getting started
 
-In order to start to use O2, please read the [*Getting started* section of the O2 wiki](https://github.com/maurizuki/O2/wiki#getting-started).
+In order to start to use O2 - after installing it on your computer - see the examples in the *Examples* directory:
+
+- __AddressBook.o2__ shows how to use the *rules* of type *E-mail address*, *Highlight*, *Internet link*, *Recurrence* to organize contact informations and recurrences of your relatives, friends, co-workers. The example also shows how to use the *relations* to connect husbands with wives, brothers with sisters, companies with employees.
+- __PasswordWallet.o2__ shows how to use the *rule* of type *Password* to create a safe place to store the credentials of your accounts. The password to open the file is *password*.
+
+### Install with Windows Package Manager
+
+To install O2 with the Windows Package Manager - a.k.a. *winget* - use the following command:
+```
+winget install --id=maurizuki.O2 -e
+```
 
 ## Change log
 
