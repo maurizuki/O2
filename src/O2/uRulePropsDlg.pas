@@ -51,7 +51,6 @@ type
     tsDateFormat: TTabSheet;
     Label8: TLabel;
     Label9: TLabel;
-    edShortDateFormat: TEdit;
     edDateSeparator: TEdit;
     tsCustomFilter: TTabSheet;
     Label10: TLabel;
@@ -83,6 +82,7 @@ type
     Months1: TMenuItem;
     Days1: TMenuItem;
     MaskHelpMemo: TMemo;
+    cbDateFormat: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure OKExecute(Sender: TObject);
@@ -166,6 +166,7 @@ end;
 procedure TRulePropsDlg.FormCreate(Sender: TObject);
 begin
   TRuleTypeLookup.Fill(cbType);
+  TDateFormatLookup.Fill(cbDateFormat);
 
   MaskHelpMemo.Lines.Clear;
   MaskHelpMemo.Lines.Add(SMaskHelp01);
@@ -196,8 +197,8 @@ begin
       edMask.Text := Params.Values[HyperLinkMaskParam];
       edDateSeparator.Text := Params.StrValue(DateSeparatorParam,
         FormatSettings.DateSeparator);
-      edShortDateFormat.Text := Params.StrValue(ShortDateFormatParam,
-        FormatSettings.ShortDateFormat);
+      TDateFormatLookup.Select(cbDateFormat,
+        Params.StrValue(ShortDateFormatParam, FormatSettings.ShortDateFormat));
       edDaysBefore.Value := Params.IntValue(DaysBeforeParam, DefaultDaysBefore);
       edDaysAfter.Value := Params.IntValue(DaysAfterParam, DefaultDaysAfter);
       cbHighlightColor.Selected :=
@@ -208,7 +209,7 @@ begin
   else
   begin
     edDateSeparator.Text := FormatSettings.DateSeparator;
-    edShortDateFormat.Text := FormatSettings.ShortDateFormat;
+    TDateFormatLookup.Select(cbDateFormat, FormatSettings.ShortDateFormat);
     edDaysBefore.Value := DefaultDaysBefore;
     edDaysAfter.Value := DefaultDaysAfter;
     cbHighlightColor.Selected := DefaultHighlightColor;
@@ -243,7 +244,8 @@ begin
   begin
     ARule.Params.Values[DisplayMaskParam] := edDisplayMask.Text;
     ARule.Params.Values[DateSeparatorParam] := edDateSeparator.Text;
-    ARule.Params.Values[ShortDateFormatParam] := edShortDateFormat.Text;
+    ARule.Params.Values[ShortDateFormatParam] :=
+      TDateFormatLookup.SelectedValue(cbDateFormat);
     ARule.Params.Values[DaysBeforeParam] := edDaysBefore.Text;
     ARule.Params.Values[DaysAfterParam] := edDaysAfter.Text;
   end;
