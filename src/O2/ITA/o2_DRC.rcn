@@ -5,10 +5,10 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">44632.8169212963</prop>
-        <prop prop-type="OrigDateTime">44632.816875</prop>
-        <prop prop-type="XlatDateTime">44614.7848611111</prop>
-        <prop prop-type="Translated">1130</prop>
+        <prop prop-type="SelfDateTime">44868.7610185185</prop>
+        <prop prop-type="OrigDateTime">0</prop>
+        <prop prop-type="XlatDateTime">44689.388587963</prop>
+        <prop prop-type="Translated">1133</prop>
         <prop prop-type="UnTranslated">0</prop>
       </prop-group>
     </header>
@@ -12233,6 +12233,30 @@
           <prop prop-type="Status">1</prop>
         </prop-group>
         <target>"Stile"</target>
+      </trans-unit>
+      <trans-unit id="uGlobal_SYMD" resname="uGlobal_SYMD">
+        <source>"Year, month, day"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44868.7588017014</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Anno, mese, giorno"</target>
+      </trans-unit>
+      <trans-unit id="uGlobal_SMDY" resname="uGlobal_SMDY">
+        <source>"Month, day, year"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44868.7588017014</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Mese, giorno, anno"</target>
+      </trans-unit>
+      <trans-unit id="uGlobal_SDMY" resname="uGlobal_SDMY">
+        <source>"Day, month, year"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44868.7588017014</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Giorno, mese, anno"</target>
       </trans-unit>
     </body>
   </file>
