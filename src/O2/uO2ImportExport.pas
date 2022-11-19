@@ -44,7 +44,7 @@ type
 implementation
 
 uses
-  uO2Rules, uO2Relations;
+  Classes, uO2Rules, uO2Relations;
 
 { TO2Import }
 

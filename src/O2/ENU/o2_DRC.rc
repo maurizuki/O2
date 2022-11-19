@@ -1255,7 +1255,7 @@ BEGIN
 	uGlobal_SImportFileFilter,	L"O2 file|*.o2|XML file|*.xml"
 	uGlobal_SImportSettingsFileFilter,	L"O2 settings file|*.xml|Any file|*.*"
 	uGlobal_SSaveFileFilter,	L"O2 file|*.o2|Any file|*.*"
-	uGlobal_SExportFileFilter,	L"O2 file|*.o2|XML file|*.xml"
+	uGlobal_SExportFileFilter,	L"O2 file|*.o2|XML file|*.xml|iCalendar file|*.ics"
 	uGlobal_SExportSettingsFileFilter,	L"O2 settings file|*.xml|Any file|*.*"
 	uGlobal_SDeleteObjectsQuery,	L"Delete selected objects?"
 	uGlobal_SRemoveFromMRUListQuery,	L"File not found. Remove from the recent files list?"

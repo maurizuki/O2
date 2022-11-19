@@ -5,7 +5,7 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">44868.7599537037</prop>
+        <prop prop-type="SelfDateTime">44884.479375</prop>
         <prop prop-type="OrigDateTime">0</prop>
         <prop prop-type="XlatDateTime">44689.388587963</prop>
         <prop prop-type="Translated">1133</prop>
@@ -490,11 +490,18 @@
         </prop-group>
       </trans-unit>
       <trans-unit id="uGlobal_SExportFileFilter" resname="uGlobal_SExportFileFilter">
-        <source>"O2 file|*.o2|XML file|*.xml"</source>
+        <source>"O2 file|*.o2|XML file|*.xml|iCalendar file|*.ics"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40178.744837419</prop>
           <prop prop-type="Status">1</prop>
         </prop-group>
+        <alt-trans>
+          <source>"O2 file|*.o2|XML file|*.xml"</source>
+          <target>"O2 file|*.o2|XML file|*.xml"</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">44884.437076331</prop>
+          </prop-group>
+        </alt-trans>
         <alt-trans>
           <source>"O2 file|*.o2|XML file|*.xml|HTML file (with index)|*.html;*.htm|HTML file (without index)|*.html;*.htm"</source>
           <target>"O2 file|*.o2|XML file|*.xml|HTML file (with index)|*.html;*.htm|HTML file (without index)|*.html;*.htm"</target>
