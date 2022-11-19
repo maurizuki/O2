@@ -112,7 +112,7 @@ resourcestring
   SImportFileFilter = 'O2 file|*.o2|XML file|*.xml';
   SImportSettingsFileFilter = 'O2 settings file|*.xml|Any file|*.*';
   SSaveFileFilter = 'O2 file|*.o2|Any file|*.*';
-  SExportFileFilter = 'O2 file|*.o2|XML file|*.xml';
+  SExportFileFilter = 'O2 file|*.o2|XML file|*.xml|iCalendar file|*.ics';
   SExportSettingsFileFilter = 'O2 settings file|*.xml|Any file|*.*';
   SDeleteObjectsQuery = 'Delete selected objects?';
   SRemoveFromMRUListQuery = 'File not found. Remove from the recent files list?';

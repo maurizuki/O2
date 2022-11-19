@@ -156,6 +156,8 @@ type
     function GetHyperLink(const AField: TO2Field): string;
     function CheckEvents(const AField: TO2Field; Date1,
       Date2: TDateTime; UseParams: Boolean = False): Boolean;
+    function GetFirstEvent(const AField: TO2Field;
+      out FirstDate: TDateTime): Boolean;
     function GetNextEvent(const AField: TO2Field; StartDate: TDateTime;
       out NextDate: TDateTime; UseParams: Boolean = False): Boolean;
     function GetHighlightColors(const AField: TO2Field;
@@ -528,27 +530,35 @@ begin
   end;
 end;
 
+function TO2Rule.GetFirstEvent(const AField: TO2Field;
+  out FirstDate: TDateTime): Boolean;
+begin
+  Result := (RuleType in EventRules) and Matches(AField)
+    and TryStrToDate(AField.FieldValue, FirstDate, GetFormatSettings);
+end;
+
 function TO2Rule.GetNextEvent(const AField: TO2Field; StartDate: TDateTime;
   out NextDate: TDateTime; UseParams: Boolean): Boolean;
 var
-  DateValue: TDateTime;
+  FirstDate: TDateTime;
 begin
   Result := False;
-  if (RuleType in EventRules) and Matches(AField)
-    and TryStrToDate(AField.FieldValue, DateValue, GetFormatSettings) then
+  if GetFirstEvent(AField, FirstDate) then
   begin
-    if UseParams then
-      StartDate := Date - Params.IntValue(DaysBeforeParam, DefaultDaysBefore);
-
     case RuleType of
       rtExpirationDate:
-        NextDate := DateValue;
+        NextDate := FirstDate;
 
       rtRecurrence:
       begin
-        NextDate := SafeRecodeYear(DateValue, YearOf(StartDate));
+        if UseParams then
+          StartDate := Date - Params.IntValue(DaysBeforeParam,
+            DefaultDaysBefore);
+
+        NextDate := SafeRecodeYear(FirstDate, YearOf(StartDate));
+
         if NextDate < StartDate then
-          NextDate := SafeRecodeYear(DateValue, YearOf(IncYear(StartDate)));
+          NextDate := SafeRecodeYear(FirstDate, YearOf(IncYear(StartDate)));
       end;
     end;
 

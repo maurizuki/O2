@@ -38,7 +38,11 @@ uses
   uStuffHTML in 'uStuffHTML.pas',
   uMRUList in 'uMRUList.pas',
   uBrowserEmulation in 'uBrowserEmulation.pas',
-  uCtrlHelpers in 'uCtrlHelpers.pas';
+  uCtrlHelpers in 'uCtrlHelpers.pas',
+  uImportExport in 'uImportExport.pas',
+  uXmlImportExport in 'uXmlImportExport.pas',
+  uO2ImportExport in 'uO2ImportExport.pas',
+  uiCalendarExport in 'uiCalendarExport.pas';
 
 {$R *.res}
 
