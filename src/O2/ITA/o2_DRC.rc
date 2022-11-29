@@ -8,48 +8,51 @@
   resources were bound to the produced executable.
 */
 
-#define uRulePropsDlg_SMaskHelp16 64400
-#define Vcl_OleConst_SBadPropValue 64401
-#define Vcl_OleConst_SCannotActivate 64402
-#define Vcl_OleConst_SNoWindowHandle 64403
-#define Vcl_OleConst_SInvalidLicense 64404
-#define Vcl_OleConst_SNotLicensed 64405
-#define Vcl_OleConst_sNoRunningObject 64406
-#define Vcl_EdgeConst_SWebViewFailure 64407
-#define Vcl_EdgeConst_SNoWebView 64408
-#define IEConst_sNotSupportedByEdge 64409
-#define Data_DBConsts_SInvalidSqlTimeStamp 64416
-#define uRulePropsDlg_SMaskHelp01 64417
-#define uRulePropsDlg_SMaskHelp02 64418
-#define uRulePropsDlg_SMaskHelp03 64419
-#define uRulePropsDlg_SMaskHelp04 64420
-#define uRulePropsDlg_SMaskHelp05 64421
-#define uRulePropsDlg_SMaskHelp06 64422
-#define uRulePropsDlg_SMaskHelp07 64423
-#define uRulePropsDlg_SMaskHelp08 64424
-#define uRulePropsDlg_SMaskHelp09 64425
-#define uRulePropsDlg_SMaskHelp10 64426
-#define uRulePropsDlg_SMaskHelp11 64427
-#define uRulePropsDlg_SMaskHelp12 64428
-#define uRulePropsDlg_SMaskHelp13 64429
-#define uRulePropsDlg_SMaskHelp14 64430
-#define uRulePropsDlg_SMaskHelp15 64431
+#define uRulePropsDlg_SMaskHelp13 64400
+#define uRulePropsDlg_SMaskHelp14 64401
+#define uRulePropsDlg_SMaskHelp15 64402
+#define uRulePropsDlg_SMaskHelp16 64403
+#define Vcl_OleConst_SBadPropValue 64404
+#define Vcl_OleConst_SCannotActivate 64405
+#define Vcl_OleConst_SNoWindowHandle 64406
+#define Vcl_OleConst_SInvalidLicense 64407
+#define Vcl_OleConst_SNotLicensed 64408
+#define Vcl_OleConst_sNoRunningObject 64409
+#define Vcl_EdgeConst_SWebViewFailure 64410
+#define Vcl_EdgeConst_SNoWebView 64411
+#define IEConst_sNotSupportedByEdge 64412
+#define Data_DBConsts_SBcdOverflow 64416
+#define Data_DBConsts_SInvalidBcdValue 64417
+#define Data_DBConsts_SCouldNotParseTimeStamp 64418
+#define Data_DBConsts_SInvalidSqlTimeStamp 64419
+#define uRulePropsDlg_SMaskHelp01 64420
+#define uRulePropsDlg_SMaskHelp02 64421
+#define uRulePropsDlg_SMaskHelp03 64422
+#define uRulePropsDlg_SMaskHelp04 64423
+#define uRulePropsDlg_SMaskHelp05 64424
+#define uRulePropsDlg_SMaskHelp06 64425
+#define uRulePropsDlg_SMaskHelp07 64426
+#define uRulePropsDlg_SMaskHelp08 64427
+#define uRulePropsDlg_SMaskHelp09 64428
+#define uRulePropsDlg_SMaskHelp10 64429
+#define uRulePropsDlg_SMaskHelp11 64430
+#define uRulePropsDlg_SMaskHelp12 64431
 #define uGlobal_SEventNext30days 64432
 #define uGlobal_SEventNext60days 64433
 #define uGlobal_SEventNext90days 64434
 #define uGlobal_SEventNext180days 64435
 #define uGlobal_SEventNext365days 64436
-#define System_RegularExpressionsConsts_SRegExMissingExpression 64437
-#define System_RegularExpressionsConsts_SRegExExpressionError 64438
-#define System_RegularExpressionsConsts_SRegExStudyError 64439
-#define System_RegularExpressionsConsts_SRegExMatchRequired 64440
-#define System_RegularExpressionsConsts_SRegExStringsRequired 64441
-#define System_RegularExpressionsConsts_SRegExInvalidIndexType 64442
-#define System_RegularExpressionsConsts_SRegExIndexOutOfBounds 64443
-#define System_RegularExpressionsConsts_SRegExInvalidGroupName 64444
-#define Data_DBConsts_SBcdOverflow 64445
-#define Data_DBConsts_SInvalidBcdValue 64446
-#define Data_DBConsts_SCouldNotParseTimeStamp 64447
+#define uGlobal_SYMD 64437
+#define uGlobal_SMDY 64438
+#define uGlobal_SDMY 64439
+#define System_RegularExpressionsConsts_SRegExMissingExpression 64440
+#define System_RegularExpressionsConsts_SRegExExpressionError 64441
+#define System_RegularExpressionsConsts_SRegExStudyError 64442
+#define System_RegularExpressionsConsts_SRegExMatchRequired 64443
+#define System_RegularExpressionsConsts_SRegExStringsRequired 64444
+#define System_RegularExpressionsConsts_SRegExInvalidIndexType 64445
+#define System_RegularExpressionsConsts_SRegExIndexOutOfBounds 64446
+#define System_RegularExpressionsConsts_SRegExInvalidGroupName 64447
 #define uGlobal_SRuleHyperLink 64448
 #define uGlobal_SRuleEmail 64449
 #define uGlobal_SRulePassword 64450
@@ -1140,6 +1143,9 @@
 #define System_SysConst_STooManyOpenFiles 65535
 STRINGTABLE
 BEGIN
+	uRulePropsDlg_SMaskHelp13,	L"Se il primo carattere dopo la parentesi quadra aperta di un insieme \x00E8 un punto esclamativo (!), allora l'insieme corrisponde a qualsiasi carattere non presente nell'insieme."
+	uRulePropsDlg_SMaskHelp14,	L"I caratteri jolly sono l'asterisco (*) e il punto esclamativo (?)."
+	uRulePropsDlg_SMaskHelp15,	L"Un asterisco corrisponde a un qualsiasi numero di caratteri."
 	uRulePropsDlg_SMaskHelp16,	L"Un punto esclamativo corrisponde a un singolo carattere qualsiasi."
 	Vcl_OleConst_SBadPropValue,	L"'%s' is not a valid property value"
 	Vcl_OleConst_SCannotActivate,	L"OLE control activation failed"
@@ -1150,6 +1156,9 @@ BEGIN
 	Vcl_EdgeConst_SWebViewFailure,	L"Failed to create Edge browser control"
 	Vcl_EdgeConst_SNoWebView,	L"The underlying WebView2 control is not initialized"
 	IEConst_sNotSupportedByEdge,	L"Operation not supported by Edge WebView2 control"
+	Data_DBConsts_SBcdOverflow,	L"BCD overflow"
+	Data_DBConsts_SInvalidBcdValue,	L"%s is not a valid BCD value"
+	Data_DBConsts_SCouldNotParseTimeStamp,	L"Could not parse SQL TimeStamp string"
 	Data_DBConsts_SInvalidSqlTimeStamp,	L"Invalid SQL date/time values"
 	uRulePropsDlg_SMaskHelp01,	L"Maschera nome campo e maschera valore campo valide sono composte da caratteri propri, insiemi di caratteri e caratteri jolly."
 	uRulePropsDlg_SMaskHelp02,	L"Ogni carattere proprio deve corrispondere a un singolo carattere nel nome o valore del campo."
@@ -1163,14 +1172,14 @@ BEGIN
 	uRulePropsDlg_SMaskHelp10,	L"Il carattere corrisponde all'insieme se \x00E8 uguale a uno dei caratteri propri nell'insieme o se \x00E8 compreso in uno degli intervalli nell'insieme."
 	uRulePropsDlg_SMaskHelp11,	L"Un carattere \x00E8 nell'intervallo se corrisponde al valore iniziale, al valore finale o se cade tra i due valori."
 	uRulePropsDlg_SMaskHelp12,	L"Tutti i confronti non distinguono tra maiuscole e minuscole."
-	uRulePropsDlg_SMaskHelp13,	L"Se il primo carattere dopo la parentesi quadra aperta di un insieme \x00E8 un punto esclamativo (!), allora l'insieme corrisponde a qualsiasi carattere non presente nell'insieme."
-	uRulePropsDlg_SMaskHelp14,	L"I caratteri jolly sono l'asterisco (*) e il punto esclamativo (?)."
-	uRulePropsDlg_SMaskHelp15,	L"Un asterisco corrisponde a un qualsiasi numero di caratteri."
 	uGlobal_SEventNext30days,	L"Prossimi 30 giorni"
 	uGlobal_SEventNext60days,	L"Prossimi 60 giorni"
 	uGlobal_SEventNext90days,	L"Prossimi 90 giorni"
 	uGlobal_SEventNext180days,	L"Prossimi 180 giorni"
 	uGlobal_SEventNext365days,	L"Prossimi 365 giorni"
+	uGlobal_SYMD,	L"Anno, mese, giorno"
+	uGlobal_SMDY,	L"Mese, giorno, anno"
+	uGlobal_SDMY,	L"Giorno, mese, anno"
 	System_RegularExpressionsConsts_SRegExMissingExpression,	L"A regular expression specified in RegEx is required"
 	System_RegularExpressionsConsts_SRegExExpressionError,	L"Error in regular expression at offset %d: %s"
 	System_RegularExpressionsConsts_SRegExStudyError,	L"Error studying the regex: %s"
@@ -1179,9 +1188,6 @@ BEGIN
 	System_RegularExpressionsConsts_SRegExInvalidIndexType,	L"Invalid index type"
 	System_RegularExpressionsConsts_SRegExIndexOutOfBounds,	L"Index out of bounds (%d)"
 	System_RegularExpressionsConsts_SRegExInvalidGroupName,	L"Invalid group name (%s)"
-	Data_DBConsts_SBcdOverflow,	L"BCD overflow"
-	Data_DBConsts_SInvalidBcdValue,	L"%s is not a valid BCD value"
-	Data_DBConsts_SCouldNotParseTimeStamp,	L"Could not parse SQL TimeStamp string"
 	uGlobal_SRuleHyperLink,	L"Collegamento Internet"
 	uGlobal_SRuleEmail,	L"Indirizzo e-mail"
 	uGlobal_SRulePassword,	L"Password"
@@ -1249,7 +1255,7 @@ BEGIN
 	uGlobal_SImportFileFilter,	L"File O2|*.o2|File XML|*.xml"
 	uGlobal_SImportSettingsFileFilter,	L"File di configuarazione di O2|*.xml|Tutti i file|*.*"
 	uGlobal_SSaveFileFilter,	L"File O2|*.o2|Tutti i file|*.*"
-	uGlobal_SExportFileFilter,	L"File O2|*.o2|File XML|*.xml"
+	uGlobal_SExportFileFilter,	L"File O2|*.o2|File XML|*.xml|File iCalendar|*.ics"
 	uGlobal_SExportSettingsFileFilter,	L"File di configurazione di O2|*.xml|Tutti i file|*.*"
 	uGlobal_SDeleteObjectsQuery,	L"Eliminare gli oggetti selezionati?"
 	uGlobal_SRemoveFromMRUListQuery,	L"File non trovato. Rimuovere dalla lista file recenti?"

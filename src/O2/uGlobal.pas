@@ -18,7 +18,7 @@ unit uGlobal;
 interface
 
 uses
-  Windows, Classes, ComCtrls, uO2Defs, uO2Rules, uLookupHelper;
+  Windows, Classes, ComCtrls, StdCtrls, uO2Defs, uO2Rules, uLookupHelper;
 
 const
   DefaultFileExt = 'o2';
@@ -112,7 +112,7 @@ resourcestring
   SImportFileFilter = 'O2 file|*.o2|XML file|*.xml';
   SImportSettingsFileFilter = 'O2 settings file|*.xml|Any file|*.*';
   SSaveFileFilter = 'O2 file|*.o2|Any file|*.*';
-  SExportFileFilter = 'O2 file|*.o2|XML file|*.xml';
+  SExportFileFilter = 'O2 file|*.o2|XML file|*.xml|iCalendar file|*.ics';
   SExportSettingsFileFilter = 'O2 settings file|*.xml|Any file|*.*';
   SDeleteObjectsQuery = 'Delete selected objects?';
   SRemoveFromMRUListQuery = 'File not found. Remove from the recent files list?';
@@ -208,6 +208,12 @@ resourcestring
   SEventNext180days = 'Next 180 days';
   SEventNext365days = 'Next 365 days';
 
+{ Date formats }
+
+  SYMD = 'Year, month, day';
+  SMDY = 'Month, day, year';
+  SDMY = 'Day, month, year';
+
 type
   TEventFilter = (
     efAll,
@@ -225,6 +231,8 @@ type
     efNext90days,
     efNext180days,
     efNext365days);
+
+  TDateFormat = (dfYMD, dfMDY, dfDMY);
 
   TCipherLookup = class(TLookupHelper)
   protected
@@ -250,7 +258,19 @@ type
     class function GetMapEntry(Index: Integer): PLookupMapEntry; override;
   end;
 
+  TDateFormatLookup = class(TLookupHelper)
+  protected
+    class procedure GetMapBounds(out LowerBound, UpperBound: Integer); override;
+    class function GetMapEntry(Index: Integer): PLookupMapEntry; override;
+  public
+    class procedure Select(const Combo: TCustomCombo; Value: string); overload;
+    class function SelectedValue(const Combo: TCustomCombo): string; overload;
+  end;
+
 implementation
+
+uses
+  SysUtils;
 
 const
   Ciphers: array[0..19] of TLookupMapEntry = (
@@ -312,6 +332,11 @@ const
     (Value: Integer(efNext180days); Item: SEventNext180days),
     (Value: Integer(efNext365days); Item: SEventNext365days));
 
+  DateFormats: array[0..2] of TLookupMapEntry = (
+    (Value: Integer(dfYMD); Item: SYMD),
+    (Value: Integer(dfMDY); Item: SMDY),
+    (Value: Integer(dfDMY); Item: SDMY));
+
 { TCipherLookup }
 
 class procedure TCipherLookup.GetMapBounds(out LowerBound,
@@ -366,6 +391,49 @@ end;
 class function TEventFilterLookup.GetMapEntry(Index: Integer): PLookupMapEntry;
 begin
   Result := @EventFilters[Index];
+end;
+
+{ TDateFormatLookup }
+
+class procedure TDateFormatLookup.GetMapBounds(out LowerBound,
+  UpperBound: Integer);
+begin
+  LowerBound := Low(DateFormats);
+  UpperBound := High(DateFormats);
+end;
+
+class function TDateFormatLookup.GetMapEntry(Index: Integer): PLookupMapEntry;
+begin
+  Result := @DateFormats[Index];
+end;
+
+class procedure TDateFormatLookup.Select(const Combo: TCustomCombo;
+  Value: string);
+var
+  Y, M, D: Integer;
+begin
+  Y := Pos('y', LowerCase(Value));
+  M := Pos('m', LowerCase(Value));
+  D := Pos('d', LowerCase(Value));
+
+  if (Y < M) and (M < D) then
+    Select(Combo, Integer(dfYMD))
+  else if (M < D) and (D < Y) then
+    Select(Combo, Integer(dfMDY))
+  else if (D < M) and (M < Y) then
+    Select(Combo, Integer(dfDMY));
+end;
+
+class function TDateFormatLookup.SelectedValue(
+  const Combo: TCustomCombo): string;
+begin
+  case SelectedValue(Combo, -1) of
+    Integer(dfYMD): Result := 'yyyy/mm/dd';
+    Integer(dfMDY): Result := 'mm/dd/yyyy';
+    Integer(dfDMY): Result := 'dd/mm/yyyy';
+  else
+    Result := '';
+  end;
 end;
 
 end.

@@ -265,14 +265,12 @@ type
     Help: TControlAction;
     WebSite: TAction;
     WebProject: TAction;
-    WebNews: TAction;
     WebSupportRequests: TAction;
     WebFeatureRequests: TAction;
     WebBugTracker: TAction;
     About1: TMenuItem;
     Projectwebpage1: TMenuItem;
     Projectinfo1: TMenuItem;
-    Projectnews1: TMenuItem;
     Supportrequests1: TMenuItem;
     Featurerequests1: TMenuItem;
     Bugtracker1: TMenuItem;
@@ -334,8 +332,6 @@ type
     Invertselection4: TMenuItem;
     ReplaceRole: TAction;
     Replacerole1: TMenuItem;
-    WebDocs: TAction;
-    Documentation1: TMenuItem;
     N30: TMenuItem;
     Showpasswords1: TMenuItem;
     CheckForUpdatesRESTClient: TRESTClient;
@@ -553,11 +549,6 @@ type
     procedure OpenNewInstance(const FileName: string = '');
     procedure LoadFromFile(const FileName: string);
     procedure SaveToFile(const FileName: string; Copy: Boolean = False);
-    procedure ImportFromO2File(const FileName: string);
-    procedure ImportFromXmlFile(const FileName: string);
-    procedure ExportToO2File(const FileName: string;
-      const Selection: TO2ObjectList);
-    procedure ExportToXmlFile(const FileName: string);
     procedure GetAppInfo(Sender: TObject; F: TStream);
     procedure LoadMRUList;
     procedure SaveMRUList;
@@ -625,7 +616,8 @@ uses
   uAppFiles, uUtils, uShellUtils, uPAFConsts, uAbout, uGetPassword,
   uSetPassword, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
   uReplaceDlg, uPrintPreview, uHTMLExport, uXmlStorage, uO2Xml, uO2Defs,
-  uBrowserEmulation, uCtrlHelpers;
+  uBrowserEmulation, uCtrlHelpers, uImportExport, uO2ImportExport,
+  uXmlImportExport, uiCalendarExport;
 
 {$R *.dfm}
 
@@ -1091,17 +1083,27 @@ procedure TMainForm.ImportExecute(Sender: TObject);
 const
   idxImportFromO2File = 1;
   idxImportFromXmlFile = 2;
+var
+  Import: TImportExport;
 begin
   ImportDialog.FileName := '';
   if ImportDialog.Execute then
   begin
     BeginBatchOperation;
     try
+      Import := nil;
       case ImportDialog.FilterIndex of
         idxImportFromO2File:
-          ImportFromO2File(ImportDialog.FileName);
+          Import := TO2Import.Create(O2File, PasswordQuery);
         idxImportFromXmlFile:
-          ImportFromXmlFile(ImportDialog.FileName);
+          Import := TXmlImport.Create(O2File);
+      end;
+
+      try
+        if Assigned(Import) then
+          Import.Execute(ImportDialog.FileName);
+      finally
+        Import.Free;
       end;
     finally
       EndBatchOperation;
@@ -1138,7 +1140,9 @@ procedure TMainForm.ExportExecute(Sender: TObject);
 const
   idxExportToO2File = 1;
   idxExportToXmlFile = 2;
+  idxExportToIcsFile = 3;
 var
+  Export: TImportExport;
   Selection: TO2ObjectList;
 begin
   ExportDialog.FileName := '';
@@ -1148,14 +1152,27 @@ begin
     try
       Selection := TO2ObjectList.Create;
       try
-        if ExportDialog.FilterIndex = idxExportToO2File then
-          FillObjList(Selection);
-
+        Export := nil;
         case ExportDialog.FilterIndex of
           idxExportToO2File:
-            ExportToO2File(ExportDialog.FileName, Selection);
+          begin
+            FillObjList(Selection);
+            Export := TO2Export.Create(O2File, Selection);
+          end;
           idxExportToXmlFile:
-            ExportToXmlFile(ExportDialog.FileName);
+            Export := TXmlExport.Create(O2File);
+          idxExportToIcsFile:
+          begin
+            FillObjList(Selection);
+            Export := TiCalendarExport.Create(O2File, Selection);
+          end;
+        end;
+
+        try
+          if Assigned(Export) then
+            Export.Execute(ExportDialog.FileName);
+        finally
+          Export.Free;
         end;
       finally
         Selection.Free;
@@ -1722,82 +1739,6 @@ begin
     O2File.FileName := O2FileName
   else
     O2FileName := O2File.FileName;
-end;
-
-procedure TMainForm.ImportFromO2File(const FileName: string);
-var
-  InputFile: TO2File;
-  AObject: TO2Object;
-  ARelation: TO2Relation;
-  ARule: TO2Rule;
-begin
-  InputFile := TO2File.Create;
-  try
-    InputFile.OnPasswordQuery := PasswordQuery;
-    InputFile.FileName := FileName;
-    InputFile.Load;
-    for AObject in InputFile.Objects do
-      O2File.Objects.ImportObject(AObject);
-    for ARelation in InputFile.Relations do
-      O2File.Relations.ImportRelation(ARelation);
-    for ARule in InputFile.Rules do
-      O2File.Rules.ImportRule(ARule);
-  finally
-    InputFile.Free;
-  end;
-end;
-
-procedure TMainForm.ImportFromXmlFile(const FileName: string);
-var
-  XmlReader: TO2XmlReader;
-begin
-  XmlReader := TO2XmlReader.Create(O2File);
-  try
-    XmlReader.LoadFromFile(FileName);
-  finally
-    XmlReader.Free;
-  end;
-end;
-
-procedure TMainForm.ExportToO2File(const FileName: string;
-  const Selection: TO2ObjectList);
-var
-  OutputFile: TO2File;
-  AObject, NewObject: TO2Object;
-  ARelation, NewRelation: TO2Relation;
-begin
-  OutputFile := TO2File.Create;
-  try
-    for AObject in Selection do
-    begin
-      NewObject := OutputFile.Objects.AddObject;
-      NewObject.Assign(AObject);
-    end;
-    for ARelation in O2File.Relations do
-      if Assigned(OutputFile.Objects.FindObjectByID(ARelation.ObjectID1))
-        and Assigned(OutputFile.Objects.FindObjectByID(ARelation.ObjectID2))
-      then begin
-        NewRelation := OutputFile.Relations.AddRelation;
-        NewRelation.Assign(ARelation);
-      end;
-    OutputFile.Rules := O2File.Rules;
-    OutputFile.FileName := FileName;
-    OutputFile.Save;
-  finally
-    OutputFile.Free;
-  end;
-end;
-
-procedure TMainForm.ExportToXmlFile(const FileName: string);
-var
-  XmlWriter: TO2XmlWriter;
-begin
-  XmlWriter := TO2XmlWriter.Create(O2File);
-  try
-    XmlWriter.SaveToFile(FileName);
-  finally
-    XmlWriter.Free;
-  end;
 end;
 
 procedure TMainForm.GetStartDate(out StartDate: TDateTime;

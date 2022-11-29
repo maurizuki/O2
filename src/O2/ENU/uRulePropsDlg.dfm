@@ -193,7 +193,7 @@ object RulePropsDlg: TRulePropsDlg
         Width = 62
         Height = 13
         Caption = 'Date &format:'
-        FocusControl = edShortDateFormat
+        FocusControl = cbDateFormat
       end
       object Label9: TLabel
         Left = 174
@@ -203,13 +203,6 @@ object RulePropsDlg: TRulePropsDlg
         Caption = 'Date &separator:'
         FocusControl = edDateSeparator
       end
-      object edShortDateFormat: TEdit
-        Left = 8
-        Top = 31
-        Width = 159
-        Height = 21
-        TabOrder = 0
-      end
       object edDateSeparator: TEdit
         Left = 174
         Top = 31
@@ -217,6 +210,14 @@ object RulePropsDlg: TRulePropsDlg
         Height = 21
         MaxLength = 1
         TabOrder = 1
+      end
+      object cbDateFormat: TComboBox
+        Left = 8
+        Top = 31
+        Width = 159
+        Height = 21
+        Style = csDropDownList
+        TabOrder = 0
       end
     end
     object tsCustomFilter: TTabSheet

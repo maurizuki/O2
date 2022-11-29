@@ -5,10 +5,10 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">44632.8169212963</prop>
-        <prop prop-type="OrigDateTime">44632.816875</prop>
-        <prop prop-type="XlatDateTime">44614.7848611111</prop>
-        <prop prop-type="Translated">1130</prop>
+        <prop prop-type="SelfDateTime">44894.7504166667</prop>
+        <prop prop-type="OrigDateTime">44894.7503472222</prop>
+        <prop prop-type="XlatDateTime">44689.388587963</prop>
+        <prop prop-type="Translated">1133</prop>
         <prop prop-type="UnTranslated">0</prop>
       </prop-group>
     </header>
@@ -527,12 +527,19 @@
         <target>"File O2|*.o2|Tutti i file|*.*"</target>
       </trans-unit>
       <trans-unit id="uGlobal_SExportFileFilter" resname="uGlobal_SExportFileFilter">
-        <source>"O2 file|*.o2|XML file|*.xml"</source>
+        <source>"O2 file|*.o2|XML file|*.xml|iCalendar file|*.ics"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">40178.7452388889</prop>
           <prop prop-type="Status">1</prop>
         </prop-group>
-        <target>"File O2|*.o2|File XML|*.xml"</target>
+        <target>"File O2|*.o2|File XML|*.xml|File iCalendar|*.ics"</target>
+        <alt-trans>
+          <source>"O2 file|*.o2|XML file|*.xml"</source>
+          <target>"File O2|*.o2|File XML|*.xml"</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">44884.4371099769</prop>
+          </prop-group>
+        </alt-trans>
         <alt-trans>
           <source>"O2 file|*.o2|XML file|*.xml|HTML file (with index)|*.html;*.htm|HTML file (without index)|*.html;*.htm"</source>
           <target>"File O2|*.o2|File XML|*.xml|File HTML (con indice)|*.html;*.htm|File HTML (senza indice)|*.html;*.htm"</target>
@@ -12233,6 +12240,30 @@
           <prop prop-type="Status">1</prop>
         </prop-group>
         <target>"Stile"</target>
+      </trans-unit>
+      <trans-unit id="uGlobal_SYMD" resname="uGlobal_SYMD">
+        <source>"Year, month, day"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44868.7588017014</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Anno, mese, giorno"</target>
+      </trans-unit>
+      <trans-unit id="uGlobal_SMDY" resname="uGlobal_SMDY">
+        <source>"Month, day, year"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44868.7588017014</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Mese, giorno, anno"</target>
+      </trans-unit>
+      <trans-unit id="uGlobal_SDMY" resname="uGlobal_SDMY">
+        <source>"Day, month, year"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">44868.7588017014</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Giorno, mese, anno"</target>
       </trans-unit>
     </body>
   </file>

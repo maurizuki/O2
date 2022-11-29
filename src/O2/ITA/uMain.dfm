@@ -1030,7 +1030,7 @@ object MainForm: TMainForm
     end
     object WebSite: TAction
       Category = 'Help'
-      Caption = 'Sito web'
+      Caption = 'Home'
       Hint = 'https://maurizuki.github.io/O2'
       OnExecute = WebExecute
       OnUpdate = ActionUpdate
@@ -1042,24 +1042,10 @@ object MainForm: TMainForm
       OnExecute = WebExecute
       OnUpdate = ActionUpdate
     end
-    object WebNews: TAction
-      Category = 'Help'
-      Caption = 'Notizie'
-      Hint = 'https://github.com/maurizuki/O2/releases'
-      OnExecute = WebExecute
-      OnUpdate = ActionUpdate
-    end
-    object WebDocs: TAction
-      Category = 'Help'
-      Caption = 'Documentazione'
-      Hint = 'https://github.com/maurizuki/O2/wiki'
-      OnExecute = WebExecute
-      OnUpdate = ActionUpdate
-    end
     object WebSupportRequests: TAction
       Category = 'Help'
       Caption = 'Richieste di supporto'
-      Hint = 'https://github.com/maurizuki/O2/issues'
+      Hint = 'https://github.com/maurizuki/O2/discussions/categories/q-a'
       OnExecute = WebExecute
       OnUpdate = ActionUpdate
     end
@@ -1079,7 +1065,7 @@ object MainForm: TMainForm
     end
     object About: TAction
       Category = 'Help'
-      Caption = 'Informazioni su O2...'
+      Caption = 'Informazioni su O2'
       Hint = 'Informazioni su O2'
       OnExecute = AboutExecute
       OnUpdate = ActionUpdate
@@ -5053,12 +5039,6 @@ object MainForm: TMainForm
     end
     object Projectinfo1: TMenuItem
       Action = WebProject
-    end
-    object Projectnews1: TMenuItem
-      Action = WebNews
-    end
-    object Documentation1: TMenuItem
-      Action = WebDocs
     end
     object N27: TMenuItem
       Caption = '-'

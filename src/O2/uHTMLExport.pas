@@ -457,17 +457,16 @@ end;
 
 procedure THTMLExport.ExportFileExecute(Sender: TObject);
 var
-  HTML: TStrings;
+  Writer: TTextWriter;
 begin
   ExportDialog.FileName := '';
   if ExportDialog.Execute then
   begin
-    HTML := TStringList.Create;
+    Writer := TStreamWriter.Create(ExportDialog.FileName);
     try
-      HTML.Text := ExportToHTML;
-      HTML.SaveToFile(ExportDialog.FileName, TEncoding.UTF8);
+      Writer.Write(ExportToHTML);
     finally
-      HTML.Free;
+      Writer.Free;
     end;
   end;
 end;
