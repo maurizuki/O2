@@ -265,14 +265,12 @@ type
     Help: TControlAction;
     WebSite: TAction;
     WebProject: TAction;
-    WebNews: TAction;
     WebSupportRequests: TAction;
     WebFeatureRequests: TAction;
     WebBugTracker: TAction;
     About1: TMenuItem;
     Projectwebpage1: TMenuItem;
     Projectinfo1: TMenuItem;
-    Projectnews1: TMenuItem;
     Supportrequests1: TMenuItem;
     Featurerequests1: TMenuItem;
     Bugtracker1: TMenuItem;
@@ -334,8 +332,6 @@ type
     Invertselection4: TMenuItem;
     ReplaceRole: TAction;
     Replacerole1: TMenuItem;
-    WebDocs: TAction;
-    Documentation1: TMenuItem;
     N30: TMenuItem;
     Showpasswords1: TMenuItem;
     CheckForUpdatesRESTClient: TRESTClient;

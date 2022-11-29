@@ -26,6 +26,11 @@ winget install --id=maurizuki.O2 -e
 
 ## Change log
 
+### Version 2.2.7
+- New feature: export events (fields that match rules of type *Expiration date* and *Recurrence*) in *iCalendar* format, compatible with Microsoft Outlook, Google Calendar, Apple Calendar, etc.
+- In the *Rule properties* dialog, *Date format* tab, the text field *Date format* has been replaced with a more friendly drop-down list.
+- *Help* menu rationalization.
+
 ### Version 2.2.6
 - Fixed: multiple consecutive white spaces in notes are not preserved during export to HTML.
 - Minor improvements.
@@ -56,25 +61,6 @@ winget install --id=maurizuki.O2 -e
 - New portable release that installs directly on removable media.
 - Added the new feature *Replace role* to the objects menu: replaces the role of the selected objects in their relations.
 - Minor bug fixes and improvements.
-
-### Version 2.1.2
-- Added accelerator characters to almost all the labels to navigate trough their associated input controls more quickly.
-- Object properties dialog, fields editor: added the buttons *Move up* and *Move down* to replace the unhandy popup menu.
-- Rule properties dialog: added a box with an explanation of valid field name mask and field value mask composition.
-- Rule properties dialog: added the name of the rule to the window title to keep it always visible.
-- Rule properties dialog (italian translation): translated the color names for the color boxes in the highlight tab.
-- Minor visual improvements.
-
-### Version 2.1.1
-- Added a drop-down menu to the *Find* button to add the new feature *Clear search*.
-- Added the *Find by rule* search option that search for objects with at least one field matching one of the selected rules.
-- The columns of all the views are now resized automatically to fit the whole available width.
-- Main window, rules view: improved the behavior of the functions *Move up* and *Move down*, now the item remains visible while it is moved.
-- Object properties dialog, fields editor: improved the behavior of the functions *Move up* and *Move down*, now the item remains visible while it is moved. Improved also the behavior of the function *Delete*, now is automatically selected the next item after the deleted one to continue deleting in sequence.
-- Minor bug fixes and code improvements.
-
-### Version 2.1
-- Main window redesigned, clearer and cleaner. Click *Find* (Ctrl+F) toolbar button to show or hide the search options box (formerly filters): find by name, event, tags.
 
 ## Acknowledgements
 
