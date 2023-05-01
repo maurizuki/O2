@@ -19,7 +19,7 @@ interface
 
 {$WARN UNIT_PLATFORM OFF}
 
-{$R o2res.res}
+{$R icons.res}
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
