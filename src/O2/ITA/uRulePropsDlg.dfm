@@ -3,36 +3,36 @@ object RulePropsDlg: TRulePropsDlg
   Top = 107
   BorderStyle = bsDialog
   Caption = 'Propriet'#224' regola'
-  ClientHeight = 428
-  ClientWidth = 361
+  ClientHeight = 427
+  ClientWidth = 357
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
   OnShow = FormShow
   DesignSize = (
-    361
-    428)
-  PixelsPerInch = 96
+    357
+    427)
   TextHeight = 13
   object btOk: TButton
-    Left = 199
-    Top = 397
+    Left = 193
+    Top = 393
     Width = 75
     Height = 25
     Action = OK
     Anchors = [akRight, akBottom]
     Default = True
     TabOrder = 1
+    ExplicitLeft = 189
+    ExplicitTop = 392
   end
   object btCancel: TButton
-    Left = 280
-    Top = 397
+    Left = 274
+    Top = 393
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -40,19 +40,23 @@ object RulePropsDlg: TRulePropsDlg
     Caption = 'Annulla'
     ModalResult = 2
     TabOrder = 2
+    ExplicitLeft = 270
+    ExplicitTop = 392
   end
   object PageControl1: TPageControl
-    Left = 6
+    Left = 8
     Top = 8
-    Width = 349
-    Height = 380
+    Width = 341
+    Height = 379
     ActivePage = tsGeneral
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 0
+    ExplicitWidth = 337
+    ExplicitHeight = 378
     object tsGeneral: TTabSheet
       Caption = 'Generale'
       object Label1: TLabel
-        Left = 8
+        Left = 3
         Top = 12
         Width = 31
         Height = 13
@@ -60,7 +64,7 @@ object RulePropsDlg: TRulePropsDlg
         FocusControl = edName
       end
       object Label2: TLabel
-        Left = 174
+        Left = 169
         Top = 12
         Width = 28
         Height = 13
@@ -68,7 +72,7 @@ object RulePropsDlg: TRulePropsDlg
         FocusControl = cbType
       end
       object Label3: TLabel
-        Left = 8
+        Left = 3
         Top = 66
         Width = 82
         Height = 13
@@ -76,7 +80,7 @@ object RulePropsDlg: TRulePropsDlg
         FocusControl = edFieldName
       end
       object Label4: TLabel
-        Left = 174
+        Left = 169
         Top = 66
         Width = 82
         Height = 13
@@ -84,40 +88,40 @@ object RulePropsDlg: TRulePropsDlg
         FocusControl = edFieldValue
       end
       object edName: TEdit
-        Left = 8
+        Left = 3
         Top = 31
-        Width = 159
+        Width = 160
         Height = 21
         TabOrder = 0
         OnChange = edNameChange
       end
       object cbType: TComboBox
-        Left = 174
+        Left = 169
         Top = 31
-        Width = 159
+        Width = 161
         Height = 21
         Style = csDropDownList
         TabOrder = 1
         OnChange = cbTypeChange
       end
       object edFieldName: TEdit
-        Left = 8
+        Left = 3
         Top = 85
-        Width = 159
+        Width = 160
         Height = 21
         TabOrder = 2
       end
       object edFieldValue: TEdit
-        Left = 174
+        Left = 169
         Top = 85
-        Width = 159
+        Width = 161
         Height = 21
         TabOrder = 3
       end
       object MaskHelpMemo: TMemo
-        Left = 8
+        Left = 3
         Top = 128
-        Width = 325
+        Width = 327
         Height = 214
         TabStop = False
         ParentColor = True
@@ -130,7 +134,7 @@ object RulePropsDlg: TRulePropsDlg
       Caption = 'Aspetto'
       ImageIndex = 5
       object Label12: TLabel
-        Left = 8
+        Left = 3
         Top = 12
         Width = 28
         Height = 13
@@ -138,15 +142,15 @@ object RulePropsDlg: TRulePropsDlg
         FocusControl = edDisplayMask
       end
       object edDisplayMask: TEdit
-        Left = 8
+        Left = 3
         Top = 31
-        Width = 325
+        Width = 327
         Height = 21
         HideSelection = False
         TabOrder = 0
       end
       object btDisplayMacros: TButton
-        Left = 258
+        Left = 255
         Top = 58
         Width = 75
         Height = 25
@@ -159,7 +163,7 @@ object RulePropsDlg: TRulePropsDlg
       Caption = 'Collegamento internet'
       ImageIndex = 2
       object Label7: TLabel
-        Left = 8
+        Left = 3
         Top = 12
         Width = 28
         Height = 13
@@ -167,15 +171,15 @@ object RulePropsDlg: TRulePropsDlg
         FocusControl = edMask
       end
       object edMask: TEdit
-        Left = 8
+        Left = 3
         Top = 31
-        Width = 325
+        Width = 327
         Height = 21
         HideSelection = False
         TabOrder = 0
       end
       object btHyperLinkMacros: TButton
-        Left = 258
+        Left = 255
         Top = 58
         Width = 75
         Height = 25
@@ -188,7 +192,7 @@ object RulePropsDlg: TRulePropsDlg
       Caption = 'Formato data'
       ImageIndex = 3
       object Label8: TLabel
-        Left = 8
+        Left = 3
         Top = 12
         Width = 62
         Height = 13
@@ -196,7 +200,7 @@ object RulePropsDlg: TRulePropsDlg
         FocusControl = cbDateFormat
       end
       object Label9: TLabel
-        Left = 174
+        Left = 169
         Top = 12
         Width = 77
         Height = 13
@@ -204,17 +208,17 @@ object RulePropsDlg: TRulePropsDlg
         FocusControl = edDateSeparator
       end
       object edDateSeparator: TEdit
-        Left = 174
+        Left = 169
         Top = 31
-        Width = 159
+        Width = 161
         Height = 21
         MaxLength = 1
         TabOrder = 1
       end
       object cbDateFormat: TComboBox
-        Left = 8
+        Left = 3
         Top = 31
-        Width = 159
+        Width = 160
         Height = 21
         Style = csDropDownList
         TabOrder = 0
@@ -224,7 +228,7 @@ object RulePropsDlg: TRulePropsDlg
       Caption = 'Intervallo personalizzato'
       ImageIndex = 4
       object Label10: TLabel
-        Left = 8
+        Left = 3
         Top = 12
         Width = 94
         Height = 13
@@ -232,7 +236,7 @@ object RulePropsDlg: TRulePropsDlg
         FocusControl = edDaysBefore
       end
       object Label11: TLabel
-        Left = 174
+        Left = 169
         Top = 12
         Width = 86
         Height = 13
@@ -240,18 +244,18 @@ object RulePropsDlg: TRulePropsDlg
         FocusControl = edDaysAfter
       end
       object edDaysBefore: TJvSpinEdit
-        Left = 8
+        Left = 3
         Top = 31
-        Width = 159
+        Width = 160
         Height = 21
         ButtonKind = bkStandard
         MaxValue = 365
         TabOrder = 0
       end
       object edDaysAfter: TJvSpinEdit
-        Left = 174
+        Left = 169
         Top = 31
-        Width = 159
+        Width = 161
         Height = 21
         ButtonKind = bkStandard
         MaxValue = 365
@@ -262,7 +266,7 @@ object RulePropsDlg: TRulePropsDlg
       Caption = 'Evidenziatura'
       ImageIndex = 1
       object Label5: TLabel
-        Left = 8
+        Left = 3
         Top = 12
         Width = 71
         Height = 13
@@ -270,7 +274,7 @@ object RulePropsDlg: TRulePropsDlg
         FocusControl = cbHighlightColor
       end
       object Label6: TLabel
-        Left = 174
+        Left = 169
         Top = 12
         Width = 52
         Height = 13
@@ -278,17 +282,17 @@ object RulePropsDlg: TRulePropsDlg
         FocusControl = cbHighlightTextColor
       end
       object cbHighlightColor: TColorBox
-        Left = 8
+        Left = 3
         Top = 31
-        Width = 159
+        Width = 160
         Height = 22
         Style = [cbStandardColors, cbCustomColor, cbPrettyNames]
         TabOrder = 0
       end
       object cbHighlightTextColor: TColorBox
-        Left = 174
+        Left = 169
         Top = 31
-        Width = 159
+        Width = 161
         Height = 22
         Style = [cbStandardColors, cbCustomColor, cbPrettyNames]
         TabOrder = 1

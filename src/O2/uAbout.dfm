@@ -11,10 +11,11 @@ object AboutForm: TAboutForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
-  PixelsPerInch = 96
+  DesignSize = (
+    295
+    418)
   TextHeight = 13
   object Image1: TImage
     Left = 12
@@ -339,7 +340,7 @@ object AboutForm: TAboutForm
     Top = 35
     Width = 204
     Height = 13
-    Caption = 'Copyright (C) 2004-2022 Maurizio Basaglia'
+    Caption = 'Copyright (C) 2004-2023 Maurizio Basaglia'
   end
   object Label2: TLabel
     Left = 73
@@ -364,31 +365,36 @@ object AboutForm: TAboutForm
     Top = 87
     Width = 279
     Height = 196
+    Anchors = [akLeft, akTop, akRight]
     Caption = 'Acknowledgements'
     TabOrder = 0
+    DesignSize = (
+      279
+      196)
     object Memo1: TMemo
       Left = 8
       Top = 24
       Width = 261
       Height = 161
       TabStop = False
+      Anchors = [akLeft, akTop, akRight, akBottom]
       BorderStyle = bsNone
       Lines.Strings = (
         'DCPCrypt Cryptographic Component Library'
         'Copyright (C) 1999-2009 David Barton.'
         ''
         'Inno Setup'
-        'Copyright (C) 1997-2020 Jordan Russell.'
-        'Portions Copyright (C) 2000-2020 Martijn Laan.'
+        'Copyright (C) 1997-2023 Jordan Russell.'
+        'Portions Copyright (C) 2000-2023 Martijn Laan.'
         ''
         'Jedi VCL Project'
-        'Copyright (C) 1999-2020 The Jedi VCL Team.'
+        'Copyright (C) 1999-2023 The Jedi VCL Team.'
         ''
         'SZCRC32 unit'
         'Copyright (C) 2004 Sasa Zeman.'
         ''
         'UPX - The Ultimate Packer for eXecutables'
-        'Copyright (C) 1996-2020 Markus Oberhumer, '
+        'Copyright (C) 1996-2023 Markus Oberhumer, '
         'Laszlo Molnar, John Reiser.')
       ParentColor = True
       ReadOnly = True
@@ -401,6 +407,7 @@ object AboutForm: TAboutForm
     Top = 385
     Width = 75
     Height = 25
+    Anchors = [akRight, akBottom]
     Cancel = True
     Caption = 'OK'
     Default = True
@@ -412,6 +419,7 @@ object AboutForm: TAboutForm
     Top = 385
     Width = 108
     Height = 25
+    Anchors = [akLeft, akBottom]
     Caption = 'Release notes...'
     TabOrder = 3
     OnClick = btReadMeClick
@@ -421,6 +429,7 @@ object AboutForm: TAboutForm
     Top = 295
     Width = 279
     Height = 68
+    Anchors = [akLeft, akTop, akRight]
     Caption = 'Translation'
     TabOrder = 1
     object Label3: TLabel

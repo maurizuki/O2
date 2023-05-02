@@ -2,21 +2,19 @@ object ReplaceDlg: TReplaceDlg
   Left = 191
   Top = 108
   BorderStyle = bsDialog
-  ClientHeight = 166
-  ClientWidth = 257
+  ClientHeight = 165
+  ClientWidth = 253
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnShow = FormShow
   DesignSize = (
-    257
-    166)
-  PixelsPerInch = 96
+    253
+    165)
   TextHeight = 13
   object lbReplaceValue: TLabel
     Left = 12
@@ -35,8 +33,8 @@ object ReplaceDlg: TReplaceDlg
     FocusControl = cbSearchValue
   end
   object btOk: TButton
-    Left = 50
-    Top = 131
+    Left = 48
+    Top = 130
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -45,11 +43,10 @@ object ReplaceDlg: TReplaceDlg
     Enabled = False
     ModalResult = 1
     TabOrder = 2
-    ExplicitTop = 112
   end
   object btCancel: TButton
-    Left = 131
-    Top = 131
+    Left = 129
+    Top = 130
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -57,7 +54,6 @@ object ReplaceDlg: TReplaceDlg
     Caption = 'Cancel'
     ModalResult = 2
     TabOrder = 3
-    ExplicitTop = 112
   end
   object cbSearchValue: TComboBox
     Left = 12

@@ -3,8 +3,8 @@ object ObjPropsDlg: TObjPropsDlg
   Top = 111
   BorderIcons = [biSystemMenu]
   Caption = 'Propriet'#224' oggetto'
-  ClientHeight = 418
-  ClientWidth = 361
+  ClientHeight = 417
+  ClientWidth = 357
   Color = clBtnFace
   Constraints.MinHeight = 452
   Constraints.MinWidth = 369
@@ -13,29 +13,27 @@ object ObjPropsDlg: TObjPropsDlg
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   OnShow = FormShow
   DesignSize = (
-    361
-    418)
-  PixelsPerInch = 96
+    357
+    417)
   TextHeight = 13
   object PageControl: TPageControl
-    Left = 6
+    Left = 8
     Top = 8
-    Width = 349
-    Height = 372
+    Width = 341
+    Height = 371
     ActivePage = TabSheet1
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Generale'
       DesignSize = (
-        341
-        344)
+        333
+        343)
       object Label1: TLabel
         Left = 8
         Top = 12
@@ -55,32 +53,36 @@ object ObjPropsDlg: TObjPropsDlg
       object edName: TEdit
         Left = 8
         Top = 31
-        Width = 325
+        Width = 317
         Height = 21
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         OnChange = edNameChange
+        ExplicitWidth = 309
       end
       object cbTag: TComboBox
         Left = 8
         Top = 132
-        Width = 244
+        Width = 236
         Height = 21
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 1
+        ExplicitWidth = 228
       end
       object lbxTags: TListBox
         Left = 8
         Top = 159
-        Width = 244
-        Height = 174
+        Width = 236
+        Height = 173
         Anchors = [akLeft, akTop, akRight, akBottom]
         ItemHeight = 13
         Sorted = True
         TabOrder = 3
+        ExplicitWidth = 228
+        ExplicitHeight = 172
       end
       object Button4: TButton
-        Left = 258
+        Left = 250
         Top = 132
         Width = 75
         Height = 25
@@ -89,9 +91,10 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 2
+        ExplicitLeft = 242
       end
       object Button5: TButton
-        Left = 258
+        Left = 250
         Top = 159
         Width = 75
         Height = 25
@@ -100,19 +103,20 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 4
+        ExplicitLeft = 242
       end
     end
     object TabSheet2: TTabSheet
       Caption = 'Campi'
       ImageIndex = 1
       DesignSize = (
-        341
-        344)
+        333
+        343)
       object FieldsView: TListView
         Left = 8
         Top = 9
-        Width = 325
-        Height = 261
+        Width = 317
+        Height = 260
         Anchors = [akLeft, akTop, akRight, akBottom]
         Columns = <
           item
@@ -131,10 +135,11 @@ object ObjPropsDlg: TObjPropsDlg
         ViewStyle = vsReport
         OnResize = FieldsViewResize
         OnSelectItem = FieldsViewSelectItem
+        ExplicitWidth = 313
       end
       object cbFieldName: TComboBox
         Left = 8
-        Top = 276
+        Top = 275
         Width = 138
         Height = 21
         Hint = 'Nome campo'
@@ -145,8 +150,8 @@ object ObjPropsDlg: TObjPropsDlg
       end
       object cbFieldValue: TComboBox
         Left = 152
-        Top = 276
-        Width = 181
+        Top = 275
+        Width = 173
         Height = 21
         Hint = 'Valore campo'
         Anchors = [akLeft, akRight, akBottom]
@@ -154,10 +159,11 @@ object ObjPropsDlg: TObjPropsDlg
         ShowHint = True
         TabOrder = 2
         OnEnter = cbFieldValueEnter
+        ExplicitWidth = 169
       end
       object Button1: TButton
         Left = 8
-        Top = 311
+        Top = 310
         Width = 75
         Height = 25
         Action = AddField
@@ -168,7 +174,7 @@ object ObjPropsDlg: TObjPropsDlg
       end
       object Button2: TButton
         Left = 89
-        Top = 311
+        Top = 310
         Width = 75
         Height = 25
         Action = ReplaceField
@@ -179,7 +185,7 @@ object ObjPropsDlg: TObjPropsDlg
       end
       object Button3: TButton
         Left = 170
-        Top = 311
+        Top = 310
         Width = 75
         Height = 25
         Action = DeleteField
@@ -189,8 +195,8 @@ object ObjPropsDlg: TObjPropsDlg
         TabOrder = 5
       end
       object Button6: TButton
-        Left = 261
-        Top = 311
+        Left = 253
+        Top = 310
         Width = 33
         Height = 25
         Action = MoveUp
@@ -198,10 +204,11 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 6
+        ExplicitLeft = 249
       end
       object Button7: TButton
-        Left = 300
-        Top = 311
+        Left = 292
+        Top = 310
         Width = 33
         Height = 25
         Action = MoveDown
@@ -209,19 +216,20 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 7
+        ExplicitLeft = 288
       end
     end
     object TabSheet3: TTabSheet
       Caption = 'Note'
       ImageIndex = 2
       DesignSize = (
-        341
-        344)
+        333
+        343)
       object Memo: TMemo
         Left = 8
         Top = 9
-        Width = 325
-        Height = 324
+        Width = 317
+        Height = 323
         Anchors = [akLeft, akTop, akRight, akBottom]
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
@@ -232,12 +240,13 @@ object ObjPropsDlg: TObjPropsDlg
         ScrollBars = ssVertical
         TabOrder = 0
         WantTabs = True
+        ExplicitWidth = 313
       end
     end
   end
   object btOk: TButton
-    Left = 199
-    Top = 387
+    Left = 193
+    Top = 385
     Width = 75
     Height = 25
     Action = OK
@@ -246,8 +255,8 @@ object ObjPropsDlg: TObjPropsDlg
     TabOrder = 1
   end
   object btCancel: TButton
-    Left = 280
-    Top = 387
+    Left = 274
+    Top = 385
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
