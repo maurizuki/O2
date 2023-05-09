@@ -39,6 +39,7 @@ object RelationPropsDlg: TRelationPropsDlg
     Top = 12
     Width = 34
     Height = 13
+    Anchors = [akTop, akRight]
     Caption = 'Role &1:'
     FocusControl = cbRole1
   end
@@ -47,6 +48,7 @@ object RelationPropsDlg: TRelationPropsDlg
     Top = 64
     Width = 34
     Height = 13
+    Anchors = [akTop, akRight]
     Caption = 'Role &2:'
     FocusControl = cbRole2
   end
@@ -56,9 +58,11 @@ object RelationPropsDlg: TRelationPropsDlg
     Width = 153
     Height = 21
     TabStop = False
+    Anchors = [akLeft, akTop, akRight]
     Color = clBtnFace
     ReadOnly = True
     TabOrder = 0
+    ExplicitWidth = 149
   end
   object edObject2: TEdit
     Left = 8
@@ -66,23 +70,29 @@ object RelationPropsDlg: TRelationPropsDlg
     Width = 153
     Height = 21
     TabStop = False
+    Anchors = [akLeft, akTop, akRight]
     Color = clBtnFace
     ReadOnly = True
     TabOrder = 2
+    ExplicitWidth = 149
   end
   object cbRole1: TComboBox
     Left = 167
     Top = 31
     Width = 158
     Height = 21
+    Anchors = [akTop, akRight]
     TabOrder = 1
+    ExplicitLeft = 163
   end
   object cbRole2: TComboBox
     Left = 167
     Top = 83
     Width = 158
     Height = 21
+    Anchors = [akTop, akRight]
     TabOrder = 3
+    ExplicitLeft = 163
   end
   object btOk: TButton
     Left = 167

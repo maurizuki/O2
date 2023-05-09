@@ -86,7 +86,8 @@
         <DCC_OutputDRCFile>true</DCC_OutputDRCFile>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_Release>4</VerInfo_Release>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2 Portable;FileVersion=2.2.4.0;InternalName=AppLauncher;LegalCopyright=(C) 2004-2022 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=O2Portable.exe;ProductName=O2;ProductVersion=2.2.4;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2 Portable;FileVersion=2.2.4.0;InternalName=AppLauncher;LegalCopyright=(C) 2004-2023 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=O2Portable.exe;ProductName=O2;ProductVersion=2.2.4;Comments=</VerInfo_Keys>
+        <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <Version>7.0</Version>
@@ -142,8 +143,15 @@
                     <Source Name="MainSource">O2Portable.dpr</Source>
                 </Source>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k260.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp260.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\JclBaseExpert280.bpl">JCL Package containing common units for JCL Experts</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\JclDebugExpert280.bpl">JCL Debug IDE extension</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\JclProjectAnalysisExpert280.bpl">JCL Project Analyzer</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\JclFavoriteFoldersExpert280.bpl">JCL Open and Save IDE dialogs with favorite folders</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\JclRepositoryExpert280.bpl">JCL Package containing repository wizards</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\JclSIMDViewExpert280.bpl">JCL Debug Window of XMM registers</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\JclStackTraceViewerExpert280.bpl">JCL Stack Trace Viewer</Excluded_Packages>
                 </Excluded_Packages>
             </Delphi.Personality>
             <Platforms>

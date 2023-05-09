@@ -59,6 +59,7 @@ object SetPasswordDlg: TSetPasswordDlg
     Height = 21
     ProtectPassword = True
     ThemedPassword = True
+    Anchors = [akLeft, akTop, akRight]
     TabOrder = 2
     Text = ''
     OnChange = edPasswordChange
@@ -70,13 +71,14 @@ object SetPasswordDlg: TSetPasswordDlg
     Height = 21
     ProtectPassword = True
     ThemedPassword = True
+    Anchors = [akLeft, akTop, akRight]
     TabOrder = 3
     Text = ''
     OnChange = edPasswordChange
   end
   object btOk: TButton
-    Left = 48
-    Top = 239
+    Left = 89
+    Top = 241
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -87,8 +89,8 @@ object SetPasswordDlg: TSetPasswordDlg
     TabOrder = 4
   end
   object btCancel: TButton
-    Left = 129
-    Top = 239
+    Left = 170
+    Top = 241
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -103,6 +105,7 @@ object SetPasswordDlg: TSetPasswordDlg
     Width = 237
     Height = 21
     Style = csDropDownList
+    Anchors = [akLeft, akTop, akRight]
     TabOrder = 0
     OnChange = cbEncryptionChange
   end
@@ -112,6 +115,7 @@ object SetPasswordDlg: TSetPasswordDlg
     Width = 237
     Height = 21
     Style = csDropDownList
+    Anchors = [akLeft, akTop, akRight]
     TabOrder = 1
     OnChange = cbHashChange
   end

@@ -5,10 +5,10 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">45048.7906944444</prop>
-        <prop prop-type="OrigDateTime">45048.7821527778</prop>
+        <prop prop-type="SelfDateTime">45055.7913657407</prop>
+        <prop prop-type="OrigDateTime">45055.7850231481</prop>
         <prop prop-type="XlatDateTime">41679.645625</prop>
-        <prop prop-type="Translated">60</prop>
+        <prop prop-type="Translated">62</prop>
         <prop prop-type="UnTranslated">0</prop>
       </prop-group>
     </header>
@@ -211,7 +211,7 @@
         </prop-group>
       </trans-unit>
       <trans-unit id="O:ReplaceDlg.O:lbReplaceValue.Left" resname="O:ReplaceDlg.O:lbReplaceValue.Left">
-        <source>12</source>
+        <source>8</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">41679.6206390972</prop>
           <prop prop-type="Status">1</prop>
@@ -219,6 +219,13 @@
           <prop prop-type="Type">TLabel</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
+        <alt-trans>
+          <source>12</source>
+          <target>12</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">45055.7075375926</prop>
+          </prop-group>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="O:ReplaceDlg.O:lbReplaceValue.Top" resname="O:ReplaceDlg.O:lbReplaceValue.Top">
         <source>68</source>
@@ -278,7 +285,7 @@
         </prop-group>
       </trans-unit>
       <trans-unit id="O:ReplaceDlg.O:lbSearchValue.Left" resname="O:ReplaceDlg.O:lbSearchValue.Left">
-        <source>12</source>
+        <source>8</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">41679.6206390972</prop>
           <prop prop-type="Status">1</prop>
@@ -286,6 +293,13 @@
           <prop prop-type="Type">TLabel</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
+        <alt-trans>
+          <source>12</source>
+          <target>12</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">45055.7075375926</prop>
+          </prop-group>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="O:ReplaceDlg.O:lbSearchValue.Top" resname="O:ReplaceDlg.O:lbSearchValue.Top">
         <source>16</source>
@@ -338,7 +352,7 @@
         </prop-group>
       </trans-unit>
       <trans-unit id="O:ReplaceDlg.O:btOk.Left" resname="O:ReplaceDlg.O:btOk.Left">
-        <source>48</source>
+        <source>89</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">41679.6206390972</prop>
           <prop prop-type="Status">1</prop>
@@ -346,6 +360,13 @@
           <prop prop-type="Type">TButton</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
+        <alt-trans>
+          <source>48</source>
+          <target>48</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">45055.7075375926</prop>
+          </prop-group>
+        </alt-trans>
         <alt-trans>
           <source>42</source>
           <target>42</target>
@@ -369,7 +390,7 @@
         </alt-trans>
       </trans-unit>
       <trans-unit id="O:ReplaceDlg.O:btOk.Top" resname="O:ReplaceDlg.O:btOk.Top">
-        <source>130</source>
+        <source>132</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">41679.6206390972</prop>
           <prop prop-type="Status">1</prop>
@@ -377,6 +398,13 @@
           <prop prop-type="Type">TButton</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
+        <alt-trans>
+          <source>130</source>
+          <target>130</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">45055.7075375926</prop>
+          </prop-group>
+        </alt-trans>
         <alt-trans>
           <source>131</source>
           <target>131</target>
@@ -473,7 +501,7 @@
         </prop-group>
       </trans-unit>
       <trans-unit id="O:ReplaceDlg.O:btCancel.Left" resname="O:ReplaceDlg.O:btCancel.Left">
-        <source>129</source>
+        <source>170</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">41679.6206390972</prop>
           <prop prop-type="Status">1</prop>
@@ -481,6 +509,13 @@
           <prop prop-type="Type">TButton</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
+        <alt-trans>
+          <source>129</source>
+          <target>129</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">45055.7075375926</prop>
+          </prop-group>
+        </alt-trans>
         <alt-trans>
           <source>123</source>
           <target>123</target>
@@ -497,7 +532,7 @@
         </alt-trans>
       </trans-unit>
       <trans-unit id="O:ReplaceDlg.O:btCancel.Top" resname="O:ReplaceDlg.O:btCancel.Top">
-        <source>130</source>
+        <source>132</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">41679.6206390972</prop>
           <prop prop-type="Status">1</prop>
@@ -505,6 +540,13 @@
           <prop prop-type="Type">TButton</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
+        <alt-trans>
+          <source>130</source>
+          <target>130</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">45055.7075375926</prop>
+          </prop-group>
+        </alt-trans>
         <alt-trans>
           <source>131</source>
           <target>131</target>
@@ -592,7 +634,7 @@
         </prop-group>
       </trans-unit>
       <trans-unit id="O:ReplaceDlg.O:cbSearchValue.Left" resname="O:ReplaceDlg.O:cbSearchValue.Left">
-        <source>12</source>
+        <source>8</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">41679.6206390972</prop>
           <prop prop-type="Status">1</prop>
@@ -600,6 +642,13 @@
           <prop prop-type="Type">TComboBox</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
+        <alt-trans>
+          <source>12</source>
+          <target>12</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">45055.7075375926</prop>
+          </prop-group>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="O:ReplaceDlg.O:cbSearchValue.Top" resname="O:ReplaceDlg.O:cbSearchValue.Top">
         <source>35</source>
@@ -619,7 +668,7 @@
         </alt-trans>
       </trans-unit>
       <trans-unit id="O:ReplaceDlg.O:cbSearchValue.Width" resname="O:ReplaceDlg.O:cbSearchValue.Width">
-        <source>233</source>
+        <source>237</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">41679.6206390972</prop>
           <prop prop-type="Status">1</prop>
@@ -627,6 +676,13 @@
           <prop prop-type="Type">TComboBox</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
+        <alt-trans>
+          <source>233</source>
+          <target>233</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">45055.7075375926</prop>
+          </prop-group>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="O:ReplaceDlg.O:cbSearchValue.Height" resname="O:ReplaceDlg.O:cbSearchValue.Height">
         <source>21</source>
@@ -648,12 +704,22 @@
           <prop prop-type="Localize">1</prop>
         </prop-group>
       </trans-unit>
+      <trans-unit id="O:ReplaceDlg.O:cbSearchValue.Anchors" resname="O:ReplaceDlg.O:cbSearchValue.Anchors">
+        <source>[akLeft, akTop, akRight]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45055.7908709259</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">52</prop>
+          <prop prop-type="Type">TComboBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
       <trans-unit id="O:ReplaceDlg.O:cbSearchValue.TabOrder" resname="O:ReplaceDlg.O:cbSearchValue.TabOrder">
         <source>0</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">41679.6206390972</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">52</prop>
+          <prop prop-type="Order">53</prop>
           <prop prop-type="Type">TComboBox</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
@@ -663,27 +729,34 @@
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">41679.6206390972</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">53</prop>
+          <prop prop-type="Order">54</prop>
           <prop prop-type="Type">TComboBox</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="O:ReplaceDlg.O:cbReplaceValue.Left" resname="O:ReplaceDlg.O:cbReplaceValue.Left">
-        <source>12</source>
+        <source>8</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">41679.6206390972</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">54</prop>
+          <prop prop-type="Order">55</prop>
           <prop prop-type="Type">TComboBox</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
+        <alt-trans>
+          <source>12</source>
+          <target>12</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">45055.7075375926</prop>
+          </prop-group>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="O:ReplaceDlg.O:cbReplaceValue.Top" resname="O:ReplaceDlg.O:cbReplaceValue.Top">
         <source>87</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">41679.6206390972</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">55</prop>
+          <prop prop-type="Order">56</prop>
           <prop prop-type="Type">TComboBox</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
@@ -696,21 +769,38 @@
         </alt-trans>
       </trans-unit>
       <trans-unit id="O:ReplaceDlg.O:cbReplaceValue.Width" resname="O:ReplaceDlg.O:cbReplaceValue.Width">
-        <source>233</source>
+        <source>237</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">41679.6206390972</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">56</prop>
+          <prop prop-type="Order">57</prop>
           <prop prop-type="Type">TComboBox</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
+        <alt-trans>
+          <source>233</source>
+          <target>233</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">45055.7075375926</prop>
+          </prop-group>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="O:ReplaceDlg.O:cbReplaceValue.Height" resname="O:ReplaceDlg.O:cbReplaceValue.Height">
         <source>21</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">41679.6206390972</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">57</prop>
+          <prop prop-type="Order">58</prop>
+          <prop prop-type="Type">TComboBox</prop>
+          <prop prop-type="Localize">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="O:ReplaceDlg.O:cbReplaceValue.Anchors" resname="O:ReplaceDlg.O:cbReplaceValue.Anchors">
+        <source>[akLeft, akTop, akRight]</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45055.7908709259</prop>
+          <prop prop-type="Status">1</prop>
+          <prop prop-type="Order">59</prop>
           <prop prop-type="Type">TComboBox</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
@@ -720,7 +810,7 @@
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">41679.6206390972</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">58</prop>
+          <prop prop-type="Order">60</prop>
           <prop prop-type="Type">TComboBox</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
@@ -730,7 +820,7 @@
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">41679.6206390972</prop>
           <prop prop-type="Status">1</prop>
-          <prop prop-type="Order">59</prop>
+          <prop prop-type="Order">61</prop>
           <prop prop-type="Type">TComboBox</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>

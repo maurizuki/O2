@@ -1,7 +1,6 @@
 object RulePropsDlg: TRulePropsDlg
   Left = 192
   Top = 107
-  BorderStyle = bsDialog
   Caption = 'Rule properties'
   ClientHeight = 427
   ClientWidth = 357
@@ -20,7 +19,7 @@ object RulePropsDlg: TRulePropsDlg
   TextHeight = 13
   object btOk: TButton
     Left = 193
-    Top = 393
+    Top = 394
     Width = 75
     Height = 25
     Action = OK
@@ -28,11 +27,11 @@ object RulePropsDlg: TRulePropsDlg
     Default = True
     TabOrder = 1
     ExplicitLeft = 189
-    ExplicitTop = 392
+    ExplicitTop = 393
   end
   object btCancel: TButton
     Left = 274
-    Top = 393
+    Top = 394
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -41,7 +40,7 @@ object RulePropsDlg: TRulePropsDlg
     ModalResult = 2
     TabOrder = 2
     ExplicitLeft = 270
-    ExplicitTop = 392
+    ExplicitTop = 393
   end
   object PageControl1: TPageControl
     Left = 8
@@ -55,6 +54,9 @@ object RulePropsDlg: TRulePropsDlg
     ExplicitHeight = 378
     object tsGeneral: TTabSheet
       Caption = 'General'
+      DesignSize = (
+        333
+        351)
       object Label1: TLabel
         Left = 3
         Top = 12
@@ -68,6 +70,7 @@ object RulePropsDlg: TRulePropsDlg
         Top = 12
         Width = 28
         Height = 13
+        Anchors = [akTop, akRight]
         Caption = '&Type:'
         FocusControl = cbType
       end
@@ -84,6 +87,7 @@ object RulePropsDlg: TRulePropsDlg
         Top = 66
         Width = 82
         Height = 13
+        Anchors = [akTop, akRight]
         Caption = 'Field &value mask:'
         FocusControl = edFieldValue
       end
@@ -92,8 +96,10 @@ object RulePropsDlg: TRulePropsDlg
         Top = 31
         Width = 160
         Height = 21
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         OnChange = edNameChange
+        ExplicitWidth = 156
       end
       object cbType: TComboBox
         Left = 169
@@ -101,38 +107,50 @@ object RulePropsDlg: TRulePropsDlg
         Width = 161
         Height = 21
         Style = csDropDownList
+        Anchors = [akTop, akRight]
         TabOrder = 1
         OnChange = cbTypeChange
+        ExplicitLeft = 165
       end
       object edFieldName: TEdit
         Left = 3
         Top = 85
         Width = 160
         Height = 21
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 2
+        ExplicitWidth = 156
       end
       object edFieldValue: TEdit
         Left = 169
         Top = 85
         Width = 161
         Height = 21
+        Anchors = [akTop, akRight]
         TabOrder = 3
+        ExplicitLeft = 165
       end
       object MaskHelpMemo: TMemo
         Left = 3
         Top = 128
         Width = 327
-        Height = 214
+        Height = 220
         TabStop = False
+        Anchors = [akLeft, akTop, akRight, akBottom]
         ParentColor = True
         ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 4
+        ExplicitWidth = 323
+        ExplicitHeight = 219
       end
     end
     object tsDisplay: TTabSheet
       Caption = 'Display'
       ImageIndex = 5
+      DesignSize = (
+        333
+        351)
       object Label12: TLabel
         Left = 3
         Top = 12
@@ -146,6 +164,7 @@ object RulePropsDlg: TRulePropsDlg
         Top = 31
         Width = 327
         Height = 21
+        Anchors = [akLeft, akTop, akRight]
         HideSelection = False
         TabOrder = 0
       end
@@ -154,6 +173,7 @@ object RulePropsDlg: TRulePropsDlg
         Top = 58
         Width = 75
         Height = 25
+        Anchors = [akTop, akRight]
         Caption = 'Macros'
         TabOrder = 1
         OnClick = btDisplayMacrosClick
@@ -162,6 +182,9 @@ object RulePropsDlg: TRulePropsDlg
     object tsHyperLink: TTabSheet
       Caption = 'Internet link'
       ImageIndex = 2
+      DesignSize = (
+        333
+        351)
       object Label7: TLabel
         Left = 3
         Top = 12
@@ -175,6 +198,7 @@ object RulePropsDlg: TRulePropsDlg
         Top = 31
         Width = 327
         Height = 21
+        Anchors = [akLeft, akTop, akRight]
         HideSelection = False
         TabOrder = 0
       end
@@ -183,6 +207,7 @@ object RulePropsDlg: TRulePropsDlg
         Top = 58
         Width = 75
         Height = 25
+        Anchors = [akTop, akRight]
         Caption = 'Macros'
         TabOrder = 1
         OnClick = btHyperLinkMacrosClick
@@ -191,6 +216,9 @@ object RulePropsDlg: TRulePropsDlg
     object tsDateFormat: TTabSheet
       Caption = 'Date format'
       ImageIndex = 3
+      DesignSize = (
+        333
+        351)
       object Label8: TLabel
         Left = 3
         Top = 12
@@ -204,6 +232,7 @@ object RulePropsDlg: TRulePropsDlg
         Top = 12
         Width = 77
         Height = 13
+        Anchors = [akTop, akRight]
         Caption = 'Date &separator:'
         FocusControl = edDateSeparator
       end
@@ -212,6 +241,7 @@ object RulePropsDlg: TRulePropsDlg
         Top = 31
         Width = 161
         Height = 21
+        Anchors = [akTop, akRight]
         MaxLength = 1
         TabOrder = 1
       end
@@ -221,12 +251,16 @@ object RulePropsDlg: TRulePropsDlg
         Width = 160
         Height = 21
         Style = csDropDownList
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
       end
     end
     object tsCustomFilter: TTabSheet
       Caption = 'Custom interval'
       ImageIndex = 4
+      DesignSize = (
+        333
+        351)
       object Label10: TLabel
         Left = 3
         Top = 12
@@ -240,6 +274,7 @@ object RulePropsDlg: TRulePropsDlg
         Top = 12
         Width = 86
         Height = 13
+        Anchors = [akTop, akRight]
         Caption = 'Days &after today:'
         FocusControl = edDaysAfter
       end
@@ -250,6 +285,7 @@ object RulePropsDlg: TRulePropsDlg
         Height = 21
         ButtonKind = bkStandard
         MaxValue = 365
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
       end
       object edDaysAfter: TJvSpinEdit
@@ -259,12 +295,16 @@ object RulePropsDlg: TRulePropsDlg
         Height = 21
         ButtonKind = bkStandard
         MaxValue = 365
+        Anchors = [akTop, akRight]
         TabOrder = 1
       end
     end
     object tsHighlight: TTabSheet
       Caption = 'Highlight'
       ImageIndex = 1
+      DesignSize = (
+        333
+        351)
       object Label5: TLabel
         Left = 3
         Top = 12
@@ -278,6 +318,7 @@ object RulePropsDlg: TRulePropsDlg
         Top = 12
         Width = 52
         Height = 13
+        Anchors = [akTop, akRight]
         Caption = '&Text color:'
         FocusControl = cbHighlightTextColor
       end
@@ -287,6 +328,7 @@ object RulePropsDlg: TRulePropsDlg
         Width = 160
         Height = 22
         Style = [cbStandardColors, cbCustomColor, cbPrettyNames]
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
       end
       object cbHighlightTextColor: TColorBox
@@ -295,6 +337,7 @@ object RulePropsDlg: TRulePropsDlg
         Width = 161
         Height = 22
         Style = [cbStandardColors, cbCustomColor, cbPrettyNames]
+        Anchors = [akTop, akRight]
         TabOrder = 1
       end
     end

@@ -4,21 +4,19 @@ object RelationPropsDlg: TRelationPropsDlg
   ActiveControl = cbRole1
   BorderStyle = bsDialog
   Caption = 'Relation properties'
-  ClientHeight = 167
-  ClientWidth = 337
+  ClientHeight = 166
+  ClientWidth = 333
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnShow = FormShow
   DesignSize = (
-    337
-    167)
-  PixelsPerInch = 96
+    333
+    166)
   TextHeight = 13
   object Label1: TLabel
     Left = 8
@@ -37,58 +35,68 @@ object RelationPropsDlg: TRelationPropsDlg
     FocusControl = edObject2
   end
   object Label3: TLabel
-    Left = 171
+    Left = 169
     Top = 12
     Width = 34
     Height = 13
+    Anchors = [akTop, akRight]
     Caption = 'Role &1:'
     FocusControl = cbRole1
   end
   object Label4: TLabel
-    Left = 171
+    Left = 167
     Top = 64
     Width = 34
     Height = 13
+    Anchors = [akTop, akRight]
     Caption = 'Role &2:'
     FocusControl = cbRole2
   end
   object edObject1: TEdit
     Left = 8
     Top = 31
-    Width = 157
+    Width = 153
     Height = 21
     TabStop = False
+    Anchors = [akLeft, akTop, akRight]
     Color = clBtnFace
     ReadOnly = True
     TabOrder = 0
+    ExplicitWidth = 149
   end
   object edObject2: TEdit
     Left = 8
     Top = 83
-    Width = 157
+    Width = 153
     Height = 21
     TabStop = False
+    Anchors = [akLeft, akTop, akRight]
     Color = clBtnFace
     ReadOnly = True
     TabOrder = 2
+    ExplicitWidth = 149
   end
   object cbRole1: TComboBox
-    Left = 171
+    Left = 167
     Top = 31
-    Width = 157
+    Width = 158
     Height = 21
+    Anchors = [akTop, akRight]
     TabOrder = 1
+    ExplicitLeft = 163
   end
   object cbRole2: TComboBox
-    Left = 171
+    Left = 167
     Top = 83
-    Width = 157
+    Width = 158
     Height = 21
+    Anchors = [akTop, akRight]
     TabOrder = 3
+    ExplicitLeft = 163
   end
   object btOk: TButton
-    Left = 171
-    Top = 134
+    Left = 167
+    Top = 133
     Width = 76
     Height = 25
     Anchors = [akRight, akBottom]
@@ -96,11 +104,12 @@ object RelationPropsDlg: TRelationPropsDlg
     Default = True
     TabOrder = 4
     OnClick = btOkClick
-    ExplicitTop = 190
+    ExplicitLeft = 163
+    ExplicitTop = 132
   end
   object btCancel: TButton
-    Left = 253
-    Top = 134
+    Left = 249
+    Top = 133
     Width = 76
     Height = 25
     Anchors = [akRight, akBottom]
@@ -108,6 +117,7 @@ object RelationPropsDlg: TRelationPropsDlg
     Caption = 'Cancel'
     ModalResult = 2
     TabOrder = 5
-    ExplicitTop = 190
+    ExplicitLeft = 245
+    ExplicitTop = 132
   end
 end

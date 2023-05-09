@@ -387,8 +387,9 @@ object AboutForm: TAboutForm
         'Copyright (C) 1997-2023 Jordan Russell.'
         'Portions Copyright (C) 2000-2023 Martijn Laan.'
         ''
-        'Jedi VCL Project'
-        'Copyright (C) 1999-2023 The Jedi VCL Team.'
+        'JEDI Visual Component Library'
+        'Copyright (C) 1999-2023 the Project JEDI '
+        'community.'
         ''
         'SZCRC32 unit'
         'Copyright (C) 2004 Sasa Zeman.'
@@ -400,6 +401,7 @@ object AboutForm: TAboutForm
       ReadOnly = True
       ScrollBars = ssVertical
       TabOrder = 0
+      ExplicitWidth = 249
     end
   end
   object btOk: TButton
@@ -423,6 +425,7 @@ object AboutForm: TAboutForm
     Caption = 'Release notes...'
     TabOrder = 3
     OnClick = btReadMeClick
+    ExplicitTop = 384
   end
   object GroupBox1: TGroupBox
     Left = 8

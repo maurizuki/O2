@@ -17,7 +17,7 @@ object ReplaceDlg: TReplaceDlg
     165)
   TextHeight = 13
   object lbReplaceValue: TLabel
-    Left = 12
+    Left = 8
     Top = 68
     Width = 72
     Height = 13
@@ -25,7 +25,7 @@ object ReplaceDlg: TReplaceDlg
     FocusControl = cbReplaceValue
   end
   object lbSearchValue: TLabel
-    Left = 12
+    Left = 8
     Top = 16
     Width = 67
     Height = 13
@@ -33,8 +33,8 @@ object ReplaceDlg: TReplaceDlg
     FocusControl = cbSearchValue
   end
   object btOk: TButton
-    Left = 48
-    Top = 130
+    Left = 89
+    Top = 132
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -45,8 +45,8 @@ object ReplaceDlg: TReplaceDlg
     TabOrder = 2
   end
   object btCancel: TButton
-    Left = 129
-    Top = 130
+    Left = 170
+    Top = 132
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -56,19 +56,21 @@ object ReplaceDlg: TReplaceDlg
     TabOrder = 3
   end
   object cbSearchValue: TComboBox
-    Left = 12
+    Left = 8
     Top = 35
-    Width = 233
+    Width = 237
     Height = 21
     Style = csDropDownList
+    Anchors = [akLeft, akTop, akRight]
     TabOrder = 0
     OnChange = cbSearchValueChange
   end
   object cbReplaceValue: TComboBox
-    Left = 12
+    Left = 8
     Top = 87
-    Width = 233
+    Width = 237
     Height = 21
+    Anchors = [akLeft, akTop, akRight]
     TabOrder = 1
     OnChange = cbReplaceValueChange
   end

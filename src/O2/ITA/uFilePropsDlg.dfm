@@ -62,39 +62,49 @@ object FilePropsDlg: TFilePropsDlg
     Top = 31
     Width = 277
     Height = 21
+    Anchors = [akLeft, akTop, akRight]
     TabOrder = 0
+    ExplicitWidth = 273
   end
   object edDescription: TEdit
     Left = 8
     Top = 85
     Width = 277
     Height = 21
+    Anchors = [akLeft, akTop, akRight]
     TabOrder = 1
+    ExplicitWidth = 273
   end
   object edAuthor: TEdit
     Left = 8
     Top = 139
     Width = 277
     Height = 21
+    Anchors = [akLeft, akTop, akRight]
     TabOrder = 2
+    ExplicitWidth = 273
   end
   object edCipher: TEdit
     Left = 8
     Top = 193
     Width = 277
     Height = 21
+    Anchors = [akLeft, akTop, akRight]
     Color = clBtnFace
     ReadOnly = True
     TabOrder = 3
+    ExplicitWidth = 273
   end
   object edHash: TEdit
     Left = 8
     Top = 247
     Width = 277
     Height = 21
+    Anchors = [akLeft, akTop, akRight]
     Color = clBtnFace
     ReadOnly = True
     TabOrder = 4
+    ExplicitWidth = 273
   end
   object btOk: TButton
     Left = 129
@@ -106,6 +116,8 @@ object FilePropsDlg: TFilePropsDlg
     Default = True
     TabOrder = 5
     OnClick = btOkClick
+    ExplicitLeft = 125
+    ExplicitTop = 296
   end
   object btCancel: TButton
     Left = 210
@@ -117,5 +129,7 @@ object FilePropsDlg: TFilePropsDlg
     Caption = 'Annulla'
     ModalResult = 2
     TabOrder = 6
+    ExplicitLeft = 206
+    ExplicitTop = 296
   end
 end
