@@ -73,8 +73,8 @@ __Inno Setup__
 Copyright (C) 1997-2023 Jordan Russell.  
 Portions Copyright (C) 2000-2023 Martijn Laan.  
 
-__Jedi VCL Project__  
-Copyright (C) 1999-2023 The Jedi VCL Team.  
+__JEDI Visual Component Library__  
+Copyright (C) 1999-2023 the Project JEDI community.  
 
 __SZCRC32 unit__  
 Copyright (C) 2004 Sasa Zeman.  
