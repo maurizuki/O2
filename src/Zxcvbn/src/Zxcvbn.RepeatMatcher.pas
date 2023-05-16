@@ -88,8 +88,8 @@ begin
 
     while (lastIndex < APassword.Length) do
     begin
-      greedyMatch := greedy.Match(APassword, lastIndex, APassword.Length - lastIndex + 1);
-      lazyMatch := lazy.Match(APassword, lastIndex, APassword.Length - lastIndex + 1);
+      greedyMatch := greedy.Match(APassword, lastIndex + 1, APassword.Length - lastIndex);
+      lazyMatch := lazy.Match(APassword, lastIndex + 1, APassword.Length - lastIndex);
       if not greedyMatch.Success then Break;
 
       if lazyMatch.Success then
