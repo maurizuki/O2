@@ -19,7 +19,8 @@ interface
 
 {$WARN UNIT_PLATFORM OFF}
 
-{$R icons.res}
+{$R Dictionaries.res}
+{$R Icons.res}
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,

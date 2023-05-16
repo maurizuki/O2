@@ -73,4 +73,5 @@ modules/
 *.ITA
 
 # Compiled resources
-src/O2/icons.res
+src/O2/Dictionaries.res
+src/O2/Icons.res
