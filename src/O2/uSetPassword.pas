@@ -19,7 +19,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, JvExStdCtrls, JvEdit;
+  Dialogs, StdCtrls, JvExStdCtrls, JvEdit, Vcl.ExtCtrls;
 
 type
   TSetPasswordDlg = class(TForm)
@@ -33,12 +33,17 @@ type
     cbEncryption: TComboBox;
     lbHash: TLabel;
     cbHash: TComboBox;
+    gbPasswordStrength: TGroupBox;
+    pbPasswordStrength: TPaintBox;
+    PasswordStrengthMemo: TMemo;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure cbEncryptionChange(Sender: TObject);
     procedure cbHashChange(Sender: TObject);
     procedure edPasswordChange(Sender: TObject);
+    procedure pbPasswordStrengthPaint(Sender: TObject);
   private
+    FPasswordScore: Integer;
     procedure EnableControls;
   public
     class function Execute(AOwner: TComponent; var Encrypt: Boolean;
@@ -51,7 +56,7 @@ var
 implementation
 
 uses
-  uO2Defs, uGlobal;
+  uO2Defs, uGlobal, Zxcvbn, Zxcvbn.Result, Zxcvbn.Utility;
 
 {$R *.dfm}
 
@@ -91,6 +96,7 @@ end;
 
 procedure TSetPasswordDlg.FormCreate(Sender: TObject);
 begin
+  FPasswordScore := 0;
   TCipherLookup.Fill(cbEncryption);
   THashLookup.Fill(cbHash);
 end;
@@ -111,8 +117,82 @@ begin
 end;
 
 procedure TSetPasswordDlg.edPasswordChange(Sender: TObject);
+var
+  Zxcvbn: TZxcvbn;
+  ZxcvbnResult: TZxcvbnResult;
 begin
   EnableControls;
+
+  Zxcvbn := TZxcvbn.Create;
+  try
+    ZxcvbnResult := Zxcvbn.EvaluatePassword(edPassword.Text);
+    try
+      FPasswordScore := ZxcvbnResult.Score;
+      pbPasswordStrength.Invalidate;
+
+      PasswordStrengthMemo.Clear;
+      PasswordStrengthMemo.Lines.Add('Warning:');
+      PasswordStrengthMemo.Lines.Add(GetWarning(ZxcvbnResult.Warning));
+      PasswordStrengthMemo.Lines.Add('');
+      PasswordStrengthMemo.Lines.Add('Suggestions:');
+      PasswordStrengthMemo.Lines.Add(GetSuggestions(ZxcvbnResult.Suggestions));
+    finally
+      ZxcvbnResult.Free;
+    end;
+  finally
+    Zxcvbn.Free;
+  end;
+end;
+
+procedure TSetPasswordDlg.pbPasswordStrengthPaint(Sender: TObject);
+begin
+  pbPasswordStrength.Canvas.Brush.Color := clWhite;
+  pbPasswordStrength.Canvas.FillRect(Rect(0, 0,
+    pbPasswordStrength.Width, pbPasswordStrength.Height));
+  pbPasswordStrength.Canvas.Rectangle(0, 0,
+    pbPasswordStrength.Width, pbPasswordStrength.Height);
+
+  if cbEncryption.ItemIndex <> 0 then
+    case FPasswordScore of
+      0:
+        begin
+          pbPasswordStrength.Canvas.Brush.Color := $00241CED;
+          pbPasswordStrength.Canvas.FillRect(Rect(1, 1,
+            1 * (pbPasswordStrength.Width div 5) - 1,
+            pbPasswordStrength.Height - 1));
+        end;
+
+      1:
+        begin
+          pbPasswordStrength.Canvas.Brush.Color := $00277FFF;
+          pbPasswordStrength.Canvas.FillRect(Rect(1, 1,
+          2 * (pbPasswordStrength.Width div 5) - 1,
+          pbPasswordStrength.Height - 1));
+        end;
+
+      2:
+        begin
+          pbPasswordStrength.Canvas.Brush.Color := $000EC9FF;
+          pbPasswordStrength.Canvas.FillRect(Rect(1, 1,
+          3 * (pbPasswordStrength.Width div 5) - 1,
+          pbPasswordStrength.Height - 1));
+        end;
+
+      3:
+        begin
+          pbPasswordStrength.Canvas.Brush.Color := $00E8A200;
+          pbPasswordStrength.Canvas.FillRect(Rect(1, 1,
+          4 * (pbPasswordStrength.Width div 5) - 1,
+          pbPasswordStrength.Height - 1));
+        end;
+
+      4:
+        begin
+          pbPasswordStrength.Canvas.Brush.Color := $004CB122;
+          pbPasswordStrength.Canvas.FillRect(Rect(1, 1,
+          pbPasswordStrength.Width - 1, pbPasswordStrength.Height - 1));
+        end;
+    end;
 end;
 
 procedure TSetPasswordDlg.EnableControls;
