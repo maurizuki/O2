@@ -448,7 +448,7 @@ var
 begin
   suggestions := '';
   for suggestion in ASuggestions do
-    suggestions := suggestions + GetSuggestion(suggestion, ATranslation) + #10;
+    suggestions := suggestions + GetSuggestion(suggestion, ATranslation) + #13#10;
 
   Result := suggestions;
 end;
