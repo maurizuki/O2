@@ -6,7 +6,7 @@ uses
   System.SysUtils,
   Zxcvbn.Result;
 
-const
+resourcestring
 	SZxcvbnInstant = 'instant';
 	SZxcvbnMinutes = 'minutes';
 	SZxcvbnHours = 'hours';
