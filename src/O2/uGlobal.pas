@@ -18,7 +18,8 @@ unit uGlobal;
 interface
 
 uses
-  Windows, Classes, ComCtrls, StdCtrls, uO2Defs, uO2Rules, uLookupHelper;
+  Windows, Classes, Graphics, ComCtrls, StdCtrls, uO2Defs, uO2Rules,
+  uLookupHelper;
 
 const
   DefaultFileExt = 'o2';
@@ -96,6 +97,14 @@ const
   Languages: array[1..2] of TLanguageMapEntry = (
     (LangId: (SUBLANG_ENGLISH_US shl 10) or LANG_ENGLISH; Language: 'ENU'),
     (LangId: (SUBLANG_ITALIAN shl 10) or LANG_ITALIAN;    Language: 'ITA'));
+
+{ Zxcvbn password score colors }
+
+  PasswordScore0Color = TColor($00241CED);
+  PasswordScore1Color = TColor($00277FFF);
+  PasswordScore2Color = TColor($000EC9FF);
+  PasswordScore3Color = TColor($00E8A200);
+  PasswordScore4Color = TColor($004CB122);
 
 resourcestring
   STags = 'Tags';

@@ -75,7 +75,7 @@ object SetPasswordDlg: TSetPasswordDlg
     OnChange = edPasswordChange
   end
   object btOk: TButton
-    Left = 274
+    Left = 270
     Top = 241
     Width = 75
     Height = 25
@@ -85,11 +85,11 @@ object SetPasswordDlg: TSetPasswordDlg
     Enabled = False
     ModalResult = 1
     TabOrder = 4
-    ExplicitLeft = 270
+    ExplicitLeft = 266
     ExplicitTop = 240
   end
   object btCancel: TButton
-    Left = 355
+    Left = 351
     Top = 241
     Width = 75
     Height = 25
@@ -98,7 +98,7 @@ object SetPasswordDlg: TSetPasswordDlg
     Caption = 'Cancel'
     ModalResult = 2
     TabOrder = 5
-    ExplicitLeft = 351
+    ExplicitLeft = 347
     ExplicitTop = 240
   end
   object cbEncryption: TComboBox
@@ -122,28 +122,29 @@ object SetPasswordDlg: TSetPasswordDlg
   object gbPasswordStrength: TGroupBox
     Left = 192
     Top = 16
-    Width = 238
+    Width = 234
     Height = 200
     Anchors = [akLeft, akTop, akRight]
     Caption = 'Password strength'
     ParentBackground = False
     TabOrder = 6
-    ExplicitWidth = 234
+    ExplicitWidth = 230
     DesignSize = (
-      238
+      234
       200)
     object pbPasswordStrength: TPaintBox
       Left = 3
       Top = 19
-      Width = 232
+      Width = 228
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       OnPaint = pbPasswordStrengthPaint
+      ExplicitWidth = 232
     end
     object PasswordStrengthMemo: TMemo
       Left = 3
       Top = 52
-      Width = 232
+      Width = 228
       Height = 145
       TabStop = False
       Anchors = [akLeft, akTop, akRight, akBottom]
@@ -152,7 +153,7 @@ object SetPasswordDlg: TSetPasswordDlg
       ReadOnly = True
       ScrollBars = ssVertical
       TabOrder = 0
-      ExplicitWidth = 228
+      ExplicitWidth = 224
     end
   end
 end
