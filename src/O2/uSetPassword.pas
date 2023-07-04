@@ -120,6 +120,7 @@ procedure TSetPasswordDlg.edPasswordChange(Sender: TObject);
 var
   Zxcvbn: TZxcvbn;
   ZxcvbnResult: TZxcvbnResult;
+  ASuggestion: TZxcvbnSuggestion;
 begin
   EnableControls;
 
@@ -136,7 +137,8 @@ begin
         PasswordStrengthMemo.Lines.Add(GetWarning(ZxcvbnResult.Warning));
         PasswordStrengthMemo.Lines.Add('');
       end;
-      PasswordStrengthMemo.Lines.Add(GetSuggestions(ZxcvbnResult.Suggestions));
+      for ASuggestion in ZxcvbnResult.Suggestions do
+        PasswordStrengthMemo.Lines.Add(GetSuggestion(ASuggestion));
     finally
       ZxcvbnResult.Free;
     end;

@@ -3,7 +3,6 @@ unit Zxcvbn;
 interface
 uses
   System.Classes, System.SysUtils, System.Generics.Collections,
-  Zxcvbn.Translation,
   Zxcvbn.MatcherFactory,
   Zxcvbn.Matcher,
   Zxcvbn.DictionaryMatcher,
@@ -27,7 +26,6 @@ type
     BruteforcePattern = 'bruteforce';
   private
     FMatcherFactory: IZxcvbnMatcherFactory;
-    FTranslation: TZxcvbnTranslation;
 
     /// <summary>
     /// Returns a new result structure initialised with data for the lowest entropy result of all of the matches passed in, adding brute-force
@@ -48,16 +46,14 @@ type
     /// Create a new instance of Zxcvbn that uses the default matchers.
     /// </summary>
     /// <param name="ADictionariesPath">Path where to look for dictionary files (if not embedded in resources)</param>
-    /// <param name="ATranslation">The language in which the strings are returned</param>
-    constructor Create(ADictionariesPath: String = ''; ATranslation: TZxcvbnTranslation = ztEnglish); overload;
+    constructor Create(ADictionariesPath: String = ''); overload;
 
     /// <summary>
     /// Create an instance of Zxcvbn that will use the given matcher factory to create matchers to use
     /// to find password weakness.
     /// </summary>
     /// <param name="AMatcherFactory">The factory used to create the pattern matchers used</param>
-    /// <param name="ATranslation">The language in which the strings are returned</param>
-    constructor Create(AMatcherFactory: IZxcvbnMatcherFactory; ATranslation: TZxcvbnTranslation = ztEnglish); overload;
+    constructor Create(AMatcherFactory: IZxcvbnMatcherFactory); overload;
 
     /// <summary>
     /// <para>Perform the password matching on the given password and user inputs, returing the result structure with information
@@ -98,15 +94,14 @@ uses
 
 { TZxcvbn }
 
-constructor TZxcvbn.Create(ADictionariesPath: String = ''; ATranslation: TZxcvbnTranslation = ztEnglish);
+constructor TZxcvbn.Create(ADictionariesPath: String = '');
 begin
-  Create(TZxcvbnDefaultMatcherFactory.Create(ADictionariesPath), ATranslation);
+  Create(TZxcvbnDefaultMatcherFactory.Create(ADictionariesPath));
 end;
 
-constructor TZxcvbn.Create(AMatcherFactory: IZxcvbnMatcherFactory; ATranslation: TZxcvbnTranslation = ztEnglish);
+constructor TZxcvbn.Create(AMatcherFactory: IZxcvbnMatcherFactory);
 begin
   FMatcherFactory := AMatcherFactory;
-  FTranslation := ATranslation;
 end;
 
 function TZxcvbn.FindMinimumEntropyMatch(APassword: String; AMatches: TList<TZxcvbnMatch>): TZxcvbnResult;
@@ -243,7 +238,7 @@ begin
   res.Entropy := minEntropy;
   res.MatchSequence := matchSequence;
   res.CrackTime := crackTime;
-  res.CrackTimeDisplay := Zxcvbn.Utility.DisplayTime(crackTime, FTranslation);
+  res.CrackTimeDisplay := Zxcvbn.Utility.DisplayTime(crackTime);
   res.Score := Zxcvbn.PasswordScoring.CrackTimeToScore(crackTime);
 
   //starting feedback

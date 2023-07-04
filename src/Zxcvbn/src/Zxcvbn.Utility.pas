@@ -4,8 +4,42 @@ interface
 uses
   System.Classes,
   System.SysUtils,
-  Zxcvbn.Translation,
   Zxcvbn.Result;
+
+const
+	SZxcvbnInstant = 'instant';
+	SZxcvbnMinutes = 'minutes';
+	SZxcvbnHours = 'hours';
+	SZxcvbnDays = 'days';
+	SZxcvbnMonths = 'months';
+	SZxcvbnYears = 'years';
+	SZxcvbnCenturies = 'centuries';
+
+	SZxcvbnStraightRow = 'Straight rows of keys are easy to guess.';
+	SZxcvbnShortKeyboardPatterns = 'Short keyboard patterns are easy to guess.';
+	SZxcvbnRepeatsLikeAaaEasy = 'Repeats like "aaa" are easy to guess.';
+	SZxcvbnRepeatsLikeAbcSlighterHarder = 'Repeats like "abcabcabc" are only slightly harder to guess than "abc".';
+	SZxcvbnSequenceAbcEasy = 'Sequences like abc or 6543 are easy to guess.';
+	SZxcvbnRecentYearsEasy = 'Recent years are easy to guess.';
+	SZxcvbnDatesEasy = 'Dates are often easy to guess.';
+	SZxcvbnTop10Passwords = 'This is a top-10 common password.';
+	SZxcvbnTop100Passwords = 'This is a top-100 common password.';
+	SZxcvbnCommonPasswords = 'This is a very common password.';
+	SZxcvbnSimilarCommonPasswords = 'This is similar to a commonly used password.';
+	SZxcvbnWordEasy = 'A word by itself is easy to guess.';
+	SZxcvbnNameSurnamesEasy = 'Names and surnames by themselves are easy to guess.';
+	SZxcvbnCommonNameSurnamesEasy = 'Common names and surnames are easy to guess.';
+
+	SZxcvbnAddAnotherWordOrTwo = 'Add another word or two. Uncommon words are better.';
+	SZxcvbnUseLongerKeyboardPattern = 'Use a longer keyboard pattern with more turns.';
+	SZxcvbnAvoidRepeatedWordsAndChars = 'Avoid repeated words and characters.';
+	SZxcvbnAvoidSequences = 'Avoid sequences.';
+	SZxcvbnAvoidYearsAssociatedYou = 'Avoid recent years and years that are associated with you.';
+	SZxcvbnAvoidDatesYearsAssociatedYou = 'Avoid dates and years that are associated with you.';
+	SZxcvbnCapsDontHelp = 'Capitalization doesn''t help very much.';
+	SZxcvbnAllCapsEasy = 'All-uppercase is almost as easy to guess as all-lowercase.';
+	SZxcvbnReversedWordEasy = 'Reversed words aren''t much harder to guess.';
+	SZxcvbnPredictableSubstitutionsEasy = 'Predictable substitutions like ''@'' instead of ''a'' don''t help very much.';
 
   /// <summary>
   /// Convert a number of seconds into a human readable form. Rounds up.
@@ -13,11 +47,8 @@ uses
   /// this is probably to avoid ever needing to deal with plurals
   /// </summary>
   /// <param name="ASeconds">The time in seconds</param>
-  /// <param name="ATranslation">The language in which the string is returned</param>
   /// <returns>A human-friendly time string</returns>
-  function DisplayTime(ASeconds: Double; ATranslation: TZxcvbnTranslation = ztEnglish): String;
-
-  function GetTranslation(AMatcher: String; ATranslation: TZxcvbnTranslation): String;
+  function DisplayTime(ASeconds: Double): String;
 
   /// <summary>
   /// Reverse a string in one call
@@ -54,25 +85,15 @@ uses
   /// Get a translated string of the Warning
   /// </summary>
   /// <param name="AWarning">Warning enum to get the string from</param>
-  /// <param name="ATranslation">Language in which to return the string to. Default is English.</param>
   /// <returns>Warning string in the right language</returns>
-  function GetWarning(AWarning: TZxcvbnWarning; ATranslation: TZxcvbnTranslation = ztEnglish): String;
+  function GetWarning(AWarning: TZxcvbnWarning): String;
 
   /// <summary>
   /// Get a translated string of the Suggestion
   /// </summary>
   /// <param name="ASuggestion">Suggestion enum to get the string from</param>
-  /// <param name="ATranslation">Language in which to return the string to. Default is English.</param>
   /// <returns>Suggestion string in the right language</returns>
-  function GetSuggestion(ASuggestion: TZxcvbnSuggestion; ATranslation: TZxcvbnTranslation = ztEnglish): String;
-
-  /// <summary>
-  /// Get a translated string of the Suggestion set
-  /// </summary>
-  /// <param name="ASuggestions">Set of Suggestion enum to get the string from</param>
-  /// <param name="ATranslation">Language in which to return the string to. Default is English.</param>
-  /// <returns>Suggestions string in the right language</returns>
-  function GetSuggestions(ASuggestions: TZxcvbnSuggestions; ATranslation: TZxcvbnTranslation = ztEnglish): String;
+  function GetSuggestion(ASuggestion: TZxcvbnSuggestion): String;
 
 implementation
 uses
@@ -80,7 +101,7 @@ uses
   System.StrUtils,
   System.Math;
 
-function DisplayTime(ASeconds: Double; ATranslation: TZxcvbnTranslation = ztEnglish): String;
+function DisplayTime(ASeconds: Double): String;
 var
   minute, hour, day, month, year, century: Int64;
 begin
@@ -91,85 +112,13 @@ begin
   year := month * 12;
   century := year * 100;
 
-  if (ASeconds < minute) then Result := GetTranslation('instant', ATranslation)
-  else if (ASeconds < hour) then Result := Format('%d %s', [1 + Ceil(ASeconds / minute), GetTranslation('minutes', ATranslation)])
-  else if (ASeconds < day) then Result := Format('%d %s', [1 + Ceil(ASeconds / hour), GetTranslation('hours', ATranslation)])
-  else if (ASeconds < month) then Result := Format('%d %s', [1 + Ceil(ASeconds / day), GetTranslation('days', ATranslation)])
-  else if (ASeconds < year) then Result := Format('%d %s', [1 + Ceil(ASeconds / month), GetTranslation('months', ATranslation)])
-  else if (ASeconds < century) then Result := Format('%d %s', [1 + Ceil(ASeconds / year), GetTranslation('years', ATranslation)])
-  else Result := GetTranslation('centuries', ATranslation);
-end;
-
-function GetTranslation(AMatcher: String; ATranslation: TZxcvbnTranslation): String;
-var
-  translated: String;
-begin
-  if AMatcher = 'instant' then
-  begin
-    case ATranslation of
-      ztGerman: translated := 'unmittelbar';
-      ztFrench: translated := 'instantané';
-      else
-        translated := 'instant';
-    end;
-  end else
-  if AMatcher = 'minutes' then
-  begin
-    case ATranslation of
-      ztGerman: translated := 'Minuten';
-      ztFrench: translated := 'Minutes';
-      else
-        translated := 'minutes';
-    end;
-  end else
-  if AMatcher = 'hours' then
-  begin
-    case ATranslation of
-      ztGerman: translated := 'Stunden';
-      ztFrench: translated := 'Heures';
-      else
-        translated := 'hours';
-    end;
-  end else
-  if AMatcher = 'days' then
-  begin
-    case ATranslation of
-      ztGerman: translated := 'Tage';
-      ztFrench: translated := 'Journées';
-      else
-        translated := 'days';
-    end;
-  end else
-  if AMatcher = 'months' then
-  begin
-    case ATranslation of
-      ztGerman: translated := 'Monate';
-      ztFrench: translated := 'Mois';
-      else
-        translated := 'months';
-    end;
-  end else
-  if AMatcher = 'years' then
-  begin
-    case ATranslation of
-      ztGerman: translated := 'Jahre';
-      ztFrench: translated := 'Ans';
-      else
-        translated := 'years';
-    end;
-  end else
-  if AMatcher = 'centuries' then
-  begin
-    case ATranslation of
-      ztGerman: translated := 'Jahrhunderte';
-      ztFrench: translated := 'Siècles';
-      else
-        translated := 'centuries';
-    end;
-  end else
-    translated := AMatcher;
-
-  Result := translated;
+  if (ASeconds < minute) then Result := SZxcvbnInstant
+  else if (ASeconds < hour) then Result := Format('%d %s', [1 + Ceil(ASeconds / minute), SZxcvbnMinutes])
+  else if (ASeconds < day) then Result := Format('%d %s', [1 + Ceil(ASeconds / hour), SZxcvbnHours])
+  else if (ASeconds < month) then Result := Format('%d %s', [1 + Ceil(ASeconds / day), SZxcvbnDays])
+  else if (ASeconds < year) then Result := Format('%d %s', [1 + Ceil(ASeconds / month), SZxcvbnMonths])
+  else if (ASeconds < century) then Result := Format('%d %s', [1 + Ceil(ASeconds / year), SZxcvbnYears])
+  else Result := SZxcvbnCenturies;
 end;
 
 function StringReverse(const AStr: String): String;
@@ -210,247 +159,68 @@ begin
   end;
 end;
 
-function GetWarning(AWarning: TZxcvbnWarning; ATranslation: TZxcvbnTranslation = ztEnglish): String;
-var
-  translated: String;
+function GetWarning(AWarning: TZxcvbnWarning): String;
 begin
   case AWarning of
     zwStraightRow:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'Straight rows of keys are easy to guess';
-      end;
-
+      Result := SZxcvbnStraightRow;
     zwShortKeyboardPatterns:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'Short keyboard patterns are easy to guess';
-      end;
-
+      Result := SZxcvbnShortKeyboardPatterns;
     zwRepeatsLikeAaaEasy:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'Repeats like "aaa" are easy to guess';
-      end;
-
+      Result := SZxcvbnRepeatsLikeAaaEasy;
     zwRepeatsLikeAbcSlighterHarder:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'Repeats like "abcabcabc" are only slightly harder to guess than "abc"';
-      end;
-
+      Result := SZxcvbnRepeatsLikeAbcSlighterHarder;
     zwSequenceAbcEasy:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'Sequences like abc or 6543 are easy to guess';
-      end;
-
+      Result := SZxcvbnSequenceAbcEasy;
     zwRecentYearsEasy:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'Recent years are easy to guess';
-      end;
-
+      Result := SZxcvbnRecentYearsEasy;
     zwDatesEasy:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'Dates are often easy to guess';
-      end;
-
+      Result := SZxcvbnDatesEasy;
     zwTop10Passwords:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'This is a top-10 common password';
-      end;
-
+      Result := SZxcvbnTop10Passwords;
     zwTop100Passwords:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'This is a top-100 common password';
-      end;
-
+      Result := SZxcvbnTop100Passwords;
     zwCommonPasswords:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'This is a very common password';
-      end;
-
+      Result := SZxcvbnCommonPasswords;
     zwSimilarCommonPasswords:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'This is similar to a commonly used password';
-      end;
-
+      Result := SZxcvbnSimilarCommonPasswords;
     zwWordEasy:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'A word by itself is easy to guess';
-      end;
-
+      Result := SZxcvbnWordEasy;
     zwNameSurnamesEasy:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'Names and surnames by themselves are easy to guess';
-      end;
-
+      Result := SZxcvbnNameSurnamesEasy;
     zwCommonNameSurnamesEasy:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'Common names and surnames are easy to guess';
-      end;
-
-    zwEmpty:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := '';
-      end;
-
+      Result := SZxcvbnCommonNameSurnamesEasy;
     else
-      translated := '';
+      Result := '';
   end;
-
-  Result := translated;
 end;
 
-function GetSuggestion(ASuggestion: TZxcvbnSuggestion; ATranslation: TZxcvbnTranslation = ztEnglish): String;
-var
-  translated: String;
+function GetSuggestion(ASuggestion: TZxcvbnSuggestion): String;
 begin
   case ASuggestion of
     zsAddAnotherWordOrTwo:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'Add another word or two. Uncommon words are better.';
-      end;
-
+      Result := SZxcvbnAddAnotherWordOrTwo;
     zsUseLongerKeyboardPattern:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'Use a longer keyboard pattern with more turns';
-      end;
-
+      Result := SZxcvbnUseLongerKeyboardPattern;
     zsAvoidRepeatedWordsAndChars:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'Avoid repeated words and characters';
-      end;
-
+      Result := SZxcvbnAvoidRepeatedWordsAndChars;
     zsAvoidSequences:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'Avoid sequences';
-      end;
-
+      Result := SZxcvbnAvoidSequences;
     zsAvoidYearsAssociatedYou:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'Avoid recent years '+#10+' Avoid years that are associated with you';
-      end;
-
+      Result := SZxcvbnAvoidYearsAssociatedYou;
     zsAvoidDatesYearsAssociatedYou:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'Avoid dates and years that are associated with you';
-      end;
-
+      Result := SZxcvbnAvoidDatesYearsAssociatedYou;
     zsCapsDontHelp:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'Capitalization doesn''t help very much';
-      end;
-
+      Result := SZxcvbnCapsDontHelp;
     zsAllCapsEasy:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'All-uppercase is almost as easy to guess as all-lowercase';
-      end;
-
+      Result := SZxcvbnAllCapsEasy;
     zsReversedWordEasy:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'Reversed words aren''t much harder to guess';
-      end;
-
+      Result := SZxcvbnReversedWordEasy;
     zsPredictableSubstitutionsEasy:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := 'Predictable substitutions like ''@'' instead of ''a'' don''t help very much';
-      end;
-
-    zsEmpty:
-      case ATranslation of
-        ztGerman:  translated := '';
-        ztFrench:  translated := '';
-        else
-          translated := '';
-      end;
+      Result := SZxcvbnPredictableSubstitutionsEasy;
     else
-      translated := 'Use a few words, avoid common phrases '+#10+' No need for symbols, digits, or uppercase letters';
+      Result := '';
   end;
-
-  Result := translated;
-end;
-
-function GetSuggestions(ASuggestions: TZxcvbnSuggestions; ATranslation: TZxcvbnTranslation = ztEnglish): String;
-var
-  suggestion: TZxcvbnSuggestion;
-  suggestions: String;
-begin
-  suggestions := '';
-  for suggestion in ASuggestions do
-    suggestions := suggestions + GetSuggestion(suggestion, ATranslation) + #13#10;
-
-  Result := suggestions;
 end;
 
 end.
