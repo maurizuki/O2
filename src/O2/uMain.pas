@@ -26,7 +26,8 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, ToolWin, ImgList, ActnList, Menus, XPMan, AppEvnts,
   StdCtrls, ExtCtrls, FileCtrl, Types, System.ImageList, System.Actions,
-  REST.Client, Data.Bind.Components, Data.Bind.ObjectScope,
+  System.Generics.Collections, REST.Client, Data.Bind.Components,
+  Data.Bind.ObjectScope,
   JvComponentBase, JvDragDrop,
   Zxcvbn,
   uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist;
@@ -514,7 +515,9 @@ type
     FTransparency: Integer;
     FTransparencyOnlyIfDeactivated: Boolean;
     FShowPasswords: Boolean;
+
     FZxcvbn: TZxcvbn;
+    FPasswordScores: TDictionary<string, Integer>;
 
     MRUMenuItems: TList;
     MRUList: TMRUList;
@@ -594,6 +597,8 @@ type
     procedure UpdateTagList;
     procedure UpdateRuleList;
     procedure UpdateMRUList(const FileName: string = '');
+    procedure UpdatePasswordScores; overload;
+    procedure UpdatePasswordScores(AObject: TO2Object); overload;
   protected
     property EventFilter: TEventFilter read GetEventFilter;
     property StayOnTop: Boolean read FStayOnTop write SetStayOnTop;
@@ -615,7 +620,7 @@ implementation
 
 uses
   TypInfo, StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, XMLDoc, XMLIntf,
-  xmldom, msxmldom, System.JSON, JclFileUtils,
+  xmldom, msxmldom, System.JSON, JclFileUtils, Zxcvbn.Result,
   uAppFiles, uUtils, uShellUtils, uPAFConsts, uAbout, uGetPassword,
   uSetPassword, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
   uReplaceDlg, uPrintPreview, uHTMLExport, uXmlStorage, uO2Xml, uO2Defs,
@@ -772,6 +777,7 @@ begin
   ExportSettingsDlg.Filter := SExportSettingsFileFilter;
 
   FZxcvbn := TZxcvbn.Create;
+  FPasswordScores := TDictionary<string, Integer>.Create;
 
   ActiveControl := ObjectsView;
 
@@ -784,6 +790,7 @@ begin
   MRUList.Free;
   MRUMenuItems.Free;
   FZxcvbn.Free;
+  FPasswordScores.Free;
 end;
 
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -934,7 +941,7 @@ var
 begin
   if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data)
     and O2File.Rules.GetHighlightColors(TO2Object(Item.Data),
-    FZxcvbn, BrushColor, FontColor) then
+    FPasswordScores, BrushColor, FontColor) then
   begin
     Sender.Canvas.Brush.Color := BrushColor;
     Sender.Canvas.Font.Color := FontColor;
@@ -1716,6 +1723,7 @@ begin
     BeginBatchOperation;
     try
       O2File.Load;
+      UpdatePasswordScores;
     finally
       EndBatchOperation;
     end;
@@ -2370,6 +2378,32 @@ begin
   end;
 end;
 
+procedure TMainForm.UpdatePasswordScores;
+var
+  AObject: TO2Object;
+begin
+  for AObject in O2File.Objects do UpdatePasswordScores(AObject);
+end;
+
+procedure TMainForm.UpdatePasswordScores(AObject: TO2Object);
+var
+  ZxcvbnResult: TZxcvbnResult;
+  AField: TO2Field;
+  ARule: TO2Rule;
+begin
+  for AField in AObject.Fields do
+    for ARule in O2File.Rules do
+      if (ARule.RuleType = rtPassword) and ARule.Matches(AField) then
+      begin
+          ZxcvbnResult := FZxcvbn.EvaluatePassword(AField.FieldValue);
+          try
+            FPasswordScores.TryAdd(AField.FieldValue, ZxcvbnResult.Score);
+          finally
+            ZxcvbnResult.Free;
+          end;
+      end;
+end;
+
 procedure TMainForm.GetAppInfo(Sender: TObject; F: TStream);
 var
   VersionInfo: TJclFileVersionInfo;
@@ -2637,6 +2671,7 @@ begin
   if TObjPropsDlg.Execute(Application, O2File.Objects, Index, False,
     pgGeneral) then
   begin
+    UpdatePasswordScores(O2File.Objects[Index]);
     Item := ObjToListItem(Index, nil);
     ObjectsView.ClearSelection;
     Item.Selected := True;
@@ -2654,6 +2689,7 @@ begin
   if TObjPropsDlg.Execute(Application, O2File.Objects, Index, True,
     pgGeneral) then
   begin
+    UpdatePasswordScores(O2File.Objects[Index]);
     Item := ObjToListItem(Index, nil);
     ObjectsView.ClearSelection;
     Item.Selected := True;
@@ -2853,6 +2889,7 @@ begin
   Index := TO2Object(ObjectsView.Selected.Data).Index;
   if TObjPropsDlg.Execute(Application, O2File.Objects, Index, False, Page) then
   begin
+    UpdatePasswordScores(O2File.Objects[Index]);
     ObjToListItem(Index, ObjectsView.Selected);
     NotifyChanges([ncObjProps, ncTagList]);
   end;
@@ -2896,7 +2933,7 @@ var
 begin
   if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data)
     and O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
-    FZxcvbn, BrushColor, FontColor) then
+    FPasswordScores, BrushColor, FontColor) then
   begin
     Sender.Canvas.Brush.Color := BrushColor;
     Sender.Canvas.Font.Color := FontColor;
@@ -2913,7 +2950,7 @@ begin
   begin
     if (State * [cdsFocused, cdsHot] = [])
       and O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
-      FZxcvbn, BrushColor, FontColor) then
+      FPasswordScores, BrushColor, FontColor) then
     begin
       Sender.Canvas.Brush.Color := BrushColor;
       Sender.Canvas.Font.Color := FontColor;

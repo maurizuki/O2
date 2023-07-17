@@ -98,7 +98,7 @@ const
     (LangId: (SUBLANG_ENGLISH_US shl 10) or LANG_ENGLISH; Language: 'ENU'),
     (LangId: (SUBLANG_ITALIAN shl 10) or LANG_ITALIAN;    Language: 'ITA'));
 
-{ Zxcvbn password score colors }
+{ Password score colors }
 
   PasswordScore0Color = TColor($00241CED);
   PasswordScore1Color = TColor($00277FFF);
