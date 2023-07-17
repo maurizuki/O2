@@ -19,7 +19,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, JvExStdCtrls, JvEdit, Vcl.ExtCtrls;
+  Dialogs, StdCtrls, Vcl.ExtCtrls, JvExStdCtrls, JvEdit, Zxcvbn;
 
 type
   TSetPasswordDlg = class(TForm)
@@ -37,12 +37,14 @@ type
     pbPasswordStrength: TPaintBox;
     PasswordStrengthMemo: TMemo;
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure cbEncryptionChange(Sender: TObject);
     procedure cbHashChange(Sender: TObject);
     procedure edPasswordChange(Sender: TObject);
     procedure pbPasswordStrengthPaint(Sender: TObject);
   private
+    FZxcvbn: TZxcvbn;
     FPasswordScore: Integer;
     procedure EnableControls;
   public
@@ -56,7 +58,7 @@ var
 implementation
 
 uses
-  uO2Defs, uGlobal, Zxcvbn, Zxcvbn.Result, Zxcvbn.Utility;
+  uO2Defs, uGlobal, Zxcvbn.Result, Zxcvbn.Utility;
 
 {$R *.dfm}
 
@@ -96,9 +98,15 @@ end;
 
 procedure TSetPasswordDlg.FormCreate(Sender: TObject);
 begin
+  FZxcvbn := TZxcvbn.Create;
   FPasswordScore := 0;
   TCipherLookup.Fill(cbEncryption);
   THashLookup.Fill(cbHash);
+end;
+
+procedure TSetPasswordDlg.FormDestroy(Sender: TObject);
+begin
+  FZxcvbn.Free;
 end;
 
 procedure TSetPasswordDlg.FormShow(Sender: TObject);
@@ -118,32 +126,26 @@ end;
 
 procedure TSetPasswordDlg.edPasswordChange(Sender: TObject);
 var
-  Zxcvbn: TZxcvbn;
   ZxcvbnResult: TZxcvbnResult;
   ASuggestion: TZxcvbnSuggestion;
 begin
   EnableControls;
 
-  Zxcvbn := TZxcvbn.Create;
+  ZxcvbnResult := FZxcvbn.EvaluatePassword(edPassword.Text);
   try
-    ZxcvbnResult := Zxcvbn.EvaluatePassword(edPassword.Text);
-    try
-      FPasswordScore := ZxcvbnResult.Score;
-      pbPasswordStrength.Invalidate;
+    FPasswordScore := ZxcvbnResult.Score;
+    pbPasswordStrength.Invalidate;
 
-      PasswordStrengthMemo.Clear;
-      if ZxcvbnResult.Warning <> zwDefault then
-      begin
-        PasswordStrengthMemo.Lines.Add(GetWarning(ZxcvbnResult.Warning));
-        PasswordStrengthMemo.Lines.Add('');
-      end;
-      for ASuggestion in ZxcvbnResult.Suggestions do
-        PasswordStrengthMemo.Lines.Add(GetSuggestion(ASuggestion));
-    finally
-      ZxcvbnResult.Free;
+    PasswordStrengthMemo.Clear;
+    if ZxcvbnResult.Warning <> zwDefault then
+    begin
+      PasswordStrengthMemo.Lines.Add(GetWarning(ZxcvbnResult.Warning));
+      PasswordStrengthMemo.Lines.Add('');
     end;
+    for ASuggestion in ZxcvbnResult.Suggestions do
+      PasswordStrengthMemo.Lines.Add(GetSuggestion(ASuggestion));
   finally
-    Zxcvbn.Free;
+    ZxcvbnResult.Free;
   end;
 end;
 

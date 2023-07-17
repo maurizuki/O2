@@ -28,6 +28,7 @@ uses
   StdCtrls, ExtCtrls, FileCtrl, Types, System.ImageList, System.Actions,
   REST.Client, Data.Bind.Components, Data.Bind.ObjectScope,
   JvComponentBase, JvDragDrop,
+  Zxcvbn,
   uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist;
 
 type
@@ -513,6 +514,7 @@ type
     FTransparency: Integer;
     FTransparencyOnlyIfDeactivated: Boolean;
     FShowPasswords: Boolean;
+    FZxcvbn: TZxcvbn;
 
     MRUMenuItems: TList;
     MRUList: TMRUList;
@@ -769,6 +771,8 @@ begin
   ImportSettingsDlg.Filter := SImportSettingsFileFilter;
   ExportSettingsDlg.Filter := SExportSettingsFileFilter;
 
+  FZxcvbn := TZxcvbn.Create;
+
   ActiveControl := ObjectsView;
 
   SetBrowserEmulation(ExtractFileName(Application.ExeName), IE11Default);
@@ -779,6 +783,7 @@ begin
   SaveSettings(AppFiles.FullPath[IdSettings]);
   MRUList.Free;
   MRUMenuItems.Free;
+  FZxcvbn.Free;
 end;
 
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -929,7 +934,7 @@ var
 begin
   if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data)
     and O2File.Rules.GetHighlightColors(TO2Object(Item.Data),
-    BrushColor, FontColor) then
+    FZxcvbn, BrushColor, FontColor) then
   begin
     Sender.Canvas.Brush.Color := BrushColor;
     Sender.Canvas.Font.Color := FontColor;
@@ -2891,7 +2896,7 @@ var
 begin
   if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data)
     and O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
-    BrushColor, FontColor) then
+    FZxcvbn, BrushColor, FontColor) then
   begin
     Sender.Canvas.Brush.Color := BrushColor;
     Sender.Canvas.Font.Color := FontColor;
@@ -2908,7 +2913,7 @@ begin
   begin
     if (State * [cdsFocused, cdsHot] = [])
       and O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
-      BrushColor, FontColor) then
+      FZxcvbn, BrushColor, FontColor) then
     begin
       Sender.Canvas.Brush.Color := BrushColor;
       Sender.Canvas.Font.Color := FontColor;

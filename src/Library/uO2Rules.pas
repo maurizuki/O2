@@ -18,7 +18,7 @@ unit uO2Rules;
 interface
 
 uses
-  Classes, Windows, SysUtils, Graphics, uO2Classes, uO2Objects;
+  Classes, Windows, SysUtils, Graphics, Zxcvbn, uO2Classes, uO2Objects;
 
 const
   PasswordChar = '●';
@@ -65,6 +65,19 @@ const
   DefaultRecurrenceMask =
     MacroStartDelimiter + FieldValueMacro + MacroEndDelimiter + #32
     + '(' + MacroStartDelimiter + YearsMacro + MacroEndDelimiter + ')';
+
+{ Zxcvbn password score colors }
+
+  PasswordScore0Color = TColor($00241CED);
+  PasswordScore0TextColor = clBlack;
+  PasswordScore1Color = TColor($00277FFF);
+  PasswordScore1TextColor = clBlack;
+  PasswordScore2Color = TColor($000EC9FF);
+  PasswordScore2TextColor = clBlack;
+  PasswordScore3Color = TColor($00E8A200);
+  PasswordScore3TextColor = clBlack;
+  PasswordScore4Color = TColor($004CB122);
+  PasswordScore4TextColor = clBlack;
 
 type
 
@@ -160,7 +173,7 @@ type
       out FirstDate: TDateTime): Boolean;
     function GetNextEvent(const AField: TO2Field; StartDate: TDateTime;
       out NextDate: TDateTime; UseParams: Boolean = False): Boolean;
-    function GetHighlightColors(const AField: TO2Field;
+    function GetHighlightColors(const AField: TO2Field; const Zxcvbn: TZxcvbn;
       out Color, TextColor: TColor): Boolean;
   published
     property Name: string read FName write SetName;
@@ -201,9 +214,9 @@ type
       out NextDate: TDateTime; UseParams: Boolean = False): Boolean; overload;
     function GetNextEvent(const AObject: TO2Object; StartDate: TDateTime;
       out NextDate: TDateTime; UseParams: Boolean = False): Boolean; overload;
-    function GetHighlightColors(const AField: TO2Field;
+    function GetHighlightColors(const AField: TO2Field; Zxcvbn: TZxcvbn;
       out Color, TextColor: TColor): Boolean; overload;
-    function GetHighlightColors(const AObject: TO2Object;
+    function GetHighlightColors(const AObject: TO2Object; Zxcvbn: TZxcvbn;
       out Color, TextColor: TColor): Boolean; overload;
     property Rules[Index: Integer]: TO2Rule read GetRules; default;
   end;
@@ -211,7 +224,7 @@ type
 implementation
 
 uses
-  Masks, DateUtils, uO2File, uO2Utils;
+  Masks, DateUtils, Zxcvbn.Result, uO2File, uO2Utils;
 
 resourcestring
   SRuleAlreadyExists = 'A rule named "%s" already exists.';
@@ -566,19 +579,48 @@ begin
   end;
 end;
 
-function TO2Rule.GetHighlightColors(const AField: TO2Field; out Color,
-  TextColor: TColor): Boolean;
+function TO2Rule.GetHighlightColors(const AField: TO2Field;
+  const Zxcvbn: TZxcvbn; out Color, TextColor: TColor): Boolean;
+const
+  PasswordScoreColors: array [0..4] of TColor = (
+    PasswordScore0Color,
+    PasswordScore1Color,
+    PasswordScore2Color,
+    PasswordScore3Color,
+    PasswordScore4Color
+  );
+  PasswordScoreTextColors: array [0..4] of TColor = (
+    PasswordScore0TextColor,
+    PasswordScore1TextColor,
+    PasswordScore2TextColor,
+    PasswordScore3TextColor,
+    PasswordScore4TextColor
+  );
+var
+  ZxcvbnResult: TZxcvbnResult;
 begin
-  if (RuleType = rtHighlight) and Matches(AField)
-    or CheckEvents(AField, 0, 0, True) then
+  if (RuleType = rtPassword) and Matches(AField) then
   begin
-    Color := Params.IntValue(HighlightColorParam, DefaultHighlightColor);
-    TextColor :=
-      Params.IntValue(HighlightTextColorParam, DefaultHighlightTextColor);
+    ZxcvbnResult := Zxcvbn.EvaluatePassword(AField.FieldValue);
+    try
+      Color := PasswordScoreColors[ZxcvbnResult.Score];
+      TextColor := PasswordScoreTextColors[ZxcvbnResult.Score];
+    finally
+      ZxcvbnResult.Free;
+    end;
     Result := True;
   end
   else
-    Result := False;
+    if (RuleType = rtHighlight) and Matches(AField)
+      or CheckEvents(AField, 0, 0, True) then
+    begin
+      Color := Params.IntValue(HighlightColorParam, DefaultHighlightColor);
+      TextColor :=
+        Params.IntValue(HighlightTextColorParam, DefaultHighlightTextColor);
+      Result := True;
+    end
+    else
+      Result := False;
 end;
 
 function TO2Rule.GetFormatSettings: TFormatSettings;
@@ -812,22 +854,22 @@ begin
     end;
 end;
 
-function TO2Rules.GetHighlightColors(const AField: TO2Field; out Color,
-  TextColor: TColor): Boolean;
+function TO2Rules.GetHighlightColors(const AField: TO2Field;
+  Zxcvbn: TZxcvbn; out Color, TextColor: TColor): Boolean;
 var
   ARule: TO2Rule;
 begin
   Result := False;
   for ARule in Self do
-    if ARule.GetHighlightColors(AField, Color, TextColor) then
+    if ARule.GetHighlightColors(AField, Zxcvbn, Color, TextColor) then
     begin
       Result := True;
       Break;
     end;
 end;
 
-function TO2Rules.GetHighlightColors(const AObject: TO2Object; out Color,
-  TextColor: TColor): Boolean;
+function TO2Rules.GetHighlightColors(const AObject: TO2Object;
+  Zxcvbn: TZxcvbn; out Color, TextColor: TColor): Boolean;
 var
   AColor, ATextColor: TColor;
   RuleIndex: Integer;
@@ -839,7 +881,7 @@ begin
   for AField in AObject.Fields do
     for ARule in Self do
       if (ARule.Index < RuleIndex)
-        and ARule.GetHighlightColors(AField, AColor, ATextColor) then
+        and ARule.GetHighlightColors(AField, Zxcvbn, AColor, ATextColor) then
       begin
         Color := AColor;
         TextColor := ATextColor;

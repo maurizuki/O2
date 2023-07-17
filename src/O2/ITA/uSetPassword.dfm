@@ -6,7 +6,7 @@ object SetPasswordDlg: TSetPasswordDlg
   BorderStyle = bsDialog
   Caption = 'Cifratura'
   ClientHeight = 274
-  ClientWidth = 438
+  ClientWidth = 430
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
@@ -15,9 +15,10 @@ object SetPasswordDlg: TSetPasswordDlg
   Font.Style = []
   Position = poMainFormCenter
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnShow = FormShow
   DesignSize = (
-    438
+    430
     274)
   TextHeight = 13
   object lbPassword: TLabel
@@ -75,7 +76,7 @@ object SetPasswordDlg: TSetPasswordDlg
     OnChange = edPasswordChange
   end
   object btOk: TButton
-    Left = 270
+    Left = 266
     Top = 241
     Width = 75
     Height = 25
@@ -85,11 +86,11 @@ object SetPasswordDlg: TSetPasswordDlg
     Enabled = False
     ModalResult = 1
     TabOrder = 4
-    ExplicitLeft = 266
+    ExplicitLeft = 262
     ExplicitTop = 240
   end
   object btCancel: TButton
-    Left = 351
+    Left = 347
     Top = 241
     Width = 75
     Height = 25
@@ -98,7 +99,7 @@ object SetPasswordDlg: TSetPasswordDlg
     Caption = 'Annulla'
     ModalResult = 2
     TabOrder = 5
-    ExplicitLeft = 347
+    ExplicitLeft = 343
     ExplicitTop = 240
   end
   object cbEncryption: TComboBox
@@ -122,20 +123,20 @@ object SetPasswordDlg: TSetPasswordDlg
   object gbPasswordStrength: TGroupBox
     Left = 192
     Top = 16
-    Width = 234
+    Width = 230
     Height = 200
     Anchors = [akLeft, akTop, akRight]
     Caption = 'Sicurezza della Password'
     ParentBackground = False
     TabOrder = 6
-    ExplicitWidth = 230
+    ExplicitWidth = 226
     DesignSize = (
-      234
+      230
       200)
     object pbPasswordStrength: TPaintBox
       Left = 3
       Top = 19
-      Width = 228
+      Width = 224
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       OnPaint = pbPasswordStrengthPaint
@@ -144,7 +145,7 @@ object SetPasswordDlg: TSetPasswordDlg
     object PasswordStrengthMemo: TMemo
       Left = 3
       Top = 52
-      Width = 228
+      Width = 224
       Height = 145
       TabStop = False
       Anchors = [akLeft, akTop, akRight, akBottom]
@@ -153,7 +154,7 @@ object SetPasswordDlg: TSetPasswordDlg
       ReadOnly = True
       ScrollBars = ssVertical
       TabOrder = 0
-      ExplicitWidth = 224
+      ExplicitWidth = 220
     end
   end
 end
