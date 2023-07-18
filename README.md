@@ -80,4 +80,8 @@ __SZCRC32 unit__
 Copyright (C) 2004 Sasa Zeman.  
 
 __UPX - The Ultimate Packer for eXecutables__  
-Copyright (C) 1996-2023 Markus Oberhumer, Laszlo Molnar, John Reiser.
+Copyright (C) 1996-2023 Markus Oberhumer, Laszlo Molnar, John Reiser.  
+
+__zxcvbn__  
+Copyright (C) 2012-2016 Dan Wheeler and Dropbox, Inc.  
+Delphi porting by TCardinal.
