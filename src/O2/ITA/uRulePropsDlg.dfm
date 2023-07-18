@@ -50,8 +50,6 @@ object RulePropsDlg: TRulePropsDlg
     ActivePage = tsGeneral
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 0
-    ExplicitWidth = 337
-    ExplicitHeight = 378
     object tsGeneral: TTabSheet
       Caption = 'Generale'
       DesignSize = (
@@ -339,6 +337,22 @@ object RulePropsDlg: TRulePropsDlg
         Style = [cbStandardColors, cbCustomColor, cbPrettyNames]
         Anchors = [akTop, akRight]
         TabOrder = 1
+      end
+    end
+    object tsPassword: TTabSheet
+      Caption = 'Password'
+      ImageIndex = 6
+      DesignSize = (
+        333
+        351)
+      object ckDisplayPasswordStrength: TCheckBox
+        Left = 3
+        Top = 11
+        Width = 327
+        Height = 17
+        Anchors = [akLeft, akTop, akRight]
+        Caption = 'Mostra sicurezza delle password'
+        TabOrder = 0
       end
     end
   end

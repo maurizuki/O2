@@ -33,6 +33,7 @@ const
   DaysAfterParam = 'DaysAfter';
   HighlightColorParam = 'Color';
   HighlightTextColorParam = 'TextColor';
+  DisplayPasswordStrengthParam = 'DisplayPasswordStrength';
 
 { Macro symbols for mask strings }
 
@@ -65,6 +66,7 @@ const
   DefaultRecurrenceMask =
     MacroStartDelimiter + FieldValueMacro + MacroEndDelimiter + #32
     + '(' + MacroStartDelimiter + YearsMacro + MacroEndDelimiter + ')';
+  DefaultDisplayPasswordStrength = False;
 
 { Password score colors }
 
@@ -136,6 +138,7 @@ type
     function ParamExists(const ParamName: string): Boolean;
     function AddParam(const ParamName: string): TO2Param;
     procedure DeleteParam(const ParamName: string);
+    function BoolValue(const ParamName: string; DefaultValue: Boolean): Boolean;
     function IntValue(const ParamName: string; DefaultValue: Integer): Integer;
     function StrValue(const ParamName, DefaultValue: string): string;
     property Params[Index: Integer]: TO2Param read GetParams; default;
@@ -237,6 +240,24 @@ resourcestring
   SRuleAlreadyExists = 'A rule named "%s" already exists.';
   SParamAlreadyExists = 'A parameter named "%s" already exists.';
 
+const
+  PasswordScoreColors: array [0..4] of TColor = (
+    PasswordScore0Color,
+    PasswordScore1Color,
+    PasswordScore2Color,
+    PasswordScore3Color,
+    PasswordScore4Color
+  );
+
+  PasswordScoreTextColors: array [0..4] of TColor = (
+    PasswordScore0TextColor,
+    PasswordScore1TextColor,
+    PasswordScore2TextColor,
+    PasswordScore3TextColor,
+    PasswordScore4TextColor
+  );
+
+
 { TO2Param }
 
 constructor TO2Param.Create(Collection: TCollection);
@@ -335,6 +356,18 @@ begin
   AParam := FindParam(ParamName);
   if Assigned(AParam) then
     Delete(AParam.Index);
+end;
+
+function TO2Params.BoolValue(const ParamName: string;
+  DefaultValue: Boolean): Boolean;
+var
+  AParam: TO2Param;
+begin
+  AParam := FindParam(ParamName);
+  if Assigned(AParam) then
+    Result := StrToBoolDef(AParam.ParamValue, DefaultValue)
+  else
+    Result := DefaultValue;
 end;
 
 function TO2Params.IntValue(const ParamName: string;
@@ -589,25 +622,11 @@ end;
 function TO2Rule.GetHighlightColors(const AField: TO2Field;
   const PasswordScoreProvider: IPasswordScoreProvider;
   out Color, TextColor: TColor): Boolean;
-const
-  PasswordScoreColors: array [0..4] of TColor = (
-    PasswordScore0Color,
-    PasswordScore1Color,
-    PasswordScore2Color,
-    PasswordScore3Color,
-    PasswordScore4Color
-  );
-  PasswordScoreTextColors: array [0..4] of TColor = (
-    PasswordScore0TextColor,
-    PasswordScore1TextColor,
-    PasswordScore2TextColor,
-    PasswordScore3TextColor,
-    PasswordScore4TextColor
-  );
 var
   PasswordScore: Integer;
 begin
-  if (RuleType = rtPassword) and Matches(AField) then
+  if (RuleType = rtPassword) and Params.BoolValue(DisplayPasswordStrengthParam,
+    DefaultDisplayPasswordStrength) and Matches(AField) then
   begin
     Result := PasswordScoreProvider.TryGet(AField.FieldValue, PasswordScore);
     if Result then
