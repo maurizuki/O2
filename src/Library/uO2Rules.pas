@@ -18,8 +18,7 @@ unit uO2Rules;
 interface
 
 uses
-  Classes, Windows, SysUtils, Graphics, System.Generics.Collections,
-  uO2Classes, uO2Objects;
+  Classes, Windows, SysUtils, Graphics, uO2Classes, uO2Objects;
 
 const
   PasswordChar = '●';
@@ -143,6 +142,10 @@ type
     property Values[Name: string]: string read GetValues write SetValues;
   end;
 
+  IPasswordScoreProvider = interface
+    function TryGet(const Password: string; var Score: Integer): Boolean;
+  end;
+
   TO2Rule = class(TO2CollectionItem)
   private
     FName: string;
@@ -175,7 +178,7 @@ type
     function GetNextEvent(const AField: TO2Field; StartDate: TDateTime;
       out NextDate: TDateTime; UseParams: Boolean = False): Boolean;
     function GetHighlightColors(const AField: TO2Field;
-      const PasswordScores: TDictionary<string, Integer>;
+      const PasswordScoreProvider: IPasswordScoreProvider;
       out Color, TextColor: TColor): Boolean;
   published
     property Name: string read FName write SetName;
@@ -217,10 +220,10 @@ type
     function GetNextEvent(const AObject: TO2Object; StartDate: TDateTime;
       out NextDate: TDateTime; UseParams: Boolean = False): Boolean; overload;
     function GetHighlightColors(const AField: TO2Field;
-      const PasswordScores: TDictionary<string, Integer>;
+      const PasswordScoreProvider: IPasswordScoreProvider;
       out Color, TextColor: TColor): Boolean; overload;
     function GetHighlightColors(const AObject: TO2Object;
-      const PasswordScores: TDictionary<string, Integer>;
+      const PasswordScoreProvider: IPasswordScoreProvider;
       out Color, TextColor: TColor): Boolean; overload;
     property Rules[Index: Integer]: TO2Rule read GetRules; default;
   end;
@@ -584,7 +587,7 @@ begin
 end;
 
 function TO2Rule.GetHighlightColors(const AField: TO2Field;
-  const PasswordScores: TDictionary<string, Integer>;
+  const PasswordScoreProvider: IPasswordScoreProvider;
   out Color, TextColor: TColor): Boolean;
 const
   PasswordScoreColors: array [0..4] of TColor = (
@@ -606,7 +609,7 @@ var
 begin
   if (RuleType = rtPassword) and Matches(AField) then
   begin
-    Result := PasswordScores.TryGetValue(AField.FieldValue, PasswordScore);
+    Result := PasswordScoreProvider.TryGet(AField.FieldValue, PasswordScore);
     if Result then
     begin
       Color := PasswordScoreColors[PasswordScore];
@@ -858,14 +861,15 @@ begin
 end;
 
 function TO2Rules.GetHighlightColors(const AField: TO2Field;
-  const PasswordScores: TDictionary<string, Integer>;
+  const PasswordScoreProvider: IPasswordScoreProvider;
   out Color, TextColor: TColor): Boolean;
 var
   ARule: TO2Rule;
 begin
   Result := False;
   for ARule in Self do
-    if ARule.GetHighlightColors(AField, PasswordScores, Color, TextColor) then
+    if ARule.GetHighlightColors(AField, PasswordScoreProvider,
+      Color, TextColor) then
     begin
       Result := True;
       Break;
@@ -873,7 +877,7 @@ begin
 end;
 
 function TO2Rules.GetHighlightColors(const AObject: TO2Object;
-  const PasswordScores: TDictionary<string, Integer>;
+  const PasswordScoreProvider: IPasswordScoreProvider;
   out Color, TextColor: TColor): Boolean;
 var
   AColor, ATextColor: TColor;
@@ -886,7 +890,7 @@ begin
   for AField in AObject.Fields do
     for ARule in Self do
       if (ARule.Index < RuleIndex)
-        and ARule.GetHighlightColors(AField, PasswordScores,
+        and ARule.GetHighlightColors(AField, PasswordScoreProvider,
           AColor, ATextColor) then
       begin
         Color := AColor;

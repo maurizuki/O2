@@ -42,7 +42,8 @@ uses
   uImportExport in 'uImportExport.pas',
   uXmlImportExport in 'uXmlImportExport.pas',
   uO2ImportExport in 'uO2ImportExport.pas',
-  uiCalendarExport in 'uiCalendarExport.pas';
+  uiCalendarExport in 'uiCalendarExport.pas',
+  uPasswordScoreProvider in 'uPasswordScoreProvider.pas';
 
 {$R *.res}
 
