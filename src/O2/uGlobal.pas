@@ -100,11 +100,8 @@ const
 
 { Password score colors }
 
-  PasswordScore0Color = TColor($00241CED);
-  PasswordScore1Color = TColor($00277FFF);
-  PasswordScore2Color = TColor($000EC9FF);
-  PasswordScore3Color = TColor($00E8A200);
-  PasswordScore4Color = TColor($004CB122);
+  PasswordScoreColors: array [0..4] of TColor = (
+    $00241CED, $00277FFF, $000EC9FF, $00E8A200, $004CB122);
 
 resourcestring
   STags = 'Tags';

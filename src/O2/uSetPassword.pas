@@ -150,28 +150,23 @@ begin
 end;
 
 procedure TSetPasswordDlg.pbPasswordStrengthPaint(Sender: TObject);
-const
-  PasswordScoreColors: array [0..4] of TColor = (
-    PasswordScore0Color,
-    PasswordScore1Color,
-    PasswordScore2Color,
-    PasswordScore3Color,
-    PasswordScore4Color
-  );
+var
+  ARect: TRect;
 begin
   pbPasswordStrength.Canvas.Brush.Color := clWhite;
-  pbPasswordStrength.Canvas.FillRect(Rect(0, 0,
-    pbPasswordStrength.Width, pbPasswordStrength.Height));
-  pbPasswordStrength.Canvas.Rectangle(0, 0,
-    pbPasswordStrength.Width, pbPasswordStrength.Height);
+
+  ARect := pbPasswordStrength.ClientRect;
+  pbPasswordStrength.Canvas.FillRect(ARect);
+  pbPasswordStrength.Canvas.Rectangle(ARect);
 
   if cbEncryption.ItemIndex <> 0 then
   begin
     pbPasswordStrength.Canvas.Brush.Color :=
       PasswordScoreColors[FPasswordScore];
-    pbPasswordStrength.Canvas.FillRect(Rect(1, 1,
-      Round((FPasswordScore + 1) * (pbPasswordStrength.Width / 5) - 1),
-      pbPasswordStrength.Height - 1));
+
+    ARect.Right := Round((FPasswordScore + 1) * (ARect.Width / 5));
+    ARect.Inflate(-1, -1);
+    pbPasswordStrength.Canvas.FillRect(ARect);
   end;
 end;
 

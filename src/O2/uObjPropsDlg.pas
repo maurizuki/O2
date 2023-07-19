@@ -20,7 +20,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, StdCtrls, Grids, ValEdit, ExtCtrls, ActnList, Menus,
-  Actions, uO2Objects;
+  Actions, Zxcvbn, uO2Objects;
 
 type
   TObjPropsDlgPage = (pgGeneral, pgGeneralTags, pgFields, pgNotes);
@@ -57,6 +57,8 @@ type
     DeleteTag: TAction;
     Button6: TButton;
     Button7: TButton;
+    ckDisplayPasswordStrength: TCheckBox;
+    pbPasswordStrength: TPaintBox;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -79,6 +81,9 @@ type
     procedure MoveDownExecute(Sender: TObject);
     procedure MoveDownUpdate(Sender: TObject);
     procedure cbFieldValueEnter(Sender: TObject);
+    procedure cbFieldValueChange(Sender: TObject);
+    procedure ckDisplayPasswordStrengthClick(Sender: TObject);
+    procedure pbPasswordStrengthPaint(Sender: TObject);
     procedure OKExecute(Sender: TObject);
     procedure OKUpdate(Sender: TObject);
   private
@@ -86,6 +91,8 @@ type
     FObjectIndex: Integer;
     FDuplicate: Boolean;
     FFields: TO2Fields;
+    FZxcvbn: TZxcvbn;
+    FPasswordScore: Integer;
     procedure SetFields(const Value: TO2Fields);
     function GetSelectedField: TO2Field;
     function FieldToListItem(const AField: TO2Field;
@@ -94,6 +101,7 @@ type
     procedure MoveSelectedField(Offset: Integer);
     procedure ResizeFieldsViewColumns;
     procedure UpdateFieldsView;
+    procedure UpdatePasswordStrengthInfo;
   protected
     property Fields: TO2Fields read FFields write SetFields;
     property SelectedField: TO2Field read GetSelectedField;
@@ -112,7 +120,7 @@ var
 implementation
 
 uses
-  uGlobal, uCtrlHelpers;
+  Zxcvbn.Result, Zxcvbn.Utility, uGlobal, uCtrlHelpers;
 
 {$R *.dfm}
 
@@ -159,11 +167,14 @@ end;
 procedure TObjPropsDlg.FormCreate(Sender: TObject);
 begin
   FFields := TO2Fields.Create(nil);
+  FZxcvbn := TZxcvbn.Create;
+  FPasswordScore := 0;
 end;
 
 procedure TObjPropsDlg.FormDestroy(Sender: TObject);
 begin
-  Fields.Free;
+  FFields.Free;
+  FZxcvbn.Free;
 end;
 
 procedure TObjPropsDlg.FormShow(Sender: TObject);
@@ -207,6 +218,7 @@ begin
   begin
     cbFieldName.Text := TO2Field(Item.Data).FieldName;
     cbFieldValue.Text := TO2Field(Item.Data).FieldValue;
+    UpdatePasswordStrengthInfo;
   end;
 end;
 
@@ -316,6 +328,38 @@ begin
   Objects.GetFieldValues(cbFieldName.Text, TComboBox(Sender).Items);
 end;
 
+procedure TObjPropsDlg.cbFieldValueChange(Sender: TObject);
+begin
+  UpdatePasswordStrengthInfo;
+end;
+
+procedure TObjPropsDlg.ckDisplayPasswordStrengthClick(Sender: TObject);
+begin
+  pbPasswordStrength.Visible := ckDisplayPasswordStrength.Checked;
+  UpdatePasswordStrengthInfo;
+end;
+
+procedure TObjPropsDlg.pbPasswordStrengthPaint(Sender: TObject);
+var
+  ARect: TRect;
+begin
+  pbPasswordStrength.Canvas.Brush.Color := clWhite;
+
+  ARect := pbPasswordStrength.ClientRect;
+  pbPasswordStrength.Canvas.FillRect(ARect);
+  pbPasswordStrength.Canvas.Rectangle(ARect);
+
+  if ckDisplayPasswordStrength.Checked then
+  begin
+    pbPasswordStrength.Canvas.Brush.Color :=
+      PasswordScoreColors[FPasswordScore];
+
+    ARect.Right := Round((FPasswordScore + 1) * (ARect.Width / 5));
+    ARect.Inflate(-1, -1);
+    pbPasswordStrength.Canvas.FillRect(ARect);
+  end;
+end;
+
 procedure TObjPropsDlg.OKExecute(Sender: TObject);
 var
   AObject: TO2Object;
@@ -407,6 +451,38 @@ begin
     end;
   finally
     Selection.Free;
+  end;
+end;
+
+procedure TObjPropsDlg.UpdatePasswordStrengthInfo;
+var
+  ZxcvbnResult: TZxcvbnResult;
+  ASuggestion: TZxcvbnSuggestion;
+  SB: TStringBuilder;
+begin
+  if ckDisplayPasswordStrength.Checked then
+  begin
+    ZxcvbnResult := FZxcvbn.EvaluatePassword(cbFieldValue.Text);
+    try
+      FPasswordScore := ZxcvbnResult.Score;
+      pbPasswordStrength.Invalidate;
+
+      SB := TStringBuilder.Create;
+      try
+        if ZxcvbnResult.Warning <> zwDefault then
+        begin
+          SB.AppendLine(GetWarning(ZxcvbnResult.Warning));
+          SB.AppendLine();
+        end;
+        for ASuggestion in ZxcvbnResult.Suggestions do
+          SB.AppendLine(GetSuggestion(ASuggestion));
+        pbPasswordStrength.Hint := Trim(SB.ToString);
+      finally
+        SB.Free;
+      end;
+    finally
+      ZxcvbnResult.Free;
+    end;
   end;
 end;
 
