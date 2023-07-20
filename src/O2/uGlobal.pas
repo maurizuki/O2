@@ -98,11 +98,6 @@ const
     (LangId: (SUBLANG_ENGLISH_US shl 10) or LANG_ENGLISH; Language: 'ENU'),
     (LangId: (SUBLANG_ITALIAN shl 10) or LANG_ITALIAN;    Language: 'ITA'));
 
-{ Password score colors }
-
-  PasswordScoreColors: array [0..4] of TColor = (
-    $00241CED, $00277FFF, $000EC9FF, $00E8A200, $004CB122);
-
 resourcestring
   STags = 'Tags';
   STagsNone = '(none)';

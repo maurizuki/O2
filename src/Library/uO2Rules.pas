@@ -70,16 +70,8 @@ const
 
 { Password score colors }
 
-  PasswordScore0Color = TColor($00241CED);
-  PasswordScore0TextColor = clBlack;
-  PasswordScore1Color = TColor($00277FFF);
-  PasswordScore1TextColor = clBlack;
-  PasswordScore2Color = TColor($000EC9FF);
-  PasswordScore2TextColor = clBlack;
-  PasswordScore3Color = TColor($00E8A200);
-  PasswordScore3TextColor = clBlack;
-  PasswordScore4Color = TColor($004CB122);
-  PasswordScore4TextColor = clBlack;
+  PasswordScoreColors: array [0..4] of TColor = (
+    $00241CED, $00277FFF, $000EC9FF, $00E8A200, $004CB122);
 
 type
 
@@ -239,24 +231,6 @@ uses
 resourcestring
   SRuleAlreadyExists = 'A rule named "%s" already exists.';
   SParamAlreadyExists = 'A parameter named "%s" already exists.';
-
-const
-  PasswordScoreColors: array [0..4] of TColor = (
-    PasswordScore0Color,
-    PasswordScore1Color,
-    PasswordScore2Color,
-    PasswordScore3Color,
-    PasswordScore4Color
-  );
-
-  PasswordScoreTextColors: array [0..4] of TColor = (
-    PasswordScore0TextColor,
-    PasswordScore1TextColor,
-    PasswordScore2TextColor,
-    PasswordScore3TextColor,
-    PasswordScore4TextColor
-  );
-
 
 { TO2Param }
 
@@ -632,7 +606,7 @@ begin
     if Result then
     begin
       Color := PasswordScoreColors[PasswordScore];
-      TextColor := PasswordScoreTextColors[PasswordScore];
+      TextColor := clBlack;
     end;
   end
   else

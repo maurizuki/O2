@@ -120,7 +120,7 @@ var
 implementation
 
 uses
-  Zxcvbn.Result, Zxcvbn.Utility, uGlobal, uCtrlHelpers;
+  Zxcvbn.Result, Zxcvbn.Utility, uO2Rules, uGlobal, uCtrlHelpers, uUtils;
 
 {$R *.dfm}
 
@@ -340,24 +340,9 @@ begin
 end;
 
 procedure TObjPropsDlg.pbPasswordStrengthPaint(Sender: TObject);
-var
-  ARect: TRect;
 begin
-  pbPasswordStrength.Canvas.Brush.Color := clWhite;
-
-  ARect := pbPasswordStrength.ClientRect;
-  pbPasswordStrength.Canvas.FillRect(ARect);
-  pbPasswordStrength.Canvas.Rectangle(ARect);
-
-  if ckDisplayPasswordStrength.Checked then
-  begin
-    pbPasswordStrength.Canvas.Brush.Color :=
-      PasswordScoreColors[FPasswordScore];
-
-    ARect.Right := Round((FPasswordScore + 1) * (ARect.Width / 5));
-    ARect.Inflate(-1, -1);
-    pbPasswordStrength.Canvas.FillRect(ARect);
-  end;
+  DrawHIndicator(pbPasswordStrength.Canvas, pbPasswordStrength.ClientRect,
+    PasswordScoreColors[FPasswordScore], (FPasswordScore + 1) / 5);
 end;
 
 procedure TObjPropsDlg.OKExecute(Sender: TObject);
@@ -465,7 +450,6 @@ begin
     ZxcvbnResult := FZxcvbn.EvaluatePassword(cbFieldValue.Text);
     try
       FPasswordScore := ZxcvbnResult.Score;
-      pbPasswordStrength.Invalidate;
 
       SB := TStringBuilder.Create;
       try
@@ -483,6 +467,8 @@ begin
     finally
       ZxcvbnResult.Free;
     end;
+
+    pbPasswordStrength.Invalidate;
   end;
 end;
 

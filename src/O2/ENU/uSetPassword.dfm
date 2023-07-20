@@ -86,8 +86,6 @@ object SetPasswordDlg: TSetPasswordDlg
     Enabled = False
     ModalResult = 1
     TabOrder = 4
-    ExplicitLeft = 262
-    ExplicitTop = 240
   end
   object btCancel: TButton
     Left = 347
@@ -99,8 +97,6 @@ object SetPasswordDlg: TSetPasswordDlg
     Caption = 'Cancel'
     ModalResult = 2
     TabOrder = 5
-    ExplicitLeft = 343
-    ExplicitTop = 240
   end
   object cbEncryption: TComboBox
     Left = 8
@@ -129,7 +125,6 @@ object SetPasswordDlg: TSetPasswordDlg
     Caption = 'Password strength'
     ParentBackground = False
     TabOrder = 6
-    ExplicitWidth = 226
     DesignSize = (
       230
       200)
@@ -154,7 +149,7 @@ object SetPasswordDlg: TSetPasswordDlg
       ReadOnly = True
       ScrollBars = ssVertical
       TabOrder = 0
-      ExplicitWidth = 220
+      ExplicitWidth = 212
     end
   end
 end

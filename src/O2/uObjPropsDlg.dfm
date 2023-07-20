@@ -25,17 +25,17 @@ object ObjPropsDlg: TObjPropsDlg
     Left = 8
     Top = 8
     Width = 341
-    Height = 374
+    Height = 370
     ActivePage = TabSheet1
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 0
     ExplicitWidth = 337
-    ExplicitHeight = 373
+    ExplicitHeight = 369
     object TabSheet1: TTabSheet
       Caption = 'General'
       DesignSize = (
         333
-        346)
+        342)
       object Label1: TLabel
         Left = 3
         Top = 12
@@ -60,6 +60,7 @@ object ObjPropsDlg: TObjPropsDlg
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         OnChange = edNameChange
+        ExplicitWidth = 323
       end
       object cbTag: TComboBox
         Left = 3
@@ -68,16 +69,19 @@ object ObjPropsDlg: TObjPropsDlg
         Height = 21
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 1
+        ExplicitWidth = 237
       end
       object lbxTags: TListBox
         Left = 3
         Top = 159
         Width = 241
-        Height = 184
+        Height = 180
         Anchors = [akLeft, akTop, akRight, akBottom]
         ItemHeight = 13
         Sorted = True
         TabOrder = 3
+        ExplicitWidth = 237
+        ExplicitHeight = 179
       end
       object Button4: TButton
         Left = 250
@@ -89,6 +93,7 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 2
+        ExplicitLeft = 246
       end
       object Button5: TButton
         Left = 250
@@ -100,6 +105,7 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 4
+        ExplicitLeft = 246
       end
     end
     object TabSheet2: TTabSheet
@@ -107,10 +113,10 @@ object ObjPropsDlg: TObjPropsDlg
       ImageIndex = 1
       DesignSize = (
         333
-        346)
+        342)
       object pbPasswordStrength: TPaintBox
         Left = 152
-        Top = 294
+        Top = 290
         Width = 178
         Height = 17
         Cursor = crHelp
@@ -125,7 +131,7 @@ object ObjPropsDlg: TObjPropsDlg
         Left = 3
         Top = 3
         Width = 327
-        Height = 259
+        Height = 255
         Anchors = [akLeft, akTop, akRight, akBottom]
         Columns = <
           item
@@ -138,6 +144,7 @@ object ObjPropsDlg: TObjPropsDlg
           end>
         ColumnClick = False
         HideSelection = False
+        Items.ItemData = {}
         ReadOnly = True
         RowSelect = True
         TabOrder = 0
@@ -145,11 +152,11 @@ object ObjPropsDlg: TObjPropsDlg
         OnResize = FieldsViewResize
         OnSelectItem = FieldsViewSelectItem
         ExplicitWidth = 323
-        ExplicitHeight = 255
+        ExplicitHeight = 259
       end
       object cbFieldName: TComboBox
         Left = 3
-        Top = 268
+        Top = 264
         Width = 143
         Height = 21
         Hint = 'Field name'
@@ -157,11 +164,10 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 1
-        ExplicitTop = 267
       end
       object cbFieldValue: TComboBox
         Left = 152
-        Top = 268
+        Top = 264
         Width = 178
         Height = 21
         Hint = 'Field value'
@@ -171,12 +177,10 @@ object ObjPropsDlg: TObjPropsDlg
         TabOrder = 2
         OnChange = cbFieldValueChange
         OnEnter = cbFieldValueEnter
-        ExplicitTop = 267
-        ExplicitWidth = 174
       end
       object Button1: TButton
         Left = 3
-        Top = 318
+        Top = 314
         Width = 75
         Height = 25
         Action = AddField
@@ -184,11 +188,11 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 3
-        ExplicitTop = 317
+        ExplicitTop = 318
       end
       object Button2: TButton
         Left = 84
-        Top = 318
+        Top = 314
         Width = 75
         Height = 25
         Action = ReplaceField
@@ -196,11 +200,11 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 4
-        ExplicitTop = 317
+        ExplicitTop = 318
       end
       object Button3: TButton
         Left = 165
-        Top = 318
+        Top = 314
         Width = 75
         Height = 25
         Action = DeleteField
@@ -208,11 +212,11 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 5
-        ExplicitTop = 317
+        ExplicitTop = 318
       end
       object Button6: TButton
         Left = 258
-        Top = 318
+        Top = 314
         Width = 33
         Height = 25
         Action = MoveUp
@@ -221,11 +225,11 @@ object ObjPropsDlg: TObjPropsDlg
         ShowHint = True
         TabOrder = 6
         ExplicitLeft = 254
-        ExplicitTop = 317
+        ExplicitTop = 318
       end
       object Button7: TButton
         Left = 297
-        Top = 318
+        Top = 314
         Width = 33
         Height = 25
         Action = MoveDown
@@ -234,18 +238,18 @@ object ObjPropsDlg: TObjPropsDlg
         ShowHint = True
         TabOrder = 7
         ExplicitLeft = 293
-        ExplicitTop = 317
+        ExplicitTop = 318
       end
       object ckDisplayPasswordStrength: TCheckBox
         Left = 3
-        Top = 294
+        Top = 290
         Width = 143
         Height = 17
         Anchors = [akLeft, akRight, akBottom]
-        Caption = 'Password strength'
+        Caption = '&Password strength'
         TabOrder = 8
         OnClick = ckDisplayPasswordStrengthClick
-        ExplicitTop = 293
+        ExplicitTop = 294
         ExplicitWidth = 139
       end
     end
@@ -254,12 +258,12 @@ object ObjPropsDlg: TObjPropsDlg
       ImageIndex = 2
       DesignSize = (
         333
-        346)
+        342)
       object Memo: TMemo
         Left = 3
         Top = 3
         Width = 327
-        Height = 340
+        Height = 336
         Anchors = [akLeft, akTop, akRight, akBottom]
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
@@ -275,7 +279,7 @@ object ObjPropsDlg: TObjPropsDlg
   end
   object btOk: TButton
     Left = 193
-    Top = 385
+    Top = 384
     Width = 75
     Height = 25
     Action = OK
@@ -283,11 +287,11 @@ object ObjPropsDlg: TObjPropsDlg
     Default = True
     TabOrder = 1
     ExplicitLeft = 189
-    ExplicitTop = 384
+    ExplicitTop = 383
   end
   object btCancel: TButton
     Left = 274
-    Top = 385
+    Top = 384
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -296,7 +300,7 @@ object ObjPropsDlg: TObjPropsDlg
     ModalResult = 2
     TabOrder = 2
     ExplicitLeft = 270
-    ExplicitTop = 384
+    ExplicitTop = 383
   end
   object ActionList: TActionList
     Left = 8

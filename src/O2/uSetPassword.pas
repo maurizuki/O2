@@ -47,6 +47,7 @@ type
     FZxcvbn: TZxcvbn;
     FPasswordScore: Integer;
     procedure EnableControls;
+    procedure UpdatePasswordStrengthInfo;
   public
     class function Execute(AOwner: TComponent; var Encrypt: Boolean;
       var Cipher, Hash: Byte; var Password: string): Boolean;
@@ -58,7 +59,7 @@ var
 implementation
 
 uses
-  uO2Defs, uGlobal, Zxcvbn.Result, Zxcvbn.Utility;
+  uO2Defs, uO2Rules, uGlobal, uUtils, Zxcvbn.Result, Zxcvbn.Utility;
 
 {$R *.dfm}
 
@@ -117,6 +118,7 @@ end;
 procedure TSetPasswordDlg.cbEncryptionChange(Sender: TObject);
 begin
   EnableControls;
+  UpdatePasswordStrengthInfo;
 end;
 
 procedure TSetPasswordDlg.cbHashChange(Sender: TObject);
@@ -125,49 +127,19 @@ begin
 end;
 
 procedure TSetPasswordDlg.edPasswordChange(Sender: TObject);
-var
-  ZxcvbnResult: TZxcvbnResult;
-  ASuggestion: TZxcvbnSuggestion;
 begin
   EnableControls;
-
-  ZxcvbnResult := FZxcvbn.EvaluatePassword(edPassword.Text);
-  try
-    FPasswordScore := ZxcvbnResult.Score;
-    pbPasswordStrength.Invalidate;
-
-    PasswordStrengthMemo.Clear;
-    if ZxcvbnResult.Warning <> zwDefault then
-    begin
-      PasswordStrengthMemo.Lines.Add(GetWarning(ZxcvbnResult.Warning));
-      PasswordStrengthMemo.Lines.Add('');
-    end;
-    for ASuggestion in ZxcvbnResult.Suggestions do
-      PasswordStrengthMemo.Lines.Add(GetSuggestion(ASuggestion));
-  finally
-    ZxcvbnResult.Free;
-  end;
+  UpdatePasswordStrengthInfo;
 end;
 
 procedure TSetPasswordDlg.pbPasswordStrengthPaint(Sender: TObject);
-var
-  ARect: TRect;
 begin
-  pbPasswordStrength.Canvas.Brush.Color := clWhite;
-
-  ARect := pbPasswordStrength.ClientRect;
-  pbPasswordStrength.Canvas.FillRect(ARect);
-  pbPasswordStrength.Canvas.Rectangle(ARect);
-
   if cbEncryption.ItemIndex <> 0 then
-  begin
-    pbPasswordStrength.Canvas.Brush.Color :=
-      PasswordScoreColors[FPasswordScore];
-
-    ARect.Right := Round((FPasswordScore + 1) * (ARect.Width / 5));
-    ARect.Inflate(-1, -1);
-    pbPasswordStrength.Canvas.FillRect(ARect);
-  end;
+    DrawHIndicator(pbPasswordStrength.Canvas, pbPasswordStrength.ClientRect,
+      PasswordScoreColors[FPasswordScore], (FPasswordScore + 1) / 5)
+  else
+    DrawHIndicator(pbPasswordStrength.Canvas, pbPasswordStrength.ClientRect,
+      0, 0);
 end;
 
 procedure TSetPasswordDlg.EnableControls;
@@ -183,6 +155,34 @@ begin
     and not (TCipherLookup.SelectedValue(cbEncryption) in DeprecatedCiphers)
     and not (THashLookup.SelectedValue(cbHash) in DeprecatedHashes)
     or (cbEncryption.ItemIndex = 0);
+end;
+
+procedure TSetPasswordDlg.UpdatePasswordStrengthInfo;
+var
+  ZxcvbnResult: TZxcvbnResult;
+  ASuggestion: TZxcvbnSuggestion;
+begin
+  PasswordStrengthMemo.Clear;
+
+  if cbEncryption.ItemIndex <> 0 then
+  begin
+    ZxcvbnResult := FZxcvbn.EvaluatePassword(edPassword.Text);
+    try
+      FPasswordScore := ZxcvbnResult.Score;
+
+      if ZxcvbnResult.Warning <> zwDefault then
+      begin
+        PasswordStrengthMemo.Lines.Add(GetWarning(ZxcvbnResult.Warning));
+        PasswordStrengthMemo.Lines.Add('');
+      end;
+      for ASuggestion in ZxcvbnResult.Suggestions do
+        PasswordStrengthMemo.Lines.Add(GetSuggestion(ASuggestion));
+    finally
+      ZxcvbnResult.Free;
+    end;
+  end;
+
+  pbPasswordStrength.Invalidate;
 end;
 
 end.
