@@ -242,22 +242,22 @@ class function TDCP_haval.SelfTest: boolean;
     {$IFDEF DIGEST256}
       const
         Test1Out: array[0..31] of byte=
-          ($1A,$1D,$C8,$09,$9B,$DA,$A7,$F3,$5B,$4D,$A4,$E8,$05,$F1,$A2,$8F,
-           $EE,$90,$9D,$8D,$EE,$92,$01,$98,$18,$5C,$BC,$AE,$D8,$A1,$0A,$8D);
+          ($EA,$B9,$2E,$C2,$9E,$FC,$CB,$E0,$19,$D8,$31,$F2,$AB,$03,$0B,$10,
+           $7E,$A9,$B8,$4B,$76,$86,$47,$33,$3B,$2D,$8C,$A5,$53,$1F,$01,$12);
         Test2Out: array[0..31] of byte=
-          ($C5,$64,$7F,$C6,$C1,$87,$7F,$FF,$96,$74,$2F,$27,$E9,$26,$6B,$68,
-           $74,$89,$4F,$41,$A0,$8F,$59,$13,$03,$3D,$9D,$53,$2A,$ED,$DB,$39);
+          ($17,$22,$C5,$DC,$88,$D7,$77,$08,$D4,$78,$7D,$28,$3D,$7E,$26,$38,
+           $57,$E9,$84,$AE,$5A,$6F,$9A,$18,$54,$96,$39,$06,$34,$3A,$BB,$F8);
       var
         TestHash: TDCP_haval;
         TestOut: array[0..31] of byte;
       begin
         TestHash:= TDCP_haval.Create(nil);
         TestHash.Init;
-        TestHash.UpdateStr('abcdefghijklmnopqrstuvwxyz');
+        TestHash.UpdateStr('abc');
         TestHash.Final(TestOut);
         Result:= CompareMem(@TestOut,@Test1Out,Sizeof(Test1Out));
         TestHash.Init;
-        TestHash.UpdateStr('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789');
+        TestHash.UpdateStr('abcdefghijklmnopqrstuvwxyz');
         TestHash.Final(TestOut);
         Result:= CompareMem(@TestOut,@Test2Out,Sizeof(Test2Out)) and Result;
         TestHash.Free;
