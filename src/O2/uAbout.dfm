@@ -368,6 +368,7 @@ object AboutForm: TAboutForm
     Anchors = [akLeft, akTop, akRight]
     Caption = 'Acknowledgements'
     TabOrder = 0
+    ExplicitWidth = 275
     DesignSize = (
       279
       196)
@@ -396,12 +397,17 @@ object AboutForm: TAboutForm
         ''
         'UPX - The Ultimate Packer for eXecutables'
         'Copyright (C) 1996-2023 Markus Oberhumer, '
-        'Laszlo Molnar, John Reiser.')
+        'Laszlo Molnar, John Reiser.'
+        ''
+        'zxcvbn'
+        'Copyright (C) 2012-2016 Dan Wheeler and '
+        'Dropbox, Inc.'
+        'Delphi porting by TCardinal.')
       ParentColor = True
       ReadOnly = True
       ScrollBars = ssVertical
       TabOrder = 0
-      ExplicitWidth = 249
+      ExplicitWidth = 257
     end
   end
   object btOk: TButton

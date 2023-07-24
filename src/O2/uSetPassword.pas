@@ -19,7 +19,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, JvExStdCtrls, JvEdit;
+  Dialogs, StdCtrls, Vcl.ExtCtrls, JvExStdCtrls, JvEdit, Zxcvbn;
 
 type
   TSetPasswordDlg = class(TForm)
@@ -33,13 +33,21 @@ type
     cbEncryption: TComboBox;
     lbHash: TLabel;
     cbHash: TComboBox;
+    gbPasswordStrength: TGroupBox;
+    pbPasswordStrength: TPaintBox;
+    PasswordStrengthMemo: TMemo;
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure cbEncryptionChange(Sender: TObject);
     procedure cbHashChange(Sender: TObject);
     procedure edPasswordChange(Sender: TObject);
+    procedure pbPasswordStrengthPaint(Sender: TObject);
   private
+    FZxcvbn: TZxcvbn;
+    FPasswordScore: Integer;
     procedure EnableControls;
+    procedure UpdatePasswordStrengthInfo;
   public
     class function Execute(AOwner: TComponent; var Encrypt: Boolean;
       var Cipher, Hash: Byte; var Password: string): Boolean;
@@ -51,7 +59,7 @@ var
 implementation
 
 uses
-  uO2Defs, uGlobal;
+  uO2Defs, uO2Rules, uGlobal, uUtils, Zxcvbn.Result, Zxcvbn.Utility;
 
 {$R *.dfm}
 
@@ -91,8 +99,15 @@ end;
 
 procedure TSetPasswordDlg.FormCreate(Sender: TObject);
 begin
+  FZxcvbn := TZxcvbn.Create;
+  FPasswordScore := 0;
   TCipherLookup.Fill(cbEncryption);
   THashLookup.Fill(cbHash);
+end;
+
+procedure TSetPasswordDlg.FormDestroy(Sender: TObject);
+begin
+  FZxcvbn.Free;
 end;
 
 procedure TSetPasswordDlg.FormShow(Sender: TObject);
@@ -103,6 +118,7 @@ end;
 procedure TSetPasswordDlg.cbEncryptionChange(Sender: TObject);
 begin
   EnableControls;
+  UpdatePasswordStrengthInfo;
 end;
 
 procedure TSetPasswordDlg.cbHashChange(Sender: TObject);
@@ -113,6 +129,17 @@ end;
 procedure TSetPasswordDlg.edPasswordChange(Sender: TObject);
 begin
   EnableControls;
+  UpdatePasswordStrengthInfo;
+end;
+
+procedure TSetPasswordDlg.pbPasswordStrengthPaint(Sender: TObject);
+begin
+  if cbEncryption.ItemIndex <> 0 then
+    DrawHIndicator(pbPasswordStrength.Canvas, pbPasswordStrength.ClientRect,
+      PasswordScoreColors[FPasswordScore], (FPasswordScore + 1) / 5)
+  else
+    DrawHIndicator(pbPasswordStrength.Canvas, pbPasswordStrength.ClientRect,
+      0, 0);
 end;
 
 procedure TSetPasswordDlg.EnableControls;
@@ -128,6 +155,34 @@ begin
     and not (TCipherLookup.SelectedValue(cbEncryption) in DeprecatedCiphers)
     and not (THashLookup.SelectedValue(cbHash) in DeprecatedHashes)
     or (cbEncryption.ItemIndex = 0);
+end;
+
+procedure TSetPasswordDlg.UpdatePasswordStrengthInfo;
+var
+  ZxcvbnResult: TZxcvbnResult;
+  ASuggestion: TZxcvbnSuggestion;
+begin
+  PasswordStrengthMemo.Clear;
+
+  if cbEncryption.ItemIndex <> 0 then
+  begin
+    ZxcvbnResult := FZxcvbn.EvaluatePassword(edPassword.Text);
+    try
+      FPasswordScore := ZxcvbnResult.Score;
+
+      if ZxcvbnResult.Warning <> zwDefault then
+      begin
+        PasswordStrengthMemo.Lines.Add(GetWarning(ZxcvbnResult.Warning));
+        PasswordStrengthMemo.Lines.Add('');
+      end;
+      for ASuggestion in ZxcvbnResult.Suggestions do
+        PasswordStrengthMemo.Lines.Add(GetSuggestion(ASuggestion));
+    finally
+      ZxcvbnResult.Free;
+    end;
+  end;
+
+  pbPasswordStrength.Invalidate;
 end;
 
 end.

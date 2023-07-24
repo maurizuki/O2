@@ -18,7 +18,7 @@ unit uUtils;
 interface
 
 uses
-  Classes, Types, JSON;
+  Classes, Types, Graphics, JSON;
 
 type
   TAppVersion = class(TPersistent)
@@ -69,6 +69,9 @@ function YesNoBox(const Text: string): Boolean; inline;
 function YesNoWarningBox(const Text: string): Boolean; inline;
 function YesNoCancelBox(const Text: string): Integer; inline;
 function AbortRetryIgnoreBox(const Text: string): Integer; inline;
+
+procedure DrawHIndicator(const ACanvas: TCanvas; ARect: TRect; AColor: TColor;
+  Ratio: Double);
 
 function GetFileSize(const FileName: string): Integer;
 
@@ -127,6 +130,24 @@ end;
 function AbortRetryIgnoreBox(const Text: string): Integer;
 begin
   Result := MsgBox(Text, MB_ICONWARNING or MB_ABORTRETRYIGNORE);
+end;
+
+procedure DrawHIndicator(const ACanvas: TCanvas; ARect: TRect; AColor: TColor;
+  Ratio: Double);
+begin
+  ACanvas.Brush.Color := clWhite;
+
+  ACanvas.FillRect(ARect);
+  ACanvas.Rectangle(ARect);
+
+  if Ratio >= 0 then
+  begin
+    ACanvas.Brush.Color := AColor;
+
+    ARect.Right := Round(ARect.Left	+ ARect.Width * Ratio);
+    ARect.Inflate(-1, -1);
+    ACanvas.FillRect(ARect);
+  end;
 end;
 
 function GetFileSize(const FileName: string): Integer;

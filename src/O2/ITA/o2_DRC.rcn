@@ -5,10 +5,10 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">45055.7908564815</prop>
-        <prop prop-type="OrigDateTime">45055.7908101852</prop>
+        <prop prop-type="SelfDateTime">45127.6387962963</prop>
+        <prop prop-type="OrigDateTime">45127.6387731481</prop>
         <prop prop-type="XlatDateTime">44689.4302546296</prop>
-        <prop prop-type="Translated">1140</prop>
+        <prop prop-type="Translated">1171</prop>
         <prop prop-type="UnTranslated">0</prop>
       </prop-group>
     </header>
@@ -12327,6 +12327,254 @@
           <prop prop-type="Created">45047.6527753472</prop>
           <prop prop-type="Status">1</prop>
         </prop-group>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnAddAnotherWordOrTwo" resname="Zxcvbn_Utility_SZxcvbnAddAnotherWordOrTwo">
+        <source>"Add another word or two. Uncommon words are better."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004985417</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Aggiungi un'altra parola o due. Le parole non comuni sono migliori."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnUseLongerKeyboardPattern" resname="Zxcvbn_Utility_SZxcvbnUseLongerKeyboardPattern">
+        <source>"Use a longer keyboard pattern with more turns."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004985417</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Usa una sequenza di tastiera più lunga con più ripetizioni"</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnAvoidRepeatedWordsAndChars" resname="Zxcvbn_Utility_SZxcvbnAvoidRepeatedWordsAndChars">
+        <source>"Avoid repeated words and characters."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004985417</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Evita parole e caratteri ripetuti."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnAvoidSequences" resname="Zxcvbn_Utility_SZxcvbnAvoidSequences">
+        <source>"Avoid sequences."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004985417</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Evita le sequenze."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnAvoidYearsAssociatedYou" resname="Zxcvbn_Utility_SZxcvbnAvoidYearsAssociatedYou">
+        <source>"Avoid recent years and years that are associated with you."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004985417</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Evita anni recenti e anni associati a te."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnAvoidDatesYearsAssociatedYou" resname="Zxcvbn_Utility_SZxcvbnAvoidDatesYearsAssociatedYou">
+        <source>"Avoid dates and years that are associated with you."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004985417</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Evita date e anni associati a te."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnCapsDontHelp" resname="Zxcvbn_Utility_SZxcvbnCapsDontHelp">
+        <source>"Capitalization doesn't help very much."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004985417</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Il maiuscolo non aiuta più di tanto."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnAllCapsEasy" resname="Zxcvbn_Utility_SZxcvbnAllCapsEasy">
+        <source>"All-uppercase is almost as easy to guess as all-lowercase."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004985417</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Tutto in maiuscolo è facile da indovinare quasi come tutto in minuscolo."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnReversedWordEasy" resname="Zxcvbn_Utility_SZxcvbnReversedWordEasy">
+        <source>"Reversed words aren't much harder to guess."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004985417</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Le parole invertite non sono più difficili da indovinare."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnPredictableSubstitutionsEasy" resname="Zxcvbn_Utility_SZxcvbnPredictableSubstitutionsEasy">
+        <source>"Predictable substitutions like '@' instead of 'a' don't help very much."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004985417</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Sostituzioni prevedibili come '@' al posto di 'a' non aiutano molto."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnYears" resname="Zxcvbn_Utility_SZxcvbnYears">
+        <source>"years"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004985417</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"anni"</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnCenturies" resname="Zxcvbn_Utility_SZxcvbnCenturies">
+        <source>"centuries"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004985417</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"secoli"</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnStraightRow" resname="Zxcvbn_Utility_SZxcvbnStraightRow">
+        <source>"Straight rows of keys are easy to guess."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004985417</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Le righe di tastiera sono facili da indovinare."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnShortKeyboardPatterns" resname="Zxcvbn_Utility_SZxcvbnShortKeyboardPatterns">
+        <source>"Short keyboard patterns are easy to guess."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004985417</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Le sequenze brevi di tastiera sono facili da indovinare."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnRepeatsLikeAaaEasy" resname="Zxcvbn_Utility_SZxcvbnRepeatsLikeAaaEasy">
+        <source>"Repeats like \"aaa\" are easy to guess."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004985417</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Ripetizioni come \"aaa\" sono facili da indovinare."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnRepeatsLikeAbcSlighterHarder" resname="Zxcvbn_Utility_SZxcvbnRepeatsLikeAbcSlighterHarder">
+        <source>"Repeats like \"abcabcabc\" are only slightly harder to guess than \"abc\"."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004985417</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Ripetizioni come \"abcabcabc\" sono solo poco più difficili da indovinare di \"abc\"."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnSequenceAbcEasy" resname="Zxcvbn_Utility_SZxcvbnSequenceAbcEasy">
+        <source>"Sequences like abc or 6543 are easy to guess."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004985417</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Sequenze come abc o 6543 sono facili da indovinare."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnRecentYearsEasy" resname="Zxcvbn_Utility_SZxcvbnRecentYearsEasy">
+        <source>"Recent years are easy to guess."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004987269</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Gli anni recenti sono facili da indovinare."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnDatesEasy" resname="Zxcvbn_Utility_SZxcvbnDatesEasy">
+        <source>"Dates are often easy to guess."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004987269</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Le date sono spesso facili da indovinare."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnTop10Passwords" resname="Zxcvbn_Utility_SZxcvbnTop10Passwords">
+        <source>"This is a top-10 common password."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004987269</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Questa è una delle prime 10 password più comuni."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnTop100Passwords" resname="Zxcvbn_Utility_SZxcvbnTop100Passwords">
+        <source>"This is a top-100 common password."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004987269</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Questa è una delle prime 100 password più comuni."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnCommonPasswords" resname="Zxcvbn_Utility_SZxcvbnCommonPasswords">
+        <source>"This is a very common password."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004987269</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Questa è una password molto comune."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnSimilarCommonPasswords" resname="Zxcvbn_Utility_SZxcvbnSimilarCommonPasswords">
+        <source>"This is similar to a commonly used password."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004987269</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Questa è simile a una password molto comune."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnWordEasy" resname="Zxcvbn_Utility_SZxcvbnWordEasy">
+        <source>"A word by itself is easy to guess."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004987269</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Una parola da sola è facile da indovinare."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnNameSurnamesEasy" resname="Zxcvbn_Utility_SZxcvbnNameSurnamesEasy">
+        <source>"Names and surnames by themselves are easy to guess."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004987269</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Nomi e cognomi da soli sono facili da indovinare."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnCommonNameSurnamesEasy" resname="Zxcvbn_Utility_SZxcvbnCommonNameSurnamesEasy">
+        <source>"Common names and surnames are easy to guess."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004987269</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"Nomi e cognomi comuni sono facili da indovinare."</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnInstant" resname="Zxcvbn_Utility_SZxcvbnInstant">
+        <source>"instant"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004987269</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"istante"</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnMinutes" resname="Zxcvbn_Utility_SZxcvbnMinutes">
+        <source>"minutes"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004987269</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"minuti"</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnHours" resname="Zxcvbn_Utility_SZxcvbnHours">
+        <source>"hours"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004987269</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"ore"</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnDays" resname="Zxcvbn_Utility_SZxcvbnDays">
+        <source>"days"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004987269</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"giorni"</target>
+      </trans-unit>
+      <trans-unit id="Zxcvbn_Utility_SZxcvbnMonths" resname="Zxcvbn_Utility_SZxcvbnMonths">
+        <source>"months"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45111.8004987269</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+        <target>"mesi"</target>
       </trans-unit>
     </body>
   </file>

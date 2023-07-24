@@ -18,7 +18,8 @@ unit uGlobal;
 interface
 
 uses
-  Windows, Classes, ComCtrls, StdCtrls, uO2Defs, uO2Rules, uLookupHelper;
+  Windows, Classes, Graphics, ComCtrls, StdCtrls, uO2Defs, uO2Rules,
+  uLookupHelper;
 
 const
   DefaultFileExt = 'o2';

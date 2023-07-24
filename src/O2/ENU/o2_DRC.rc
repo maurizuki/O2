@@ -8,26 +8,57 @@
   resources were bound to the produced executable.
 */
 
-#define Vcl_OleConst_sNoRunningObject 64384
-#define Vcl_EdgeConst_SWebViewFailure 64385
-#define Vcl_EdgeConst_SNoWebView 64386
-#define IEConst_sNotSupportedByEdge 64387
-#define uRulePropsDlg_SMaskHelp06 64400
-#define uRulePropsDlg_SMaskHelp07 64401
-#define uRulePropsDlg_SMaskHelp08 64402
-#define uRulePropsDlg_SMaskHelp09 64403
-#define uRulePropsDlg_SMaskHelp10 64404
-#define uRulePropsDlg_SMaskHelp11 64405
-#define uRulePropsDlg_SMaskHelp12 64406
-#define uRulePropsDlg_SMaskHelp13 64407
-#define uRulePropsDlg_SMaskHelp14 64408
-#define uRulePropsDlg_SMaskHelp15 64409
-#define uRulePropsDlg_SMaskHelp16 64410
-#define Vcl_OleConst_SBadPropValue 64411
-#define Vcl_OleConst_SCannotActivate 64412
-#define Vcl_OleConst_SNoWindowHandle 64413
-#define Vcl_OleConst_SInvalidLicense 64414
-#define Vcl_OleConst_SNotLicensed 64415
+#define Vcl_EdgeConst_SWebViewFailure 64352
+#define Vcl_EdgeConst_SNoWebView 64353
+#define IEConst_sNotSupportedByEdge 64354
+#define uRulePropsDlg_SMaskHelp07 64368
+#define uRulePropsDlg_SMaskHelp08 64369
+#define uRulePropsDlg_SMaskHelp09 64370
+#define uRulePropsDlg_SMaskHelp10 64371
+#define uRulePropsDlg_SMaskHelp11 64372
+#define uRulePropsDlg_SMaskHelp12 64373
+#define uRulePropsDlg_SMaskHelp13 64374
+#define uRulePropsDlg_SMaskHelp14 64375
+#define uRulePropsDlg_SMaskHelp15 64376
+#define uRulePropsDlg_SMaskHelp16 64377
+#define Vcl_OleConst_SBadPropValue 64378
+#define Vcl_OleConst_SCannotActivate 64379
+#define Vcl_OleConst_SNoWindowHandle 64380
+#define Vcl_OleConst_SInvalidLicense 64381
+#define Vcl_OleConst_SNotLicensed 64382
+#define Vcl_OleConst_sNoRunningObject 64383
+#define Zxcvbn_Utility_SZxcvbnAddAnotherWordOrTwo 64384
+#define Zxcvbn_Utility_SZxcvbnUseLongerKeyboardPattern 64385
+#define Zxcvbn_Utility_SZxcvbnAvoidRepeatedWordsAndChars 64386
+#define Zxcvbn_Utility_SZxcvbnAvoidSequences 64387
+#define Zxcvbn_Utility_SZxcvbnAvoidYearsAssociatedYou 64388
+#define Zxcvbn_Utility_SZxcvbnAvoidDatesYearsAssociatedYou 64389
+#define Zxcvbn_Utility_SZxcvbnCapsDontHelp 64390
+#define Zxcvbn_Utility_SZxcvbnAllCapsEasy 64391
+#define Zxcvbn_Utility_SZxcvbnReversedWordEasy 64392
+#define Zxcvbn_Utility_SZxcvbnPredictableSubstitutionsEasy 64393
+#define uRulePropsDlg_SMaskHelp01 64394
+#define uRulePropsDlg_SMaskHelp02 64395
+#define uRulePropsDlg_SMaskHelp03 64396
+#define uRulePropsDlg_SMaskHelp04 64397
+#define uRulePropsDlg_SMaskHelp05 64398
+#define uRulePropsDlg_SMaskHelp06 64399
+#define Zxcvbn_Utility_SZxcvbnYears 64400
+#define Zxcvbn_Utility_SZxcvbnCenturies 64401
+#define Zxcvbn_Utility_SZxcvbnStraightRow 64402
+#define Zxcvbn_Utility_SZxcvbnShortKeyboardPatterns 64403
+#define Zxcvbn_Utility_SZxcvbnRepeatsLikeAaaEasy 64404
+#define Zxcvbn_Utility_SZxcvbnRepeatsLikeAbcSlighterHarder 64405
+#define Zxcvbn_Utility_SZxcvbnSequenceAbcEasy 64406
+#define Zxcvbn_Utility_SZxcvbnRecentYearsEasy 64407
+#define Zxcvbn_Utility_SZxcvbnDatesEasy 64408
+#define Zxcvbn_Utility_SZxcvbnTop10Passwords 64409
+#define Zxcvbn_Utility_SZxcvbnTop100Passwords 64410
+#define Zxcvbn_Utility_SZxcvbnCommonPasswords 64411
+#define Zxcvbn_Utility_SZxcvbnSimilarCommonPasswords 64412
+#define Zxcvbn_Utility_SZxcvbnWordEasy 64413
+#define Zxcvbn_Utility_SZxcvbnNameSurnamesEasy 64414
+#define Zxcvbn_Utility_SZxcvbnCommonNameSurnamesEasy 64415
 #define System_RegularExpressionsConsts_SRegExExpressionError 64416
 #define System_RegularExpressionsConsts_SRegExStudyError 64417
 #define System_RegularExpressionsConsts_SRegExMatchRequired 64418
@@ -39,11 +70,11 @@
 #define Data_DBConsts_SInvalidBcdValue 64424
 #define Data_DBConsts_SCouldNotParseTimeStamp 64425
 #define Data_DBConsts_SInvalidSqlTimeStamp 64426
-#define uRulePropsDlg_SMaskHelp01 64427
-#define uRulePropsDlg_SMaskHelp02 64428
-#define uRulePropsDlg_SMaskHelp03 64429
-#define uRulePropsDlg_SMaskHelp04 64430
-#define uRulePropsDlg_SMaskHelp05 64431
+#define Zxcvbn_Utility_SZxcvbnInstant 64427
+#define Zxcvbn_Utility_SZxcvbnMinutes 64428
+#define Zxcvbn_Utility_SZxcvbnHours 64429
+#define Zxcvbn_Utility_SZxcvbnDays 64430
+#define Zxcvbn_Utility_SZxcvbnMonths 64431
 #define uGlobal_SEventToday 64432
 #define uGlobal_SEventTomorrow 64433
 #define uGlobal_SEventThisWeek 64434
@@ -1150,11 +1181,9 @@
 #define System_SysConst_SAccessDenied 65535
 STRINGTABLE
 BEGIN
-	Vcl_OleConst_sNoRunningObject,	L"Unable to retrieve a pointer to a running object registered with OLE for %s/%s"
 	Vcl_EdgeConst_SWebViewFailure,	L"Failed to create Edge browser control"
 	Vcl_EdgeConst_SNoWebView,	L"The underlying WebView2 control is not initialized"
 	IEConst_sNotSupportedByEdge,	L"Operation not supported by Edge WebView2 control"
-	uRulePropsDlg_SMaskHelp06,	L"Each element is a literal character or a range."
 	uRulePropsDlg_SMaskHelp07,	L"Ranges are specified by an initial value, a dash (-), and a final value."
 	uRulePropsDlg_SMaskHelp08,	L"Do not use spaces or commas to separate the elements of the set."
 	uRulePropsDlg_SMaskHelp09,	L"A set must match a single character in the field name or value."
@@ -1170,6 +1199,39 @@ BEGIN
 	Vcl_OleConst_SNoWindowHandle,	L"Could not obtain OLE control window handle"
 	Vcl_OleConst_SInvalidLicense,	L"License information for %s is invalid"
 	Vcl_OleConst_SNotLicensed,	L"License information for %s not found. You cannot use this control in design mode"
+	Vcl_OleConst_sNoRunningObject,	L"Unable to retrieve a pointer to a running object registered with OLE for %s/%s"
+	Zxcvbn_Utility_SZxcvbnAddAnotherWordOrTwo,	L"Add another word or two. Uncommon words are better."
+	Zxcvbn_Utility_SZxcvbnUseLongerKeyboardPattern,	L"Use a longer keyboard pattern with more turns."
+	Zxcvbn_Utility_SZxcvbnAvoidRepeatedWordsAndChars,	L"Avoid repeated words and characters."
+	Zxcvbn_Utility_SZxcvbnAvoidSequences,	L"Avoid sequences."
+	Zxcvbn_Utility_SZxcvbnAvoidYearsAssociatedYou,	L"Avoid recent years and years that are associated with you."
+	Zxcvbn_Utility_SZxcvbnAvoidDatesYearsAssociatedYou,	L"Avoid dates and years that are associated with you."
+	Zxcvbn_Utility_SZxcvbnCapsDontHelp,	L"Capitalization doesn't help very much."
+	Zxcvbn_Utility_SZxcvbnAllCapsEasy,	L"All-uppercase is almost as easy to guess as all-lowercase."
+	Zxcvbn_Utility_SZxcvbnReversedWordEasy,	L"Reversed words aren't much harder to guess."
+	Zxcvbn_Utility_SZxcvbnPredictableSubstitutionsEasy,	L"Predictable substitutions like '@' instead of 'a' don't help very much."
+	uRulePropsDlg_SMaskHelp01,	L"Valid field name mask and field value mask consist of literal characters, sets, and wildcards."
+	uRulePropsDlg_SMaskHelp02,	L"Each literal character must match a single character in the field name or value."
+	uRulePropsDlg_SMaskHelp03,	L"The comparison to literal characters is case-insensitive."
+	uRulePropsDlg_SMaskHelp04,	L"Each set begins with an opening bracket ([) and ends with a closing bracket (])."
+	uRulePropsDlg_SMaskHelp05,	L"Between the brackets are the elements of the set."
+	uRulePropsDlg_SMaskHelp06,	L"Each element is a literal character or a range."
+	Zxcvbn_Utility_SZxcvbnYears,	L"years"
+	Zxcvbn_Utility_SZxcvbnCenturies,	L"centuries"
+	Zxcvbn_Utility_SZxcvbnStraightRow,	L"Straight rows of keys are easy to guess."
+	Zxcvbn_Utility_SZxcvbnShortKeyboardPatterns,	L"Short keyboard patterns are easy to guess."
+	Zxcvbn_Utility_SZxcvbnRepeatsLikeAaaEasy,	L"Repeats like ""aaa"" are easy to guess."
+	Zxcvbn_Utility_SZxcvbnRepeatsLikeAbcSlighterHarder,	L"Repeats like ""abcabcabc"" are only slightly harder to guess than ""abc""."
+	Zxcvbn_Utility_SZxcvbnSequenceAbcEasy,	L"Sequences like abc or 6543 are easy to guess."
+	Zxcvbn_Utility_SZxcvbnRecentYearsEasy,	L"Recent years are easy to guess."
+	Zxcvbn_Utility_SZxcvbnDatesEasy,	L"Dates are often easy to guess."
+	Zxcvbn_Utility_SZxcvbnTop10Passwords,	L"This is a top-10 common password."
+	Zxcvbn_Utility_SZxcvbnTop100Passwords,	L"This is a top-100 common password."
+	Zxcvbn_Utility_SZxcvbnCommonPasswords,	L"This is a very common password."
+	Zxcvbn_Utility_SZxcvbnSimilarCommonPasswords,	L"This is similar to a commonly used password."
+	Zxcvbn_Utility_SZxcvbnWordEasy,	L"A word by itself is easy to guess."
+	Zxcvbn_Utility_SZxcvbnNameSurnamesEasy,	L"Names and surnames by themselves are easy to guess."
+	Zxcvbn_Utility_SZxcvbnCommonNameSurnamesEasy,	L"Common names and surnames are easy to guess."
 	System_RegularExpressionsConsts_SRegExExpressionError,	L"Error in regular expression at offset %d: %s"
 	System_RegularExpressionsConsts_SRegExStudyError,	L"Error studying the regex: %s"
 	System_RegularExpressionsConsts_SRegExMatchRequired,	L"Successful match required"
@@ -1181,11 +1243,11 @@ BEGIN
 	Data_DBConsts_SInvalidBcdValue,	L"%s is not a valid BCD value"
 	Data_DBConsts_SCouldNotParseTimeStamp,	L"Could not parse SQL TimeStamp string"
 	Data_DBConsts_SInvalidSqlTimeStamp,	L"Invalid SQL date/time values"
-	uRulePropsDlg_SMaskHelp01,	L"Valid field name mask and field value mask consist of literal characters, sets, and wildcards."
-	uRulePropsDlg_SMaskHelp02,	L"Each literal character must match a single character in the field name or value."
-	uRulePropsDlg_SMaskHelp03,	L"The comparison to literal characters is case-insensitive."
-	uRulePropsDlg_SMaskHelp04,	L"Each set begins with an opening bracket ([) and ends with a closing bracket (])."
-	uRulePropsDlg_SMaskHelp05,	L"Between the brackets are the elements of the set."
+	Zxcvbn_Utility_SZxcvbnInstant,	L"instant"
+	Zxcvbn_Utility_SZxcvbnMinutes,	L"minutes"
+	Zxcvbn_Utility_SZxcvbnHours,	L"hours"
+	Zxcvbn_Utility_SZxcvbnDays,	L"days"
+	Zxcvbn_Utility_SZxcvbnMonths,	L"months"
 	uGlobal_SEventToday,	L"Today"
 	uGlobal_SEventTomorrow,	L"Tomorrow"
 	uGlobal_SEventThisWeek,	L"This week"
@@ -2312,7 +2374,8 @@ END
 /* C:\Users\mauri_000\source\repos\O2\src\O2\uReplaceDlg.dfm */
 /* C:\Users\mauri_000\source\repos\O2\src\O2\uPrintPreview.dfm */
 /* C:\Users\mauri_000\source\repos\O2\src\O2\uHTMLExport.dfm */
-/* C:\Users\mauri_000\source\repos\O2\src\O2\o2res.res */
+/* C:\Users\mauri_000\source\repos\O2\src\O2\Dictionaries.res */
+/* C:\Users\mauri_000\source\repos\O2\src\O2\Icons.res */
 /* C:\Users\mauri_000\source\repos\O2\src\O2\uMain.dfm */
 /* C:\Users\mauri_000\source\repos\O2\src\O2\o2.res */
 /* C:\Users\mauri_000\source\repos\O2\src\O2\o2.drf */

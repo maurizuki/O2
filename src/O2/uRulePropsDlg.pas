@@ -83,6 +83,8 @@ type
     Days1: TMenuItem;
     MaskHelpMemo: TMemo;
     cbDateFormat: TComboBox;
+    tsPassword: TTabSheet;
+    ckDisplayPasswordStrength: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure OKExecute(Sender: TObject);
@@ -205,6 +207,8 @@ begin
         Params.IntValue(HighlightColorParam, DefaultHighlightColor);
       cbHighlightTextColor.Selected :=
         Params.IntValue(HighlightTextColorParam, DefaultHighlightTextColor);
+      ckDisplayPasswordStrength.Checked := Params.BoolValue(
+        DisplayPasswordStrengthParam, DefaultDisplayPasswordStrength);
     end
   else
   begin
@@ -256,6 +260,9 @@ begin
     ARule.Params.Values[HighlightTextColorParam] :=
       IntToStr(cbHighlightTextColor.Selected);
   end;
+  if ARule.RuleType = rtPassword then
+    ARule.Params.Values[DisplayPasswordStrengthParam] :=
+      BoolToStr(ckDisplayPasswordStrength.Checked);
   RuleIndex := ARule.Index;
 
   ModalResult := mrOk;
@@ -329,6 +336,7 @@ begin
   tsDateFormat.TabVisible := RuleType in EventRules;
   tsCustomFilter.TabVisible := RuleType in EventRules;
   tsHighlight.TabVisible := RuleType in HighlightRules;
+  tsPassword.TabVisible := RuleType = rtPassword;
 end;
 
 procedure TRulePropsDlg.btDisplayMacrosClick(Sender: TObject);

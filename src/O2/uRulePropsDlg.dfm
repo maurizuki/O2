@@ -26,8 +26,6 @@ object RulePropsDlg: TRulePropsDlg
     Anchors = [akRight, akBottom]
     Default = True
     TabOrder = 1
-    ExplicitLeft = 189
-    ExplicitTop = 393
   end
   object btCancel: TButton
     Left = 274
@@ -39,24 +37,20 @@ object RulePropsDlg: TRulePropsDlg
     Caption = 'Cancel'
     ModalResult = 2
     TabOrder = 2
-    ExplicitLeft = 270
-    ExplicitTop = 393
   end
   object PageControl1: TPageControl
     Left = 8
     Top = 8
     Width = 341
-    Height = 379
+    Height = 380
     ActivePage = tsGeneral
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 0
-    ExplicitWidth = 337
-    ExplicitHeight = 378
     object tsGeneral: TTabSheet
       Caption = 'General'
       DesignSize = (
         333
-        351)
+        352)
       object Label1: TLabel
         Left = 3
         Top = 12
@@ -99,7 +93,7 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         OnChange = edNameChange
-        ExplicitWidth = 156
+        ExplicitWidth = 152
       end
       object cbType: TComboBox
         Left = 169
@@ -110,7 +104,7 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akTop, akRight]
         TabOrder = 1
         OnChange = cbTypeChange
-        ExplicitLeft = 165
+        ExplicitLeft = 161
       end
       object edFieldName: TEdit
         Left = 3
@@ -119,7 +113,7 @@ object RulePropsDlg: TRulePropsDlg
         Height = 21
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 2
-        ExplicitWidth = 156
+        ExplicitWidth = 152
       end
       object edFieldValue: TEdit
         Left = 169
@@ -128,20 +122,20 @@ object RulePropsDlg: TRulePropsDlg
         Height = 21
         Anchors = [akTop, akRight]
         TabOrder = 3
-        ExplicitLeft = 165
+        ExplicitLeft = 161
       end
       object MaskHelpMemo: TMemo
         Left = 3
         Top = 128
         Width = 327
-        Height = 220
+        Height = 221
         TabStop = False
         Anchors = [akLeft, akTop, akRight, akBottom]
         ParentColor = True
         ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 4
-        ExplicitWidth = 323
+        ExplicitWidth = 319
         ExplicitHeight = 219
       end
     end
@@ -150,7 +144,7 @@ object RulePropsDlg: TRulePropsDlg
       ImageIndex = 5
       DesignSize = (
         333
-        351)
+        352)
       object Label12: TLabel
         Left = 3
         Top = 12
@@ -167,6 +161,7 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akLeft, akTop, akRight]
         HideSelection = False
         TabOrder = 0
+        ExplicitWidth = 323
       end
       object btDisplayMacros: TButton
         Left = 255
@@ -177,6 +172,7 @@ object RulePropsDlg: TRulePropsDlg
         Caption = 'Macros'
         TabOrder = 1
         OnClick = btDisplayMacrosClick
+        ExplicitLeft = 251
       end
     end
     object tsHyperLink: TTabSheet
@@ -184,7 +180,7 @@ object RulePropsDlg: TRulePropsDlg
       ImageIndex = 2
       DesignSize = (
         333
-        351)
+        352)
       object Label7: TLabel
         Left = 3
         Top = 12
@@ -201,6 +197,7 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akLeft, akTop, akRight]
         HideSelection = False
         TabOrder = 0
+        ExplicitWidth = 323
       end
       object btHyperLinkMacros: TButton
         Left = 255
@@ -211,6 +208,7 @@ object RulePropsDlg: TRulePropsDlg
         Caption = 'Macros'
         TabOrder = 1
         OnClick = btHyperLinkMacrosClick
+        ExplicitLeft = 251
       end
     end
     object tsDateFormat: TTabSheet
@@ -218,7 +216,7 @@ object RulePropsDlg: TRulePropsDlg
       ImageIndex = 3
       DesignSize = (
         333
-        351)
+        352)
       object Label8: TLabel
         Left = 3
         Top = 12
@@ -244,6 +242,7 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akTop, akRight]
         MaxLength = 1
         TabOrder = 1
+        ExplicitLeft = 165
       end
       object cbDateFormat: TComboBox
         Left = 3
@@ -253,6 +252,7 @@ object RulePropsDlg: TRulePropsDlg
         Style = csDropDownList
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
+        ExplicitWidth = 156
       end
     end
     object tsCustomFilter: TTabSheet
@@ -260,7 +260,7 @@ object RulePropsDlg: TRulePropsDlg
       ImageIndex = 4
       DesignSize = (
         333
-        351)
+        352)
       object Label10: TLabel
         Left = 3
         Top = 12
@@ -287,6 +287,7 @@ object RulePropsDlg: TRulePropsDlg
         MaxValue = 365.000000000000000000
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
+        ExplicitWidth = 156
       end
       object edDaysAfter: TJvSpinEdit
         Left = 169
@@ -297,6 +298,7 @@ object RulePropsDlg: TRulePropsDlg
         MaxValue = 365.000000000000000000
         Anchors = [akTop, akRight]
         TabOrder = 1
+        ExplicitLeft = 165
       end
     end
     object tsHighlight: TTabSheet
@@ -304,7 +306,7 @@ object RulePropsDlg: TRulePropsDlg
       ImageIndex = 1
       DesignSize = (
         333
-        351)
+        352)
       object Label5: TLabel
         Left = 3
         Top = 12
@@ -330,6 +332,7 @@ object RulePropsDlg: TRulePropsDlg
         Style = [cbStandardColors, cbCustomColor, cbPrettyNames]
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
+        ExplicitWidth = 156
       end
       object cbHighlightTextColor: TColorBox
         Left = 169
@@ -339,6 +342,24 @@ object RulePropsDlg: TRulePropsDlg
         Style = [cbStandardColors, cbCustomColor, cbPrettyNames]
         Anchors = [akTop, akRight]
         TabOrder = 1
+        ExplicitLeft = 165
+      end
+    end
+    object tsPassword: TTabSheet
+      Caption = 'Password'
+      ImageIndex = 6
+      DesignSize = (
+        333
+        352)
+      object ckDisplayPasswordStrength: TCheckBox
+        Left = 3
+        Top = 11
+        Width = 327
+        Height = 17
+        Anchors = [akLeft, akTop, akRight]
+        Caption = 'Display password strength'
+        TabOrder = 0
+        ExplicitWidth = 323
       end
     end
   end

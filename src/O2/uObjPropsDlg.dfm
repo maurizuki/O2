@@ -7,7 +7,7 @@ object ObjPropsDlg: TObjPropsDlg
   ClientWidth = 357
   Color = clBtnFace
   Constraints.MinHeight = 452
-  Constraints.MinWidth = 369
+  Constraints.MinWidth = 354
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -25,17 +25,17 @@ object ObjPropsDlg: TObjPropsDlg
     Left = 8
     Top = 8
     Width = 341
-    Height = 371
+    Height = 370
     ActivePage = TabSheet1
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 0
     ExplicitWidth = 337
-    ExplicitHeight = 370
+    ExplicitHeight = 369
     object TabSheet1: TTabSheet
       Caption = 'General'
       DesignSize = (
         333
-        343)
+        342)
       object Label1: TLabel
         Left = 3
         Top = 12
@@ -75,13 +75,13 @@ object ObjPropsDlg: TObjPropsDlg
         Left = 3
         Top = 159
         Width = 241
-        Height = 181
+        Height = 180
         Anchors = [akLeft, akTop, akRight, akBottom]
         ItemHeight = 13
         Sorted = True
         TabOrder = 3
         ExplicitWidth = 237
-        ExplicitHeight = 180
+        ExplicitHeight = 179
       end
       object Button4: TButton
         Left = 250
@@ -113,12 +113,25 @@ object ObjPropsDlg: TObjPropsDlg
       ImageIndex = 1
       DesignSize = (
         333
-        343)
+        342)
+      object pbPasswordStrength: TPaintBox
+        Left = 152
+        Top = 290
+        Width = 178
+        Height = 17
+        Cursor = crHelp
+        Anchors = [akLeft, akRight, akBottom]
+        ParentShowHint = False
+        ShowHint = True
+        Visible = False
+        OnPaint = pbPasswordStrengthPaint
+        ExplicitTop = 292
+      end
       object FieldsView: TListView
         Left = 3
         Top = 3
         Width = 327
-        Height = 279
+        Height = 255
         Anchors = [akLeft, akTop, akRight, akBottom]
         Columns = <
           item
@@ -131,16 +144,19 @@ object ObjPropsDlg: TObjPropsDlg
           end>
         ColumnClick = False
         HideSelection = False
+        Items.ItemData = {}
         ReadOnly = True
         RowSelect = True
         TabOrder = 0
         ViewStyle = vsReport
         OnResize = FieldsViewResize
         OnSelectItem = FieldsViewSelectItem
+        ExplicitWidth = 323
+        ExplicitHeight = 259
       end
       object cbFieldName: TComboBox
         Left = 3
-        Top = 288
+        Top = 264
         Width = 143
         Height = 21
         Hint = 'Field name'
@@ -151,7 +167,7 @@ object ObjPropsDlg: TObjPropsDlg
       end
       object cbFieldValue: TComboBox
         Left = 152
-        Top = 288
+        Top = 264
         Width = 178
         Height = 21
         Hint = 'Field value'
@@ -159,11 +175,12 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 2
+        OnChange = cbFieldValueChange
         OnEnter = cbFieldValueEnter
       end
       object Button1: TButton
         Left = 3
-        Top = 315
+        Top = 314
         Width = 75
         Height = 25
         Action = AddField
@@ -171,10 +188,11 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 3
+        ExplicitTop = 318
       end
       object Button2: TButton
         Left = 84
-        Top = 315
+        Top = 314
         Width = 75
         Height = 25
         Action = ReplaceField
@@ -182,10 +200,11 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 4
+        ExplicitTop = 318
       end
       object Button3: TButton
         Left = 165
-        Top = 315
+        Top = 314
         Width = 75
         Height = 25
         Action = DeleteField
@@ -193,10 +212,11 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 5
+        ExplicitTop = 318
       end
       object Button6: TButton
         Left = 258
-        Top = 315
+        Top = 314
         Width = 33
         Height = 25
         Action = MoveUp
@@ -204,10 +224,12 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 6
+        ExplicitLeft = 254
+        ExplicitTop = 318
       end
       object Button7: TButton
         Left = 297
-        Top = 315
+        Top = 314
         Width = 33
         Height = 25
         Action = MoveDown
@@ -215,6 +237,20 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 7
+        ExplicitLeft = 293
+        ExplicitTop = 318
+      end
+      object ckDisplayPasswordStrength: TCheckBox
+        Left = 3
+        Top = 290
+        Width = 143
+        Height = 17
+        Anchors = [akLeft, akRight, akBottom]
+        Caption = '&Password strength'
+        TabOrder = 8
+        OnClick = ckDisplayPasswordStrengthClick
+        ExplicitTop = 294
+        ExplicitWidth = 139
       end
     end
     object TabSheet3: TTabSheet
@@ -222,12 +258,12 @@ object ObjPropsDlg: TObjPropsDlg
       ImageIndex = 2
       DesignSize = (
         333
-        343)
+        342)
       object Memo: TMemo
         Left = 3
         Top = 3
         Width = 327
-        Height = 337
+        Height = 336
         Anchors = [akLeft, akTop, akRight, akBottom]
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
@@ -243,7 +279,7 @@ object ObjPropsDlg: TObjPropsDlg
   end
   object btOk: TButton
     Left = 193
-    Top = 385
+    Top = 384
     Width = 75
     Height = 25
     Action = OK
@@ -251,11 +287,11 @@ object ObjPropsDlg: TObjPropsDlg
     Default = True
     TabOrder = 1
     ExplicitLeft = 189
-    ExplicitTop = 384
+    ExplicitTop = 383
   end
   object btCancel: TButton
     Left = 274
-    Top = 385
+    Top = 384
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -264,7 +300,7 @@ object ObjPropsDlg: TObjPropsDlg
     ModalResult = 2
     TabOrder = 2
     ExplicitLeft = 270
-    ExplicitTop = 384
+    ExplicitTop = 383
   end
   object ActionList: TActionList
     Left = 8
