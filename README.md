@@ -26,6 +26,12 @@ winget install --id=maurizuki.O2 -e
 
 ## Change log
 
+### Version 2.3
+-	*Encryption* dialog: added a color-based indication of the strength of the password typed, with some useful suggestions on how to strengthen it.
+-	*Object properties* dialog: added an option to enable a color based indication of the strength of the password typed in the field value, with some useful suggestions on how to strengthen it displayed hovering the indicator.
+-	Main window, objects view and fields view: objects and fields highlight indicates the strength of the passwords if the fields match rules of type *Password* with the new option *Display password strength*.
+-	Developed with Embarcadero® Delphi 11.
+
 ### Version 2.2.7
 - New feature: export events (fields that match rules of type *Expiration date* and *Recurrence*) in *iCalendar* format, compatible with Microsoft Outlook, Google Calendar, Apple Calendar, etc.
 - In the *Rule properties* dialog, *Date format* tab, the text field *Date format* has been replaced with a more friendly drop-down list.
