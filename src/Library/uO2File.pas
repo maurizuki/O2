@@ -142,7 +142,7 @@ procedure TestCipher(CipherClass: TDCP_cipherclass);
 var
   ACipher: TDCP_cipher;
 begin
-  ACipher := CipherClass.Create(nil);
+  ACipher := CipherClass.Create;
   try
       OutputDebugString(PChar(Format('Test cipher algorithm "%s" passed: %s',
         [ACipher.GetAlgorithm, BoolToStr(ACipher.SelfTest, True)])));
@@ -155,7 +155,7 @@ procedure TestHash(HashClass: TDCP_hashclass);
 var
   AHash: TDCP_hash;
 begin
-  AHash := HashClass.Create(nil);
+  AHash := HashClass.Create;
   try
       OutputDebugString(PChar(Format('Test hash algorithm "%s" passed: %s',
         [AHash.GetAlgorithm, BoolToStr(AHash.SelfTest, True)])));
@@ -490,7 +490,7 @@ procedure TO2File.Encrypt(InputStream, OutputStream: TStream);
 var
   Cipher: TDCP_cipher;
 begin
-  Cipher := GetCipherClass.Create(nil);
+  Cipher := GetCipherClass.Create;
   try
     Cipher.InitStr(AnsiString(Password), GetHashClass);
     Cipher.EncryptStream(InputStream, OutputStream,
@@ -505,7 +505,7 @@ procedure TO2File.Decrypt(InputStream, OutputStream: TStream);
 var
   Cipher: TDCP_cipher;
 begin
-  Cipher := GetCipherClass.Create(nil);
+  Cipher := GetCipherClass.Create;
   try
     Cipher.InitStr(AnsiString(Password), GetHashClass);
     Cipher.DecryptStream(InputStream, OutputStream,

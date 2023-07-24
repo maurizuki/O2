@@ -171,7 +171,7 @@ var
   TestHash: TDCP_md5;
   TestOut: array[0..19] of byte;
 begin
-  TestHash:= TDCP_md5.Create(nil);
+  TestHash:= TDCP_md5.Create;
   TestHash.Init;
   TestHash.UpdateStr('abc');
   TestHash.Final(TestOut);

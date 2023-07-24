@@ -359,7 +359,7 @@ var
   Cipher: TDCP_des;
   Data: array[0..7] of byte;
 begin
-  Cipher:= TDCP_des.Create(nil);
+  Cipher:= TDCP_des.Create;
   Cipher.Init(Key1,Sizeof(Key1)*8,nil);
   Cipher.EncryptECB(InData1,Data);
   Result:= boolean(CompareMem(@Data,@OutData1,Sizeof(Data)));
@@ -433,7 +433,7 @@ var
   Cipher: TDCP_3des;
   Block: array[0..7] of byte;
 begin
-  Cipher:= TDCP_3des.Create(nil);
+  Cipher:= TDCP_3des.Create;
   Cipher.Init(Key,Sizeof(Key)*8,nil);
   Cipher.EncryptECB(PlainText,Block);
   Result:= CompareMem(@Block,@CipherText,Sizeof(CipherText));

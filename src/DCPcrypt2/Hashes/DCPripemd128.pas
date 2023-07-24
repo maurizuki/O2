@@ -237,7 +237,7 @@ var
   TestHash: TDCP_ripemd128;
   TestOut: array[0..15] of byte;
 begin
-  TestHash:= TDCP_ripemd128.Create(nil);
+  TestHash:= TDCP_ripemd128.Create;
   TestHash.Init;
   TestHash.UpdateStr('abc');
   TestHash.Final(TestOut);

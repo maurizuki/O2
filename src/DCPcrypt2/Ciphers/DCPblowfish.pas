@@ -78,7 +78,7 @@ var
   Cipher: TDCP_blowfish;
   Data: array[0..7] of byte;
 begin
-  Cipher:= TDCP_blowfish.Create(nil);
+  Cipher:= TDCP_blowfish.Create;
   Cipher.Init(Key1,Sizeof(Key1)*8,nil);
   Cipher.EncryptECB(InData1,Data);
   Result:= boolean(CompareMem(@Data,@OutData1,Sizeof(Data)));

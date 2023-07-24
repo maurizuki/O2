@@ -230,7 +230,7 @@ var
   TestHash: TDCP_tiger;
   TestOut: array[0..2] of int64;
 begin
-  TestHash:= TDCP_tiger.Create(nil);
+  TestHash:= TDCP_tiger.Create;
   TestHash.Init;
   TestHash.UpdateStr('abc');
   TestHash.Final(TestOut);

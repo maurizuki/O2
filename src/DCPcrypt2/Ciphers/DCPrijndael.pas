@@ -96,7 +96,7 @@ var
   Block: array[0..15] of byte;
   Cipher: TDCP_rijndael;
 begin
-  Cipher:= TDCP_rijndael.Create(nil);
+  Cipher:= TDCP_rijndael.Create;
   Cipher.Init(Key1,Sizeof(Key1)*8,nil);
   Cipher.EncryptECB(InData1,Block);
   Result:= boolean(CompareMem(@Block,@OutData1,16));

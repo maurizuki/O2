@@ -92,7 +92,7 @@ var
   Block: array[0..15] of byte;
   Cipher: TDCP_serpent;
 begin
-  Cipher:= TDCP_serpent.Create(nil);
+  Cipher:= TDCP_serpent.Create;
   Cipher.Init(Key1,Sizeof(Key1)*8,nil);
   Cipher.EncryptECB(InData1,Block);
   Result:= boolean(CompareMem(@Block,@OutData1,16));

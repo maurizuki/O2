@@ -265,7 +265,7 @@ var
   TestHash: TDCP_sha384;
   TestOut: array[0..47] of byte;
 begin
-  TestHash:= TDCP_sha384.Create(nil);
+  TestHash:= TDCP_sha384.Create;
   TestHash.Init;
   TestHash.UpdateStr('abc');
   TestHash.Final(TestOut);
@@ -345,7 +345,7 @@ var
   TestHash: TDCP_sha512;
   TestOut: array[0..63] of byte;
 begin
-  TestHash:= TDCP_sha512.Create(nil);
+  TestHash:= TDCP_sha512.Create;
   TestHash.Init;
   TestHash.UpdateStr('abc');
   TestHash.Final(TestOut);

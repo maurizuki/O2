@@ -189,7 +189,7 @@ var
   TestHash: TDCP_sha256;
   TestOut: array[0..31] of byte;
 begin
-  TestHash:= TDCP_sha256.Create(nil);
+  TestHash:= TDCP_sha256.Create;
   TestHash.Init;
   TestHash.UpdateStr('abc');
   TestHash.Final(TestOut);

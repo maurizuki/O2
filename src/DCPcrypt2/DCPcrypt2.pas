@@ -26,7 +26,7 @@ unit DCPcrypt2;
 
 interface
 uses
-  Classes, Sysutils, DCPconst, DCPbase64;
+  Classes, Sysutils, DCPbase64;
 
 //{$DEFINE DCP1COMPAT}  { DCPcrypt v1.31 compatiblity mode - see documentation }
 
@@ -50,13 +50,10 @@ type
 
 type
   EDCP_hash= class(Exception);
-  TDCP_hash= class(TComponent)
+  TDCP_hash= class
   protected
     fInitialized: boolean;  { Whether or not the algorithm has been initialized }
 
-    procedure DeadInt(Value: integer);   { Knudge to display vars in the object inspector   }
-    procedure DeadStr(Value: string);    { Knudge to display vars in the object inspector   }
-  
   private
     function _GetId: integer;
     function _GetAlgorithm: string;
@@ -97,13 +94,9 @@ type
     
     destructor Destroy; override;
 
-  published
-    property Id: integer
-      read _GetId write DeadInt;
-    property Algorithm: string
-      read _GetAlgorithm write DeadStr;
-    property HashSize: integer
-      read _GetHashSize write DeadInt;
+    property Id: integer read _GetId;
+    property Algorithm: string read _GetAlgorithm;
+    property HashSize: integer read _GetHashSize;
   end;
   TDCP_hashclass= class of TDCP_hash;
 
@@ -115,12 +108,9 @@ type
 
 type
   EDCP_cipher= class(Exception);
-  TDCP_cipher= class(TComponent)
+  TDCP_cipher= class
   protected
     fInitialized: boolean;  { Whether or not the key setup has been done yet }
-
-    procedure DeadInt(Value: integer);   { Knudge to display vars in the object inspector   }
-    procedure DeadStr(Value: string);    { Knudge to display vars in the object inspector   }
 
   private
     function _GetId: integer;
@@ -171,16 +161,12 @@ type
       { Decrypt a Base64 encoded Unicode string }
 {$ENDIF}
 
-    constructor Create(AOwner: TComponent); override;
+    constructor Create; virtual;
     destructor Destroy; override;
 
-  published
-    property Id: integer
-      read _GetId write DeadInt;
-    property Algorithm: string
-      read _GetAlgorithm write DeadStr;
-    property MaxKeySize: integer
-      read _GetMaxKeySize write DeadInt;
+    property Id: integer read _GetId;
+    property Algorithm: string read _GetAlgorithm;
+    property MaxKeySize: integer read _GetMaxKeySize;
   end;
   TDCP_cipherclass= class of TDCP_cipher;
 
@@ -249,11 +235,9 @@ type
     procedure DecryptCTR(const Indata; var Outdata; Size: longword); virtual;
       { Decrypt size bytes of data using the CTR method of decryption }
 
-    constructor Create(AOwner: TComponent); override;
+    constructor Create; override;
 
-  published
-    property BlockSize: integer
-      read _GetBlockSize write DeadInt;
+    property BlockSize: integer read _GetBlockSize;
     property CipherMode: TDCP_ciphermode
       read fCipherMode write fCipherMode default cmCBC;
   end;
@@ -271,14 +255,6 @@ implementation
 
 
 {** TDCP_hash *****************************************************************}
-
-procedure TDCP_hash.DeadInt(Value: integer);
-begin
-end;
-
-procedure TDCP_hash.DeadStr(Value: string);
-begin
-end;
 
 function TDCP_hash._GetId: integer;
 begin
@@ -370,14 +346,6 @@ end;
 
 {** TDCP_cipher ***************************************************************}
 
-procedure TDCP_cipher.DeadInt(Value: integer);
-begin
-end;
-
-procedure TDCP_cipher.DeadStr(Value: string);
-begin
-end;
-
 function TDCP_cipher._GetId: integer;
 begin
   Result:= GetId;
@@ -432,7 +400,7 @@ begin
     Burn;
   try
     GetMem(Digest,HashType.GetHashSize div 8);
-    Hash:= HashType.Create(Self);
+    Hash:= HashType.Create;
     Hash.Init;
     Hash.UpdateStr(Key);
     Hash.Final(Digest^);
@@ -458,7 +426,7 @@ begin
     Burn;
   try
     GetMem(Digest,HashType.GetHashSize div 8);
-    Hash:= HashType.Create(Self);
+    Hash:= HashType.Create;
     Hash.Init;
     Hash.UpdateStr(Key);
     Hash.Final(Digest^);
@@ -564,9 +532,8 @@ begin
 end;
 {$ENDIF}
 
-constructor TDCP_cipher.Create(AOwner: TComponent);
+constructor TDCP_cipher.Create;
 begin
-  inherited Create(AOwner);
   Burn;
 end;
 
@@ -700,9 +667,9 @@ procedure TDCP_blockcipher.DecryptCTR(const Indata; var Outdata; Size: longword)
 begin
 end;
 
-constructor TDCP_blockcipher.Create(AOwner: TComponent);
+constructor TDCP_blockcipher.Create;
 begin
-  inherited Create(AOwner);
+  inherited Create;
   fCipherMode:= cmCBC;
 end;
 

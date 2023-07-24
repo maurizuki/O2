@@ -28,10 +28,6 @@ interface
 
 {******************************************************************************}
 const
-  { Component registration }
-  DCPcipherpage     = 'DCPciphers';
-  DCPhashpage       = 'DCPhashes';
-
   { ID values }
   DCP_rc2           =  1;
   DCP_sha1          =  2;

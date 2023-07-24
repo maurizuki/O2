@@ -93,7 +93,7 @@ var
   Cipher: TDCP_mars;
   Block: array[0..3] of dword;
 begin
-  Cipher:= TDCP_mars.Create(nil);
+  Cipher:= TDCP_mars.Create;
   Cipher.Init(Key1,Sizeof(Key1)*8,nil);
   Cipher.EncryptECB(Plain1,Block);
   Result:= CompareMem(@Cipher1,@Block,Sizeof(Block));

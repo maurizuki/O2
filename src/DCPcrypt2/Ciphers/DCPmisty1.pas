@@ -90,7 +90,7 @@ var
   Cipher: TDCP_misty1;
   Block: array[0..7] of byte;
 begin
-  Cipher:= TDCP_misty1.Create(nil);
+  Cipher:= TDCP_misty1.Create;
   Cipher.Init(Key,Sizeof(Key)*8,nil);
   Cipher.EncryptECB(Plain1,Block);
   Result:= CompareMem(@Cipher1,@Block,Sizeof(Block));
