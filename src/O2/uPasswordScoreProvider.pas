@@ -45,7 +45,7 @@ uses
 constructor TPasswordScoreProvider.Create;
 begin
   FPasswordScores := TDictionary<string, Integer>.Create;
-  FHash := TDCP_sha256.Create(nil);
+  FHash := TDCP_sha256.Create;
   FZxcvbn := TZxcvbn.Create;
 end;
 
