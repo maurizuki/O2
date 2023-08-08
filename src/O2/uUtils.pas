@@ -292,19 +292,20 @@ end;
 procedure TAppUpdate.LoadFromJSON(const JSON: TJSONValue);
 const
   AppVersionPattern =
-    '^v(?<MajorVersion>[0-9]+)\.(?<MinorVersion>[0-9]+)\.(?<Release>[0-9]+)$';
+    '^v(?<MajorVersion>[0-9]+)\.(?<MinorVersion>[0-9]+)(?:\.(?<Release>[0-9]+))?$';
 var
   RegEx: TRegEx;
   Match: TMatch;
 begin
     RegEx := TRegEx.Create(AppVersionPattern);
     Match := RegEx.Match(JSON.GetValue<string>('tag_name'));
-    AppVersion.MajorVersion :=
-      StrToIntDef(Match.Groups['MajorVersion'].Value, 0);
-    AppVersion.MinorVersion :=
-      StrToIntDef(Match.Groups['MinorVersion'].Value, 0);
-    AppVersion.Release :=
-      StrToIntDef(Match.Groups['Release'].Value, 0);
+    AppVersion.MajorVersion := StrToInt(Match.Groups['MajorVersion'].Value);
+    AppVersion.MinorVersion := StrToInt(Match.Groups['MinorVersion'].Value);
+    try
+      AppVersion.Release := StrToIntDef(Match.Groups['Release'].Value, 0)
+    except
+      AppVersion.Release := 0;
+    end;
     AppVersion.Build := 0;
     DownloadURL := JSON.GetValue<string>('html_url');
 end;
