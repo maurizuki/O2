@@ -54,7 +54,7 @@ type
     procedure Burn; override;
     procedure EncryptECB(const InData; var OutData); override;
     procedure DecryptECB(const InData; var OutData); override;
-    constructor Create(AOwner: TComponent); override;
+    constructor Create; override;
   end;
 
 
@@ -97,7 +97,7 @@ var
   Block: array[0..15] of byte;
   Cipher: TDCP_twofish;
 begin
-  Cipher:= TDCP_twofish.Create(nil);
+  Cipher:= TDCP_twofish.Create;
   FillChar(Key,Sizeof(Key),0);
   FillChar(Block,Sizeof(Block),0);
   for i:= 1 to 49 do
@@ -558,9 +558,9 @@ begin
   end;
 end;
 
-constructor TDCP_twofish.Create(AOwner: TComponent);
+constructor TDCP_twofish.Create;
 begin
-  inherited Create(AOwner);
+  inherited Create;
   if not MDSDone then
   begin
     PreCompMDS;

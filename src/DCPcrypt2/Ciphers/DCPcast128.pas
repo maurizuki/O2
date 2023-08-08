@@ -88,7 +88,7 @@ var
   Block: array[0..7] of byte;
   Cipher: TDCP_cast128;
 begin
-  Cipher:= TDCP_cast128.Create(nil);
+  Cipher:= TDCP_cast128.Create;
   Cipher.Init(Key,128,nil);
   Cipher.EncryptECB(InBlock,Block);
   Result:= boolean(CompareMem(@Block,@Out128,8));

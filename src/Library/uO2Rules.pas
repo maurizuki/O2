@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2022 the initial Contributor. All rights reserved.              }
+{ 2004-2023 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -33,6 +33,7 @@ const
   DaysAfterParam = 'DaysAfter';
   HighlightColorParam = 'Color';
   HighlightTextColorParam = 'TextColor';
+  DisplayPasswordStrengthParam = 'DisplayPasswordStrength';
 
 { Macro symbols for mask strings }
 
@@ -65,6 +66,12 @@ const
   DefaultRecurrenceMask =
     MacroStartDelimiter + FieldValueMacro + MacroEndDelimiter + #32
     + '(' + MacroStartDelimiter + YearsMacro + MacroEndDelimiter + ')';
+  DefaultDisplayPasswordStrength = False;
+
+{ Password score colors }
+
+  PasswordScoreColors: array [0..4] of TColor = (
+    $00241CED, $00277FFF, $000EC9FF, $00E8A200, $004CB122);
 
 type
 
@@ -123,10 +130,15 @@ type
     function ParamExists(const ParamName: string): Boolean;
     function AddParam(const ParamName: string): TO2Param;
     procedure DeleteParam(const ParamName: string);
+    function BoolValue(const ParamName: string; DefaultValue: Boolean): Boolean;
     function IntValue(const ParamName: string; DefaultValue: Integer): Integer;
     function StrValue(const ParamName, DefaultValue: string): string;
     property Params[Index: Integer]: TO2Param read GetParams; default;
     property Values[Name: string]: string read GetValues write SetValues;
+  end;
+
+  IPasswordScoreProvider = interface
+    function TryGet(const Password: string; var Score: Integer): Boolean;
   end;
 
   TO2Rule = class(TO2CollectionItem)
@@ -161,6 +173,7 @@ type
     function GetNextEvent(const AField: TO2Field; StartDate: TDateTime;
       out NextDate: TDateTime; UseParams: Boolean = False): Boolean;
     function GetHighlightColors(const AField: TO2Field;
+      const PasswordScoreProvider: IPasswordScoreProvider;
       out Color, TextColor: TColor): Boolean;
   published
     property Name: string read FName write SetName;
@@ -202,8 +215,10 @@ type
     function GetNextEvent(const AObject: TO2Object; StartDate: TDateTime;
       out NextDate: TDateTime; UseParams: Boolean = False): Boolean; overload;
     function GetHighlightColors(const AField: TO2Field;
+      const PasswordScoreProvider: IPasswordScoreProvider;
       out Color, TextColor: TColor): Boolean; overload;
     function GetHighlightColors(const AObject: TO2Object;
+      const PasswordScoreProvider: IPasswordScoreProvider;
       out Color, TextColor: TColor): Boolean; overload;
     property Rules[Index: Integer]: TO2Rule read GetRules; default;
   end;
@@ -315,6 +330,18 @@ begin
   AParam := FindParam(ParamName);
   if Assigned(AParam) then
     Delete(AParam.Index);
+end;
+
+function TO2Params.BoolValue(const ParamName: string;
+  DefaultValue: Boolean): Boolean;
+var
+  AParam: TO2Param;
+begin
+  AParam := FindParam(ParamName);
+  if Assigned(AParam) then
+    Result := StrToBoolDef(AParam.ParamValue, DefaultValue)
+  else
+    Result := DefaultValue;
 end;
 
 function TO2Params.IntValue(const ParamName: string;
@@ -566,19 +593,33 @@ begin
   end;
 end;
 
-function TO2Rule.GetHighlightColors(const AField: TO2Field; out Color,
-  TextColor: TColor): Boolean;
+function TO2Rule.GetHighlightColors(const AField: TO2Field;
+  const PasswordScoreProvider: IPasswordScoreProvider;
+  out Color, TextColor: TColor): Boolean;
+var
+  PasswordScore: Integer;
 begin
-  if (RuleType = rtHighlight) and Matches(AField)
-    or CheckEvents(AField, 0, 0, True) then
+  if (RuleType = rtPassword) and Params.BoolValue(DisplayPasswordStrengthParam,
+    DefaultDisplayPasswordStrength) and Matches(AField) then
   begin
-    Color := Params.IntValue(HighlightColorParam, DefaultHighlightColor);
-    TextColor :=
-      Params.IntValue(HighlightTextColorParam, DefaultHighlightTextColor);
-    Result := True;
+    Result := PasswordScoreProvider.TryGet(AField.FieldValue, PasswordScore);
+    if Result then
+    begin
+      Color := PasswordScoreColors[PasswordScore];
+      TextColor := clBlack;
+    end;
   end
   else
-    Result := False;
+    if (RuleType = rtHighlight) and Matches(AField)
+      or CheckEvents(AField, 0, 0, True) then
+    begin
+      Color := Params.IntValue(HighlightColorParam, DefaultHighlightColor);
+      TextColor :=
+        Params.IntValue(HighlightTextColorParam, DefaultHighlightTextColor);
+      Result := True;
+    end
+    else
+      Result := False;
 end;
 
 function TO2Rule.GetFormatSettings: TFormatSettings;
@@ -812,22 +853,25 @@ begin
     end;
 end;
 
-function TO2Rules.GetHighlightColors(const AField: TO2Field; out Color,
-  TextColor: TColor): Boolean;
+function TO2Rules.GetHighlightColors(const AField: TO2Field;
+  const PasswordScoreProvider: IPasswordScoreProvider;
+  out Color, TextColor: TColor): Boolean;
 var
   ARule: TO2Rule;
 begin
   Result := False;
   for ARule in Self do
-    if ARule.GetHighlightColors(AField, Color, TextColor) then
+    if ARule.GetHighlightColors(AField, PasswordScoreProvider,
+      Color, TextColor) then
     begin
       Result := True;
       Break;
     end;
 end;
 
-function TO2Rules.GetHighlightColors(const AObject: TO2Object; out Color,
-  TextColor: TColor): Boolean;
+function TO2Rules.GetHighlightColors(const AObject: TO2Object;
+  const PasswordScoreProvider: IPasswordScoreProvider;
+  out Color, TextColor: TColor): Boolean;
 var
   AColor, ATextColor: TColor;
   RuleIndex: Integer;
@@ -839,7 +883,8 @@ begin
   for AField in AObject.Fields do
     for ARule in Self do
       if (ARule.Index < RuleIndex)
-        and ARule.GetHighlightColors(AField, AColor, ATextColor) then
+        and ARule.GetHighlightColors(AField, PasswordScoreProvider,
+          AColor, ATextColor) then
       begin
         Color := AColor;
         TextColor := ATextColor;

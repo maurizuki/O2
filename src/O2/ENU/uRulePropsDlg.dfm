@@ -1,28 +1,25 @@
 object RulePropsDlg: TRulePropsDlg
   Left = 192
   Top = 107
-  BorderStyle = bsDialog
   Caption = 'Rule properties'
-  ClientHeight = 428
-  ClientWidth = 361
+  ClientHeight = 427
+  ClientWidth = 357
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
   OnShow = FormShow
   DesignSize = (
-    361
-    428)
-  PixelsPerInch = 96
+    357
+    427)
   TextHeight = 13
   object btOk: TButton
-    Left = 199
-    Top = 397
+    Left = 193
+    Top = 394
     Width = 75
     Height = 25
     Action = OK
@@ -31,8 +28,8 @@ object RulePropsDlg: TRulePropsDlg
     TabOrder = 1
   end
   object btCancel: TButton
-    Left = 280
-    Top = 397
+    Left = 274
+    Top = 394
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -42,17 +39,20 @@ object RulePropsDlg: TRulePropsDlg
     TabOrder = 2
   end
   object PageControl1: TPageControl
-    Left = 6
+    Left = 8
     Top = 8
-    Width = 349
+    Width = 341
     Height = 380
     ActivePage = tsGeneral
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 0
     object tsGeneral: TTabSheet
       Caption = 'General'
+      DesignSize = (
+        333
+        352)
       object Label1: TLabel
-        Left = 8
+        Left = 3
         Top = 12
         Width = 31
         Height = 13
@@ -60,15 +60,16 @@ object RulePropsDlg: TRulePropsDlg
         FocusControl = edName
       end
       object Label2: TLabel
-        Left = 174
+        Left = 169
         Top = 12
         Width = 28
         Height = 13
+        Anchors = [akTop, akRight]
         Caption = '&Type:'
         FocusControl = cbType
       end
       object Label3: TLabel
-        Left = 8
+        Left = 3
         Top = 66
         Width = 82
         Height = 13
@@ -76,61 +77,76 @@ object RulePropsDlg: TRulePropsDlg
         FocusControl = edFieldName
       end
       object Label4: TLabel
-        Left = 174
+        Left = 169
         Top = 66
         Width = 82
         Height = 13
+        Anchors = [akTop, akRight]
         Caption = 'Field &value mask:'
         FocusControl = edFieldValue
       end
       object edName: TEdit
-        Left = 8
+        Left = 3
         Top = 31
-        Width = 159
+        Width = 160
         Height = 21
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         OnChange = edNameChange
+        ExplicitWidth = 152
       end
       object cbType: TComboBox
-        Left = 174
+        Left = 169
         Top = 31
-        Width = 159
+        Width = 161
         Height = 21
         Style = csDropDownList
+        Anchors = [akTop, akRight]
         TabOrder = 1
         OnChange = cbTypeChange
+        ExplicitLeft = 161
       end
       object edFieldName: TEdit
-        Left = 8
+        Left = 3
         Top = 85
-        Width = 159
+        Width = 160
         Height = 21
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 2
+        ExplicitWidth = 152
       end
       object edFieldValue: TEdit
-        Left = 174
+        Left = 169
         Top = 85
-        Width = 159
+        Width = 161
         Height = 21
+        Anchors = [akTop, akRight]
         TabOrder = 3
+        ExplicitLeft = 161
       end
       object MaskHelpMemo: TMemo
-        Left = 8
+        Left = 3
         Top = 128
-        Width = 325
-        Height = 214
+        Width = 327
+        Height = 221
         TabStop = False
+        Anchors = [akLeft, akTop, akRight, akBottom]
         ParentColor = True
         ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 4
+        ExplicitWidth = 319
+        ExplicitHeight = 220
       end
     end
     object tsDisplay: TTabSheet
       Caption = 'Display'
       ImageIndex = 5
+      DesignSize = (
+        333
+        352)
       object Label12: TLabel
-        Left = 8
+        Left = 3
         Top = 12
         Width = 28
         Height = 13
@@ -138,18 +154,20 @@ object RulePropsDlg: TRulePropsDlg
         FocusControl = edDisplayMask
       end
       object edDisplayMask: TEdit
-        Left = 8
+        Left = 3
         Top = 31
-        Width = 325
+        Width = 327
         Height = 21
+        Anchors = [akLeft, akTop, akRight]
         HideSelection = False
         TabOrder = 0
       end
       object btDisplayMacros: TButton
-        Left = 258
+        Left = 255
         Top = 58
         Width = 75
         Height = 25
+        Anchors = [akTop, akRight]
         Caption = 'Macros'
         TabOrder = 1
         OnClick = btDisplayMacrosClick
@@ -158,8 +176,11 @@ object RulePropsDlg: TRulePropsDlg
     object tsHyperLink: TTabSheet
       Caption = 'Internet link'
       ImageIndex = 2
+      DesignSize = (
+        333
+        352)
       object Label7: TLabel
-        Left = 8
+        Left = 3
         Top = 12
         Width = 28
         Height = 13
@@ -167,18 +188,20 @@ object RulePropsDlg: TRulePropsDlg
         FocusControl = edMask
       end
       object edMask: TEdit
-        Left = 8
+        Left = 3
         Top = 31
-        Width = 325
+        Width = 327
         Height = 21
+        Anchors = [akLeft, akTop, akRight]
         HideSelection = False
         TabOrder = 0
       end
       object btHyperLinkMacros: TButton
-        Left = 258
+        Left = 255
         Top = 58
         Width = 75
         Height = 25
+        Anchors = [akTop, akRight]
         Caption = 'Macros'
         TabOrder = 1
         OnClick = btHyperLinkMacrosClick
@@ -187,8 +210,11 @@ object RulePropsDlg: TRulePropsDlg
     object tsDateFormat: TTabSheet
       Caption = 'Date format'
       ImageIndex = 3
+      DesignSize = (
+        333
+        352)
       object Label8: TLabel
-        Left = 8
+        Left = 3
         Top = 12
         Width = 62
         Height = 13
@@ -196,35 +222,43 @@ object RulePropsDlg: TRulePropsDlg
         FocusControl = cbDateFormat
       end
       object Label9: TLabel
-        Left = 174
+        Left = 169
         Top = 12
         Width = 77
         Height = 13
+        Anchors = [akTop, akRight]
         Caption = 'Date &separator:'
         FocusControl = edDateSeparator
       end
       object edDateSeparator: TEdit
-        Left = 174
+        Left = 169
         Top = 31
-        Width = 159
+        Width = 161
         Height = 21
+        Anchors = [akTop, akRight]
         MaxLength = 1
         TabOrder = 1
+        ExplicitLeft = 165
       end
       object cbDateFormat: TComboBox
-        Left = 8
+        Left = 3
         Top = 31
-        Width = 159
+        Width = 160
         Height = 21
         Style = csDropDownList
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
+        ExplicitWidth = 156
       end
     end
     object tsCustomFilter: TTabSheet
       Caption = 'Custom interval'
       ImageIndex = 4
+      DesignSize = (
+        333
+        352)
       object Label10: TLabel
-        Left = 8
+        Left = 3
         Top = 12
         Width = 94
         Height = 13
@@ -232,37 +266,43 @@ object RulePropsDlg: TRulePropsDlg
         FocusControl = edDaysBefore
       end
       object Label11: TLabel
-        Left = 174
+        Left = 169
         Top = 12
         Width = 86
         Height = 13
+        Anchors = [akTop, akRight]
         Caption = 'Days &after today:'
         FocusControl = edDaysAfter
       end
       object edDaysBefore: TJvSpinEdit
-        Left = 8
+        Left = 3
         Top = 31
-        Width = 159
+        Width = 160
         Height = 21
         ButtonKind = bkStandard
         MaxValue = 365
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
       end
       object edDaysAfter: TJvSpinEdit
-        Left = 174
+        Left = 169
         Top = 31
-        Width = 159
+        Width = 161
         Height = 21
         ButtonKind = bkStandard
         MaxValue = 365
+        Anchors = [akTop, akRight]
         TabOrder = 1
       end
     end
     object tsHighlight: TTabSheet
       Caption = 'Highlight'
       ImageIndex = 1
+      DesignSize = (
+        333
+        352)
       object Label5: TLabel
-        Left = 8
+        Left = 3
         Top = 12
         Width = 71
         Height = 13
@@ -270,28 +310,47 @@ object RulePropsDlg: TRulePropsDlg
         FocusControl = cbHighlightColor
       end
       object Label6: TLabel
-        Left = 174
+        Left = 169
         Top = 12
         Width = 52
         Height = 13
+        Anchors = [akTop, akRight]
         Caption = '&Text color:'
         FocusControl = cbHighlightTextColor
       end
       object cbHighlightColor: TColorBox
-        Left = 8
+        Left = 3
         Top = 31
-        Width = 159
+        Width = 160
         Height = 22
         Style = [cbStandardColors, cbCustomColor, cbPrettyNames]
+        Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
       end
       object cbHighlightTextColor: TColorBox
-        Left = 174
+        Left = 169
         Top = 31
-        Width = 159
+        Width = 161
         Height = 22
         Style = [cbStandardColors, cbCustomColor, cbPrettyNames]
+        Anchors = [akTop, akRight]
         TabOrder = 1
+      end
+    end
+    object tsPassword: TTabSheet
+      Caption = 'Password'
+      ImageIndex = 6
+      DesignSize = (
+        333
+        352)
+      object ckDisplayPasswordStrength: TCheckBox
+        Left = 3
+        Top = 11
+        Width = 327
+        Height = 17
+        Anchors = [akLeft, akTop, akRight]
+        Caption = 'Display password strength'
+        TabOrder = 0
       end
     end
   end

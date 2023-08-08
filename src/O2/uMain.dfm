@@ -12,12 +12,10 @@ object MainForm: TMainForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poScreenCenter
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
   TextHeight = 13
   object VSplitter: TSplitter
     Left = 596
@@ -44,6 +42,8 @@ object MainForm: TMainForm
       item
         Width = 100
       end>
+    ExplicitTop = 546
+    ExplicitWidth = 788
   end
   object pnClient: TPanel
     Left = 0
@@ -55,6 +55,8 @@ object MainForm: TMainForm
     ParentBackground = False
     ParentColor = True
     TabOrder = 1
+    ExplicitWidth = 592
+    ExplicitHeight = 508
     object HSplitter: TSplitter
       Left = 0
       Top = 300
@@ -102,6 +104,8 @@ object MainForm: TMainForm
       OnEdited = ObjectsViewEdited
       OnKeyDown = ObjectsViewKeyDown
       OnResize = ObjectsViewResize
+      ExplicitWidth = 592
+      ExplicitHeight = 299
     end
     object PageControl: TPageControl
       AlignWithMargins = True
@@ -113,6 +117,8 @@ object MainForm: TMainForm
       Align = alBottom
       MultiLine = True
       TabOrder = 1
+      ExplicitTop = 305
+      ExplicitWidth = 586
       object tsFields: TTabSheet
         Caption = 'Fields'
         object FieldsView: TListView
@@ -262,6 +268,8 @@ object MainForm: TMainForm
     ParentColor = False
     TabOrder = 2
     Visible = False
+    ExplicitLeft = 595
+    ExplicitHeight = 508
     DesignSize = (
       193
       509)
@@ -363,6 +371,7 @@ object MainForm: TMainForm
     TabOrder = 3
     Transparent = True
     Wrapable = False
+    ExplicitWidth = 788
     object ToolButton1: TToolButton
       Left = 0
       Top = 0
@@ -5101,6 +5110,7 @@ object MainForm: TMainForm
     AcceptCharset = 'utf-8, *;q=0.8'
     BaseURL = 'https://api.github.com'
     Params = <>
+    SynchronizedEvents = False
     Left = 392
     Top = 72
   end

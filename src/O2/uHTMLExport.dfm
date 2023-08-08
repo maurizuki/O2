@@ -3,24 +3,22 @@ object HTMLExport: THTMLExport
   Top = 0
   BorderIcons = [biSystemMenu, biMaximize]
   Caption = 'Export to HTML'
-  ClientHeight = 286
-  ClientWidth = 426
+  ClientHeight = 285
+  ClientWidth = 422
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   OnCreate = FormCreate
-  PixelsPerInch = 96
   TextHeight = 13
   object WebBrowser: TWebBrowser
     AlignWithMargins = True
     Left = 4
     Top = 38
-    Width = 418
-    Height = 244
+    Width = 414
+    Height = 243
     Margins.Left = 4
     Margins.Top = 0
     Margins.Right = 4
@@ -41,7 +39,7 @@ object HTMLExport: THTMLExport
   object ToolBar: TToolBar
     Left = 0
     Top = 0
-    Width = 426
+    Width = 422
     Height = 38
     AutoSize = True
     BorderWidth = 2
@@ -59,6 +57,7 @@ object HTMLExport: THTMLExport
     TabOrder = 1
     Transparent = True
     Wrapable = False
+    ExplicitWidth = 426
     object ToolButton1: TToolButton
       Left = 0
       Top = 0

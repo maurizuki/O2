@@ -5,25 +5,24 @@ object SetPasswordDlg: TSetPasswordDlg
   Anchors = [akRight, akBottom]
   BorderStyle = bsDialog
   Caption = 'Cifratura'
-  ClientHeight = 275
-  ClientWidth = 257
+  ClientHeight = 274
+  ClientWidth = 430
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnShow = FormShow
   DesignSize = (
-    257
-    275)
-  PixelsPerInch = 96
+    430
+    274)
   TextHeight = 13
   object lbPassword: TLabel
-    Left = 12
+    Left = 8
     Top = 122
     Width = 50
     Height = 13
@@ -31,7 +30,7 @@ object SetPasswordDlg: TSetPasswordDlg
     FocusControl = edPassword
   end
   object lbConfPassword: TLabel
-    Left = 12
+    Left = 8
     Top = 176
     Width = 112
     Height = 13
@@ -39,7 +38,7 @@ object SetPasswordDlg: TSetPasswordDlg
     FocusControl = edConfPassword
   end
   object Label1: TLabel
-    Left = 12
+    Left = 8
     Top = 16
     Width = 55
     Height = 13
@@ -47,7 +46,7 @@ object SetPasswordDlg: TSetPasswordDlg
     FocusControl = cbEncryption
   end
   object lbHash: TLabel
-    Left = 12
+    Left = 8
     Top = 68
     Width = 75
     Height = 13
@@ -55,9 +54,9 @@ object SetPasswordDlg: TSetPasswordDlg
     FocusControl = cbHash
   end
   object edPassword: TJvEdit
-    Left = 12
+    Left = 8
     Top = 141
-    Width = 233
+    Width = 178
     Height = 21
     ProtectPassword = True
     ThemedPassword = True
@@ -66,9 +65,9 @@ object SetPasswordDlg: TSetPasswordDlg
     OnChange = edPasswordChange
   end
   object edConfPassword: TJvEdit
-    Left = 12
+    Left = 8
     Top = 195
-    Width = 233
+    Width = 178
     Height = 21
     ProtectPassword = True
     ThemedPassword = True
@@ -77,8 +76,8 @@ object SetPasswordDlg: TSetPasswordDlg
     OnChange = edPasswordChange
   end
   object btOk: TButton
-    Left = 50
-    Top = 240
+    Left = 266
+    Top = 241
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -89,8 +88,8 @@ object SetPasswordDlg: TSetPasswordDlg
     TabOrder = 4
   end
   object btCancel: TButton
-    Left = 131
-    Top = 240
+    Left = 347
+    Top = 241
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -100,21 +99,57 @@ object SetPasswordDlg: TSetPasswordDlg
     TabOrder = 5
   end
   object cbEncryption: TComboBox
-    Left = 12
+    Left = 8
     Top = 35
-    Width = 233
+    Width = 178
     Height = 21
     Style = csDropDownList
     TabOrder = 0
     OnChange = cbEncryptionChange
   end
   object cbHash: TComboBox
-    Left = 12
+    Left = 8
     Top = 87
-    Width = 233
+    Width = 178
     Height = 21
     Style = csDropDownList
     TabOrder = 1
     OnChange = cbHashChange
+  end
+  object gbPasswordStrength: TGroupBox
+    Left = 192
+    Top = 16
+    Width = 230
+    Height = 200
+    Anchors = [akLeft, akTop, akRight]
+    Caption = 'Sicurezza della password'
+    ParentBackground = False
+    TabOrder = 6
+    DesignSize = (
+      230
+      200)
+    object pbPasswordStrength: TPaintBox
+      Left = 3
+      Top = 19
+      Width = 224
+      Height = 21
+      Anchors = [akLeft, akTop, akRight]
+      OnPaint = pbPasswordStrengthPaint
+      ExplicitWidth = 232
+    end
+    object PasswordStrengthMemo: TMemo
+      Left = 3
+      Top = 52
+      Width = 224
+      Height = 145
+      TabStop = False
+      Anchors = [akLeft, akTop, akRight, akBottom]
+      BorderStyle = bsNone
+      Color = clBtnFace
+      ReadOnly = True
+      ScrollBars = ssVertical
+      TabOrder = 0
+      ExplicitWidth = 216
+    end
   end
 end

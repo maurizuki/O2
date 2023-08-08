@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2022 the initial Contributor. All rights reserved.              }
+{ 2004-2023 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -19,7 +19,8 @@ interface
 
 {$WARN UNIT_PLATFORM OFF}
 
-{$R o2res.res}
+{$R Dictionaries.res}
+{$R Icons.res}
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
@@ -27,7 +28,8 @@ uses
   StdCtrls, ExtCtrls, FileCtrl, Types, System.ImageList, System.Actions,
   REST.Client, Data.Bind.Components, Data.Bind.ObjectScope,
   JvComponentBase, JvDragDrop,
-  uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist;
+  uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist,
+  uPasswordScoreProvider;
 
 type
   TCmdLineAction = (caNone, caOpenFile);
@@ -512,6 +514,7 @@ type
     FTransparency: Integer;
     FTransparencyOnlyIfDeactivated: Boolean;
     FShowPasswords: Boolean;
+    FPasswordScoreProvider: TPasswordScoreProvider;
 
     MRUMenuItems: TList;
     MRUList: TMRUList;
@@ -768,6 +771,8 @@ begin
   ImportSettingsDlg.Filter := SImportSettingsFileFilter;
   ExportSettingsDlg.Filter := SExportSettingsFileFilter;
 
+  FPasswordScoreProvider := TPasswordScoreProvider.Create;
+
   ActiveControl := ObjectsView;
 
   SetBrowserEmulation(ExtractFileName(Application.ExeName), IE11Default);
@@ -778,6 +783,7 @@ begin
   SaveSettings(AppFiles.FullPath[IdSettings]);
   MRUList.Free;
   MRUMenuItems.Free;
+  FPasswordScoreProvider.Free;
 end;
 
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -928,7 +934,7 @@ var
 begin
   if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data)
     and O2File.Rules.GetHighlightColors(TO2Object(Item.Data),
-    BrushColor, FontColor) then
+    FPasswordScoreProvider, BrushColor, FontColor) then
   begin
     Sender.Canvas.Brush.Color := BrushColor;
     Sender.Canvas.Font.Color := FontColor;
@@ -1710,6 +1716,7 @@ begin
     BeginBatchOperation;
     try
       O2File.Load;
+      FPasswordScoreProvider.Update(O2File);
     finally
       EndBatchOperation;
     end;
@@ -2631,6 +2638,7 @@ begin
   if TObjPropsDlg.Execute(Application, O2File.Objects, Index, False,
     pgGeneral) then
   begin
+    FPasswordScoreProvider.Update(O2File, Index);
     Item := ObjToListItem(Index, nil);
     ObjectsView.ClearSelection;
     Item.Selected := True;
@@ -2648,6 +2656,7 @@ begin
   if TObjPropsDlg.Execute(Application, O2File.Objects, Index, True,
     pgGeneral) then
   begin
+    FPasswordScoreProvider.Update(O2File, Index);
     Item := ObjToListItem(Index, nil);
     ObjectsView.ClearSelection;
     Item.Selected := True;
@@ -2847,6 +2856,7 @@ begin
   Index := TO2Object(ObjectsView.Selected.Data).Index;
   if TObjPropsDlg.Execute(Application, O2File.Objects, Index, False, Page) then
   begin
+    FPasswordScoreProvider.Update(O2File, Index);
     ObjToListItem(Index, ObjectsView.Selected);
     NotifyChanges([ncObjProps, ncTagList]);
   end;
@@ -2890,7 +2900,7 @@ var
 begin
   if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data)
     and O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
-    BrushColor, FontColor) then
+    FPasswordScoreProvider, BrushColor, FontColor) then
   begin
     Sender.Canvas.Brush.Color := BrushColor;
     Sender.Canvas.Font.Color := FontColor;
@@ -2907,7 +2917,7 @@ begin
   begin
     if (State * [cdsFocused, cdsHot] = [])
       and O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
-      BrushColor, FontColor) then
+      FPasswordScoreProvider, BrushColor, FontColor) then
     begin
       Sender.Canvas.Brush.Color := BrushColor;
       Sender.Canvas.Font.Color := FontColor;

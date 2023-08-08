@@ -164,14 +164,14 @@ end;
 class function TDCP_md5.SelfTest: boolean;
 const
   Test1Out: array[0..15] of byte=
-    ($90,$01,$50,$98,$3c,$d2,$4f,$b0,$d6,$96,$3f,$7d,$28,$e1,$7f,$72);
+    ($CE,$14,$73,$CF,$80,$C6,$B3,$FD,$A8,$E3,$DF,$C0,$06,$AD,$C3,$15);
   Test2Out: array[0..15] of byte=
-    ($c3,$fc,$d3,$d7,$61,$92,$e4,$00,$7d,$fb,$49,$6c,$ca,$67,$e1,$3b);
+    ($35,$02,$0D,$67,$A5,$2D,$8E,$91,$53,$30,$F0,$A7,$7F,$67,$6B,$BF);
 var
   TestHash: TDCP_md5;
   TestOut: array[0..19] of byte;
 begin
-  TestHash:= TDCP_md5.Create(nil);
+  TestHash:= TDCP_md5.Create;
   TestHash.Init;
   TestHash.UpdateStr('abc');
   TestHash.Final(TestOut);

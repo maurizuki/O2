@@ -254,24 +254,24 @@ end;
 class function TDCP_sha384.SelfTest: boolean;
 const
   Test1Out: array[0..47] of byte=
-    ($cb,$00,$75,$3f,$45,$a3,$5e,$8b,$b5,$a0,$3d,$69,$9a,$c6,$50,$07,
-     $27,$2c,$32,$ab,$0e,$de,$d1,$63,$1a,$8b,$60,$5a,$43,$ff,$5b,$ed,
-     $80,$86,$07,$2b,$a1,$e7,$cc,$23,$58,$ba,$ec,$a1,$34,$c8,$25,$a7);
+    ($9B,$7C,$E7,$C7,$AF,$46,$E4,$00,$A3,$7C,$80,$99,$CB,$4B,$BB,$5D,
+     $04,$08,$06,$1D,$D7,$4C,$DB,$5D,$AC,$76,$61,$BE,$D1,$E5,$37,$24,
+     $BD,$07,$F2,$99,$E2,$65,$F4,$00,$80,$2A,$48,$D2,$E0,$B2,$09,$2C);
   Test2Out: array[0..47] of byte=
-    ($09,$33,$0c,$33,$f7,$11,$47,$e8,$3d,$19,$2f,$c7,$82,$cd,$1b,$47,
-     $53,$11,$1b,$17,$3b,$3b,$05,$d2,$2f,$a0,$80,$86,$e3,$b0,$f7,$12,
-     $fc,$c7,$c7,$1a,$55,$7e,$2d,$b9,$66,$c3,$e9,$fa,$91,$74,$60,$39);
+    ($88,$60,$A0,$9A,$1B,$A1,$71,$34,$B1,$C7,$9A,$93,$32,$F8,$67,$F6,
+     $35,$4E,$48,$CA,$97,$40,$73,$20,$5F,$AA,$C5,$D8,$3D,$66,$F4,$E6,
+     $FD,$36,$2F,$BC,$EA,$2A,$CE,$9A,$ED,$07,$88,$14,$AE,$9F,$41,$E4);
 var
   TestHash: TDCP_sha384;
   TestOut: array[0..47] of byte;
 begin
-  TestHash:= TDCP_sha384.Create(nil);
+  TestHash:= TDCP_sha384.Create;
   TestHash.Init;
   TestHash.UpdateStr('abc');
   TestHash.Final(TestOut);
   Result:= boolean(CompareMem(@TestOut,@Test1Out,Sizeof(Test1Out)));
   TestHash.Init;
-  TestHash.UpdateStr('abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu');
+  TestHash.UpdateStr('abcdefghijklmnopqrstuvwxyz');
   TestHash.Final(TestOut);
   Result:= boolean(CompareMem(@TestOut,@Test2Out,Sizeof(Test2Out))) and Result;
   TestHash.Free;
@@ -332,26 +332,26 @@ end;
 class function TDCP_sha512.SelfTest: boolean;
 const
   Test1Out: array[0..63] of byte=
-    ($dd,$af,$35,$a1,$93,$61,$7a,$ba,$cc,$41,$73,$49,$ae,$20,$41,$31,
-     $12,$e6,$fa,$4e,$89,$a9,$7e,$a2,$0a,$9e,$ee,$e6,$4b,$55,$d3,$9a,
-     $21,$92,$99,$2a,$27,$4f,$c1,$a8,$36,$ba,$3c,$23,$a3,$fe,$eb,$bd,
-     $45,$4d,$44,$23,$64,$3c,$e8,$0e,$2a,$9a,$c9,$4f,$a5,$4c,$a4,$9f);
+    ($AD,$D8,$B8,$15,$4D,$F7,$A7,$34,$D2,$94,$7A,$98,$1F,$4E,$61,$C5,
+     $36,$67,$10,$D6,$10,$04,$0E,$5B,$54,$89,$4D,$10,$06,$E8,$92,$83,
+     $CB,$A0,$82,$28,$7E,$D5,$DD,$4C,$25,$CD,$AA,$5A,$F5,$6D,$24,$AB,
+     $9F,$BE,$DC,$56,$89,$71,$30,$B0,$B5,$F3,$E5,$0C,$7F,$9E,$E6,$DF);
   Test2Out: array[0..63] of byte=
-    ($8e,$95,$9b,$75,$da,$e3,$13,$da,$8c,$f4,$f7,$28,$14,$fc,$14,$3f,
-     $8f,$77,$79,$c6,$eb,$9f,$7f,$a1,$72,$99,$ae,$ad,$b6,$88,$90,$18,
-     $50,$1d,$28,$9e,$49,$00,$f7,$e4,$33,$1b,$99,$de,$c4,$b5,$43,$3a,
-     $c7,$d3,$29,$ee,$b6,$dd,$26,$54,$5e,$96,$e5,$5b,$87,$4b,$e9,$09);
+    ($13,$44,$90,$32,$54,$C8,$92,$2B,$4B,$B4,$3A,$7E,$CD,$A8,$5D,$37,
+     $39,$BE,$35,$3B,$74,$C3,$8A,$AE,$48,$BB,$06,$34,$9F,$75,$31,$35,
+     $FF,$0E,$6D,$47,$0B,$F9,$2B,$A3,$5F,$B6,$B7,$33,$7F,$1A,$AA,$1F,
+     $10,$80,$6C,$51,$AF,$71,$21,$B8,$51,$8C,$8B,$C2,$2D,$4E,$57,$AD);
 var
   TestHash: TDCP_sha512;
   TestOut: array[0..63] of byte;
 begin
-  TestHash:= TDCP_sha512.Create(nil);
+  TestHash:= TDCP_sha512.Create;
   TestHash.Init;
   TestHash.UpdateStr('abc');
   TestHash.Final(TestOut);
   Result:= boolean(CompareMem(@TestOut,@Test1Out,Sizeof(Test1Out)));
   TestHash.Init;
-  TestHash.UpdateStr('abcdefghbcdefghicdefghijdefghijkefghijklfghijklmghijklmnhijklmnoijklmnopjklmnopqklmnopqrlmnopqrsmnopqrstnopqrstu');
+  TestHash.UpdateStr('abcdefghijklmnopqrstuvwxyz');
   TestHash.Final(TestOut);
   Result:= boolean(CompareMem(@TestOut,@Test2Out,Sizeof(Test2Out))) and Result;
   TestHash.Free;

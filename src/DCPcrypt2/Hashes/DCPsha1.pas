@@ -182,20 +182,20 @@ end;
 class function TDCP_sha1.SelfTest: boolean;
 const
   Test1Out: array[0..19] of byte=
-    ($A9,$99,$3E,$36,$47,$06,$81,$6A,$BA,$3E,$25,$71,$78,$50,$C2,$6C,$9C,$D0,$D8,$9D);
+    ($9F,$04,$F4,$1A,$84,$85,$14,$16,$20,$50,$E3,$D6,$8C,$1A,$7A,$BB,$44,$1D,$C2,$B5);
   Test2Out: array[0..19] of byte=
-    ($84,$98,$3E,$44,$1C,$3B,$D2,$6E,$BA,$AE,$4A,$A1,$F9,$51,$29,$E5,$E5,$46,$70,$F1);
+    ($D6,$44,$F8,$B7,$C1,$50,$2B,$17,$39,$2F,$84,$C0,$C9,$D2,$5A,$2C,$8F,$97,$66,$4B);
 var
   TestHash: TDCP_sha1;
   TestOut: array[0..19] of byte;
 begin
-  TestHash:= TDCP_sha1.Create(nil);
+  TestHash:= TDCP_sha1.Create;
   TestHash.Init;
   TestHash.UpdateStr('abc');
   TestHash.Final(TestOut);
   Result:= boolean(CompareMem(@TestOut,@Test1Out,Sizeof(Test1Out)));
   TestHash.Init;
-  TestHash.UpdateStr('abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq');
+  TestHash.UpdateStr('abcdefghijklmnopqrstuvwxyz');
   TestHash.Final(TestOut);
   Result:= boolean(CompareMem(@TestOut,@Test2Out,Sizeof(Test2Out))) and Result;
   TestHash.Free;

@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2022 the initial Contributor. All rights reserved.              }
+{ 2004-2023 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -69,6 +69,7 @@ type
   public
     constructor Create;
     destructor Destroy; override;
+    class procedure TestAlgorithms;
     procedure Load; virtual;
     procedure Save(KeepModified: Boolean = False); virtual;
     property FileName: string read FFileName write FFileName;
@@ -133,6 +134,67 @@ begin
   FRelations.Free;
   FObjects.Free;
   inherited Destroy;
+end;
+
+class procedure TO2File.TestAlgorithms;
+
+procedure TestCipher(CipherClass: TDCP_cipherclass);
+var
+  ACipher: TDCP_cipher;
+begin
+  ACipher := CipherClass.Create;
+  try
+      OutputDebugString(PChar(Format('Test cipher algorithm "%s" passed: %s',
+        [ACipher.GetAlgorithm, BoolToStr(ACipher.SelfTest, True)])));
+  finally
+    ACipher.Free;
+  end;
+end;
+
+procedure TestHash(HashClass: TDCP_hashclass);
+var
+  AHash: TDCP_hash;
+begin
+  AHash := HashClass.Create;
+  try
+      OutputDebugString(PChar(Format('Test hash algorithm "%s" passed: %s',
+        [AHash.GetAlgorithm, BoolToStr(AHash.SelfTest, True)])));
+  finally
+    AHash.Free;
+  end;
+end;
+
+begin
+  TestCipher(TDCP_blowfish);
+  TestCipher(TDCP_cast128);
+  TestCipher(TDCP_cast256);
+  TestCipher(TDCP_des);
+  TestCipher(TDCP_3des);
+  TestCipher(TDCP_ice);
+  TestCipher(TDCP_thinice);
+  TestCipher(TDCP_ice2);
+  TestCipher(TDCP_idea);
+  TestCipher(TDCP_mars);
+  TestCipher(TDCP_misty1);
+  TestCipher(TDCP_rc2);
+  TestCipher(TDCP_rc4);
+  TestCipher(TDCP_rc5);
+  TestCipher(TDCP_rc6);
+  TestCipher(TDCP_rijndael);
+  TestCipher(TDCP_serpent);
+  TestCipher(TDCP_tea);
+  TestCipher(TDCP_twofish);
+
+  TestHash(TDCP_haval);
+  TestHash(TDCP_md4);
+  TestHash(TDCP_md5);
+  TestHash(TDCP_ripemd128);
+  TestHash(TDCP_ripemd160);
+  TestHash(TDCP_sha1);
+  TestHash(TDCP_sha256);
+  TestHash(TDCP_sha384);
+  TestHash(TDCP_sha512);
+  TestHash(TDCP_tiger);
 end;
 
 procedure TO2File.Load;
@@ -428,7 +490,7 @@ procedure TO2File.Encrypt(InputStream, OutputStream: TStream);
 var
   Cipher: TDCP_cipher;
 begin
-  Cipher := GetCipherClass.Create(nil);
+  Cipher := GetCipherClass.Create;
   try
     Cipher.InitStr(AnsiString(Password), GetHashClass);
     Cipher.EncryptStream(InputStream, OutputStream,
@@ -443,7 +505,7 @@ procedure TO2File.Decrypt(InputStream, OutputStream: TStream);
 var
   Cipher: TDCP_cipher;
 begin
-  Cipher := GetCipherClass.Create(nil);
+  Cipher := GetCipherClass.Create;
   try
     Cipher.InitStr(AnsiString(Password), GetHashClass);
     Cipher.DecryptStream(InputStream, OutputStream,

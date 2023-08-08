@@ -11,10 +11,11 @@ object AboutForm: TAboutForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
-  PixelsPerInch = 96
+  DesignSize = (
+    295
+    418)
   TextHeight = 13
   object Image1: TImage
     Left = 12
@@ -339,7 +340,7 @@ object AboutForm: TAboutForm
     Top = 35
     Width = 204
     Height = 13
-    Caption = 'Copyright (C) 2004-2021 Maurizio Basaglia'
+    Caption = 'Copyright (C) 2004-2023 Maurizio Basaglia'
   end
   object Label2: TLabel
     Left = 73
@@ -364,32 +365,43 @@ object AboutForm: TAboutForm
     Top = 87
     Width = 279
     Height = 196
+    Anchors = [akLeft, akTop, akRight]
     Caption = 'Riconoscimenti'
     TabOrder = 0
+    DesignSize = (
+      279
+      196)
     object Memo1: TMemo
       Left = 8
       Top = 24
-      Width = 261
+      Width = 265
       Height = 161
       TabStop = False
+      Anchors = [akLeft, akTop, akRight, akBottom]
       BorderStyle = bsNone
       Lines.Strings = (
         'DCPCrypt Cryptographic Component Library'
         'Copyright (C) 1999-2009 David Barton.'
         ''
         'Inno Setup'
-        'Copyright (C) 1997-2020 Jordan Russell.'
-        'Portions Copyright (C) 2000-2020 Martijn Laan.'
+        'Copyright (C) 1997-2023 Jordan Russell.'
+        'Portions Copyright (C) 2000-2023 Martijn Laan.'
         ''
-        'Jedi VCL Project'
-        'Copyright (C) 1999-2020 The Jedi VCL Team.'
+        'JEDI Visual Component Library'
+        'Copyright (C) 1999-2023 the Project JEDI '
+        'community.'
         ''
         'SZCRC32 unit'
         'Copyright (C) 2004 Sasa Zeman.'
         ''
         'UPX - The Ultimate Packer for eXecutables'
-        'Copyright (C) 1996-2020 Markus Oberhumer, '
-        'Laszlo Molnar, John Reiser.')
+        'Copyright (C) 1996-2023 Markus Oberhumer, '
+        'Laszlo Molnar, John Reiser.'
+        ''
+        'zxcvbn'
+        'Copyright (C) 2012-2016 Dan Wheeler and '
+        'Dropbox, Inc.'
+        'Delphi porting di TCardinal.')
       ParentColor = True
       ReadOnly = True
       ScrollBars = ssVertical
@@ -401,6 +413,7 @@ object AboutForm: TAboutForm
     Top = 385
     Width = 75
     Height = 25
+    Anchors = [akRight, akBottom]
     Cancel = True
     Caption = 'OK'
     Default = True
@@ -412,15 +425,18 @@ object AboutForm: TAboutForm
     Top = 385
     Width = 108
     Height = 25
+    Anchors = [akLeft, akBottom]
     Caption = 'Note di rilascio...'
     TabOrder = 3
     OnClick = btReadMeClick
+    ExplicitTop = 384
   end
   object GroupBox1: TGroupBox
     Left = 8
     Top = 295
     Width = 279
     Height = 68
+    Anchors = [akLeft, akTop, akRight]
     Caption = 'Traduzione'
     TabOrder = 1
     object Label3: TLabel

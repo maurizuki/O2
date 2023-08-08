@@ -81,7 +81,7 @@ var
   Data: array[0..1] of dword;
   Cipher: TDCP_tea;
 begin
-  Cipher:= TDCP_tea.Create(nil);
+  Cipher:= TDCP_tea.Create;
   Cipher.Init(Key,Sizeof(Key)*8,nil);
   Cipher.EncryptECB(PT,Data);
   Result:= not CompareMem(@Data,@PT,Sizeof(PT));

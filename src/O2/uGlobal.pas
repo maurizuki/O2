@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2022 the initial Contributor. All rights reserved.              }
+{ 2004-2023 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -18,7 +18,8 @@ unit uGlobal;
 interface
 
 uses
-  Windows, Classes, ComCtrls, StdCtrls, uO2Defs, uO2Rules, uLookupHelper;
+  Windows, Classes, Graphics, ComCtrls, StdCtrls, uO2Defs, uO2Rules,
+  uLookupHelper;
 
 const
   DefaultFileExt = 'o2';

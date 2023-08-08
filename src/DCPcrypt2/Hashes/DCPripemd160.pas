@@ -590,16 +590,16 @@ end;
 class function TDCP_ripemd160.SelfTest: boolean;
 const
   Test1Out: array[0..19] of byte=
-    ($0B,$DC,$9D,$2D,$25,$6B,$3E,$E9,$DA,$AE,$34,$7B,$E6,$F4,$DC,$83,$5A,$46,$7F,$FE);
+    ($44,$BF,$C4,$96,$5C,$B1,$40,$DC,$9B,$EA,$1F,$84,$2A,$9D,$EA,$BD,$AE,$0B,$E4,$53);
   Test2Out: array[0..19] of byte=
-    ($F7,$1C,$27,$10,$9C,$69,$2C,$1B,$56,$BB,$DC,$EB,$5B,$9D,$28,$65,$B3,$70,$8D,$BC);
+    ($24,$71,$79,$9A,$D0,$EE,$46,$96,$8F,$A5,$BD,$32,$BE,$AC,$4E,$86,$DA,$2E,$95,$6D);
 var
   TestHash: TDCP_ripemd160;
   TestOut: array[0..19] of byte;
 begin
-  TestHash:= TDCP_ripemd160.Create(nil);
+  TestHash:= TDCP_ripemd160.Create;
   TestHash.Init;
-  TestHash.UpdateStr('a');
+  TestHash.UpdateStr('abc');
   TestHash.Final(TestOut);
   Result:= CompareMem(@TestOut,@Test1Out,Sizeof(Test1Out));
   TestHash.Init;

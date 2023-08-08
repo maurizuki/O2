@@ -73,7 +73,7 @@ var
   Cipher: TDCP_rc4;
   Data: array[0..4] of byte;
 begin
-  Cipher:= TDCP_rc4.Create(nil);
+  Cipher:= TDCP_rc4.Create;
   Cipher.Init(Key1,Sizeof(Key1)*8,nil);
   Cipher.Encrypt(InData1,Data,Sizeof(Data));
   Result:= boolean(CompareMem(@Data,@OutData1,Sizeof(Data)));

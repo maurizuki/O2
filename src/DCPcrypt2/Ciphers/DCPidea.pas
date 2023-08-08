@@ -82,7 +82,7 @@ var
   Cipher: TDCP_idea;
   Data: array[0..7] of byte;
 begin
-  Cipher:= TDCP_idea.Create(nil);
+  Cipher:= TDCP_idea.Create;
   Cipher.Init(Key1,Sizeof(Key1)*8,nil);
   Cipher.EncryptECB(InData1,Data);
   Result:= boolean(CompareMem(@Data,@OutData1,Sizeof(Data)));

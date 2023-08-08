@@ -40,7 +40,7 @@ type
     procedure Burn; override;
     procedure EncryptECB(const InData; var OutData); override;
     procedure DecryptECB(const InData; var OutData); override;
-    constructor Create(AOwner: TComponent); override;
+    constructor Create; override;
   end;
 
   TDCP_ice= class(TDCP_customice)
@@ -302,9 +302,9 @@ begin
   Pdword(longword(@OutData)+4)^:= SwapDWord(l);
 end;
 
-constructor TDCP_customice.Create(AOwner: TComponent);
+constructor TDCP_customice.Create;
 begin
-  inherited Create(AOwner);
+  inherited Create;
   if not ice_sboxdone then
   begin
     ice_sboxes_init;
@@ -337,7 +337,7 @@ var
   Cipher: TDCP_ice;
   Data: array[0..7] of byte;
 begin
-  Cipher:= TDCP_ice.Create(nil);
+  Cipher:= TDCP_ice.Create;
   Cipher.Init(Key1,Sizeof(Key1)*8,nil);
   Cipher.EncryptECB(InData1,Data);
   Result:= boolean(CompareMem(@Data,@OutData1,Sizeof(Data)));
@@ -378,7 +378,7 @@ var
   Cipher: TDCP_thinice;
   Data: array[0..7] of byte;
 begin
-  Cipher:= TDCP_thinice.Create(nil);
+  Cipher:= TDCP_thinice.Create;
   Cipher.Init(Key1,Sizeof(Key1)*8,nil);
   Cipher.EncryptECB(InData1,Data);
   Result:= boolean(CompareMem(@Data,@OutData1,Sizeof(Data)));
@@ -420,7 +420,7 @@ var
   Cipher: TDCP_ice2;
   Data: array[0..7] of byte;
 begin
-  Cipher:= TDCP_ice2.Create(nil);
+  Cipher:= TDCP_ice2.Create;
   Cipher.Init(Key1,Sizeof(Key1)*8,nil);
   Cipher.EncryptECB(InData1,Data);
   Result:= boolean(CompareMem(@Data,@OutData1,Sizeof(Data)));

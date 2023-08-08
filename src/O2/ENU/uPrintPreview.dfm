@@ -3,23 +3,21 @@ object PrintPreview: TPrintPreview
   Top = 0
   BorderIcons = [biSystemMenu, biMaximize]
   Caption = 'Preview'
-  ClientHeight = 606
-  ClientWidth = 472
+  ClientHeight = 605
+  ClientWidth = 468
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   OnCreate = FormCreate
-  PixelsPerInch = 96
   TextHeight = 13
   object PreviewControl: TJvPreviewControl
     Left = 0
     Top = 38
-    Width = 472
-    Height = 549
+    Width = 468
+    Height = 548
     TopRow = 0
     SelectedPage = -1
     BorderStyle = bsNone
@@ -41,19 +39,23 @@ object PrintPreview: TPrintPreview
     Align = alClient
     ParentColor = False
     TabOrder = 0
+    ExplicitWidth = 472
+    ExplicitHeight = 549
   end
   object StatusBar: TStatusBar
     Left = 0
-    Top = 587
-    Width = 472
+    Top = 586
+    Width = 468
     Height = 19
     Panels = <>
     SimplePanel = True
+    ExplicitTop = 587
+    ExplicitWidth = 472
   end
   object ToolBar: TToolBar
     Left = 0
     Top = 0
-    Width = 472
+    Width = 468
     Height = 38
     AutoSize = True
     BorderWidth = 2
@@ -71,6 +73,7 @@ object PrintPreview: TPrintPreview
     TabOrder = 2
     Transparent = True
     Wrapable = False
+    ExplicitWidth = 472
     object ToolButton1: TToolButton
       Left = 0
       Top = 0

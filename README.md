@@ -26,6 +26,12 @@ winget install --id=maurizuki.O2 -e
 
 ## Change log
 
+### Version 2.3
+-	*Encryption* dialog: added a color-based indication of the strength of the password typed, with some useful suggestions on how to strengthen it.
+-	*Object properties* dialog: added an option to enable a color based indication of the strength of the password typed in the field value, with some useful suggestions on how to strengthen it displayed hovering the indicator.
+-	Main window, objects view and fields view: objects and fields highlight indicates the strength of the passwords if the fields match rules of type *Password* with the new option *Display password strength*.
+-	Developed with Embarcadero® Delphi 11.
+
 ### Version 2.2.7
 - New feature: export events (fields that match rules of type *Expiration date* and *Recurrence*) in *iCalendar* format, compatible with Microsoft Outlook, Google Calendar, Apple Calendar, etc.
 - In the *Rule properties* dialog, *Date format* tab, the text field *Date format* has been replaced with a more friendly drop-down list.
@@ -70,14 +76,18 @@ __DCPCrypt Cryptographic Component Library__
 Copyright (C) 1999-2009 David Barton.  
 
 __Inno Setup__  
-Copyright (C) 1997-2020 Jordan Russell.  
-Portions Copyright (C) 2000-2020 Martijn Laan.  
+Copyright (C) 1997-2023 Jordan Russell.  
+Portions Copyright (C) 2000-2023 Martijn Laan.  
 
-__Jedi VCL Project__  
-Copyright (C) 1999-2020 The Jedi VCL Team.  
+__JEDI Visual Component Library__  
+Copyright (C) 1999-2023 the Project JEDI community.  
 
 __SZCRC32 unit__  
 Copyright (C) 2004 Sasa Zeman.  
 
 __UPX - The Ultimate Packer for eXecutables__  
-Copyright (C) 1996-2020 Markus Oberhumer, Laszlo Molnar, John Reiser.
+Copyright (C) 1996-2023 Markus Oberhumer, Laszlo Molnar, John Reiser.  
+
+__zxcvbn__  
+Copyright (C) 2012-2016 Dan Wheeler and Dropbox, Inc.  
+Delphi porting by TCardinal.

@@ -3,21 +3,19 @@ object FilePropsDlg: TFilePropsDlg
   Top = 110
   BorderStyle = bsDialog
   Caption = 'Propriet'#224' file'
-  ClientHeight = 331
-  ClientWidth = 297
+  ClientHeight = 330
+  ClientWidth = 293
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnShow = FormShow
   DesignSize = (
-    297
-    331)
-  PixelsPerInch = 96
+    293
+    330)
   TextHeight = 13
   object Label1: TLabel
     Left = 8
@@ -62,29 +60,33 @@ object FilePropsDlg: TFilePropsDlg
   object edTitle: TEdit
     Left = 8
     Top = 31
-    Width = 281
+    Width = 277
     Height = 21
+    Anchors = [akLeft, akTop, akRight]
     TabOrder = 0
   end
   object edDescription: TEdit
     Left = 8
     Top = 85
-    Width = 281
+    Width = 277
     Height = 21
+    Anchors = [akLeft, akTop, akRight]
     TabOrder = 1
   end
   object edAuthor: TEdit
     Left = 8
     Top = 139
-    Width = 281
+    Width = 277
     Height = 21
+    Anchors = [akLeft, akTop, akRight]
     TabOrder = 2
   end
   object edCipher: TEdit
     Left = 8
     Top = 193
-    Width = 281
+    Width = 277
     Height = 21
+    Anchors = [akLeft, akTop, akRight]
     Color = clBtnFace
     ReadOnly = True
     TabOrder = 3
@@ -92,15 +94,16 @@ object FilePropsDlg: TFilePropsDlg
   object edHash: TEdit
     Left = 8
     Top = 247
-    Width = 281
+    Width = 277
     Height = 21
+    Anchors = [akLeft, akTop, akRight]
     Color = clBtnFace
     ReadOnly = True
     TabOrder = 4
   end
   object btOk: TButton
-    Left = 133
-    Top = 298
+    Left = 129
+    Top = 297
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -108,11 +111,10 @@ object FilePropsDlg: TFilePropsDlg
     Default = True
     TabOrder = 5
     OnClick = btOkClick
-    ExplicitTop = 397
   end
   object btCancel: TButton
-    Left = 214
-    Top = 298
+    Left = 210
+    Top = 297
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -120,6 +122,5 @@ object FilePropsDlg: TFilePropsDlg
     Caption = 'Annulla'
     ModalResult = 2
     TabOrder = 6
-    ExplicitTop = 397
   end
 end
