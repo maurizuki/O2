@@ -368,14 +368,13 @@ object AboutForm: TAboutForm
     Anchors = [akLeft, akTop, akRight]
     Caption = 'Riconoscimenti'
     TabOrder = 0
-    ExplicitWidth = 275
     DesignSize = (
       279
       196)
     object Memo1: TMemo
       Left = 8
       Top = 24
-      Width = 261
+      Width = 265
       Height = 161
       TabStop = False
       Anchors = [akLeft, akTop, akRight, akBottom]
@@ -407,7 +406,6 @@ object AboutForm: TAboutForm
       ReadOnly = True
       ScrollBars = ssVertical
       TabOrder = 0
-      ExplicitWidth = 257
     end
   end
   object btOk: TButton

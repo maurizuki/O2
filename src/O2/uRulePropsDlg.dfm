@@ -136,7 +136,7 @@ object RulePropsDlg: TRulePropsDlg
         ScrollBars = ssVertical
         TabOrder = 4
         ExplicitWidth = 319
-        ExplicitHeight = 219
+        ExplicitHeight = 220
       end
     end
     object tsDisplay: TTabSheet
@@ -161,7 +161,6 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akLeft, akTop, akRight]
         HideSelection = False
         TabOrder = 0
-        ExplicitWidth = 323
       end
       object btDisplayMacros: TButton
         Left = 255
@@ -172,7 +171,6 @@ object RulePropsDlg: TRulePropsDlg
         Caption = 'Macros'
         TabOrder = 1
         OnClick = btDisplayMacrosClick
-        ExplicitLeft = 251
       end
     end
     object tsHyperLink: TTabSheet
@@ -197,7 +195,6 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akLeft, akTop, akRight]
         HideSelection = False
         TabOrder = 0
-        ExplicitWidth = 323
       end
       object btHyperLinkMacros: TButton
         Left = 255
@@ -208,7 +205,6 @@ object RulePropsDlg: TRulePropsDlg
         Caption = 'Macros'
         TabOrder = 1
         OnClick = btHyperLinkMacrosClick
-        ExplicitLeft = 251
       end
     end
     object tsDateFormat: TTabSheet
@@ -287,7 +283,6 @@ object RulePropsDlg: TRulePropsDlg
         MaxValue = 365.000000000000000000
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
-        ExplicitWidth = 156
       end
       object edDaysAfter: TJvSpinEdit
         Left = 169
@@ -298,7 +293,6 @@ object RulePropsDlg: TRulePropsDlg
         MaxValue = 365.000000000000000000
         Anchors = [akTop, akRight]
         TabOrder = 1
-        ExplicitLeft = 165
       end
     end
     object tsHighlight: TTabSheet
@@ -332,7 +326,6 @@ object RulePropsDlg: TRulePropsDlg
         Style = [cbStandardColors, cbCustomColor, cbPrettyNames]
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
-        ExplicitWidth = 156
       end
       object cbHighlightTextColor: TColorBox
         Left = 169
@@ -342,7 +335,6 @@ object RulePropsDlg: TRulePropsDlg
         Style = [cbStandardColors, cbCustomColor, cbPrettyNames]
         Anchors = [akTop, akRight]
         TabOrder = 1
-        ExplicitLeft = 165
       end
     end
     object tsPassword: TTabSheet
@@ -359,7 +351,6 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akLeft, akTop, akRight]
         Caption = 'Display password strength'
         TabOrder = 0
-        ExplicitWidth = 323
       end
     end
   end

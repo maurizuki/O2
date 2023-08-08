@@ -149,7 +149,7 @@ object SetPasswordDlg: TSetPasswordDlg
       ReadOnly = True
       ScrollBars = ssVertical
       TabOrder = 0
-      ExplicitWidth = 212
+      ExplicitWidth = 216
     end
   end
 end

@@ -1,7 +1,6 @@
 object GetPasswordDlg: TGetPasswordDlg
   Left = 191
   Top = 108
-  ActiveControl = edPassword
   BorderStyle = bsDialog
   Caption = 'Password'
   ClientHeight = 87
@@ -28,7 +27,6 @@ object GetPasswordDlg: TGetPasswordDlg
     TabOrder = 0
     Text = ''
     OnChange = edPasswordChange
-    ExplicitWidth = 233
   end
   object btOk: TButton
     Left = 89
@@ -41,8 +39,6 @@ object GetPasswordDlg: TGetPasswordDlg
     Enabled = False
     ModalResult = 1
     TabOrder = 1
-    ExplicitLeft = 85
-    ExplicitTop = 53
   end
   object btCancel: TButton
     Left = 170
@@ -54,7 +50,5 @@ object GetPasswordDlg: TGetPasswordDlg
     Caption = 'Annulla'
     ModalResult = 2
     TabOrder = 2
-    ExplicitLeft = 166
-    ExplicitTop = 53
   end
 end

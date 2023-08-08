@@ -35,7 +35,7 @@ object RelationPropsDlg: TRelationPropsDlg
     FocusControl = edObject2
   end
   object Label3: TLabel
-    Left = 169
+    Left = 167
     Top = 12
     Width = 34
     Height = 13
@@ -62,7 +62,6 @@ object RelationPropsDlg: TRelationPropsDlg
     Color = clBtnFace
     ReadOnly = True
     TabOrder = 0
-    ExplicitWidth = 149
   end
   object edObject2: TEdit
     Left = 8
@@ -74,7 +73,6 @@ object RelationPropsDlg: TRelationPropsDlg
     Color = clBtnFace
     ReadOnly = True
     TabOrder = 2
-    ExplicitWidth = 149
   end
   object cbRole1: TComboBox
     Left = 167
@@ -83,7 +81,6 @@ object RelationPropsDlg: TRelationPropsDlg
     Height = 21
     Anchors = [akTop, akRight]
     TabOrder = 1
-    ExplicitLeft = 163
   end
   object cbRole2: TComboBox
     Left = 167
@@ -92,7 +89,6 @@ object RelationPropsDlg: TRelationPropsDlg
     Height = 21
     Anchors = [akTop, akRight]
     TabOrder = 3
-    ExplicitLeft = 163
   end
   object btOk: TButton
     Left = 167
@@ -104,8 +100,6 @@ object RelationPropsDlg: TRelationPropsDlg
     Default = True
     TabOrder = 4
     OnClick = btOkClick
-    ExplicitLeft = 163
-    ExplicitTop = 132
   end
   object btCancel: TButton
     Left = 249
@@ -117,7 +111,5 @@ object RelationPropsDlg: TRelationPropsDlg
     Caption = 'Cancel'
     ModalResult = 2
     TabOrder = 5
-    ExplicitLeft = 245
-    ExplicitTop = 132
   end
 end
