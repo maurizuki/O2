@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="settingType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="boolean"/>
+      <xs:enumeration value="float"/>
+      <xs:enumeration value="integer"/>
+      <xs:enumeration value="string"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="O2">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Settings">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="setting" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute name="name" type="xs:string" use="required"/>
+                      <xs:attribute name="type" type="settingType" use="required"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
