@@ -45,13 +45,13 @@ var
 implementation
 
 uses
-  JclFileUtils, uGlobal, uAppFiles, uShellUtils;
+  JclFileUtils, uGlobal, uAppFiles, uShellUtils, uRTFViewer;
 
 {$R *.dfm}
 
 procedure TAboutForm.btReadMeClick(Sender: TObject);
 begin
-  ShellOpen(AppFiles.FullPath[IdReadMe]);
+  TRTFViewer.Execute(Application, AppFiles.FullPath[IdReadMe]);
 end;
 
 procedure TAboutForm.FormCreate(Sender: TObject);

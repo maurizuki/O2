@@ -5,10 +5,10 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">45146.4876157407</prop>
+        <prop prop-type="SelfDateTime">45232.7163425926</prop>
         <prop prop-type="OrigDateTime">0</prop>
-        <prop prop-type="XlatDateTime">45131.4689351852</prop>
-        <prop prop-type="Translated">1171</prop>
+        <prop prop-type="XlatDateTime">45131.4272685185</prop>
+        <prop prop-type="Translated">1174</prop>
         <prop prop-type="UnTranslated">0</prop>
       </prop-group>
     </header>
@@ -12575,6 +12575,27 @@
           <prop prop-type="Status">1</prop>
         </prop-group>
         <target>"mesi"</target>
+      </trans-unit>
+      <trans-unit id="Vcl_ComStrs_sRichEditInsertError" resname="Vcl_ComStrs_sRichEditInsertError">
+        <source>"RichEdit line insertion error"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45232.7150453704</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Vcl_ComStrs_sRichEditLoadFail" resname="Vcl_ComStrs_sRichEditLoadFail">
+        <source>"Failed to Load Stream"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45232.7150453704</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Vcl_ComStrs_sRichEditSaveFail" resname="Vcl_ComStrs_sRichEditSaveFail">
+        <source>"Failed to Save Stream"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45232.7150453704</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
       </trans-unit>
     </body>
   </file>

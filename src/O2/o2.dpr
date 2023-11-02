@@ -43,7 +43,8 @@ uses
   uXmlImportExport in 'uXmlImportExport.pas',
   uO2ImportExport in 'uO2ImportExport.pas',
   uiCalendarExport in 'uiCalendarExport.pas',
-  uPasswordScoreProvider in 'uPasswordScoreProvider.pas';
+  uPasswordScoreProvider in 'uPasswordScoreProvider.pas',
+  uRTFViewer in 'uRTFViewer.pas' {RTFViewer};
 
 {$R *.res}
 
@@ -51,5 +52,6 @@ begin
   Application.Initialize;
   Application.Title := 'O2';
   Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(TRTFViewer, RTFViewer);
   Application.Run;
 end.
