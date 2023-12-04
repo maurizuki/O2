@@ -615,7 +615,7 @@ implementation
 
 uses
   TypInfo, StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, XMLDoc, XMLIntf,
-  xmldom, msxmldom, System.JSON, JclFileUtils,
+  xmldom, msxmldom, System.JSON, JclFileUtils, MarkdownCommonMark,
   uAppFiles, uUtils, uShellUtils, uPAFConsts, uAbout, uGetPassword,
   uSetPassword, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
   uReplaceDlg, uPrintPreview, uHTMLExport, uXmlStorage, uO2Xml, uO2Defs,
@@ -2211,13 +2211,24 @@ begin
 end;
 
 procedure TMainForm.UpdateNotesView;
+var
+  MarkdownProcessor: TCommonMarkProcessor;
 begin
   Notes.Lines.BeginUpdate;
   try
     Notes.Clear;
     if Assigned(ObjectsView.Selected) then
     begin
-      Notes.Lines := TO2Object(ObjectsView.Selected.Data).Text;
+      MarkdownProcessor := TCommonMarkProcessor.Create;
+      try
+        MarkdownProcessor.AllowUnsafe := False;
+
+        Notes.Text := MarkdownProcessor.process(
+          TO2Object(ObjectsView.Selected.Data).Text.Text);
+      finally
+        MarkdownProcessor.Free;
+      end;
+
       Notes.SelStart := 0;
     end;
   finally
