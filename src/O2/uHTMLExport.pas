@@ -114,8 +114,8 @@ var
 implementation
 
 uses
-  System.Generics.Collections, JclFileUtils, uGlobal, uAppFiles, uStuffHTML,
-  uUtils;
+  System.Generics.Collections, JclFileUtils, MarkdownCommonMark, uGlobal,
+  uAppFiles, uStuffHTML, uUtils;
 
 {$R *.dfm}
 
@@ -149,11 +149,20 @@ end;
 
 function TStringBuilderHelper.AppendHTML(const Lines: TStrings): TStringBuilder;
 var
-  S: string;
+  MarkdownProcessor: TCommonMarkProcessor;
+//  S: string;
 begin
-  Self.Append('<pre>');
-  for S in Lines do Self.Append(EncodeHTML(S)).Append('<br>');
-  Result := Self.Append('</pre>');
+//  Self.Append('<pre>');
+//  for S in Lines do Self.Append(EncodeHTML(S)).Append('<br>');
+//  Result := Self.Append('</pre>');
+  MarkdownProcessor := TCommonMarkProcessor.Create;
+  try
+    MarkdownProcessor.AllowUnsafe := False;
+
+    Result := Self.Append(MarkdownProcessor.process(Lines.Text));
+  finally
+    MarkdownProcessor.Free;
+  end;
 end;
 
 { THTMLExport }
