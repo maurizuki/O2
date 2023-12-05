@@ -29,7 +29,8 @@ type
     class function EncodeHTML(const S: string): string;
   public
     function AppendHTML(const S: string): TStringBuilder; overload;
-    function AppendHTML(const Lines: TStrings): TStringBuilder; overload;
+    function AppendHTML(const Lines: TStrings;
+      Markdown: Boolean): TStringBuilder; overload;
   end;
 
   TExportToHTMLOption = (xoIncludeIndex, xoIncludeTags, xoIncludeNotes,
@@ -147,21 +148,27 @@ begin
   Result := Self.Append(EncodeHTML(S));
 end;
 
-function TStringBuilderHelper.AppendHTML(const Lines: TStrings): TStringBuilder;
+function TStringBuilderHelper.AppendHTML(const Lines: TStrings;
+  Markdown: Boolean): TStringBuilder;
 var
   MarkdownProcessor: TCommonMarkProcessor;
-//  S: string;
+  S: string;
 begin
-//  Self.Append('<pre>');
-//  for S in Lines do Self.Append(EncodeHTML(S)).Append('<br>');
-//  Result := Self.Append('</pre>');
-  MarkdownProcessor := TCommonMarkProcessor.Create;
-  try
-    MarkdownProcessor.AllowUnsafe := False;
-
-    Result := Self.Append(MarkdownProcessor.process(Lines.Text));
-  finally
-    MarkdownProcessor.Free;
+  if Markdown then
+  begin
+    MarkdownProcessor := TCommonMarkProcessor.Create;
+    try
+      MarkdownProcessor.AllowUnsafe := False;
+      Result := Self.Append(MarkdownProcessor.process(Lines.Text));
+    finally
+      MarkdownProcessor.Free;
+    end;
+  end
+  else
+  begin
+    Self.Append('<pre>');
+    for S in Lines do Self.Append(EncodeHTML(S)).Append('<br />');
+    Result := Self.Append('</pre>');
   end;
 end;
 
@@ -278,7 +285,7 @@ begin
 
       if IncludeNotes.Checked and (Objects[I].Text.Count > 0) then
         SB.Append('<div class="notes">')
-          .AppendHTML(Objects[I].Text).Append('</div>');
+          .AppendHTML(Objects[I].Text, True).Append('</div>');
 
       SB.Append('</div>');
     end;
@@ -422,11 +429,11 @@ begin
       SB.AppendLine('<!DOCTYPE html>')
         .AppendLine('<html>')
         .AppendLine('<head>')
-        .AppendFormat('<meta name="generator" content="%s %s">',
+        .AppendFormat('<meta name="generator" content="%s %s" />',
           [VersionInfo.ProductName, VersionInfo.BinFileVersion])
-        .AppendFormat('<meta name="description" content="%s">',
+        .AppendFormat('<meta name="description" content="%s" />',
           [O2File.Description])
-        .AppendFormat('<meta name="author" content="%s">', [O2File.Author])
+        .AppendFormat('<meta name="author" content="%s" />', [O2File.Author])
         .AppendLine('<style>')
         .AppendLine(DefaultStyle.ExpandMacros)
         .AppendLine('</style>')
