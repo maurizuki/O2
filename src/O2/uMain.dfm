@@ -55,8 +55,6 @@ object MainForm: TMainForm
     ParentBackground = False
     ParentColor = True
     TabOrder = 1
-    ExplicitWidth = 592
-    ExplicitHeight = 508
     object HSplitter: TSplitter
       Left = 0
       Top = 300
@@ -157,22 +155,21 @@ object MainForm: TMainForm
       object tsNotes: TTabSheet
         Caption = 'Notes'
         ImageIndex = 1
-        object Notes: TMemo
-          AlignWithMargins = True
-          Left = 3
-          Top = 3
-          Width = 576
-          Height = 166
+        object NotesView: TWebBrowser
+          Left = 0
+          Top = 0
+          Width = 582
+          Height = 172
           Align = alClient
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -13
-          Font.Name = 'Courier New'
-          Font.Style = []
-          ParentFont = False
-          ReadOnly = True
-          ScrollBars = ssVertical
           TabOrder = 0
+          ExplicitLeft = 1
+          ExplicitTop = 1
+          ControlData = {
+            4C000000273C0000C71100000100000001020000000000000000000000000000
+            000000004C000000000000000000000001000000E0D057007335CF11AE690800
+            2B2E126208000000000000004C0000000114020000000000C000000000000046
+            8000000000000000000000000000000000000000000000000000000000000000
+            00000000000000000100000000000000000000000000000000000000}
         end
       end
       object tsRelations: TTabSheet
@@ -196,6 +193,7 @@ object MainForm: TMainForm
             end>
           ColumnClick = False
           HideSelection = False
+          Items.ItemData = {}
           ReadOnly = True
           RowSelect = True
           ParentShowHint = False
@@ -240,6 +238,7 @@ object MainForm: TMainForm
             end>
           ColumnClick = False
           HideSelection = False
+          Items.ItemData = {}
           MultiSelect = True
           ReadOnly = True
           RowSelect = True

@@ -26,7 +26,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, ToolWin, ImgList, ActnList, Menus, XPMan, AppEvnts,
   StdCtrls, ExtCtrls, FileCtrl, Types, System.ImageList, System.Actions,
-  REST.Client, Data.Bind.Components, Data.Bind.ObjectScope,
+  REST.Client, Data.Bind.Components, Data.Bind.ObjectScope, OleCtrls, SHDocVw,
   JvComponentBase, JvDragDrop,
   uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist,
   uPasswordScoreProvider;
@@ -308,7 +308,7 @@ type
     tsRelations: TTabSheet;
     tsRules: TTabSheet;
     FieldsView: TListView;
-    Notes: TMemo;
+    NotesView: TWebBrowser;
     RelationsView: TListView;
     RulesView: TListView;
     HSplitter: TSplitter;
@@ -615,12 +615,12 @@ implementation
 
 uses
   TypInfo, StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, XMLDoc, XMLIntf,
-  xmldom, msxmldom, System.JSON, JclFileUtils, MarkdownCommonMark,
+  xmldom, msxmldom, System.JSON, JclFileUtils,
   uAppFiles, uUtils, uShellUtils, uPAFConsts, uAbout, uGetPassword,
   uSetPassword, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
   uReplaceDlg, uPrintPreview, uHTMLExport, uXmlStorage, uO2Xml, uO2Defs,
   uBrowserEmulation, uCtrlHelpers, uImportExport, uO2ImportExport,
-  uXmlImportExport, uiCalendarExport;
+  uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper;
 
 {$R *.dfm}
 
@@ -2212,27 +2212,22 @@ end;
 
 procedure TMainForm.UpdateNotesView;
 var
-  MarkdownProcessor: TCommonMarkProcessor;
+  SB: TStringBuilder;
 begin
-  Notes.Lines.BeginUpdate;
+  SB := TStringBuilder.Create;
   try
-    Notes.Clear;
+    SB.AppendLine('<!DOCTYPE html>')
+      .AppendLine('<html>')
+      .Append('<body style="color: #000; background-color: #fff; font-family: sans-serif; font-size: 1rem;">');
+
     if Assigned(ObjectsView.Selected) then
-    begin
-      MarkdownProcessor := TCommonMarkProcessor.Create;
-      try
-        MarkdownProcessor.AllowUnsafe := False;
+      SB.AppendHTML(TO2Object(ObjectsView.Selected.Data).Text, True);
 
-        Notes.Text := MarkdownProcessor.process(
-          TO2Object(ObjectsView.Selected.Data).Text.Text);
-      finally
-        MarkdownProcessor.Free;
-      end;
+    SB.AppendLine('</body>').Append('</html>');
 
-      Notes.SelStart := 0;
-    end;
+    StuffHTML(NotesView.DefaultInterface, SB.ToString);
   finally
-    Notes.Lines.EndUpdate;
+    SB.Free;
   end;
 end;
 
