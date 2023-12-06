@@ -24,15 +24,6 @@ uses
   System.Actions;
 
 type
-  TStringBuilderHelper = class helper for TStringBuilder
-  private
-    class function EncodeHTML(const S: string): string;
-  public
-    function AppendHTML(const S: string): TStringBuilder; overload;
-    function AppendHTML(const Lines: TStrings;
-      Markdown: Boolean): TStringBuilder; overload;
-  end;
-
   TExportToHTMLOption = (xoIncludeIndex, xoIncludeTags, xoIncludeNotes,
     xoIncludeRelations, xoIncludePasswords);
   TExportToHTMLOptions = set of TExportToHTMLOption;
@@ -115,8 +106,8 @@ var
 implementation
 
 uses
-  System.Generics.Collections, JclFileUtils, MarkdownCommonMark, uGlobal,
-  uAppFiles, uStuffHTML, uUtils;
+  System.Generics.Collections, JclFileUtils, uGlobal, uAppFiles, uStuffHTML,
+  uHTMLHelper, uUtils;
 
 {$R *.dfm}
 
@@ -133,44 +124,6 @@ const
     ( LinkColor: '#a1952e'; BorderColor: '#d5e3c0'; AltBgColor: '#f1f6ea' ),
     ( LinkColor: '#c3829e'; BorderColor: '#fcc9b9'; AltBgColor: '#fff5f2' )
   );
-
-{ TStringBuilderHelper }
-
-class function TStringBuilderHelper.EncodeHTML(const S: string): string;
-begin
-  Result := StringReplace(S, '&', '&amp;', [rfReplaceAll]);
-  Result := StringReplace(Result, '<', '&lt;', [rfReplaceAll]);
-  Result := StringReplace(Result, '>', '&gt;', [rfReplaceAll]);
-end;
-
-function TStringBuilderHelper.AppendHTML(const S: string): TStringBuilder;
-begin
-  Result := Self.Append(EncodeHTML(S));
-end;
-
-function TStringBuilderHelper.AppendHTML(const Lines: TStrings;
-  Markdown: Boolean): TStringBuilder;
-var
-  MarkdownProcessor: TCommonMarkProcessor;
-  S: string;
-begin
-  if Markdown then
-  begin
-    MarkdownProcessor := TCommonMarkProcessor.Create;
-    try
-      MarkdownProcessor.AllowUnsafe := False;
-      Result := Self.Append(MarkdownProcessor.process(Lines.Text));
-    finally
-      MarkdownProcessor.Free;
-    end;
-  end
-  else
-  begin
-    Self.Append('<pre>');
-    for S in Lines do Self.Append(EncodeHTML(S)).Append('<br />');
-    Result := Self.Append('</pre>');
-  end;
-end;
 
 { THTMLExport }
 

@@ -986,6 +986,7 @@
             <Form>RTFViewer</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="uHTMLHelper.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
