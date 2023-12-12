@@ -55,6 +55,8 @@ object MainForm: TMainForm
     ParentBackground = False
     ParentColor = True
     TabOrder = 1
+    ExplicitWidth = 592
+    ExplicitHeight = 508
     object HSplitter: TSplitter
       Left = 0
       Top = 300
@@ -193,7 +195,6 @@ object MainForm: TMainForm
             end>
           ColumnClick = False
           HideSelection = False
-          Items.ItemData = {}
           ReadOnly = True
           RowSelect = True
           ParentShowHint = False
@@ -238,7 +239,6 @@ object MainForm: TMainForm
             end>
           ColumnClick = False
           HideSelection = False
-          Items.ItemData = {}
           MultiSelect = True
           ReadOnly = True
           RowSelect = True
@@ -4669,6 +4669,7 @@ object MainForm: TMainForm
     OnActivate = ApplicationEventsActivate
     OnDeactivate = ApplicationEventsDeactivate
     OnIdle = ApplicationEventsIdle
+    OnMessage = ApplicationEventsMessage
     Left = 392
     Top = 40
   end

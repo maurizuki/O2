@@ -345,6 +345,7 @@ type
     procedure ApplicationEventsActivate(Sender: TObject);
     procedure ApplicationEventsDeactivate(Sender: TObject);
     procedure ApplicationEventsIdle(Sender: TObject; var Done: Boolean);
+    procedure ApplicationEventsMessage(var Msg: tagMSG; var Handled: Boolean);
     procedure ObjectsViewChange(Sender: TObject; Item: TListItem;
       Change: TItemChange);
     procedure ObjectsViewColumnClick(Sender: TObject; Column: TListColumn);
@@ -868,6 +869,14 @@ begin
     CheckForUpdatesSilent := True;
     CheckForUpdatesNow.Execute;
   end;
+end;
+
+procedure TMainForm.ApplicationEventsMessage(var Msg: tagMSG;
+  var Handled: Boolean);
+begin
+  if ((Msg.Message = WM_RBUTTONDOWN) or (Msg.Message = WM_RBUTTONDBLCLK))
+    and IsChild(NotesView.Handle, Msg.hwnd) then
+    Handled := True;
 end;
 
 procedure TMainForm.ObjectsViewChange(Sender: TObject; Item: TListItem;

@@ -64,6 +64,7 @@ type
     Matcha1: TMenuItem;
     Sakura1: TMenuItem;
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure ActionUpdate(Sender: TObject);
     procedure ExportFileExecute(Sender: TObject);
     procedure OptionExecute(Sender: TObject);
@@ -76,6 +77,9 @@ type
     FO2File: TO2File;
     FObjects: TO2ObjectList;
     FStyleIndex: Integer;
+    OriginalApplicationOnMessage: procedure(var Msg: tagMSG;
+      var Handled: Boolean) of object;
+    procedure ApplicationOnMessage(var Msg: tagMSG; var Handled: Boolean);
     procedure SetStyleIndex(const Value: Integer);
     procedure SetStyleCaption(Action: TCustomAction);
   protected
@@ -177,9 +181,14 @@ begin
   end;
 end;
 
-procedure THTMLExport.RefreshPreview;
+procedure THTMLExport.ApplicationOnMessage(var Msg: tagMSG;
+  var Handled: Boolean);
 begin
-  StuffHTML(WebBrowser.DefaultInterface, ExportToHTML);
+  if ((Msg.Message = WM_RBUTTONDOWN) or (Msg.Message = WM_RBUTTONDBLCLK))
+    and IsChild(WebBrowser.Handle, Msg.hwnd) then
+    Handled := True
+  else
+    OriginalApplicationOnMessage(Msg, Handled);
 end;
 
 procedure THTMLExport.SetStyleIndex(const Value: Integer);
@@ -410,6 +419,11 @@ begin
   end;
 end;
 
+procedure THTMLExport.RefreshPreview;
+begin
+  StuffHTML(WebBrowser.DefaultInterface, ExportToHTML);
+end;
+
 procedure THTMLExport.FormCreate(Sender: TObject);
 var
   WorkArea: TRect;
@@ -417,6 +431,14 @@ begin
   SystemParametersInfo(SPI_GETWORKAREA, 0, @WorkArea, 0);
   SetBounds(WorkArea.Left, WorkArea.Top,
     WorkArea.Right - WorkArea.Left, WorkArea.Bottom - WorkArea.Top);
+
+  OriginalApplicationOnMessage := Application.OnMessage;
+  Application.OnMessage := ApplicationOnMessage;
+end;
+
+procedure THTMLExport.FormDestroy(Sender: TObject);
+begin
+  Application.OnMessage := OriginalApplicationOnMessage;
 end;
 
 procedure THTMLExport.ActionUpdate(Sender: TObject);
