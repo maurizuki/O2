@@ -339,6 +339,9 @@ type
     CheckForUpdatesRESTClient: TRESTClient;
     CheckForUpdatesRequest: TRESTRequest;
     CheckForUpdatesResponse: TRESTResponse;
+    FormatNotes: TAction;
+    Formatnotes1: TMenuItem;
+    N31: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -417,6 +420,7 @@ type
     procedure TransparencyOnlyIfDeactivatedUpdate(Sender: TObject);
     procedure ViewStayOnTopExecute(Sender: TObject);
     procedure ViewStayOnTopUpdate(Sender: TObject);
+    procedure FormatNotesExecute(Sender: TObject);
     procedure FindExecute(Sender: TObject);
     procedure FindUpdate(Sender: TObject);
     procedure ClearSearchExecute(Sender: TObject);
@@ -1496,6 +1500,12 @@ begin
   TAction(Sender).Checked := StayOnTop;
 end;
 
+procedure TMainForm.FormatNotesExecute(Sender: TObject);
+begin
+  TAction(Sender).Checked := not TAction(Sender).Checked;
+  NotifyChanges([ncObjProps]);
+end;
+
 procedure TMainForm.FindExecute(Sender: TObject);
 begin
   if SearchBox.Visible then
@@ -2230,7 +2240,8 @@ begin
       .Append('<body style="color: #000; background-color: #fff; font-family: sans-serif; font-size: 1rem;">');
 
     if Assigned(ObjectsView.Selected) then
-      SB.AppendHTML(TO2Object(ObjectsView.Selected.Data).Text, True);
+      SB.AppendHTML(TO2Object(ObjectsView.Selected.Data).Text,
+        FormatNotes.Checked);
 
     SB.AppendLine('</body>').Append('</html>');
 

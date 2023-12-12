@@ -164,8 +164,6 @@ object MainForm: TMainForm
           Height = 172
           Align = alClient
           TabOrder = 0
-          ExplicitLeft = 1
-          ExplicitTop = 1
           ControlData = {
             4C000000273C0000C71100000100000001020000000000000000000000000000
             000000004C000000000000000000000001000000E0D057007335CF11AE690800
@@ -986,6 +984,12 @@ object MainForm: TMainForm
       Hint = 'Always on top'
       OnExecute = ViewStayOnTopExecute
       OnUpdate = ViewStayOnTopUpdate
+    end
+    object FormatNotes: TAction
+      Category = 'Tools'
+      Caption = 'Format notes'
+      Hint = 'Format notes'
+      OnExecute = FormatNotesExecute
     end
     object InstallOnRemovableMedia: TAction
       Category = 'Tools'
@@ -4778,7 +4782,6 @@ object MainForm: TMainForm
     end
     object LanguageMenu: TMenuItem
       Caption = 'Language'
-      GroupIndex = 2
       object Systemdefault1: TMenuItem
         Action = DefaultLanguage
       end
@@ -4788,7 +4791,6 @@ object MainForm: TMainForm
     end
     object Transparency1: TMenuItem
       Caption = 'Transparency'
-      GroupIndex = 2
       object N01: TMenuItem
         Action = Transparency0
         RadioItem = True
@@ -4838,27 +4840,27 @@ object MainForm: TMainForm
     end
     object Stayontop1: TMenuItem
       Action = ViewStayOnTop
-      GroupIndex = 2
     end
     object N20: TMenuItem
       Caption = '-'
-      GroupIndex = 2
     end
-    object Checkforupdatesnow1: TMenuItem
-      Action = CheckForUpdatesNow
-      GroupIndex = 2
-    end
-    object Checkforupdatesperiodically1: TMenuItem
-      Action = CheckForUpdatesPeriodically
-      GroupIndex = 2
+    object Formatnotes1: TMenuItem
+      Action = FormatNotes
     end
     object N23: TMenuItem
       Caption = '-'
-      GroupIndex = 2
+    end
+    object Checkforupdatesnow1: TMenuItem
+      Action = CheckForUpdatesNow
+    end
+    object Checkforupdatesperiodically1: TMenuItem
+      Action = CheckForUpdatesPeriodically
+    end
+    object N31: TMenuItem
+      Caption = '-'
     end
     object Installonremovablemedia1: TMenuItem
       Action = InstallOnRemovableMedia
-      GroupIndex = 2
     end
   end
   object PrintDialog: TPrintDialog
