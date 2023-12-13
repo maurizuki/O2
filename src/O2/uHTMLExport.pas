@@ -235,6 +235,8 @@ begin
 end;
 
 procedure THTMLExport.AppendObjectList(const SB: TStringBuilder);
+const
+  TextFormats: array[Boolean] of TTextFormat = (tfPlainText, tfCommonMark);
 var
   I: Integer;
 begin
@@ -254,7 +256,8 @@ begin
 
       if IncludeNotes.Checked and (Objects[I].Text.Count > 0) then
         SB.Append('<div class="notes">')
-          .AppendHTML(Objects[I].Text, FormatNotes.Checked).Append('</div>');
+          .AppendHTML(Objects[I].Text, TextFormats[FormatNotes.Checked])
+          .Append('</div>');
 
       SB.Append('</div>');
     end;

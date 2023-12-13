@@ -21,6 +21,8 @@ uses
   Classes, SysUtils;
 
 type
+  TTextFormat = (tfPlainText, tfCommonMark);
+
   THTMLHelper = class helper for TStringBuilder
   private
     class function EncodeHTML(const S: string): string;
@@ -28,7 +30,7 @@ type
   public
     function AppendHTML(const S: string): TStringBuilder; overload;
     function AppendHTML(const Lines: TStrings;
-      Markdown: Boolean): TStringBuilder; overload;
+      TextFormat: TTextFormat): TStringBuilder; overload;
   end;
 
 implementation
@@ -64,11 +66,11 @@ begin
 end;
 
 function THTMLHelper.AppendHTML(const Lines: TStrings;
-  Markdown: Boolean): TStringBuilder;
+  TextFormat: TTextFormat): TStringBuilder;
 var
   S: string;
 begin
-  if Markdown then
+  if TextFormat = tfCommonMark then
     Result := Self.Append(ProcessMarkdown(Lines.Text))
   else
   begin

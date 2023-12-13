@@ -193,7 +193,6 @@ object MainForm: TMainForm
             end>
           ColumnClick = False
           HideSelection = False
-          Items.ItemData = {}
           ReadOnly = True
           RowSelect = True
           ParentShowHint = False
@@ -238,7 +237,6 @@ object MainForm: TMainForm
             end>
           ColumnClick = False
           HideSelection = False
-          Items.ItemData = {}
           MultiSelect = True
           ReadOnly = True
           RowSelect = True

@@ -236,7 +236,6 @@ type
     efNext365days);
 
   TDateFormat = (dfYMD, dfMDY, dfDMY);
-  TTextFormat = (tfPlainText, tfCommonMark);
 
   TCipherLookup = class(TLookupHelper)
   protected

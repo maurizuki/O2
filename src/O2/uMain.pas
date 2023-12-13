@@ -2242,6 +2242,8 @@ begin
 end;
 
 procedure TMainForm.UpdateNotesView;
+const
+  TextFormats: array[Boolean] of TTextFormat = (tfPlainText, tfCommonMark);
 var
   SB: TStringBuilder;
 begin
@@ -2253,7 +2255,7 @@ begin
 
     if Assigned(ObjectsView.Selected) then
       SB.AppendHTML(TO2Object(ObjectsView.Selected.Data).Text,
-        FormatNotes.Checked);
+        TextFormats[FormatNotes.Checked]);
 
     SB.AppendLine('</body>').Append('</html>');
 
