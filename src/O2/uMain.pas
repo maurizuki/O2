@@ -641,6 +641,10 @@ const
     (Value: Integer(ocTags);      Name: 'Tags'),
     (Value: Integer(ocNextEvent); Name: 'NextEvent'));
 
+  TextFormats: array[0..1] of TIdentMapEntry = (
+    (Value: Integer(tfPlainText);   Name: 'PlainText'),
+    (Value: Integer(tfCommonMark);  Name: 'CommonMark'));
+
 procedure TMainForm.FormCreate(Sender: TObject);
 var
   AppPath, SettingsPath, LauncherPath, PortablePath: string;
@@ -1203,6 +1207,9 @@ begin
 end;
 
 procedure TMainForm.ExportToHTMLExecute(Sender: TObject);
+const
+  TextFormatIdents: array[Boolean] of Integer = (
+    Integer(tfPlainText), Integer(tfCommonMark));
 var
   Selection: TO2ObjectList;
   Options: TExportToHTMLOptions;
@@ -1218,6 +1225,9 @@ begin
     XmlStorage.ReadBoolean(IdHTMLExportIncludeRelations, True));
   THTMLExport.IncludeOption(Options, xoIncludePasswords,
     XmlStorage.ReadBoolean(IdHTMLExportIncludePasswords, True));
+  THTMLExport.IncludeOption(Options, xoFormatNotes,
+    TTextFormat(XmlStorage.ReadIntIdent(IdHTMLExportNotesFormat,
+    TextFormats, Integer(tfPlainText))) = tfCommonMark);
 
   Selection := TO2ObjectList.Create;
   try
@@ -1237,6 +1247,8 @@ begin
     xoIncludeRelations in Options);
   XmlStorage.WriteBoolean(IdHTMLExportIncludePasswords,
     xoIncludePasswords in Options);
+  XmlStorage.WriteIntIdent(IdHTMLExportNotesFormat, TextFormats,
+    TextFormatIdents[xoFormatNotes in Options]);
 end;
 
 procedure TMainForm.PrintFileExecute(Sender: TObject);
@@ -2585,9 +2597,14 @@ begin
   SortColumn := TObjectViewColumn(XmlStorage.ReadIntIdent(IdSortColumn,
     SortColumns, Integer(ocName)));
   SortSign := SortSigns[XmlStorage.ReadBoolean(IdSortAscending, True)];
+  FormatNotes.Checked := TTextFormat(XmlStorage.ReadIntIdent(IdNotesFormat,
+    TextFormats, Integer(tfPlainText))) = tfCommonMark;
 end;
 
 procedure TMainForm.SaveSettings(const FileName: string);
+const
+  TextFormatIdents: array[Boolean] of Integer = (
+    Integer(tfPlainText), Integer(tfCommonMark));
 begin
   SaveMRUList;
 
@@ -2602,6 +2619,8 @@ begin
   XmlStorage.WriteIntIdent(IdSortColumn, SortColumns,
     Integer(SortColumn));
   XmlStorage.WriteBoolean(IdSortAscending, SortSign > 0);
+  XmlStorage.WriteIntIdent(IdNotesFormat, TextFormats,
+    TextFormatIdents[FormatNotes.Checked]);
 
   ForceDirectories(ExtractFileDir(FileName));
   XmlStorage.SaveToFile(FileName);

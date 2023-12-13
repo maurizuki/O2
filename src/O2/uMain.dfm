@@ -193,6 +193,7 @@ object MainForm: TMainForm
             end>
           ColumnClick = False
           HideSelection = False
+          Items.ItemData = {}
           ReadOnly = True
           RowSelect = True
           ParentShowHint = False
@@ -237,6 +238,7 @@ object MainForm: TMainForm
             end>
           ColumnClick = False
           HideSelection = False
+          Items.ItemData = {}
           MultiSelect = True
           ReadOnly = True
           RowSelect = True
@@ -4780,14 +4782,11 @@ object MainForm: TMainForm
     object N16: TMenuItem
       Caption = '-'
     end
-    object LanguageMenu: TMenuItem
-      Caption = 'Language'
-      object Systemdefault1: TMenuItem
-        Action = DefaultLanguage
-      end
-      object N25: TMenuItem
-        Caption = '-'
-      end
+    object Formatnotes1: TMenuItem
+      Action = FormatNotes
+    end
+    object N20: TMenuItem
+      Caption = '-'
     end
     object Transparency1: TMenuItem
       Caption = 'Transparency'
@@ -4838,14 +4837,17 @@ object MainForm: TMainForm
         Action = TransparencyOnlyIfDeactivated
       end
     end
+    object LanguageMenu: TMenuItem
+      Caption = 'Language'
+      object Systemdefault1: TMenuItem
+        Action = DefaultLanguage
+      end
+      object N25: TMenuItem
+        Caption = '-'
+      end
+    end
     object Stayontop1: TMenuItem
       Action = ViewStayOnTop
-    end
-    object N20: TMenuItem
-      Caption = '-'
-    end
-    object Formatnotes1: TMenuItem
-      Action = FormatNotes
     end
     object N23: TMenuItem
       Caption = '-'

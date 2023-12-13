@@ -75,11 +75,13 @@ const
   IdViewStyle = 'MainWindow.ObjectView.ViewStyle';
   IdSortColumn = 'MainWindow.ObjectView.Sort.Column';
   IdSortAscending = 'MainWindow.ObjectView.Sort.Ascending';
+  IdNotesFormat = 'MainWindow.NotesView.TextFormat';
   IdHTMLExportIncludeIndex = 'ExportToHTML.Include.Index';
   IdHTMLExportIncludeTags = 'ExportToHTML.Include.Tags';
   IdHTMLExportIncludeNotes = 'ExportToHTML.Include.Notes';
   IdHTMLExportIncludeRelations = 'ExportToHTML.Include.Relations';
   IdHTMLExportIncludePasswords = 'ExportToHTML.Include.Passwords';
+  IdHTMLExportNotesFormat = 'ExportToHTML.Notes.TextFormat';
   IdPrintIncludeTags = 'Print.Include.Tags';
   IdPrintIncludeNotes = 'Print.Include.Notes';
   IdPrintIncludeRelations = 'Print.Include.Relations';
@@ -234,6 +236,7 @@ type
     efNext365days);
 
   TDateFormat = (dfYMD, dfMDY, dfDMY);
+  TTextFormat = (tfPlainText, tfCommonMark);
 
   TCipherLookup = class(TLookupHelper)
   protected

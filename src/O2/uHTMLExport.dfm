@@ -26,8 +26,6 @@ object HTMLExport: THTMLExport
     Margins.Bottom = 4
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 418
-    ExplicitHeight = 244
     ControlData = {
       4C000000CA2A00001D1900000000000000000000000000000000000000000000
       000000004C000000000000000000000001000000E0D057007335CF11AE690800
@@ -159,6 +157,13 @@ object HTMLExport: THTMLExport
       GroupIndex = 1
       OnExecute = StyleExecute
       OnUpdate = StyleUpdate
+    end
+    object FormatNotes: TAction
+      Category = 'Options'
+      Caption = 'Format notes'
+      Hint = 'Format notes'
+      OnExecute = OptionExecute
+      OnUpdate = FormatNotesUpdate
     end
   end
   object ToolBarImages: TImageList
@@ -1114,6 +1119,12 @@ object HTMLExport: THTMLExport
     end
     object Includepasswords1: TMenuItem
       Action = IncludePasswords
+    end
+    object N3: TMenuItem
+      Caption = '-'
+    end
+    object Formatnotes1: TMenuItem
+      Action = FormatNotes
     end
   end
   object DefaultStyle: TJvStrHolder
