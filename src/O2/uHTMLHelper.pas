@@ -24,6 +24,7 @@ type
   THTMLHelper = class helper for TStringBuilder
   private
     class function EncodeHTML(const S: string): string;
+    class function ProcessMarkdown(const S: string): string;
   public
     function AppendHTML(const S: string): TStringBuilder; overload;
     function AppendHTML(const Lines: TStrings;
@@ -44,6 +45,19 @@ begin
   Result := StringReplace(Result, '>', '&gt;', [rfReplaceAll]);
 end;
 
+class function THTMLHelper.ProcessMarkdown(const S: string): string;
+var
+  MarkdownProcessor: TCommonMarkProcessor;
+begin
+  MarkdownProcessor := TCommonMarkProcessor.Create;
+  try
+    MarkdownProcessor.AllowUnsafe := False;
+    Result := MarkdownProcessor.process(S);
+  finally
+    MarkdownProcessor.Free;
+  end;
+end;
+
 function THTMLHelper.AppendHTML(const S: string): TStringBuilder;
 begin
   Result := Self.Append(EncodeHTML(S));
@@ -52,19 +66,10 @@ end;
 function THTMLHelper.AppendHTML(const Lines: TStrings;
   Markdown: Boolean): TStringBuilder;
 var
-  MarkdownProcessor: TCommonMarkProcessor;
   S: string;
 begin
   if Markdown then
-  begin
-    MarkdownProcessor := TCommonMarkProcessor.Create;
-    try
-      MarkdownProcessor.AllowUnsafe := False;
-      Result := Self.Append(MarkdownProcessor.process(Lines.Text));
-    finally
-      MarkdownProcessor.Free;
-    end;
-  end
+    Result := Self.Append(ProcessMarkdown(Lines.Text))
   else
   begin
     Self.Append('<pre>');
