@@ -987,8 +987,8 @@ object MainForm: TMainForm
     end
     object FormatNotes: TAction
       Category = 'Tools'
-      Caption = 'Format notes'
-      Hint = 'Format notes'
+      Caption = 'Format notes (Markdown)'
+      Hint = 'Format notes (Markdown)'
       OnExecute = FormatNotesExecute
     end
     object InstallOnRemovableMedia: TAction

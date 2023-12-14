@@ -68,7 +68,7 @@ end;
 
 procedure TAboutForm.LinkClick(Sender: TObject);
 begin
-  ShellOpen(TLabel(Sender).Hint);
+  ShellOpen(TControl(Sender).Hint);
 end;
 
 end.

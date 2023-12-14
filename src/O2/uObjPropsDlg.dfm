@@ -250,11 +250,30 @@ object ObjPropsDlg: TObjPropsDlg
       DesignSize = (
         333
         342)
+      object Label3: TLabel
+        Left = 3
+        Top = 326
+        Width = 72
+        Height = 13
+        Cursor = crHandPoint
+        Hint = 'https://commonmark.org/help/'
+        Anchors = [akLeft, akBottom]
+        Caption = 'Markdown help'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlue
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsUnderline]
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = LinkClick
+      end
       object Memo: TMemo
         Left = 3
         Top = 3
         Width = 327
-        Height = 336
+        Height = 317
         Anchors = [akLeft, akTop, akRight, akBottom]
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
@@ -265,6 +284,7 @@ object ObjPropsDlg: TObjPropsDlg
         ScrollBars = ssVertical
         TabOrder = 0
         WantTabs = True
+        ExplicitWidth = 323
       end
     end
   end

@@ -160,8 +160,8 @@ object HTMLExport: THTMLExport
     end
     object FormatNotes: TAction
       Category = 'Options'
-      Caption = 'Format notes'
-      Hint = 'Format notes'
+      Caption = 'Format notes (Markdown)'
+      Hint = 'Format notes (Markdown)'
       OnExecute = OptionExecute
       OnUpdate = FormatNotesUpdate
     end

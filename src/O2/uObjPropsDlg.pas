@@ -59,6 +59,7 @@ type
     Button7: TButton;
     ckDisplayPasswordStrength: TCheckBox;
     pbPasswordStrength: TPaintBox;
+    Label3: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -84,6 +85,7 @@ type
     procedure cbFieldValueChange(Sender: TObject);
     procedure ckDisplayPasswordStrengthClick(Sender: TObject);
     procedure pbPasswordStrengthPaint(Sender: TObject);
+    procedure LinkClick(Sender: TObject);
     procedure OKExecute(Sender: TObject);
     procedure OKUpdate(Sender: TObject);
   private
@@ -120,7 +122,8 @@ var
 implementation
 
 uses
-  Zxcvbn.Result, Zxcvbn.Utility, uO2Rules, uGlobal, uCtrlHelpers, uUtils;
+  Zxcvbn.Result, Zxcvbn.Utility, uO2Rules, uGlobal, uCtrlHelpers, uUtils,
+  uShellUtils;
 
 {$R *.dfm}
 
@@ -343,6 +346,11 @@ procedure TObjPropsDlg.pbPasswordStrengthPaint(Sender: TObject);
 begin
   DrawHIndicator(pbPasswordStrength.Canvas, pbPasswordStrength.ClientRect,
     PasswordScoreColors[FPasswordScore], (FPasswordScore + 1) / 5);
+end;
+
+procedure TObjPropsDlg.LinkClick(Sender: TObject);
+begin
+  ShellOpen(TControl(Sender).Hint);
 end;
 
 procedure TObjPropsDlg.OKExecute(Sender: TObject);
