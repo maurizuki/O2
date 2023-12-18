@@ -158,13 +158,6 @@ object HTMLExport: THTMLExport
       OnExecute = StyleExecute
       OnUpdate = StyleUpdate
     end
-    object FormatNotes: TAction
-      Category = 'Options'
-      Caption = 'Format notes (Markdown)'
-      Hint = 'Format notes (Markdown)'
-      OnExecute = OptionExecute
-      OnUpdate = FormatNotesUpdate
-    end
   end
   object ToolBarImages: TImageList
     Height = 24
@@ -1119,12 +1112,6 @@ object HTMLExport: THTMLExport
     end
     object Includepasswords1: TMenuItem
       Action = IncludePasswords
-    end
-    object N3: TMenuItem
-      Caption = '-'
-    end
-    object Formatnotes1: TMenuItem
-      Action = FormatNotes
     end
   end
   object DefaultStyle: TJvStrHolder

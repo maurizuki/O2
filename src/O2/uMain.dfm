@@ -985,12 +985,6 @@ object MainForm: TMainForm
       OnExecute = ViewStayOnTopExecute
       OnUpdate = ViewStayOnTopUpdate
     end
-    object FormatNotes: TAction
-      Category = 'Tools'
-      Caption = 'Format notes (Markdown)'
-      Hint = 'Format notes (Markdown)'
-      OnExecute = FormatNotesExecute
-    end
     object InstallOnRemovableMedia: TAction
       Category = 'Tools'
       Caption = 'Install on removable media...'
@@ -4780,11 +4774,14 @@ object MainForm: TMainForm
     object N16: TMenuItem
       Caption = '-'
     end
-    object Formatnotes1: TMenuItem
-      Action = FormatNotes
-    end
-    object N20: TMenuItem
-      Caption = '-'
+    object LanguageMenu: TMenuItem
+      Caption = 'Language'
+      object Systemdefault1: TMenuItem
+        Action = DefaultLanguage
+      end
+      object N25: TMenuItem
+        Caption = '-'
+      end
     end
     object Transparency1: TMenuItem
       Caption = 'Transparency'
@@ -4835,19 +4832,10 @@ object MainForm: TMainForm
         Action = TransparencyOnlyIfDeactivated
       end
     end
-    object LanguageMenu: TMenuItem
-      Caption = 'Language'
-      object Systemdefault1: TMenuItem
-        Action = DefaultLanguage
-      end
-      object N25: TMenuItem
-        Caption = '-'
-      end
-    end
     object Stayontop1: TMenuItem
       Action = ViewStayOnTop
     end
-    object N23: TMenuItem
+    object N20: TMenuItem
       Caption = '-'
     end
     object Checkforupdatesnow1: TMenuItem
@@ -4856,7 +4844,7 @@ object MainForm: TMainForm
     object Checkforupdatesperiodically1: TMenuItem
       Action = CheckForUpdatesPeriodically
     end
-    object N31: TMenuItem
+    object N23: TMenuItem
       Caption = '-'
     end
     object Installonremovablemedia1: TMenuItem

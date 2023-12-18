@@ -148,7 +148,6 @@ object ObjPropsDlg: TObjPropsDlg
         ViewStyle = vsReport
         OnResize = FieldsViewResize
         OnSelectItem = FieldsViewSelectItem
-        ExplicitWidth = 323
       end
       object cbFieldName: TComboBox
         Left = 3
@@ -173,7 +172,6 @@ object ObjPropsDlg: TObjPropsDlg
         TabOrder = 2
         OnChange = cbFieldValueChange
         OnEnter = cbFieldValueEnter
-        ExplicitWidth = 174
       end
       object Button1: TButton
         Left = 3
@@ -218,7 +216,6 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 6
-        ExplicitLeft = 254
       end
       object Button7: TButton
         Left = 297
@@ -230,7 +227,6 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 7
-        ExplicitLeft = 293
       end
       object ckDisplayPasswordStrength: TCheckBox
         Left = 3
@@ -241,7 +237,6 @@ object ObjPropsDlg: TObjPropsDlg
         Caption = '&Password strength'
         TabOrder = 8
         OnClick = ckDisplayPasswordStrengthClick
-        ExplicitWidth = 139
       end
     end
     object TabSheet3: TTabSheet
@@ -251,13 +246,14 @@ object ObjPropsDlg: TObjPropsDlg
         333
         342)
       object Label3: TLabel
-        Left = 3
-        Top = 326
+        Left = 258
+        Top = 323
         Width = 72
         Height = 13
         Cursor = crHandPoint
         Hint = 'https://commonmark.org/help/'
-        Anchors = [akLeft, akBottom]
+        Alignment = taRightJustify
+        Anchors = [akRight, akBottom]
         Caption = 'Markdown help'
         Font.Charset = ANSI_CHARSET
         Font.Color = clBlue
@@ -273,7 +269,7 @@ object ObjPropsDlg: TObjPropsDlg
         Left = 3
         Top = 3
         Width = 327
-        Height = 317
+        Height = 313
         Anchors = [akLeft, akTop, akRight, akBottom]
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
@@ -284,7 +280,15 @@ object ObjPropsDlg: TObjPropsDlg
         ScrollBars = ssVertical
         TabOrder = 0
         WantTabs = True
-        ExplicitWidth = 323
+      end
+      object ckMarkdown: TCheckBox
+        Left = 3
+        Top = 322
+        Width = 245
+        Height = 17
+        Anchors = [akLeft, akRight, akBottom]
+        Caption = '&Markdown'
+        TabOrder = 1
       end
     end
   end

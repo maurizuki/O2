@@ -339,9 +339,6 @@ type
     CheckForUpdatesRESTClient: TRESTClient;
     CheckForUpdatesRequest: TRESTRequest;
     CheckForUpdatesResponse: TRESTResponse;
-    FormatNotes: TAction;
-    Formatnotes1: TMenuItem;
-    N31: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -420,7 +417,6 @@ type
     procedure TransparencyOnlyIfDeactivatedUpdate(Sender: TObject);
     procedure ViewStayOnTopExecute(Sender: TObject);
     procedure ViewStayOnTopUpdate(Sender: TObject);
-    procedure FormatNotesExecute(Sender: TObject);
     procedure FindExecute(Sender: TObject);
     procedure FindUpdate(Sender: TObject);
     procedure ClearSearchExecute(Sender: TObject);
@@ -648,10 +644,6 @@ const
     (Value: Integer(ocName);      Name: 'Name'),
     (Value: Integer(ocTags);      Name: 'Tags'),
     (Value: Integer(ocNextEvent); Name: 'NextEvent'));
-
-  TextFormats: array[0..1] of TIdentMapEntry = (
-    (Value: Integer(tfPlainText);   Name: 'PlainText'),
-    (Value: Integer(tfCommonMark);  Name: 'CommonMark'));
 
 procedure TMainForm.FormCreate(Sender: TObject);
 var
@@ -1216,9 +1208,6 @@ begin
 end;
 
 procedure TMainForm.ExportToHTMLExecute(Sender: TObject);
-const
-  TextFormatIdents: array[Boolean] of Integer = (
-    Integer(tfPlainText), Integer(tfCommonMark));
 var
   Selection: TO2ObjectList;
   Options: TExportToHTMLOptions;
@@ -1234,9 +1223,6 @@ begin
     XmlStorage.ReadBoolean(IdHTMLExportIncludeRelations, True));
   THTMLExport.IncludeOption(Options, xoIncludePasswords,
     XmlStorage.ReadBoolean(IdHTMLExportIncludePasswords, True));
-  THTMLExport.IncludeOption(Options, xoFormatNotes,
-    TTextFormat(XmlStorage.ReadIntIdent(IdHTMLExportNotesFormat,
-      TextFormats, Integer(tfPlainText))) = tfCommonMark);
 
   Selection := TO2ObjectList.Create;
   try
@@ -1256,8 +1242,6 @@ begin
     xoIncludeRelations in Options);
   XmlStorage.WriteBoolean(IdHTMLExportIncludePasswords,
     xoIncludePasswords in Options);
-  XmlStorage.WriteIntIdent(IdHTMLExportNotesFormat, TextFormats,
-    TextFormatIdents[xoFormatNotes in Options]);
 end;
 
 procedure TMainForm.PrintFileExecute(Sender: TObject);
@@ -1519,12 +1503,6 @@ end;
 procedure TMainForm.ViewStayOnTopUpdate(Sender: TObject);
 begin
   TAction(Sender).Checked := StayOnTop;
-end;
-
-procedure TMainForm.FormatNotesExecute(Sender: TObject);
-begin
-  TAction(Sender).Checked := not TAction(Sender).Checked;
-  NotifyChanges([ncObjProps]);
 end;
 
 procedure TMainForm.FindExecute(Sender: TObject);
@@ -2271,8 +2249,6 @@ begin
 end;
 
 procedure TMainForm.UpdateNotesView;
-const
-  TextFormats: array[Boolean] of TTextFormat = (tfPlainText, tfCommonMark);
 var
   SB: TStringBuilder;
 begin
@@ -2283,7 +2259,7 @@ begin
       .Append('<body style="color: #000; background-color: #fff; font-family: sans-serif; font-size: 1rem;">');
 
     if HasSelectedObject then
-      SB.AppendHTML(SelectedObject.Text, TextFormats[FormatNotes.Checked]);
+      SB.AppendHTML(SelectedObject.Text, SelectedObject.TextType);
 
     SB.AppendLine('</body>').Append('</html>');
 
@@ -2626,21 +2602,16 @@ begin
   SortColumn := TObjectViewColumn(XmlStorage.ReadIntIdent(IdSortColumn,
     SortColumns, Integer(ocName)));
   SortSign := SortSigns[XmlStorage.ReadBoolean(IdSortAscending, True)];
-  FormatNotes.Checked := TTextFormat(XmlStorage.ReadIntIdent(IdNotesFormat,
-    TextFormats, Integer(tfPlainText))) = tfCommonMark;
 end;
 
 procedure TMainForm.SaveSettings(const FileName: string);
-const
-  TextFormatIdents: array[Boolean] of Integer = (
-    Integer(tfPlainText), Integer(tfCommonMark));
 begin
   SaveMRUList;
 
   XmlStorage.WriteBoolean(IdStayOnTop, StayOnTop);
   XmlStorage.WriteInteger(IdTransparency, Transparency);
   XmlStorage.WriteBoolean(IdAutoCheckForUpdates, AutoCheckForUpdates);
-  XmlStorage.WriteBoolean(IdTransparencyOnlyIfDeactivated, 
+  XmlStorage.WriteBoolean(IdTransparencyOnlyIfDeactivated,
     FTransparencyOnlyIfDeactivated);
   XmlStorage.WriteFloat(IdLastCheckForUpdates, LastCheckForUpdates);
   XmlStorage.WriteIntIdent(IdViewStyle, ViewStyles,
@@ -2648,8 +2619,6 @@ begin
   XmlStorage.WriteIntIdent(IdSortColumn, SortColumns,
     Integer(SortColumn));
   XmlStorage.WriteBoolean(IdSortAscending, SortSign > 0);
-  XmlStorage.WriteIntIdent(IdNotesFormat, TextFormats,
-    TextFormatIdents[FormatNotes.Checked]);
 
   ForceDirectories(ExtractFileDir(FileName));
   XmlStorage.SaveToFile(FileName);

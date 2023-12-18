@@ -59,6 +59,7 @@ type
     Button7: TButton;
     ckDisplayPasswordStrength: TCheckBox;
     pbPasswordStrength: TPaintBox;
+    ckMarkdown: TCheckBox;
     Label3: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -193,6 +194,7 @@ begin
     Fields := AObject.Fields;
     Memo.Lines := AObject.Text;
     Memo.SelStart := 0;
+    ckMarkdown.Checked := AObject.TextType = ttCommonMark;
   end;
   UpdateFieldsView;
   Objects.GetTags(cbTag.Items);
@@ -354,6 +356,8 @@ begin
 end;
 
 procedure TObjPropsDlg.OKExecute(Sender: TObject);
+const
+  TextTypes: array[Boolean] of TO2TextType = (ttPlainText, ttCommonMark);
 var
   AObject: TO2Object;
 begin
@@ -368,6 +372,7 @@ begin
   AObject.Fields := Fields;
   Memo.WordWrap := False;
   AObject.Text := Memo.Lines;
+  AObject.TextType := TextTypes[ckMarkdown.Checked];
   ObjectIndex := AObject.Index;
 
   ModalResult := mrOk;

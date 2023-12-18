@@ -25,7 +25,7 @@ uses
 
 type
   TExportToHTMLOption = (xoIncludeIndex, xoIncludeTags, xoIncludeNotes,
-    xoIncludeRelations, xoIncludePasswords, xoFormatNotes);
+    xoIncludeRelations, xoIncludePasswords);
   TExportToHTMLOptions = set of TExportToHTMLOption;
 
   THTMLExport = class(TForm)
@@ -63,15 +63,11 @@ type
     BlueWater1: TMenuItem;
     Matcha1: TMenuItem;
     Sakura1: TMenuItem;
-    FormatNotes: TAction;
-    N3: TMenuItem;
-    Formatnotes1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure ActionUpdate(Sender: TObject);
     procedure ExportFileExecute(Sender: TObject);
     procedure OptionExecute(Sender: TObject);
-    procedure FormatNotesUpdate(Sender: TObject);
     procedure StyleExecute(Sender: TObject);
     procedure StyleUpdate(Sender: TObject);
     procedure ExportDialogCanClose(Sender: TObject; var CanClose: Boolean);
@@ -165,7 +161,6 @@ begin
     Form.IncludeNotes.Checked := xoIncludeNotes in Options;
     Form.IncludeRelations.Checked := xoIncludeRelations in Options;
     Form.IncludePasswords.Checked := xoIncludePasswords in Options;
-    Form.FormatNotes.Checked := xoFormatNotes in Options;
 
     Form.RefreshPreview;
     Form.BlueWaterStyle.Execute;
@@ -181,8 +176,6 @@ begin
       Form.IncludeRelations.Checked);
     THTMLExport.IncludeOption(Options, xoIncludePasswords,
       Form.IncludePasswords.Checked);
-    THTMLExport.IncludeOption(Options, xoFormatNotes,
-      Form.FormatNotes.Checked);
   finally
     Form.Free;
   end;
@@ -235,8 +228,6 @@ begin
 end;
 
 procedure THTMLExport.AppendObjectList(const SB: TStringBuilder);
-const
-  TextFormats: array[Boolean] of TTextFormat = (tfPlainText, tfCommonMark);
 var
   I: Integer;
 begin
@@ -256,7 +247,7 @@ begin
 
       if IncludeNotes.Checked and (Objects[I].Text.Count > 0) then
         SB.Append('<div class="notes">')
-          .AppendHTML(Objects[I].Text, TextFormats[FormatNotes.Checked])
+          .AppendHTML(Objects[I].Text, Objects[I].TextType)
           .Append('</div>');
 
       SB.Append('</div>');
@@ -476,11 +467,6 @@ procedure THTMLExport.OptionExecute(Sender: TObject);
 begin
   TAction(Sender).Checked := not TAction(Sender).Checked;
   RefreshPreview;
-end;
-
-procedure THTMLExport.FormatNotesUpdate(Sender: TObject);
-begin
-  TAction(Sender).Enabled := IncludeNotes.Checked;
 end;
 
 procedure THTMLExport.StyleExecute(Sender: TObject);
