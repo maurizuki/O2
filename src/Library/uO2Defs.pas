@@ -22,7 +22,7 @@ uses
 
 const
   O2FileGUID: TGUID = '{ABBB4FE2-9C21-450E-80B0-469DFD8A8BFC}';
-  O2FileVersion: WordRec = (Lo: 2; Hi: 2); // 2.2
+  O2FileVersion: WordRec = (Lo: 3; Hi: 2); // 2.3
 
 type
   TO2Cipher = Byte;
