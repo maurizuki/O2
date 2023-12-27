@@ -59,6 +59,8 @@ type
     Button7: TButton;
     ckDisplayPasswordStrength: TCheckBox;
     pbPasswordStrength: TPaintBox;
+    ckMarkdown: TCheckBox;
+    Label3: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormShow(Sender: TObject);
@@ -84,6 +86,7 @@ type
     procedure cbFieldValueChange(Sender: TObject);
     procedure ckDisplayPasswordStrengthClick(Sender: TObject);
     procedure pbPasswordStrengthPaint(Sender: TObject);
+    procedure LinkClick(Sender: TObject);
     procedure OKExecute(Sender: TObject);
     procedure OKUpdate(Sender: TObject);
   private
@@ -120,7 +123,8 @@ var
 implementation
 
 uses
-  Zxcvbn.Result, Zxcvbn.Utility, uO2Rules, uGlobal, uCtrlHelpers, uUtils;
+  Zxcvbn.Result, Zxcvbn.Utility, uO2Rules, uGlobal, uCtrlHelpers, uUtils,
+  uShellUtils;
 
 {$R *.dfm}
 
@@ -190,6 +194,7 @@ begin
     Fields := AObject.Fields;
     Memo.Lines := AObject.Text;
     Memo.SelStart := 0;
+    ckMarkdown.Checked := AObject.TextType = ttCommonMark;
   end;
   UpdateFieldsView;
   Objects.GetTags(cbTag.Items);
@@ -345,7 +350,14 @@ begin
     PasswordScoreColors[FPasswordScore], (FPasswordScore + 1) / 5);
 end;
 
+procedure TObjPropsDlg.LinkClick(Sender: TObject);
+begin
+  ShellOpen(TControl(Sender).Hint);
+end;
+
 procedure TObjPropsDlg.OKExecute(Sender: TObject);
+const
+  TextTypes: array[Boolean] of TO2TextType = (ttPlainText, ttCommonMark);
 var
   AObject: TO2Object;
 begin
@@ -360,6 +372,7 @@ begin
   AObject.Fields := Fields;
   Memo.WordWrap := False;
   AObject.Text := Memo.Lines;
+  AObject.TextType := TextTypes[ckMarkdown.Checked];
   ObjectIndex := AObject.Index;
 
   ModalResult := mrOk;
