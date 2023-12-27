@@ -75,6 +75,9 @@ The development and deployment of O2 were made possible thanks to the following 
 __DCPCrypt Cryptographic Component Library__  
 Copyright (C) 1999-2009 David Barton.  
 
+__delphi-markdown__  
+Copyright (C) 2011+ Health Intersections Pty Ltd.  
+
 __Inno Setup__  
 Copyright (C) 1997-2023 Jordan Russell.  
 Portions Copyright (C) 2000-2023 Martijn Laan.  
