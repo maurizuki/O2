@@ -340,7 +340,7 @@ object AboutForm: TAboutForm
     Top = 35
     Width = 204
     Height = 13
-    Caption = 'Copyright (C) 2004-2023 Maurizio Basaglia'
+    Caption = 'Copyright (C) 2004-2024 Maurizio Basaglia'
   end
   object Label2: TLabel
     Left = 73
@@ -348,7 +348,7 @@ object AboutForm: TAboutForm
     Width = 156
     Height = 13
     Cursor = crHandPoint
-    Hint = 'http://mozilla.org/MPL/2.0/'
+    Hint = 'https://mozilla.org/MPL/2.0/'
     Caption = 'Mozilla Public License Version 2.0'
     Font.Charset = ANSI_CHARSET
     Font.Color = clBlue
@@ -383,6 +383,9 @@ object AboutForm: TAboutForm
         'DCPCrypt Cryptographic Component Library'
         'Copyright (C) 1999-2009 David Barton.'
         ''
+        'delphi-markdown'
+        'Copyright (C) 2011+ Health Intersections Pty Ltd.'
+        ''
         'Inno Setup'
         'Copyright (C) 1997-2023 Jordan Russell.'
         'Portions Copyright (C) 2000-2023 Martijn Laan.'
@@ -401,11 +404,12 @@ object AboutForm: TAboutForm
         'zxcvbn'
         'Copyright (C) 2012-2016 Dan Wheeler and '
         'Dropbox, Inc.'
-        'Delphi porting di TCardinal.')
+        'Delphi porting by TCardinal.')
       ParentColor = True
       ReadOnly = True
       ScrollBars = ssVertical
       TabOrder = 0
+      ExplicitWidth = 257
     end
   end
   object btOk: TButton

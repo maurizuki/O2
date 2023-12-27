@@ -246,15 +246,15 @@ object ObjPropsDlg: TObjPropsDlg
         333
         342)
       object Label3: TLabel
-        Left = 258
+        Left = 222
         Top = 323
-        Width = 72
+        Width = 108
         Height = 13
         Cursor = crHandPoint
         Hint = 'https://commonmark.org/help/'
         Alignment = taRightJustify
         Anchors = [akRight, akBottom]
-        Caption = 'Markdown help'
+        Caption = 'Markdown syntax help'
         Font.Charset = ANSI_CHARSET
         Font.Color = clBlue
         Font.Height = -11
@@ -284,10 +284,10 @@ object ObjPropsDlg: TObjPropsDlg
       object ckMarkdown: TCheckBox
         Left = 3
         Top = 322
-        Width = 245
+        Width = 213
         Height = 17
         Anchors = [akLeft, akRight, akBottom]
-        Caption = '&Markdown'
+        Caption = '&Markdown syntax'
         TabOrder = 1
       end
     end

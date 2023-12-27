@@ -12,6 +12,7 @@ object HTMLExport: THTMLExport
   Font.Name = 'Tahoma'
   Font.Style = []
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   TextHeight = 13
   object WebBrowser: TWebBrowser
     AlignWithMargins = True
@@ -25,12 +26,8 @@ object HTMLExport: THTMLExport
     Margins.Bottom = 4
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = -2
-    ExplicitTop = 36
-    ExplicitWidth = 420
-    ExplicitHeight = 242
     ControlData = {
-      4C000000342B0000381900000000000000000000000000000000000000000000
+      4C000000CA2A00001D1900000000000000000000000000000000000000000000
       000000004C000000000000000000000001000000E0D057007335CF11AE690800
       2B2E126208000000000000004C0000000114020000000000C000000000000046
       8000000000000000000000000000000000000000000000000000000000000000
@@ -57,7 +54,7 @@ object HTMLExport: THTMLExport
     TabOrder = 1
     Transparent = True
     Wrapable = False
-    ExplicitWidth = 426
+    ExplicitWidth = 418
     object ToolButton1: TToolButton
       Left = 0
       Top = 0
