@@ -26,11 +26,15 @@ winget install --id=maurizuki.O2 -e
 
 ## Change log
 
+### Version 2.4
+- New feature: support for [Markdown syntax](https://commonmark.org/) in notes text. Text and paragraph styles are applied to objects notes in the notes view and in the HTML export.
+- *About* box: the release notes are now displayed through an internal viewer.
+
 ### Version 2.3
--	*Encryption* dialog: added a color-based indication of the strength of the password typed, with some useful suggestions on how to strengthen it.
--	*Object properties* dialog: added an option to enable a color based indication of the strength of the password typed in the field value, with some useful suggestions on how to strengthen it displayed hovering the indicator.
--	Main window, objects view and fields view: objects and fields highlight indicates the strength of the passwords if the fields match rules of type *Password* with the new option *Display password strength*.
--	Developed with Embarcadero® Delphi 11.
+- *Encryption* dialog: added a color-based indication of the strength of the password typed, with some useful suggestions on how to strengthen it.
+- *Object properties* dialog: added an option to enable a color based indication of the strength of the password typed in the field value, with some useful suggestions on how to strengthen it displayed hovering the indicator.
+- Main window, objects view and fields view: objects and fields highlight indicates the strength of the passwords if the fields match rules of type *Password* with the new option *Display password strength*.
+- Developed with Embarcadero® Delphi 11.
 
 ### Version 2.2.7
 - New feature: export events (fields that match rules of type *Expiration date* and *Recurrence*) in *iCalendar* format, compatible with Microsoft Outlook, Google Calendar, Apple Calendar, etc.
