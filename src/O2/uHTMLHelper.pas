@@ -52,6 +52,7 @@ begin
   MarkdownProcessor := TCommonMarkProcessor.Create;
   try
     MarkdownProcessor.AllowUnsafe := False;
+    MarkdownProcessor.OpenLinksInNewWindow := True;
     Result := MarkdownProcessor.process(S);
   finally
     MarkdownProcessor.Free;

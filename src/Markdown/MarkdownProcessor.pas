@@ -46,12 +46,15 @@ Type
   EMarkdownProcessor = class (Exception);
 
   TMarkdownProcessor = class abstract
+  private
+    FOpenLinksInNewWindow: boolean;
   protected
     function GetAllowUnSafe: boolean; virtual; abstract;
     procedure SetAllowUnSafe(const Value: boolean); virtual; abstract;
   public
     // when AllowUnsafe = true, then the processor can create scripts etc.
     property AllowUnsafe : boolean read GetAllowUnSafe write SetAllowUnSafe;
+    property OpenLinksInNewWindow : boolean read FOpenLinksInNewWindow write FOpenLinksInNewWindow;
     function process(source : String) : String; virtual; abstract;
   end;
 

@@ -440,6 +440,7 @@ type
     FStack : TObjectList<TCMDelimiter>;
     FStyling : boolean;
     FGFMExtensions : boolean;
+    FOpenLinksInNewWindow: boolean;
 
     // line operations
     procedure parseLines(src : String);
@@ -515,11 +516,12 @@ type
     Constructor Create;
     Destructor Destroy; override;
     property GFMExtensions : boolean read FGFMExtensions write FGFMExtensions;
+    property OpenLinksInNewWindow : boolean read FOpenLinksInNewWindow write FOpenLinksInNewWindow;
 
-    class function process(src : String; gfm : boolean) : String;
+    class function process(src : String; gfm : boolean; openLinksInNewWindow : boolean) : String;
 
     // divided into 2 steps in case some consumer wants to process the syntax tree
-    class function parse(src : String; gfm : boolean) : TCommonMarkDocument; overload;
+    class function parse(src : String; gfm : boolean; openLinksInNewWindow : boolean) : TCommonMarkDocument; overload;
     class function parseStyles(src : String; gfm : boolean) : TObjectList<TCMLine>; overload;
     class function render(doc : TCommonMarkDocument) : String;
   end;
@@ -1715,13 +1717,14 @@ end;
 
 { TCommonMarkEngine }
 
-class function TCommonMarkEngine.parse(src: String; gfm : boolean): TCommonMarkDocument;
+class function TCommonMarkEngine.parse(src: String; gfm : boolean; openLinksInNewWindow : boolean): TCommonMarkDocument;
 var
   this : TCommonMarkEngine;
   doc : TCMDocumentProcessor;
 begin
   this := TCommonMarkEngine.Create;
   try
+    this.OpenLinksInNewWindow := openLinksInNewWindow;
     this.FStyling := TEST_STYLING;
     this.parseLines(src.Replace(#13#10, #10).replace(#13, #10));
     this.GFMExtensions := gfm;
@@ -2686,6 +2689,8 @@ begin
     begin
       a := nodes.addOpener(lexer.location, 'a');
       a.attrs.Add('href', urlEscape(s));
+      if OpenLinksInNewWindow then
+        a.attrs.Add('target', '_blank');
       nodes.addText(lexer.location, htmlEscape(s));
       nodes.addCloser(lexer.location, 'a');
       lexer.grab(cmURL, s.Length);
@@ -3013,6 +3018,8 @@ begin
       del.Node.name := 'a'; // clears the text
       del.Node.opener := true;
       del.Node.attrs.Add('href', urlEscape(url));
+      if OpenLinksInNewWindow then
+        del.node.attrs.Add('target', '_blank');
       if title <> '' then
         del.node.attrs.Add('title', title);
       nodes.addCloser(lexer.location, 'a');
@@ -3162,6 +3169,8 @@ begin
     begin
       a := nodes.addOpener(lexer.location, 'a');
       a.attrs.Add('href', linkStart+start+urlEscape(s));
+      if OpenLinksInNewWindow then
+        a.attrs.Add('target', '_blank');
       nodes.addText(lexer.location, start+htmlEscape(s));
       nodes.addCloser(lexer.location, 'a');
     end
@@ -3169,6 +3178,8 @@ begin
     begin
       a := nodes.addOpener(lexer.location, 'a');
       a.attrs.Add('href', linkStart+start+urlEscape(s.Substring(0, s.Length-tail)));
+      if OpenLinksInNewWindow then
+        a.attrs.Add('target', '_blank');
       nodes.addText(lexer.location, start+htmlEscape(s.Substring(0, s.Length-tail)));
       nodes.addCloser(lexer.location, 'a');
       nodes.addText(lexer.location, htmlEscape(s.Substring(s.length-tail)));
@@ -3498,11 +3509,11 @@ begin
       processInlines(c, block.wsMode);
 end;
 
-class function TCommonMarkEngine.process(src: String; gfm : boolean): String;
+class function TCommonMarkEngine.process(src: String; gfm : boolean; openLinksInNewWindow : boolean): String;
 var
   doc : TCommonMarkDocument;
 begin
-  doc := parse(src, gfm);
+  doc := parse(src, gfm, openLinksInNewWindow);
   try
     result := render(doc);
   finally
@@ -3624,7 +3635,7 @@ function TCommonMarkProcessor.process(source: String): String;
 var
   doc : TCommonMarkDocument;
 begin
-  doc := TCommonMarkEngine.parse(source, true);
+  doc := TCommonMarkEngine.parse(source, true, OpenLinksInNewWindow);
   try
     result := TCommonMarkEngine.render(doc);
   finally

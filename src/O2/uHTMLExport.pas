@@ -315,7 +315,8 @@ begin
         if Assigned(ARule) then
           case ARule.RuleType of
             rtHyperLink:
-              SB.AppendFormat('<a href="%s">', [ARule.GetHyperLink(Fields[I])])
+              SB.AppendFormat('<a href="%s" target="_blank">',
+                [ARule.GetHyperLink(Fields[I])])
                 .AppendHTML(Fields[I].FieldValue).Append('</a>');
             rtEmail:
               SB.AppendFormat('<a href="mailto:%s">', [Fields[I].FieldValue])
