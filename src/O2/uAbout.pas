@@ -35,6 +35,7 @@ type
     btReadMe: TButton;
     Memo1: TMemo;
     procedure FormCreate(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure LinkClick(Sender: TObject);
     procedure btReadMeClick(Sender: TObject);
   end;
@@ -45,14 +46,10 @@ var
 implementation
 
 uses
-  JclFileUtils, uGlobal, uAppFiles, uShellUtils, uRTFViewer;
+  JclBase, JclFileUtils, JVCLVer, uGlobal, uAppFiles, uShellUtils, uRTFViewer,
+  uO2Defs;
 
 {$R *.dfm}
-
-procedure TAboutForm.btReadMeClick(Sender: TObject);
-begin
-  TRTFViewer.Execute(Application, AppFiles.FullPath[IdReadMe]);
-end;
 
 procedure TAboutForm.FormCreate(Sender: TObject);
 var
@@ -66,9 +63,38 @@ begin
   end;
 end;
 
+procedure TAboutForm.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (Key = VK_F1) and (ssCtrl in Shift) and (ssShift in Shift) then
+  begin
+    GroupBox2.Caption := 'Tech info';
+
+    Memo1.Clear;
+    Memo1.Lines.Add(Format('Compiler version: %d.%d', [Trunc(CompilerVersion),
+      Trunc(Frac(CompilerVersion) * 10)]));
+    Memo1.Lines.Add('');
+    Memo1.Lines.Add(Format('JCL version: %d.%d.%d.%d', [JclVersionMajor,
+      JclVersionMinor, JclVersionRelease, JclVersionBuild]));
+    Memo1.Lines.Add(Format('JVCL version: %d.%d.%d.%d', [JVCLVersionMajor,
+      JVCLVersionMinor, JVCLVersionRelease, JVCLVersionBuild]));
+    Memo1.Lines.Add('');
+    Memo1.Lines.Add(Format('O2 file version: %d.%d', [O2FileVersion.Hi,
+      O2FileVersion.Lo]));
+    Memo1.Lines.Add('O2 file identifier: ' + GUIDToString(O2FileGUID));
+    Memo1.Lines.Add('');
+    Memo1.Lines.Add('EXE path: ' + Application.ExeName);
+  end;
+end;
+
 procedure TAboutForm.LinkClick(Sender: TObject);
 begin
   ShellOpen(TControl(Sender).Hint);
+end;
+
+procedure TAboutForm.btReadMeClick(Sender: TObject);
+begin
+  TRTFViewer.Execute(Application, AppFiles.FullPath[IdReadMe]);
 end;
 
 end.
