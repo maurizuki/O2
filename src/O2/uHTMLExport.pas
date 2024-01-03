@@ -77,9 +77,8 @@ type
     FO2File: TO2File;
     FObjects: TO2ObjectList;
     FStyleIndex: Integer;
-    OriginalApplicationOnMessage: procedure(var Msg: tagMSG;
-      var Handled: Boolean) of object;
-    procedure ApplicationOnMessage(var Msg: tagMSG; var Handled: Boolean);
+    OriginalApplicationMessage: TMessageEvent;
+    procedure ApplicationMessage(var Msg: TMsg; var Handled: Boolean);
     procedure SetStyleIndex(const Value: Integer);
     procedure SetStyleCaption(Action: TCustomAction);
   protected
@@ -181,14 +180,13 @@ begin
   end;
 end;
 
-procedure THTMLExport.ApplicationOnMessage(var Msg: tagMSG;
-  var Handled: Boolean);
+procedure THTMLExport.ApplicationMessage(var Msg: TMsg; var Handled: Boolean);
 begin
   if ((Msg.Message = WM_RBUTTONDOWN) or (Msg.Message = WM_RBUTTONDBLCLK))
     and IsChild(WebBrowser.Handle, Msg.hwnd) then
     Handled := True
   else
-    OriginalApplicationOnMessage(Msg, Handled);
+    OriginalApplicationMessage(Msg, Handled);
 end;
 
 procedure THTMLExport.SetStyleIndex(const Value: Integer);
@@ -434,13 +432,13 @@ begin
   SetBounds(WorkArea.Left, WorkArea.Top,
     WorkArea.Right - WorkArea.Left, WorkArea.Bottom - WorkArea.Top);
 
-  OriginalApplicationOnMessage := Application.OnMessage;
-  Application.OnMessage := ApplicationOnMessage;
+  OriginalApplicationMessage := Application.OnMessage;
+  Application.OnMessage := ApplicationMessage;
 end;
 
 procedure THTMLExport.FormDestroy(Sender: TObject);
 begin
-  Application.OnMessage := OriginalApplicationOnMessage;
+  Application.OnMessage := OriginalApplicationMessage;
 end;
 
 procedure THTMLExport.ActionUpdate(Sender: TObject);
