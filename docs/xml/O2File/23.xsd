@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:simpleType name="guid">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[{][0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}[}]"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="TO2File">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Title" type="xs:string"/>
+        <xs:element name="Description" type="xs:string"/>
+        <xs:element name="Author" type="xs:string"/>
+        <xs:element name="Objects">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="item" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="ObjectID" type="guid"/>
+                    <xs:element name="Name" type="xs:string"/>
+                    <xs:element name="Tag" type="xs:string"/>
+                    <xs:element name="Fields">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="item" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="FieldName" type="xs:string"/>
+                                <xs:element name="FieldValue" type="xs:string"/>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Text" type="xs:string"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Relations">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="item" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="RelationID" type="guid"/>
+                    <xs:element name="ObjectID1" type="guid"/>
+                    <xs:element name="ObjectID2" type="guid"/>
+                    <xs:element name="Role1" type="xs:string"/>
+                    <xs:element name="Role2" type="xs:string"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Rules">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="item" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Name" type="xs:string"/>
+                    <xs:element name="RuleType">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="rtHyperLink"/>
+                          <xs:enumeration value="rtEmail"/>
+                          <xs:enumeration value="rtPassword"/>
+                          <xs:enumeration value="rtExpirationDate"/>
+                          <xs:enumeration value="rtRecurrence"/>
+                          <xs:enumeration value="rtHighlight"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                    <xs:element name="FieldName" type="xs:string"/>
+                    <xs:element name="FieldValue" type="xs:string"/>
+                    <xs:element name="Params">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="item" minOccurs="0" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="ParamName">
+                                  <xs:simpleType>
+                                    <xs:restriction base="xs:string">
+                                      <xs:enumeration value="Mask"/>
+                                      <xs:enumeration value="DisplayMask"/>
+                                      <xs:enumeration value="DateSeparator"/>
+                                      <xs:enumeration value="ShortDateFormat"/>
+                                      <xs:enumeration value="DaysBefore"/>
+                                      <xs:enumeration value="DaysAfter"/>
+                                      <xs:enumeration value="Color"/>
+                                      <xs:enumeration value="TextColor"/>
+                                      <xs:enumeration value="DisplayPasswordStrength"/>
+                                    </xs:restriction>
+                                  </xs:simpleType>
+                                </xs:element>
+                                <xs:element name="ParamValue" type="xs:string"/>
+                              </xs:sequence>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="Active">
+                      <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                          <xs:enumeration value="False"/>
+                          <xs:enumeration value="True"/>
+                        </xs:restriction>
+                      </xs:simpleType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
