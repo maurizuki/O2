@@ -25,6 +25,8 @@ type
   private
     FInstance: TPersistent;
   protected
+    const SchemaLocationFmt =
+      'https://maurizuki.github.io/O2/xml/O2File/%d%d.xsd';
     const ItemIdent = 'item';
     function GetPropCount(AInstance: TPersistent): Integer;
     function GetPropName(AInstance: TPersistent; Index: Integer): string;
@@ -75,7 +77,7 @@ type
 implementation
 
 uses
-  SysUtils, TypInfo, Variants;
+  SysUtils, TypInfo, Variants, uO2Defs;
 
 { TO2XmlFiler }
 
@@ -113,6 +115,10 @@ begin
   Result.Encoding := 'utf-8';
   Result.StandAlone := 'yes';
   Result.DocumentElement := Result.CreateNode(FInstance.ClassName);
+  Result.DocumentElement.Attributes['xmlns:xsi'] :=
+    'http://www.w3.org/2001/XMLSchema-instance';
+  Result.DocumentElement.Attributes['xsi:noNamespaceSchemaLocation'] :=
+    Format(SchemaLocationFmt, [O2FileVersion.Hi, O2FileVersion.Lo]);
 end;
 
 { TO2XmlReader }
