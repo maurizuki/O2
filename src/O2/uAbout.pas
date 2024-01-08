@@ -70,6 +70,7 @@ begin
   begin
     GroupBox2.Caption := 'Tech info';
 
+    Memo1.Lines.BeginUpdate;
     Memo1.Clear;
     Memo1.Lines.Add(Format('Compiler version: %d.%d', [Trunc(CompilerVersion),
       Trunc(Frac(CompilerVersion) * 10)]));
@@ -84,6 +85,8 @@ begin
     Memo1.Lines.Add('O2 file identifier: ' + GUIDToString(O2FileGUID));
     Memo1.Lines.Add('');
     Memo1.Lines.Add('EXE path: ' + Application.ExeName);
+    Memo1.Lines.Add('Settings path: ' + AppFiles.FullPath[IdSettings]);
+    Memo1.Lines.EndUpdate;
   end;
 end;
 
