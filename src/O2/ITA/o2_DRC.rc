@@ -8,428 +8,428 @@
   resources were bound to the produced executable.
 */
 
-#define Vcl_OleConst_SInvalidLicense 64352
-#define Vcl_OleConst_SNotLicensed 64353
-#define Vcl_OleConst_sNoRunningObject 64354
-#define Vcl_EdgeConst_SWebViewFailure 64355
-#define Vcl_EdgeConst_SNoWebView 64356
-#define IEConst_sNotSupportedByEdge 64357
-#define uRulePropsDlg_SMaskHelp04 64368
-#define uRulePropsDlg_SMaskHelp05 64369
-#define uRulePropsDlg_SMaskHelp06 64370
-#define uRulePropsDlg_SMaskHelp07 64371
-#define uRulePropsDlg_SMaskHelp08 64372
-#define uRulePropsDlg_SMaskHelp09 64373
-#define uRulePropsDlg_SMaskHelp10 64374
-#define uRulePropsDlg_SMaskHelp11 64375
-#define uRulePropsDlg_SMaskHelp12 64376
-#define uRulePropsDlg_SMaskHelp13 64377
-#define uRulePropsDlg_SMaskHelp14 64378
-#define uRulePropsDlg_SMaskHelp15 64379
-#define uRulePropsDlg_SMaskHelp16 64380
-#define Vcl_OleConst_SBadPropValue 64381
-#define Vcl_OleConst_SCannotActivate 64382
-#define Vcl_OleConst_SNoWindowHandle 64383
-#define Zxcvbn_Utility_SZxcvbnUseLongerKeyboardPattern 64384
-#define Zxcvbn_Utility_SZxcvbnAvoidRepeatedWordsAndChars 64385
-#define Zxcvbn_Utility_SZxcvbnAvoidSequences 64386
-#define Zxcvbn_Utility_SZxcvbnAvoidYearsAssociatedYou 64387
-#define Zxcvbn_Utility_SZxcvbnAvoidDatesYearsAssociatedYou 64388
-#define Zxcvbn_Utility_SZxcvbnCapsDontHelp 64389
-#define Zxcvbn_Utility_SZxcvbnAllCapsEasy 64390
-#define Zxcvbn_Utility_SZxcvbnReversedWordEasy 64391
-#define Zxcvbn_Utility_SZxcvbnPredictableSubstitutionsEasy 64392
-#define Data_DBConsts_SBcdOverflow 64393
-#define Data_DBConsts_SInvalidBcdValue 64394
-#define Data_DBConsts_SCouldNotParseTimeStamp 64395
-#define Data_DBConsts_SInvalidSqlTimeStamp 64396
-#define uRulePropsDlg_SMaskHelp01 64397
-#define uRulePropsDlg_SMaskHelp02 64398
-#define uRulePropsDlg_SMaskHelp03 64399
-#define Zxcvbn_Utility_SZxcvbnCenturies 64400
-#define Zxcvbn_Utility_SZxcvbnStraightRow 64401
-#define Zxcvbn_Utility_SZxcvbnShortKeyboardPatterns 64402
-#define Zxcvbn_Utility_SZxcvbnRepeatsLikeAaaEasy 64403
-#define Zxcvbn_Utility_SZxcvbnRepeatsLikeAbcSlighterHarder 64404
-#define Zxcvbn_Utility_SZxcvbnSequenceAbcEasy 64405
-#define Zxcvbn_Utility_SZxcvbnRecentYearsEasy 64406
-#define Zxcvbn_Utility_SZxcvbnDatesEasy 64407
-#define Zxcvbn_Utility_SZxcvbnTop10Passwords 64408
-#define Zxcvbn_Utility_SZxcvbnTop100Passwords 64409
-#define Zxcvbn_Utility_SZxcvbnCommonPasswords 64410
-#define Zxcvbn_Utility_SZxcvbnSimilarCommonPasswords 64411
-#define Zxcvbn_Utility_SZxcvbnWordEasy 64412
-#define Zxcvbn_Utility_SZxcvbnNameSurnamesEasy 64413
-#define Zxcvbn_Utility_SZxcvbnCommonNameSurnamesEasy 64414
-#define Zxcvbn_Utility_SZxcvbnAddAnotherWordOrTwo 64415
-#define uGlobal_SMDY 64416
-#define uGlobal_SDMY 64417
-#define System_RegularExpressionsConsts_SRegExMissingExpression 64418
-#define System_RegularExpressionsConsts_SRegExExpressionError 64419
-#define System_RegularExpressionsConsts_SRegExStudyError 64420
-#define System_RegularExpressionsConsts_SRegExMatchRequired 64421
-#define System_RegularExpressionsConsts_SRegExStringsRequired 64422
-#define System_RegularExpressionsConsts_SRegExInvalidIndexType 64423
-#define System_RegularExpressionsConsts_SRegExIndexOutOfBounds 64424
-#define System_RegularExpressionsConsts_SRegExInvalidGroupName 64425
-#define Zxcvbn_Utility_SZxcvbnInstant 64426
-#define Zxcvbn_Utility_SZxcvbnMinutes 64427
-#define Zxcvbn_Utility_SZxcvbnHours 64428
-#define Zxcvbn_Utility_SZxcvbnDays 64429
-#define Zxcvbn_Utility_SZxcvbnMonths 64430
-#define Zxcvbn_Utility_SZxcvbnYears 64431
-#define uGlobal_SEventAll 64432
-#define uGlobal_SEventAllEvents 64433
-#define uGlobal_SEventCustom 64434
-#define uGlobal_SEventToday 64435
-#define uGlobal_SEventTomorrow 64436
-#define uGlobal_SEventThisWeek 64437
-#define uGlobal_SEventThisMonth 64438
-#define uGlobal_SEventThisYear 64439
-#define uGlobal_SEventNext7days 64440
-#define uGlobal_SEventNext15days 64441
-#define uGlobal_SEventNext30days 64442
-#define uGlobal_SEventNext60days 64443
-#define uGlobal_SEventNext90days 64444
-#define uGlobal_SEventNext180days 64445
-#define uGlobal_SEventNext365days 64446
-#define uGlobal_SYMD 64447
-#define uGlobal_SHashNone 64448
-#define uGlobal_SHashHaval 64449
-#define uGlobal_SHashMD4 64450
-#define uGlobal_SHashMD5 64451
-#define uGlobal_SHashRipeMD128 64452
-#define uGlobal_SHashSHA1 64453
-#define uGlobal_SHashSHA256 64454
-#define uGlobal_SHashSHA384 64455
-#define uGlobal_SHashSHA512 64456
-#define uGlobal_SHashTiger 64457
-#define uGlobal_SRuleHyperLink 64458
-#define uGlobal_SRuleEmail 64459
-#define uGlobal_SRulePassword 64460
-#define uGlobal_SRuleExpirationDate 64461
-#define uGlobal_SRuleRecurrence 64462
-#define uGlobal_SRuleHighlight 64463
-#define uGlobal_SCipherDES 64464
-#define uGlobal_SCipher3DES 64465
-#define uGlobal_SCipherIce 64466
-#define uGlobal_SCipherThinIce 64467
-#define uGlobal_SCipherIce2 64468
-#define uGlobal_SCipherIDEA 64469
-#define uGlobal_SCipherMARS 64470
-#define uGlobal_SCipherMisty1 64471
-#define uGlobal_SCipherRC2 64472
-#define uGlobal_SCipherRC4 64473
-#define uGlobal_SCipherRC5 64474
-#define uGlobal_SCipherRC6 64475
-#define uGlobal_SCipherRijndael 64476
-#define uGlobal_SCipherSerpent 64477
-#define uGlobal_SCipherTEA 64478
-#define uGlobal_SCipherTwofish 64479
-#define uGlobal_SReplaceFieldValueDlgTitle 64480
-#define uGlobal_SReplaceFieldValueDlgSearchLabel 64481
-#define uGlobal_SReplaceFieldValueDlgReplaceLabel 64482
-#define uGlobal_SReplaceRoleDlgTitle 64483
-#define uGlobal_SReplaceRoleDlgSearchLabel 64484
-#define uGlobal_SReplaceRoleDlgReplaceLabel 64485
-#define uGlobal_SCannotCheckForUpdates 64486
-#define uGlobal_SNoAvailableUpdates 64487
-#define uGlobal_SDownloadUpdatesQuery 64488
-#define uGlobal_SApplyAtNextStartup 64489
-#define uGlobal_SPrintPreviewZoom 64490
-#define uGlobal_SHTMLExportStyle 64491
-#define uGlobal_SCipherNone 64492
-#define uGlobal_SCipherBlowfish 64493
-#define uGlobal_SCipherCast128 64494
-#define uGlobal_SCipherCast256 64495
-#define uGlobal_SRemoveFromMRUListQuery 64496
-#define uGlobal_SSaveChangesQuery 64497
-#define uGlobal_SFileOverwriteQuery 64498
-#define uGlobal_SObjPropsDlgTitle 64499
-#define uGlobal_SRulePropsDlgTitle 64500
-#define uGlobal_SDeleteRelationQuery 64501
-#define uGlobal_SDeleteRuleQuery 64502
-#define uGlobal_SInstallOnRemovableMediaPrompt 64503
-#define uGlobal_SInstallOnRemovableMediaFolderPrompt 64504
-#define uGlobal_SSettingsOverwriteQuery 64505
-#define uGlobal_SReplaceTagDlgTitle 64506
-#define uGlobal_SReplaceTagDlgSearchLabel 64507
-#define uGlobal_SReplaceTagDlgReplaceLabel 64508
-#define uGlobal_SReplaceFieldNameDlgTitle 64509
-#define uGlobal_SReplaceFieldNameDlgSearchLabel 64510
-#define uGlobal_SReplaceFieldNameDlgReplaceLabel 64511
-#define uGlobal_STagsNone 64512
-#define uGlobal_SStatusItemsCount 64513
-#define uGlobal_SStatusSelectedItemsCount 64514
-#define uGlobal_SStatusObject 64515
-#define uGlobal_SStatusPagesCount 64516
-#define uGlobal_SFieldsViewHint 64517
-#define uGlobal_SFieldsViewHint2 64518
-#define uGlobal_SRelationsViewHint 64519
-#define uGlobal_SRelationsViewHint2 64520
-#define uGlobal_SOpenFileFilter 64521
-#define uGlobal_SImportFileFilter 64522
-#define uGlobal_SImportSettingsFileFilter 64523
-#define uGlobal_SSaveFileFilter 64524
-#define uGlobal_SExportFileFilter 64525
-#define uGlobal_SExportSettingsFileFilter 64526
-#define uGlobal_SDeleteObjectsQuery 64527
-#define Xml_XMLConst_SNoAttributes 64528
-#define Xml_XMLConst_SInvalidNodeType 64529
-#define Xml_XMLConst_SMismatchedRegItems 64530
-#define Xml_XMLConst_SNotSingleTextNode 64531
-#define Xml_XMLConst_SNoDOMParseOptions 64532
-#define Xml_XMLConst_SMissingItemTag 64533
-#define Xml_XMLConst_SNodeReadOnly 64534
-#define Xml_XMLConst_SNoRefresh 64535
-#define Xml_XMLConst_SMissingFileName 64536
-#define Xml_XMLConst_SLine 64537
-#define uO2File_SUnsupportedFileType 64538
-#define uO2File_SUnsupportedFileVersion 64539
-#define uO2File_SUnsupportedCipher 64540
-#define uO2File_SUnsupportedHash 64541
-#define uO2File_SWrongPassword 64542
-#define uGlobal_STags 64543
-#define uO2Objects_SObjectAlreadyExists 64544
-#define uO2Objects_SObjectNameAlreadyExists 64545
-#define uO2Objects_SFieldAlreadyExists 64546
-#define uO2Relations_SRelationAlreadyExists 64547
-#define uO2Rules_SRuleAlreadyExists 64548
-#define uO2Rules_SParamAlreadyExists 64549
-#define Xml_XMLConst_SDuplicateRegistration 64550
-#define Xml_XMLConst_SNoMatchingDOMVendor 64551
-#define Xml_XMLConst_SNoDOMNodeEx 64552
-#define Xml_XMLConst_SDOMNotSupported 64553
-#define Xml_XMLConst_SNoDOMVendorSelected 64554
-#define Xml_XMLConst_SNodeExpected 64555
-#define Xml_XMLConst_SMSDOMNotInstalled 64556
-#define Xml_XMLConst_SNotActive 64557
-#define Xml_XMLConst_SNodeNotFound 64558
-#define Xml_XMLConst_SMissingNode 64559
-#define JvResources_RsClGrayText 64560
-#define JvResources_RsClBtnText 64561
-#define JvResources_RsClInactiveCaptionText 64562
-#define JvResources_RsClBtnHighlight 64563
-#define JvResources_RsCl3DDkShadow 64564
-#define JvResources_RsCl3DLight 64565
-#define JvResources_RsClInfoText 64566
-#define JvResources_RsClInfoBk 64567
-#define JvResources_RsGradientActiveCaption 64568
-#define JvResources_RsGradientInactiveCaption 64569
-#define JvResources_RsHotLight 64570
-#define JvResources_RsMenuBar 64571
-#define JvResources_RsMenuHighlight 64572
-#define Vcl_Imaging_JConsts_sChangeJPGSize 64573
-#define Vcl_Imaging_JConsts_sJPEGError 64574
-#define Vcl_Imaging_JConsts_sJPEGImageFile 64575
-#define JvResources_RsClBackground 64576
-#define JvResources_RsClActiveCaption 64577
-#define JvResources_RsClInactiveCaption 64578
-#define JvResources_RsClMenu 64579
-#define JvResources_RsClWindow 64580
-#define JvResources_RsClWindowFrame 64581
-#define JvResources_RsClMenuText 64582
-#define JvResources_RsClWindowText 64583
-#define JvResources_RsClCaptionText 64584
-#define JvResources_RsClActiveBorder 64585
-#define JvResources_RsClInactiveBorder 64586
-#define JvResources_RsClAppWorkSpace 64587
-#define JvResources_RsClHighlight 64588
-#define JvResources_RsClHighlightText 64589
-#define JvResources_RsClBtnFace 64590
-#define JvResources_RsClBtnShadow 64591
-#define JvResources_RsClViolet 64592
-#define JvResources_RsClGray40 64593
-#define JvResources_RsClPink 64594
-#define JvResources_RsClGold 64595
-#define JvResources_RsClBrightGreen 64596
-#define JvResources_RsClTurquoise 64597
-#define JvResources_RsClPlum 64598
-#define JvResources_RsClGray25 64599
-#define JvResources_RsClRose 64600
-#define JvResources_RsClTan 64601
-#define JvResources_RsClLightYellow 64602
-#define JvResources_RsClLightGreen 64603
-#define JvResources_RsClLightTurquoise 64604
-#define JvResources_RsClPaleBlue 64605
-#define JvResources_RsClLavender 64606
-#define JvResources_RsClScrollBar 64607
-#define JvResources_RsClMedGray 64608
-#define JvResources_RsClBrown 64609
-#define JvResources_RsClOliveGreen 64610
-#define JvResources_RsClDarkGreen 64611
-#define JvResources_RsClDarkTeal 64612
-#define JvResources_RsClDarkBlue 64613
-#define JvResources_RsClIndigo 64614
-#define JvResources_RsClGray80 64615
-#define JvResources_RsClDarkRed 64616
-#define JvResources_RsClOrange 64617
-#define JvResources_RsClDarkYellow 64618
-#define JvResources_RsClBlueGray 64619
-#define JvResources_RsClGray50 64620
-#define JvResources_RsClLightOrange 64621
-#define JvResources_RsClSeaGreen 64622
-#define JvResources_RsClLightBlue 64623
-#define JvResources_RsClOlive 64624
-#define JvResources_RsClNavy 64625
-#define JvResources_RsClPurple 64626
-#define JvResources_RsClTeal 64627
-#define JvResources_RsClGray 64628
-#define JvResources_RsClSilver 64629
-#define JvResources_RsClRed 64630
-#define JvResources_RsClLime 64631
-#define JvResources_RsClYellow 64632
-#define JvResources_RsClBlue 64633
-#define JvResources_RsClFuchsia 64634
-#define JvResources_RsClAqua 64635
-#define JvResources_RsClWhite 64636
-#define JvResources_RsClMoneyGreen 64637
-#define JvResources_RsClSkyBlue 64638
-#define JvResources_RsClCream 64639
-#define JclResources_RsELibraryNotFound 64640
-#define JclResources_RsEFunctionNotFound 64641
-#define JvResources_RsUndoItem 64642
-#define JvResources_RsCutItem 64643
-#define JvResources_RsCopyItem 64644
-#define JvResources_RsPasteItem 64645
-#define JvResources_RsDeleteItem 64646
-#define JvResources_RsSelectAllItem 64647
-#define JvResources_RsEInvalidCaretOwner 64648
-#define JvResources_RsECannotPerfromThisOperationWhilePrin 64649
-#define JvResources_RsEPrinterNotAssigned 64650
-#define JvResources_RsENoPrintPreviewAssigned 64651
-#define JvResources_RsEOutOfRangeFloat 64652
-#define JvResources_RsClBlack 64653
-#define JvResources_RsClMaroon 64654
-#define JvResources_RsClGreen 64655
-#define JclResources_RsIntelCacheDescrDD 64656
-#define JclResources_RsIntelCacheDescrDE 64657
-#define JclResources_RsIntelCacheDescrE2 64658
-#define JclResources_RsIntelCacheDescrE3 64659
-#define JclResources_RsIntelCacheDescrE4 64660
-#define JclResources_RsIntelCacheDescrEA 64661
-#define JclResources_RsIntelCacheDescrEB 64662
-#define JclResources_RsIntelCacheDescrEC 64663
-#define JclResources_RsIntelCacheDescrF0 64664
-#define JclResources_RsIntelCacheDescrF1 64665
-#define JclResources_RsIntelCacheDescrFF 64666
-#define JclResources_RsOSVersionWin8 64667
-#define JclResources_RsOSVersionWinServer2012 64668
-#define JclResources_RsOSVersionWin81 64669
-#define JclResources_RsOSVersionWinServer2012R2 64670
-#define JclResources_RsWin32Error 64671
-#define JclResources_RsIntelCacheDescr87 64672
-#define JclResources_RsIntelCacheDescrB0 64673
-#define JclResources_RsIntelCacheDescrB1 64674
-#define JclResources_RsIntelCacheDescrB2 64675
-#define JclResources_RsIntelCacheDescrB3 64676
-#define JclResources_RsIntelCacheDescrB4 64677
-#define JclResources_RsIntelCacheDescrBA 64678
-#define JclResources_RsIntelCacheDescrC0 64679
-#define JclResources_RsIntelCacheDescrCA 64680
-#define JclResources_RsIntelCacheDescrD0 64681
-#define JclResources_RsIntelCacheDescrD1 64682
-#define JclResources_RsIntelCacheDescrD2 64683
-#define JclResources_RsIntelCacheDescrD6 64684
-#define JclResources_RsIntelCacheDescrD7 64685
-#define JclResources_RsIntelCacheDescrD8 64686
-#define JclResources_RsIntelCacheDescrDC 64687
-#define JclResources_RsIntelCacheDescr72 64688
-#define JclResources_RsIntelCacheDescr73 64689
-#define JclResources_RsIntelCacheDescr76 64690
-#define JclResources_RsIntelCacheDescr78 64691
-#define JclResources_RsIntelCacheDescr79 64692
-#define JclResources_RsIntelCacheDescr7A 64693
-#define JclResources_RsIntelCacheDescr7B 64694
-#define JclResources_RsIntelCacheDescr7C 64695
-#define JclResources_RsIntelCacheDescr7D 64696
-#define JclResources_RsIntelCacheDescr7F 64697
-#define JclResources_RsIntelCacheDescr80 64698
-#define JclResources_RsIntelCacheDescr82 64699
-#define JclResources_RsIntelCacheDescr83 64700
-#define JclResources_RsIntelCacheDescr84 64701
-#define JclResources_RsIntelCacheDescr85 64702
-#define JclResources_RsIntelCacheDescr86 64703
-#define JclResources_RsIntelCacheDescr51 64704
-#define JclResources_RsIntelCacheDescr52 64705
-#define JclResources_RsIntelCacheDescr55 64706
-#define JclResources_RsIntelCacheDescr56 64707
-#define JclResources_RsIntelCacheDescr57 64708
-#define JclResources_RsIntelCacheDescr59 64709
-#define JclResources_RsIntelCacheDescr5A 64710
-#define JclResources_RsIntelCacheDescr5B 64711
-#define JclResources_RsIntelCacheDescr5C 64712
-#define JclResources_RsIntelCacheDescr5D 64713
-#define JclResources_RsIntelCacheDescr60 64714
-#define JclResources_RsIntelCacheDescr66 64715
-#define JclResources_RsIntelCacheDescr67 64716
-#define JclResources_RsIntelCacheDescr68 64717
-#define JclResources_RsIntelCacheDescr70 64718
-#define JclResources_RsIntelCacheDescr71 64719
-#define JclResources_RsIntelCacheDescr41 64720
-#define JclResources_RsIntelCacheDescr42 64721
-#define JclResources_RsIntelCacheDescr43 64722
-#define JclResources_RsIntelCacheDescr44 64723
-#define JclResources_RsIntelCacheDescr45 64724
-#define JclResources_RsIntelCacheDescr46 64725
-#define JclResources_RsIntelCacheDescr47 64726
-#define JclResources_RsIntelCacheDescr48 64727
-#define JclResources_RsIntelCacheDescr49 64728
-#define JclResources_RsIntelCacheDescr4A 64729
-#define JclResources_RsIntelCacheDescr4B 64730
-#define JclResources_RsIntelCacheDescr4C 64731
-#define JclResources_RsIntelCacheDescr4D 64732
-#define JclResources_RsIntelCacheDescr4E 64733
-#define JclResources_RsIntelCacheDescr4F 64734
-#define JclResources_RsIntelCacheDescr50 64735
-#define JclResources_RsIntelCacheDescr0D 64736
-#define JclResources_RsIntelCacheDescr0E 64737
-#define JclResources_RsIntelCacheDescr21 64738
-#define JclResources_RsIntelCacheDescr22 64739
-#define JclResources_RsIntelCacheDescr23 64740
-#define JclResources_RsIntelCacheDescr25 64741
-#define JclResources_RsIntelCacheDescr29 64742
-#define JclResources_RsIntelCacheDescr2C 64743
-#define JclResources_RsIntelCacheDescr30 64744
-#define JclResources_RsIntelCacheDescr39 64745
-#define JclResources_RsIntelCacheDescr3A 64746
-#define JclResources_RsIntelCacheDescr3B 64747
-#define JclResources_RsIntelCacheDescr3C 64748
-#define JclResources_RsIntelCacheDescr3D 64749
-#define JclResources_RsIntelCacheDescr3E 64750
-#define JclResources_RsIntelCacheDescr40 64751
-#define JclResources_RsUnableToOpenKeyRead 64752
-#define JclResources_RsUnableToAccessValue 64753
-#define JclResources_RsWrongDataType 64754
-#define JclResources_RsInconsistentPath 64755
-#define JclResources_RsIntelCacheDescr00 64756
-#define JclResources_RsIntelCacheDescr01 64757
-#define JclResources_RsIntelCacheDescr02 64758
-#define JclResources_RsIntelCacheDescr03 64759
-#define JclResources_RsIntelCacheDescr04 64760
-#define JclResources_RsIntelCacheDescr05 64761
-#define JclResources_RsIntelCacheDescr06 64762
-#define JclResources_RsIntelCacheDescr08 64763
-#define JclResources_RsIntelCacheDescr09 64764
-#define JclResources_RsIntelCacheDescr0A 64765
-#define JclResources_RsIntelCacheDescr0B 64766
-#define JclResources_RsIntelCacheDescr0C 64767
+#define uRulePropsDlg_SMaskHelp11 64352
+#define uRulePropsDlg_SMaskHelp12 64353
+#define uRulePropsDlg_SMaskHelp13 64354
+#define uRulePropsDlg_SMaskHelp14 64355
+#define uRulePropsDlg_SMaskHelp15 64356
+#define uRulePropsDlg_SMaskHelp16 64357
+#define Zxcvbn_Utility_SZxcvbnReversedWordEasy 64368
+#define Zxcvbn_Utility_SZxcvbnPredictableSubstitutionsEasy 64369
+#define Data_DBConsts_SBcdOverflow 64370
+#define Data_DBConsts_SInvalidBcdValue 64371
+#define Data_DBConsts_SCouldNotParseTimeStamp 64372
+#define Data_DBConsts_SInvalidSqlTimeStamp 64373
+#define uRulePropsDlg_SMaskHelp01 64374
+#define uRulePropsDlg_SMaskHelp02 64375
+#define uRulePropsDlg_SMaskHelp03 64376
+#define uRulePropsDlg_SMaskHelp04 64377
+#define uRulePropsDlg_SMaskHelp05 64378
+#define uRulePropsDlg_SMaskHelp06 64379
+#define uRulePropsDlg_SMaskHelp07 64380
+#define uRulePropsDlg_SMaskHelp08 64381
+#define uRulePropsDlg_SMaskHelp09 64382
+#define uRulePropsDlg_SMaskHelp10 64383
+#define Zxcvbn_Utility_SZxcvbnDatesEasy 64384
+#define Zxcvbn_Utility_SZxcvbnTop10Passwords 64385
+#define Zxcvbn_Utility_SZxcvbnTop100Passwords 64386
+#define Zxcvbn_Utility_SZxcvbnCommonPasswords 64387
+#define Zxcvbn_Utility_SZxcvbnSimilarCommonPasswords 64388
+#define Zxcvbn_Utility_SZxcvbnWordEasy 64389
+#define Zxcvbn_Utility_SZxcvbnNameSurnamesEasy 64390
+#define Zxcvbn_Utility_SZxcvbnCommonNameSurnamesEasy 64391
+#define Zxcvbn_Utility_SZxcvbnAddAnotherWordOrTwo 64392
+#define Zxcvbn_Utility_SZxcvbnUseLongerKeyboardPattern 64393
+#define Zxcvbn_Utility_SZxcvbnAvoidRepeatedWordsAndChars 64394
+#define Zxcvbn_Utility_SZxcvbnAvoidSequences 64395
+#define Zxcvbn_Utility_SZxcvbnAvoidYearsAssociatedYou 64396
+#define Zxcvbn_Utility_SZxcvbnAvoidDatesYearsAssociatedYou 64397
+#define Zxcvbn_Utility_SZxcvbnCapsDontHelp 64398
+#define Zxcvbn_Utility_SZxcvbnAllCapsEasy 64399
+#define System_RegularExpressionsConsts_SRegExInvalidIndexType 64400
+#define System_RegularExpressionsConsts_SRegExIndexOutOfBounds 64401
+#define System_RegularExpressionsConsts_SRegExInvalidGroupName 64402
+#define Zxcvbn_Utility_SZxcvbnInstant 64403
+#define Zxcvbn_Utility_SZxcvbnMinutes 64404
+#define Zxcvbn_Utility_SZxcvbnHours 64405
+#define Zxcvbn_Utility_SZxcvbnDays 64406
+#define Zxcvbn_Utility_SZxcvbnMonths 64407
+#define Zxcvbn_Utility_SZxcvbnYears 64408
+#define Zxcvbn_Utility_SZxcvbnCenturies 64409
+#define Zxcvbn_Utility_SZxcvbnStraightRow 64410
+#define Zxcvbn_Utility_SZxcvbnShortKeyboardPatterns 64411
+#define Zxcvbn_Utility_SZxcvbnRepeatsLikeAaaEasy 64412
+#define Zxcvbn_Utility_SZxcvbnRepeatsLikeAbcSlighterHarder 64413
+#define Zxcvbn_Utility_SZxcvbnSequenceAbcEasy 64414
+#define Zxcvbn_Utility_SZxcvbnRecentYearsEasy 64415
+#define uGlobal_SEventThisYear 64416
+#define uGlobal_SEventNext7days 64417
+#define uGlobal_SEventNext15days 64418
+#define uGlobal_SEventNext30days 64419
+#define uGlobal_SEventNext60days 64420
+#define uGlobal_SEventNext90days 64421
+#define uGlobal_SEventNext180days 64422
+#define uGlobal_SEventNext365days 64423
+#define uGlobal_SYMD 64424
+#define uGlobal_SMDY 64425
+#define uGlobal_SDMY 64426
+#define System_RegularExpressionsConsts_SRegExMissingExpression 64427
+#define System_RegularExpressionsConsts_SRegExExpressionError 64428
+#define System_RegularExpressionsConsts_SRegExStudyError 64429
+#define System_RegularExpressionsConsts_SRegExMatchRequired 64430
+#define System_RegularExpressionsConsts_SRegExStringsRequired 64431
+#define uGlobal_SHashSHA384 64432
+#define uGlobal_SHashSHA512 64433
+#define uGlobal_SHashTiger 64434
+#define uGlobal_SRuleHyperLink 64435
+#define uGlobal_SRuleEmail 64436
+#define uGlobal_SRulePassword 64437
+#define uGlobal_SRuleExpirationDate 64438
+#define uGlobal_SRuleRecurrence 64439
+#define uGlobal_SRuleHighlight 64440
+#define uGlobal_SEventAll 64441
+#define uGlobal_SEventAllEvents 64442
+#define uGlobal_SEventCustom 64443
+#define uGlobal_SEventToday 64444
+#define uGlobal_SEventTomorrow 64445
+#define uGlobal_SEventThisWeek 64446
+#define uGlobal_SEventThisMonth 64447
+#define uGlobal_SCipherMisty1 64448
+#define uGlobal_SCipherRC2 64449
+#define uGlobal_SCipherRC4 64450
+#define uGlobal_SCipherRC5 64451
+#define uGlobal_SCipherRC6 64452
+#define uGlobal_SCipherRijndael 64453
+#define uGlobal_SCipherSerpent 64454
+#define uGlobal_SCipherTEA 64455
+#define uGlobal_SCipherTwofish 64456
+#define uGlobal_SHashNone 64457
+#define uGlobal_SHashHaval 64458
+#define uGlobal_SHashMD4 64459
+#define uGlobal_SHashMD5 64460
+#define uGlobal_SHashRipeMD128 64461
+#define uGlobal_SHashSHA1 64462
+#define uGlobal_SHashSHA256 64463
+#define uGlobal_SNoAvailableUpdates 64464
+#define uGlobal_SDownloadUpdatesQuery 64465
+#define uGlobal_SApplyAtNextStartup 64466
+#define uGlobal_SPrintPreviewZoom 64467
+#define uGlobal_SHTMLExportStyle 64468
+#define uGlobal_SCipherNone 64469
+#define uGlobal_SCipherBlowfish 64470
+#define uGlobal_SCipherCast128 64471
+#define uGlobal_SCipherCast256 64472
+#define uGlobal_SCipherDES 64473
+#define uGlobal_SCipher3DES 64474
+#define uGlobal_SCipherIce 64475
+#define uGlobal_SCipherThinIce 64476
+#define uGlobal_SCipherIce2 64477
+#define uGlobal_SCipherIDEA 64478
+#define uGlobal_SCipherMARS 64479
+#define uGlobal_SInstallOnRemovableMediaPrompt 64480
+#define uGlobal_SInstallOnRemovableMediaFolderPrompt 64481
+#define uGlobal_SSettingsOverwriteQuery 64482
+#define uGlobal_SReplaceTagDlgTitle 64483
+#define uGlobal_SReplaceTagDlgSearchLabel 64484
+#define uGlobal_SReplaceTagDlgReplaceLabel 64485
+#define uGlobal_SReplaceFieldNameDlgTitle 64486
+#define uGlobal_SReplaceFieldNameDlgSearchLabel 64487
+#define uGlobal_SReplaceFieldNameDlgReplaceLabel 64488
+#define uGlobal_SReplaceFieldValueDlgTitle 64489
+#define uGlobal_SReplaceFieldValueDlgSearchLabel 64490
+#define uGlobal_SReplaceFieldValueDlgReplaceLabel 64491
+#define uGlobal_SReplaceRoleDlgTitle 64492
+#define uGlobal_SReplaceRoleDlgSearchLabel 64493
+#define uGlobal_SReplaceRoleDlgReplaceLabel 64494
+#define uGlobal_SCannotCheckForUpdates 64495
+#define uGlobal_SRelationsViewHint 64496
+#define uGlobal_SRelationsViewHint2 64497
+#define uGlobal_SOpenFileFilter 64498
+#define uGlobal_SImportFileFilter 64499
+#define uGlobal_SImportSettingsFileFilter 64500
+#define uGlobal_SSaveFileFilter 64501
+#define uGlobal_SExportFileFilter 64502
+#define uGlobal_SExportSettingsFileFilter 64503
+#define uGlobal_SDeleteObjectsQuery 64504
+#define uGlobal_SRemoveFromMRUListQuery 64505
+#define uGlobal_SSaveChangesQuery 64506
+#define uGlobal_SFileOverwriteQuery 64507
+#define uGlobal_SObjPropsDlgTitle 64508
+#define uGlobal_SRulePropsDlgTitle 64509
+#define uGlobal_SDeleteRelationQuery 64510
+#define uGlobal_SDeleteRuleQuery 64511
+#define Xml_XMLConst_SNoRefresh 64512
+#define Xml_XMLConst_SMissingFileName 64513
+#define Xml_XMLConst_SLine 64514
+#define uO2File_SUnsupportedFileType 64515
+#define uO2File_SUnsupportedFileVersion 64516
+#define uO2File_SUnsupportedCipher 64517
+#define uO2File_SUnsupportedHash 64518
+#define uO2File_SWrongPassword 64519
+#define uGlobal_STags 64520
+#define uGlobal_STagsNone 64521
+#define uGlobal_SStatusItemsCount 64522
+#define uGlobal_SStatusSelectedItemsCount 64523
+#define uGlobal_SStatusObject 64524
+#define uGlobal_SStatusPagesCount 64525
+#define uGlobal_SFieldsViewHint 64526
+#define uGlobal_SFieldsViewHint2 64527
+#define Xml_XMLConst_SNoMatchingDOMVendor 64528
+#define Xml_XMLConst_SNoDOMNodeEx 64529
+#define Xml_XMLConst_SDOMNotSupported 64530
+#define Xml_XMLConst_SNoDOMVendorSelected 64531
+#define Xml_XMLConst_SNodeExpected 64532
+#define Xml_XMLConst_SMSDOMNotInstalled 64533
+#define Xml_XMLConst_SNotActive 64534
+#define Xml_XMLConst_SNodeNotFound 64535
+#define Xml_XMLConst_SMissingNode 64536
+#define Xml_XMLConst_SNoAttributes 64537
+#define Xml_XMLConst_SInvalidNodeType 64538
+#define Xml_XMLConst_SMismatchedRegItems 64539
+#define Xml_XMLConst_SNotSingleTextNode 64540
+#define Xml_XMLConst_SNoDOMParseOptions 64541
+#define Xml_XMLConst_SMissingItemTag 64542
+#define Xml_XMLConst_SNodeReadOnly 64543
+#define JvResources_RsClInfoBk 64544
+#define JvResources_RsGradientActiveCaption 64545
+#define JvResources_RsGradientInactiveCaption 64546
+#define JvResources_RsHotLight 64547
+#define JvResources_RsMenuBar 64548
+#define JvResources_RsMenuHighlight 64549
+#define Vcl_Imaging_JConsts_sChangeJPGSize 64550
+#define Vcl_Imaging_JConsts_sJPEGError 64551
+#define Vcl_Imaging_JConsts_sJPEGImageFile 64552
+#define uO2Objects_SObjectAlreadyExists 64553
+#define uO2Objects_SObjectNameAlreadyExists 64554
+#define uO2Objects_SFieldAlreadyExists 64555
+#define uO2Relations_SRelationAlreadyExists 64556
+#define uO2Rules_SRuleAlreadyExists 64557
+#define uO2Rules_SParamAlreadyExists 64558
+#define Xml_XMLConst_SDuplicateRegistration 64559
+#define JvResources_RsClWindowText 64560
+#define JvResources_RsClCaptionText 64561
+#define JvResources_RsClActiveBorder 64562
+#define JvResources_RsClInactiveBorder 64563
+#define JvResources_RsClAppWorkSpace 64564
+#define JvResources_RsClHighlight 64565
+#define JvResources_RsClHighlightText 64566
+#define JvResources_RsClBtnFace 64567
+#define JvResources_RsClBtnShadow 64568
+#define JvResources_RsClGrayText 64569
+#define JvResources_RsClBtnText 64570
+#define JvResources_RsClInactiveCaptionText 64571
+#define JvResources_RsClBtnHighlight 64572
+#define JvResources_RsCl3DDkShadow 64573
+#define JvResources_RsCl3DLight 64574
+#define JvResources_RsClInfoText 64575
+#define JvResources_RsClGray25 64576
+#define JvResources_RsClRose 64577
+#define JvResources_RsClTan 64578
+#define JvResources_RsClLightYellow 64579
+#define JvResources_RsClLightGreen 64580
+#define JvResources_RsClLightTurquoise 64581
+#define JvResources_RsClPaleBlue 64582
+#define JvResources_RsClLavender 64583
+#define JvResources_RsClScrollBar 64584
+#define JvResources_RsClBackground 64585
+#define JvResources_RsClActiveCaption 64586
+#define JvResources_RsClInactiveCaption 64587
+#define JvResources_RsClMenu 64588
+#define JvResources_RsClWindow 64589
+#define JvResources_RsClWindowFrame 64590
+#define JvResources_RsClMenuText 64591
+#define JvResources_RsClGray80 64592
+#define JvResources_RsClDarkRed 64593
+#define JvResources_RsClOrange 64594
+#define JvResources_RsClDarkYellow 64595
+#define JvResources_RsClBlueGray 64596
+#define JvResources_RsClGray50 64597
+#define JvResources_RsClLightOrange 64598
+#define JvResources_RsClSeaGreen 64599
+#define JvResources_RsClLightBlue 64600
+#define JvResources_RsClViolet 64601
+#define JvResources_RsClGray40 64602
+#define JvResources_RsClPink 64603
+#define JvResources_RsClGold 64604
+#define JvResources_RsClBrightGreen 64605
+#define JvResources_RsClTurquoise 64606
+#define JvResources_RsClPlum 64607
+#define JvResources_RsClLime 64608
+#define JvResources_RsClYellow 64609
+#define JvResources_RsClBlue 64610
+#define JvResources_RsClFuchsia 64611
+#define JvResources_RsClAqua 64612
+#define JvResources_RsClWhite 64613
+#define JvResources_RsClMoneyGreen 64614
+#define JvResources_RsClSkyBlue 64615
+#define JvResources_RsClCream 64616
+#define JvResources_RsClMedGray 64617
+#define JvResources_RsClBrown 64618
+#define JvResources_RsClOliveGreen 64619
+#define JvResources_RsClDarkGreen 64620
+#define JvResources_RsClDarkTeal 64621
+#define JvResources_RsClDarkBlue 64622
+#define JvResources_RsClIndigo 64623
+#define JvResources_RsSelectAllItem 64624
+#define JvResources_RsEInvalidCaretOwner 64625
+#define JvResources_RsECannotPerfromThisOperationWhilePrin 64626
+#define JvResources_RsEPrinterNotAssigned 64627
+#define JvResources_RsENoPrintPreviewAssigned 64628
+#define JvResources_RsEOutOfRangeFloat 64629
+#define JvResources_RsClBlack 64630
+#define JvResources_RsClMaroon 64631
+#define JvResources_RsClGreen 64632
+#define JvResources_RsClOlive 64633
+#define JvResources_RsClNavy 64634
+#define JvResources_RsClPurple 64635
+#define JvResources_RsClTeal 64636
+#define JvResources_RsClGray 64637
+#define JvResources_RsClSilver 64638
+#define JvResources_RsClRed 64639
+#define JclResources_RsIntelCacheDescrEC 64640
+#define JclResources_RsIntelCacheDescrF0 64641
+#define JclResources_RsIntelCacheDescrF1 64642
+#define JclResources_RsIntelCacheDescrFF 64643
+#define JclResources_RsOSVersionWin8 64644
+#define JclResources_RsOSVersionWinServer2012 64645
+#define JclResources_RsOSVersionWin81 64646
+#define JclResources_RsOSVersionWinServer2012R2 64647
+#define JclResources_RsWin32Error 64648
+#define JclResources_RsELibraryNotFound 64649
+#define JclResources_RsEFunctionNotFound 64650
+#define JvResources_RsUndoItem 64651
+#define JvResources_RsCutItem 64652
+#define JvResources_RsCopyItem 64653
+#define JvResources_RsPasteItem 64654
+#define JvResources_RsDeleteItem 64655
+#define JclResources_RsIntelCacheDescrC0 64656
+#define JclResources_RsIntelCacheDescrCA 64657
+#define JclResources_RsIntelCacheDescrD0 64658
+#define JclResources_RsIntelCacheDescrD1 64659
+#define JclResources_RsIntelCacheDescrD2 64660
+#define JclResources_RsIntelCacheDescrD6 64661
+#define JclResources_RsIntelCacheDescrD7 64662
+#define JclResources_RsIntelCacheDescrD8 64663
+#define JclResources_RsIntelCacheDescrDC 64664
+#define JclResources_RsIntelCacheDescrDD 64665
+#define JclResources_RsIntelCacheDescrDE 64666
+#define JclResources_RsIntelCacheDescrE2 64667
+#define JclResources_RsIntelCacheDescrE3 64668
+#define JclResources_RsIntelCacheDescrE4 64669
+#define JclResources_RsIntelCacheDescrEA 64670
+#define JclResources_RsIntelCacheDescrEB 64671
+#define JclResources_RsIntelCacheDescr7C 64672
+#define JclResources_RsIntelCacheDescr7D 64673
+#define JclResources_RsIntelCacheDescr7F 64674
+#define JclResources_RsIntelCacheDescr80 64675
+#define JclResources_RsIntelCacheDescr82 64676
+#define JclResources_RsIntelCacheDescr83 64677
+#define JclResources_RsIntelCacheDescr84 64678
+#define JclResources_RsIntelCacheDescr85 64679
+#define JclResources_RsIntelCacheDescr86 64680
+#define JclResources_RsIntelCacheDescr87 64681
+#define JclResources_RsIntelCacheDescrB0 64682
+#define JclResources_RsIntelCacheDescrB1 64683
+#define JclResources_RsIntelCacheDescrB2 64684
+#define JclResources_RsIntelCacheDescrB3 64685
+#define JclResources_RsIntelCacheDescrB4 64686
+#define JclResources_RsIntelCacheDescrBA 64687
+#define JclResources_RsIntelCacheDescr5B 64688
+#define JclResources_RsIntelCacheDescr5C 64689
+#define JclResources_RsIntelCacheDescr5D 64690
+#define JclResources_RsIntelCacheDescr60 64691
+#define JclResources_RsIntelCacheDescr66 64692
+#define JclResources_RsIntelCacheDescr67 64693
+#define JclResources_RsIntelCacheDescr68 64694
+#define JclResources_RsIntelCacheDescr70 64695
+#define JclResources_RsIntelCacheDescr71 64696
+#define JclResources_RsIntelCacheDescr72 64697
+#define JclResources_RsIntelCacheDescr73 64698
+#define JclResources_RsIntelCacheDescr76 64699
+#define JclResources_RsIntelCacheDescr78 64700
+#define JclResources_RsIntelCacheDescr79 64701
+#define JclResources_RsIntelCacheDescr7A 64702
+#define JclResources_RsIntelCacheDescr7B 64703
+#define JclResources_RsIntelCacheDescr48 64704
+#define JclResources_RsIntelCacheDescr49 64705
+#define JclResources_RsIntelCacheDescr4A 64706
+#define JclResources_RsIntelCacheDescr4B 64707
+#define JclResources_RsIntelCacheDescr4C 64708
+#define JclResources_RsIntelCacheDescr4D 64709
+#define JclResources_RsIntelCacheDescr4E 64710
+#define JclResources_RsIntelCacheDescr4F 64711
+#define JclResources_RsIntelCacheDescr50 64712
+#define JclResources_RsIntelCacheDescr51 64713
+#define JclResources_RsIntelCacheDescr52 64714
+#define JclResources_RsIntelCacheDescr55 64715
+#define JclResources_RsIntelCacheDescr56 64716
+#define JclResources_RsIntelCacheDescr57 64717
+#define JclResources_RsIntelCacheDescr59 64718
+#define JclResources_RsIntelCacheDescr5A 64719
+#define JclResources_RsIntelCacheDescr2C 64720
+#define JclResources_RsIntelCacheDescr30 64721
+#define JclResources_RsIntelCacheDescr39 64722
+#define JclResources_RsIntelCacheDescr3A 64723
+#define JclResources_RsIntelCacheDescr3B 64724
+#define JclResources_RsIntelCacheDescr3C 64725
+#define JclResources_RsIntelCacheDescr3D 64726
+#define JclResources_RsIntelCacheDescr3E 64727
+#define JclResources_RsIntelCacheDescr40 64728
+#define JclResources_RsIntelCacheDescr41 64729
+#define JclResources_RsIntelCacheDescr42 64730
+#define JclResources_RsIntelCacheDescr43 64731
+#define JclResources_RsIntelCacheDescr44 64732
+#define JclResources_RsIntelCacheDescr45 64733
+#define JclResources_RsIntelCacheDescr46 64734
+#define JclResources_RsIntelCacheDescr47 64735
+#define JclResources_RsIntelCacheDescr03 64736
+#define JclResources_RsIntelCacheDescr04 64737
+#define JclResources_RsIntelCacheDescr05 64738
+#define JclResources_RsIntelCacheDescr06 64739
+#define JclResources_RsIntelCacheDescr08 64740
+#define JclResources_RsIntelCacheDescr09 64741
+#define JclResources_RsIntelCacheDescr0A 64742
+#define JclResources_RsIntelCacheDescr0B 64743
+#define JclResources_RsIntelCacheDescr0C 64744
+#define JclResources_RsIntelCacheDescr0D 64745
+#define JclResources_RsIntelCacheDescr0E 64746
+#define JclResources_RsIntelCacheDescr21 64747
+#define JclResources_RsIntelCacheDescr22 64748
+#define JclResources_RsIntelCacheDescr23 64749
+#define JclResources_RsIntelCacheDescr25 64750
+#define JclResources_RsIntelCacheDescr29 64751
+#define JclResources_RsEWindowsVersionNotSupported 64752
+#define JclResources_RsEWindowNotValid 64753
+#define JclResources_RsEProcessNotValid 64754
+#define JclResources_RsEModuleNotValid 64755
+#define JclResources_RsFileUtilsNoVersionInfo 64756
+#define JclResources_RsFileUtilsFileDoesNotExist 64757
+#define JclResources_RsFileUtilsLanguageIndex 64758
+#define JclResources_RsFileUtilsEmptyValue 64759
+#define JclResources_RsFileUtilsValueNotFound 64760
+#define JclResources_RsUnableToOpenKeyRead 64761
+#define JclResources_RsUnableToAccessValue 64762
+#define JclResources_RsWrongDataType 64763
+#define JclResources_RsInconsistentPath 64764
+#define JclResources_RsIntelCacheDescr00 64765
+#define JclResources_RsIntelCacheDescr01 64766
+#define JclResources_RsIntelCacheDescr02 64767
 #define REST_Consts_sResponseContentIsEmpty 64768
 #define REST_Consts_sResponseInvalidRootElement 64769
 #define REST_Consts_sNoClientAttached 64770
 #define REST_Consts_sUnknownRequestMethod 64771
 #define REST_Consts_sRESTRequestFailed 64772
-#define JclResources_RsEReplacementChar 64773
-#define JclResources_RsCannotCreateDir 64774
-#define JclResources_RsEWindowsVersionNotSupported 64775
-#define JclResources_RsEWindowNotValid 64776
-#define JclResources_RsEProcessNotValid 64777
-#define JclResources_RsEModuleNotValid 64778
-#define JclResources_RsFileUtilsNoVersionInfo 64779
-#define JclResources_RsFileUtilsFileDoesNotExist 64780
-#define JclResources_RsFileUtilsLanguageIndex 64781
-#define JclResources_RsFileUtilsEmptyValue 64782
-#define JclResources_RsFileUtilsValueNotFound 64783
+#define Vcl_OleConst_SBadPropValue 64773
+#define Vcl_OleConst_SCannotActivate 64774
+#define Vcl_OleConst_SNoWindowHandle 64775
+#define Vcl_OleConst_SInvalidLicense 64776
+#define Vcl_OleConst_SNotLicensed 64777
+#define Vcl_OleConst_sNoRunningObject 64778
+#define Vcl_EdgeConst_SWebViewFailure 64779
+#define Vcl_EdgeConst_SNoWebView 64780
+#define IEConst_sNotSupportedByEdge 64781
+#define JclResources_RsEReplacementChar 64782
+#define JclResources_RsCannotCreateDir 64783
 #define System_Bindings_Consts_sUpperCaseDesc 64784
 #define System_Bindings_Consts_sLowerCaseDesc 64785
 #define Data_Bind_Consts_sNameAttr 64786
@@ -1184,35 +1184,12 @@
 #define System_SysConst_SAccessDenied 65535
 STRINGTABLE
 BEGIN
-	Vcl_OleConst_SInvalidLicense,	L"License information for %s is invalid"
-	Vcl_OleConst_SNotLicensed,	L"License information for %s not found. You cannot use this control in design mode"
-	Vcl_OleConst_sNoRunningObject,	L"Unable to retrieve a pointer to a running object registered with OLE for %s/%s"
-	Vcl_EdgeConst_SWebViewFailure,	L"Failed to create Edge browser control"
-	Vcl_EdgeConst_SNoWebView,	L"The underlying WebView2 control is not initialized"
-	IEConst_sNotSupportedByEdge,	L"Operation not supported by Edge WebView2 control"
-	uRulePropsDlg_SMaskHelp04,	L"Ogni insieme di caratteri inizia con una parentesi quadra aperta ([) e termina con una parentesi quadra chiusa (])."
-	uRulePropsDlg_SMaskHelp05,	L"Tra le parentesi quadre si trovano gli elementi dell'insieme."
-	uRulePropsDlg_SMaskHelp06,	L"Ogni elemento \x00E8 un carattere proprio o un intervallo di caratteri."
-	uRulePropsDlg_SMaskHelp07,	L"Gli intervalli sono indicati con un valore iniziale, un trattino (-) e un valore finale."
-	uRulePropsDlg_SMaskHelp08,	L"Non usare spazi o virgole per separare gli elementi dell'insieme."
-	uRulePropsDlg_SMaskHelp09,	L"Un insieme deve corrispondere a un singolo carettere nel nome o valore del campo."
-	uRulePropsDlg_SMaskHelp10,	L"Il carattere corrisponde all'insieme se \x00E8 uguale a uno dei caratteri propri nell'insieme o se \x00E8 compreso in uno degli intervalli nell'insieme."
 	uRulePropsDlg_SMaskHelp11,	L"Un carattere \x00E8 nell'intervallo se corrisponde al valore iniziale, al valore finale o se cade tra i due valori."
 	uRulePropsDlg_SMaskHelp12,	L"Tutti i confronti non distinguono tra maiuscole e minuscole."
 	uRulePropsDlg_SMaskHelp13,	L"Se il primo carattere dopo la parentesi quadra aperta di un insieme \x00E8 un punto esclamativo (!), allora l'insieme corrisponde a qualsiasi carattere non presente nell'insieme."
 	uRulePropsDlg_SMaskHelp14,	L"I caratteri jolly sono l'asterisco (*) e il punto esclamativo (?)."
 	uRulePropsDlg_SMaskHelp15,	L"Un asterisco corrisponde a un qualsiasi numero di caratteri."
 	uRulePropsDlg_SMaskHelp16,	L"Un punto esclamativo corrisponde a un singolo carattere qualsiasi."
-	Vcl_OleConst_SBadPropValue,	L"'%s' is not a valid property value"
-	Vcl_OleConst_SCannotActivate,	L"OLE control activation failed"
-	Vcl_OleConst_SNoWindowHandle,	L"Could not obtain OLE control window handle"
-	Zxcvbn_Utility_SZxcvbnUseLongerKeyboardPattern,	L"Usa una sequenza di tastiera pi\x00F9 lunga con pi\x00F9 ripetizioni"
-	Zxcvbn_Utility_SZxcvbnAvoidRepeatedWordsAndChars,	L"Evita parole e caratteri ripetuti."
-	Zxcvbn_Utility_SZxcvbnAvoidSequences,	L"Evita le sequenze."
-	Zxcvbn_Utility_SZxcvbnAvoidYearsAssociatedYou,	L"Evita anni recenti e anni associati a te."
-	Zxcvbn_Utility_SZxcvbnAvoidDatesYearsAssociatedYou,	L"Evita date e anni associati a te."
-	Zxcvbn_Utility_SZxcvbnCapsDontHelp,	L"Il maiuscolo non aiuta pi\x00F9 di tanto."
-	Zxcvbn_Utility_SZxcvbnAllCapsEasy,	L"Tutto in maiuscolo \x00E8 facile da indovinare quasi come tutto in minuscolo."
 	Zxcvbn_Utility_SZxcvbnReversedWordEasy,	L"Le parole invertite non sono pi\x00F9 difficili da indovinare."
 	Zxcvbn_Utility_SZxcvbnPredictableSubstitutionsEasy,	L"Sostituzioni prevedibili come '@' al posto di 'a' non aiutano molto."
 	Data_DBConsts_SBcdOverflow,	L"BCD overflow"
@@ -1222,13 +1199,13 @@ BEGIN
 	uRulePropsDlg_SMaskHelp01,	L"Maschera nome campo e maschera valore campo valide sono composte da caratteri propri, insiemi di caratteri e caratteri jolly."
 	uRulePropsDlg_SMaskHelp02,	L"Ogni carattere proprio deve corrispondere a un singolo carattere nel nome o valore del campo."
 	uRulePropsDlg_SMaskHelp03,	L"Il confronto di caratteri propri non distingue tra maiuscole e minuscole."
-	Zxcvbn_Utility_SZxcvbnCenturies,	L"secoli"
-	Zxcvbn_Utility_SZxcvbnStraightRow,	L"Le righe di tastiera sono facili da indovinare."
-	Zxcvbn_Utility_SZxcvbnShortKeyboardPatterns,	L"Le sequenze brevi di tastiera sono facili da indovinare."
-	Zxcvbn_Utility_SZxcvbnRepeatsLikeAaaEasy,	L"Ripetizioni come ""aaa"" sono facili da indovinare."
-	Zxcvbn_Utility_SZxcvbnRepeatsLikeAbcSlighterHarder,	L"Ripetizioni come ""abcabcabc"" sono solo poco pi\x00F9 difficili da indovinare di ""abc""."
-	Zxcvbn_Utility_SZxcvbnSequenceAbcEasy,	L"Sequenze come abc o 6543 sono facili da indovinare."
-	Zxcvbn_Utility_SZxcvbnRecentYearsEasy,	L"Gli anni recenti sono facili da indovinare."
+	uRulePropsDlg_SMaskHelp04,	L"Ogni insieme di caratteri inizia con una parentesi quadra aperta ([) e termina con una parentesi quadra chiusa (])."
+	uRulePropsDlg_SMaskHelp05,	L"Tra le parentesi quadre si trovano gli elementi dell'insieme."
+	uRulePropsDlg_SMaskHelp06,	L"Ogni elemento \x00E8 un carattere proprio o un intervallo di caratteri."
+	uRulePropsDlg_SMaskHelp07,	L"Gli intervalli sono indicati con un valore iniziale, un trattino (-) e un valore finale."
+	uRulePropsDlg_SMaskHelp08,	L"Non usare spazi o virgole per separare gli elementi dell'insieme."
+	uRulePropsDlg_SMaskHelp09,	L"Un insieme deve corrispondere a un singolo carettere nel nome o valore del campo."
+	uRulePropsDlg_SMaskHelp10,	L"Il carattere corrisponde all'insieme se \x00E8 uguale a uno dei caratteri propri nell'insieme o se \x00E8 compreso in uno degli intervalli nell'insieme."
 	Zxcvbn_Utility_SZxcvbnDatesEasy,	L"Le date sono spesso facili da indovinare."
 	Zxcvbn_Utility_SZxcvbnTop10Passwords,	L"Questa \x00E8 una delle prime 10 password pi\x00F9 comuni."
 	Zxcvbn_Utility_SZxcvbnTop100Passwords,	L"Questa \x00E8 una delle prime 100 password pi\x00F9 comuni."
@@ -1238,13 +1215,13 @@ BEGIN
 	Zxcvbn_Utility_SZxcvbnNameSurnamesEasy,	L"Nomi e cognomi da soli sono facili da indovinare."
 	Zxcvbn_Utility_SZxcvbnCommonNameSurnamesEasy,	L"Nomi e cognomi comuni sono facili da indovinare."
 	Zxcvbn_Utility_SZxcvbnAddAnotherWordOrTwo,	L"Aggiungi un'altra parola o due. Le parole non comuni sono migliori."
-	uGlobal_SMDY,	L"Mese, giorno, anno"
-	uGlobal_SDMY,	L"Giorno, mese, anno"
-	System_RegularExpressionsConsts_SRegExMissingExpression,	L"A regular expression specified in RegEx is required"
-	System_RegularExpressionsConsts_SRegExExpressionError,	L"Error in regular expression at offset %d: %s"
-	System_RegularExpressionsConsts_SRegExStudyError,	L"Error studying the regex: %s"
-	System_RegularExpressionsConsts_SRegExMatchRequired,	L"Successful match required"
-	System_RegularExpressionsConsts_SRegExStringsRequired,	L"Strings parameter cannot be nil"
+	Zxcvbn_Utility_SZxcvbnUseLongerKeyboardPattern,	L"Usa una sequenza di tastiera pi\x00F9 lunga con pi\x00F9 ripetizioni"
+	Zxcvbn_Utility_SZxcvbnAvoidRepeatedWordsAndChars,	L"Evita parole e caratteri ripetuti."
+	Zxcvbn_Utility_SZxcvbnAvoidSequences,	L"Evita le sequenze."
+	Zxcvbn_Utility_SZxcvbnAvoidYearsAssociatedYou,	L"Evita anni recenti e anni associati a te."
+	Zxcvbn_Utility_SZxcvbnAvoidDatesYearsAssociatedYou,	L"Evita date e anni associati a te."
+	Zxcvbn_Utility_SZxcvbnCapsDontHelp,	L"Il maiuscolo non aiuta pi\x00F9 di tanto."
+	Zxcvbn_Utility_SZxcvbnAllCapsEasy,	L"Tutto in maiuscolo \x00E8 facile da indovinare quasi come tutto in minuscolo."
 	System_RegularExpressionsConsts_SRegExInvalidIndexType,	L"Invalid index type"
 	System_RegularExpressionsConsts_SRegExIndexOutOfBounds,	L"Index out of bounds (%d)"
 	System_RegularExpressionsConsts_SRegExInvalidGroupName,	L"Invalid group name (%s)"
@@ -1254,13 +1231,13 @@ BEGIN
 	Zxcvbn_Utility_SZxcvbnDays,	L"giorni"
 	Zxcvbn_Utility_SZxcvbnMonths,	L"mesi"
 	Zxcvbn_Utility_SZxcvbnYears,	L"anni"
-	uGlobal_SEventAll,	L"Tutti"
-	uGlobal_SEventAllEvents,	L"Tutti gli eventi"
-	uGlobal_SEventCustom,	L"Personalizzato"
-	uGlobal_SEventToday,	L"Oggi"
-	uGlobal_SEventTomorrow,	L"Domani"
-	uGlobal_SEventThisWeek,	L"Questa settimana"
-	uGlobal_SEventThisMonth,	L"Questo mese"
+	Zxcvbn_Utility_SZxcvbnCenturies,	L"secoli"
+	Zxcvbn_Utility_SZxcvbnStraightRow,	L"Le righe di tastiera sono facili da indovinare."
+	Zxcvbn_Utility_SZxcvbnShortKeyboardPatterns,	L"Le sequenze brevi di tastiera sono facili da indovinare."
+	Zxcvbn_Utility_SZxcvbnRepeatsLikeAaaEasy,	L"Ripetizioni come ""aaa"" sono facili da indovinare."
+	Zxcvbn_Utility_SZxcvbnRepeatsLikeAbcSlighterHarder,	L"Ripetizioni come ""abcabcabc"" sono solo poco pi\x00F9 difficili da indovinare di ""abc""."
+	Zxcvbn_Utility_SZxcvbnSequenceAbcEasy,	L"Sequenze come abc o 6543 sono facili da indovinare."
+	Zxcvbn_Utility_SZxcvbnRecentYearsEasy,	L"Gli anni recenti sono facili da indovinare."
 	uGlobal_SEventThisYear,	L"Quest'anno"
 	uGlobal_SEventNext7days,	L"Prossimi 7 giorni"
 	uGlobal_SEventNext15days,	L"Prossimi 15 giorni"
@@ -1270,13 +1247,13 @@ BEGIN
 	uGlobal_SEventNext180days,	L"Prossimi 180 giorni"
 	uGlobal_SEventNext365days,	L"Prossimi 365 giorni"
 	uGlobal_SYMD,	L"Anno, mese, giorno"
-	uGlobal_SHashNone,	L"(nessuno)"
-	uGlobal_SHashHaval,	L"Haval"
-	uGlobal_SHashMD4,	L"MD4"
-	uGlobal_SHashMD5,	L"MD5 [deprecato]"
-	uGlobal_SHashRipeMD128,	L"RipeMD-128"
-	uGlobal_SHashSHA1,	L"SHA-1 [deprecato]"
-	uGlobal_SHashSHA256,	L"SHA-256"
+	uGlobal_SMDY,	L"Mese, giorno, anno"
+	uGlobal_SDMY,	L"Giorno, mese, anno"
+	System_RegularExpressionsConsts_SRegExMissingExpression,	L"A regular expression specified in RegEx is required"
+	System_RegularExpressionsConsts_SRegExExpressionError,	L"Error in regular expression at offset %d: %s"
+	System_RegularExpressionsConsts_SRegExStudyError,	L"Error studying the regex: %s"
+	System_RegularExpressionsConsts_SRegExMatchRequired,	L"Successful match required"
+	System_RegularExpressionsConsts_SRegExStringsRequired,	L"Strings parameter cannot be nil"
 	uGlobal_SHashSHA384,	L"SHA-384"
 	uGlobal_SHashSHA512,	L"SHA-512"
 	uGlobal_SHashTiger,	L"Tiger"
@@ -1286,13 +1263,13 @@ BEGIN
 	uGlobal_SRuleExpirationDate,	L"Scadenza"
 	uGlobal_SRuleRecurrence,	L"Ricorrenza"
 	uGlobal_SRuleHighlight,	L"Evidenziatura"
-	uGlobal_SCipherDES,	L"DES [deprecato]"
-	uGlobal_SCipher3DES,	L"3DES"
-	uGlobal_SCipherIce,	L"Ice [deprecato]"
-	uGlobal_SCipherThinIce,	L"Thin Ice [deprecato]"
-	uGlobal_SCipherIce2,	L"Ice 2"
-	uGlobal_SCipherIDEA,	L"IDEA"
-	uGlobal_SCipherMARS,	L"MARS"
+	uGlobal_SEventAll,	L"Tutti"
+	uGlobal_SEventAllEvents,	L"Tutti gli eventi"
+	uGlobal_SEventCustom,	L"Personalizzato"
+	uGlobal_SEventToday,	L"Oggi"
+	uGlobal_SEventTomorrow,	L"Domani"
+	uGlobal_SEventThisWeek,	L"Questa settimana"
+	uGlobal_SEventThisMonth,	L"Questo mese"
 	uGlobal_SCipherMisty1,	L"Misty1 [deprecato]"
 	uGlobal_SCipherRC2,	L"RC2 [deprecato]"
 	uGlobal_SCipherRC4,	L"RC4 [deprecato]"
@@ -1302,13 +1279,13 @@ BEGIN
 	uGlobal_SCipherSerpent,	L"Serpent"
 	uGlobal_SCipherTEA,	L"TEA [deprecato]"
 	uGlobal_SCipherTwofish,	L"Twofish"
-	uGlobal_SReplaceFieldValueDlgTitle,	L"Sostituisci valore campo"
-	uGlobal_SReplaceFieldValueDlgSearchLabel,	L"Nome &campo:"
-	uGlobal_SReplaceFieldValueDlgReplaceLabel,	L"&Nuovo valore campo:"
-	uGlobal_SReplaceRoleDlgTitle,	L"Sostituisci ruolo"
-	uGlobal_SReplaceRoleDlgSearchLabel,	L"&Ruolo:"
-	uGlobal_SReplaceRoleDlgReplaceLabel,	L"&Nuovo ruolo:"
-	uGlobal_SCannotCheckForUpdates,	L"Impossibile controllare gli aggiornamenti."
+	uGlobal_SHashNone,	L"(nessuno)"
+	uGlobal_SHashHaval,	L"Haval"
+	uGlobal_SHashMD4,	L"MD4"
+	uGlobal_SHashMD5,	L"MD5 [deprecato]"
+	uGlobal_SHashRipeMD128,	L"RipeMD-128"
+	uGlobal_SHashSHA1,	L"SHA-1 [deprecato]"
+	uGlobal_SHashSHA256,	L"SHA-256"
 	uGlobal_SNoAvailableUpdates,	L"Nessun aggiornamento disponibile."
 	uGlobal_SDownloadUpdatesQuery,	L"Version %d.%d.%d is available. Download?"
 	uGlobal_SApplyAtNextStartup,	L"Il cambiamento avr\x00E0 effetto al prossimo avvio dell'applicazione."
@@ -1318,13 +1295,13 @@ BEGIN
 	uGlobal_SCipherBlowfish,	L"Blowfish [deprecato]"
 	uGlobal_SCipherCast128,	L"Cast-128"
 	uGlobal_SCipherCast256,	L"Cast-256"
-	uGlobal_SRemoveFromMRUListQuery,	L"File non trovato. Rimuovere dalla lista file recenti?"
-	uGlobal_SSaveChangesQuery,	L"Salvare i cambiamenti?"
-	uGlobal_SFileOverwriteQuery,	L"Il file esiste gi\x00E0. Sovrascrivere?"
-	uGlobal_SObjPropsDlgTitle,	L"Propriet\x00E0 oggetto"
-	uGlobal_SRulePropsDlgTitle,	L"Propriet\x00E0 regola"
-	uGlobal_SDeleteRelationQuery,	L"Eliminare la relazione selezionata?"
-	uGlobal_SDeleteRuleQuery,	L"Eliminare le regole selezionate?"
+	uGlobal_SCipherDES,	L"DES [deprecato]"
+	uGlobal_SCipher3DES,	L"3DES"
+	uGlobal_SCipherIce,	L"Ice [deprecato]"
+	uGlobal_SCipherThinIce,	L"Thin Ice [deprecato]"
+	uGlobal_SCipherIce2,	L"Ice 2"
+	uGlobal_SCipherIDEA,	L"IDEA"
+	uGlobal_SCipherMARS,	L"MARS"
 	uGlobal_SInstallOnRemovableMediaPrompt,	L"O2 pu\x00F2 installare se stesso su una unit\x00E0 rimovibile. L'unit\x00E0 deve avere %.1f MB liberi."
 	uGlobal_SInstallOnRemovableMediaFolderPrompt,	L"Seleziona la cartella di installazione:"
 	uGlobal_SSettingsOverwriteQuery,	L"Il file di configurazione esiste gi\x00E0. Sovrascrivere?"
@@ -1334,13 +1311,13 @@ BEGIN
 	uGlobal_SReplaceFieldNameDlgTitle,	L"Sostituisci nome campo"
 	uGlobal_SReplaceFieldNameDlgSearchLabel,	L"Nome &campo:"
 	uGlobal_SReplaceFieldNameDlgReplaceLabel,	L"&Nuovo nome campo:"
-	uGlobal_STagsNone,	L"(nessuna)"
-	uGlobal_SStatusItemsCount,	L"Elementi: %d"
-	uGlobal_SStatusSelectedItemsCount,	L"Elementi selezionati: %d"
-	uGlobal_SStatusObject,	L"%s Etichette: %s"
-	uGlobal_SStatusPagesCount,	L"Pagine: %d"
-	uGlobal_SFieldsViewHint,	L"Doppio-click: copia il valore del campo"
-	uGlobal_SFieldsViewHint2,	L"Ctrl+Click: apre il collegamento"
+	uGlobal_SReplaceFieldValueDlgTitle,	L"Sostituisci valore campo"
+	uGlobal_SReplaceFieldValueDlgSearchLabel,	L"Nome &campo:"
+	uGlobal_SReplaceFieldValueDlgReplaceLabel,	L"&Nuovo valore campo:"
+	uGlobal_SReplaceRoleDlgTitle,	L"Sostituisci ruolo"
+	uGlobal_SReplaceRoleDlgSearchLabel,	L"&Ruolo:"
+	uGlobal_SReplaceRoleDlgReplaceLabel,	L"&Nuovo ruolo:"
+	uGlobal_SCannotCheckForUpdates,	L"Impossibile controllare gli aggiornamenti."
 	uGlobal_SRelationsViewHint,	L"Doppio-click: modifica propriet\x00E0"
 	uGlobal_SRelationsViewHint2,	L"Ctrl+Click: vai all'oggetto"
 	uGlobal_SOpenFileFilter,	L"File O2|*.o2|Tutti i file|*.*"
@@ -1350,13 +1327,13 @@ BEGIN
 	uGlobal_SExportFileFilter,	L"File O2|*.o2|File XML|*.xml|File iCalendar|*.ics"
 	uGlobal_SExportSettingsFileFilter,	L"File di configurazione di O2|*.xml|Tutti i file|*.*"
 	uGlobal_SDeleteObjectsQuery,	L"Eliminare gli oggetti selezionati?"
-	Xml_XMLConst_SNoAttributes,	L"Attributes are not supported on this node type"
-	Xml_XMLConst_SInvalidNodeType,	L"Invalid node type"
-	Xml_XMLConst_SMismatchedRegItems,	L"Mismatched paramaters to RegisterChildNodes"
-	Xml_XMLConst_SNotSingleTextNode,	L"Element ""%s"" does not contain a single text node"
-	Xml_XMLConst_SNoDOMParseOptions,	L"DOM Implementation does not support IDOMParseOptions"
-	Xml_XMLConst_SMissingItemTag,	L"ItemTag property is not initialized"
-	Xml_XMLConst_SNodeReadOnly,	L"Node is readonly"
+	uGlobal_SRemoveFromMRUListQuery,	L"File non trovato. Rimuovere dalla lista file recenti?"
+	uGlobal_SSaveChangesQuery,	L"Salvare i cambiamenti?"
+	uGlobal_SFileOverwriteQuery,	L"Il file esiste gi\x00E0. Sovrascrivere?"
+	uGlobal_SObjPropsDlgTitle,	L"Propriet\x00E0 oggetto"
+	uGlobal_SRulePropsDlgTitle,	L"Propriet\x00E0 regola"
+	uGlobal_SDeleteRelationQuery,	L"Eliminare la relazione selezionata?"
+	uGlobal_SDeleteRuleQuery,	L"Eliminare le regole selezionate?"
 	Xml_XMLConst_SNoRefresh,	L"Refresh is only supported if the FileName or XML properties are set"
 	Xml_XMLConst_SMissingFileName,	L"FileName cannot be blank"
 	Xml_XMLConst_SLine,	L"Line"
@@ -1366,13 +1343,13 @@ BEGIN
 	uO2File_SUnsupportedHash,	L"Algoritmo di hash non supportato ($%.2x)."
 	uO2File_SWrongPassword,	L"Password errata."
 	uGlobal_STags,	L"Etichette"
-	uO2Objects_SObjectAlreadyExists,	L"L'oggetto %s esiste gi\x00E0."
-	uO2Objects_SObjectNameAlreadyExists,	L"Un oggetto di nome ""%s"" esiste gi\x00E0."
-	uO2Objects_SFieldAlreadyExists,	L"Un campo di nome ""%s"" esiste gi\x00E0."
-	uO2Relations_SRelationAlreadyExists,	L"La relazione %s esiste gi\x00E0."
-	uO2Rules_SRuleAlreadyExists,	L"Una regola di nome ""%s"" esiste gi\x00E0."
-	uO2Rules_SParamAlreadyExists,	L"Un parametro di nome ""%s"" esiste gi\x00E0."
-	Xml_XMLConst_SDuplicateRegistration,	L"""%s"" DOMImplementation already registered"
+	uGlobal_STagsNone,	L"(nessuna)"
+	uGlobal_SStatusItemsCount,	L"Elementi: %d"
+	uGlobal_SStatusSelectedItemsCount,	L"Elementi selezionati: %d"
+	uGlobal_SStatusObject,	L"%s Etichette: %s"
+	uGlobal_SStatusPagesCount,	L"Pagine: %d"
+	uGlobal_SFieldsViewHint,	L"Doppio-click: copia il valore del campo"
+	uGlobal_SFieldsViewHint2,	L"Ctrl+Click: apre il collegamento"
 	Xml_XMLConst_SNoMatchingDOMVendor,	L"No matching DOM Vendor: ""%s"""
 	Xml_XMLConst_SNoDOMNodeEx,	L"Selected DOM Vendor does not support this property or method"
 	Xml_XMLConst_SDOMNotSupported,	L"Property or Method ""%s"" is not supported by DOM Vendor ""%s"""
@@ -1382,13 +1359,13 @@ BEGIN
 	Xml_XMLConst_SNotActive,	L"No active document"
 	Xml_XMLConst_SNodeNotFound,	L"Node ""%s"" not found"
 	Xml_XMLConst_SMissingNode,	L"IDOMNode required"
-	JvResources_RsClGrayText,	L"Dimmed text"
-	JvResources_RsClBtnText,	L"Button text"
-	JvResources_RsClInactiveCaptionText,	L"Inactive window title bar text"
-	JvResources_RsClBtnHighlight,	L"Button highlight"
-	JvResources_RsCl3DDkShadow,	L"Dark shadow 3D elements"
-	JvResources_RsCl3DLight,	L"Highlight 3D elements"
-	JvResources_RsClInfoText,	L"Tooltip text"
+	Xml_XMLConst_SNoAttributes,	L"Attributes are not supported on this node type"
+	Xml_XMLConst_SInvalidNodeType,	L"Invalid node type"
+	Xml_XMLConst_SMismatchedRegItems,	L"Mismatched paramaters to RegisterChildNodes"
+	Xml_XMLConst_SNotSingleTextNode,	L"Element ""%s"" does not contain a single text node"
+	Xml_XMLConst_SNoDOMParseOptions,	L"DOM Implementation does not support IDOMParseOptions"
+	Xml_XMLConst_SMissingItemTag,	L"ItemTag property is not initialized"
+	Xml_XMLConst_SNodeReadOnly,	L"Node is readonly"
 	JvResources_RsClInfoBk,	L"Tooltip background"
 	JvResources_RsGradientActiveCaption,	L"Gradient Active Caption"
 	JvResources_RsGradientInactiveCaption,	L"Gradient Inactive Caption"
@@ -1398,13 +1375,13 @@ BEGIN
 	Vcl_Imaging_JConsts_sChangeJPGSize,	L"Cannot change the size of a JPEG image"
 	Vcl_Imaging_JConsts_sJPEGError,	L"JPEG error #%d"
 	Vcl_Imaging_JConsts_sJPEGImageFile,	L"JPEG Image File"
-	JvResources_RsClBackground,	L"Desktop background"
-	JvResources_RsClActiveCaption,	L"Active window title bar"
-	JvResources_RsClInactiveCaption,	L"Inactive window title bar"
-	JvResources_RsClMenu,	L"Menu background"
-	JvResources_RsClWindow,	L"Window background"
-	JvResources_RsClWindowFrame,	L"Window frame"
-	JvResources_RsClMenuText,	L"Menu text"
+	uO2Objects_SObjectAlreadyExists,	L"L'oggetto %s esiste gi\x00E0."
+	uO2Objects_SObjectNameAlreadyExists,	L"Un oggetto di nome ""%s"" esiste gi\x00E0."
+	uO2Objects_SFieldAlreadyExists,	L"Un campo di nome ""%s"" esiste gi\x00E0."
+	uO2Relations_SRelationAlreadyExists,	L"La relazione %s esiste gi\x00E0."
+	uO2Rules_SRuleAlreadyExists,	L"Una regola di nome ""%s"" esiste gi\x00E0."
+	uO2Rules_SParamAlreadyExists,	L"Un parametro di nome ""%s"" esiste gi\x00E0."
+	Xml_XMLConst_SDuplicateRegistration,	L"""%s"" DOMImplementation already registered"
 	JvResources_RsClWindowText,	L"Window text"
 	JvResources_RsClCaptionText,	L"Active window title bar text"
 	JvResources_RsClActiveBorder,	L"Active window border"
@@ -1414,13 +1391,13 @@ BEGIN
 	JvResources_RsClHighlightText,	L"Selection text"
 	JvResources_RsClBtnFace,	L"Button face"
 	JvResources_RsClBtnShadow,	L"Button shadow"
-	JvResources_RsClViolet,	L"Violet"
-	JvResources_RsClGray40,	L"Gray 40%"
-	JvResources_RsClPink,	L"Pink"
-	JvResources_RsClGold,	L"Gold"
-	JvResources_RsClBrightGreen,	L"Bright Green"
-	JvResources_RsClTurquoise,	L"Turquoise"
-	JvResources_RsClPlum,	L"Plum"
+	JvResources_RsClGrayText,	L"Dimmed text"
+	JvResources_RsClBtnText,	L"Button text"
+	JvResources_RsClInactiveCaptionText,	L"Inactive window title bar text"
+	JvResources_RsClBtnHighlight,	L"Button highlight"
+	JvResources_RsCl3DDkShadow,	L"Dark shadow 3D elements"
+	JvResources_RsCl3DLight,	L"Highlight 3D elements"
+	JvResources_RsClInfoText,	L"Tooltip text"
 	JvResources_RsClGray25,	L"Gray 25%"
 	JvResources_RsClRose,	L"Rose"
 	JvResources_RsClTan,	L"Tan"
@@ -1430,13 +1407,13 @@ BEGIN
 	JvResources_RsClPaleBlue,	L"Pale Blue"
 	JvResources_RsClLavender,	L"Lavender"
 	JvResources_RsClScrollBar,	L"Scrollbar"
-	JvResources_RsClMedGray,	L"Medium gray"
-	JvResources_RsClBrown,	L"Brown"
-	JvResources_RsClOliveGreen,	L"Olive Green"
-	JvResources_RsClDarkGreen,	L"Dark Green"
-	JvResources_RsClDarkTeal,	L"Dark Teal"
-	JvResources_RsClDarkBlue,	L"Dark Blue"
-	JvResources_RsClIndigo,	L"Indigo"
+	JvResources_RsClBackground,	L"Desktop background"
+	JvResources_RsClActiveCaption,	L"Active window title bar"
+	JvResources_RsClInactiveCaption,	L"Inactive window title bar"
+	JvResources_RsClMenu,	L"Menu background"
+	JvResources_RsClWindow,	L"Window background"
+	JvResources_RsClWindowFrame,	L"Window frame"
+	JvResources_RsClMenuText,	L"Menu text"
 	JvResources_RsClGray80,	L"Gray 80%"
 	JvResources_RsClDarkRed,	L"Dark Red"
 	JvResources_RsClOrange,	L"Orange"
@@ -1446,13 +1423,13 @@ BEGIN
 	JvResources_RsClLightOrange,	L"Light Orange"
 	JvResources_RsClSeaGreen,	L"Sea Green"
 	JvResources_RsClLightBlue,	L"Light Blue"
-	JvResources_RsClOlive,	L"Olive green"
-	JvResources_RsClNavy,	L"Navy blue"
-	JvResources_RsClPurple,	L"Purple"
-	JvResources_RsClTeal,	L"Teal"
-	JvResources_RsClGray,	L"Gray"
-	JvResources_RsClSilver,	L"Silver"
-	JvResources_RsClRed,	L"Red"
+	JvResources_RsClViolet,	L"Violet"
+	JvResources_RsClGray40,	L"Gray 40%"
+	JvResources_RsClPink,	L"Pink"
+	JvResources_RsClGold,	L"Gold"
+	JvResources_RsClBrightGreen,	L"Bright Green"
+	JvResources_RsClTurquoise,	L"Turquoise"
+	JvResources_RsClPlum,	L"Plum"
 	JvResources_RsClLime,	L"Lime"
 	JvResources_RsClYellow,	L"Yellow"
 	JvResources_RsClBlue,	L"Blue"
@@ -1462,13 +1439,13 @@ BEGIN
 	JvResources_RsClMoneyGreen,	L"Money green"
 	JvResources_RsClSkyBlue,	L"Sky blue"
 	JvResources_RsClCream,	L"Cream"
-	JclResources_RsELibraryNotFound,	L"Library not found: %s"
-	JclResources_RsEFunctionNotFound,	L"Function not found: %s.%s"
-	JvResources_RsUndoItem,	L"&Undo"
-	JvResources_RsCutItem,	L"Cu&t"
-	JvResources_RsCopyItem,	L"&Copy"
-	JvResources_RsPasteItem,	L"&Paste"
-	JvResources_RsDeleteItem,	L"&Delete"
+	JvResources_RsClMedGray,	L"Medium gray"
+	JvResources_RsClBrown,	L"Brown"
+	JvResources_RsClOliveGreen,	L"Olive Green"
+	JvResources_RsClDarkGreen,	L"Dark Green"
+	JvResources_RsClDarkTeal,	L"Dark Teal"
+	JvResources_RsClDarkBlue,	L"Dark Blue"
+	JvResources_RsClIndigo,	L"Indigo"
 	JvResources_RsSelectAllItem,	L"Select &All"
 	JvResources_RsEInvalidCaretOwner,	L"%s: cannot be created without a valid Owner"
 	JvResources_RsECannotPerfromThisOperationWhilePrin,	L"Cannot perfrom this operation while printing!"
@@ -1478,13 +1455,13 @@ BEGIN
 	JvResources_RsClBlack,	L"Black"
 	JvResources_RsClMaroon,	L"Maroon"
 	JvResources_RsClGreen,	L"Green"
-	JclResources_RsIntelCacheDescrDD,	L"3rd-level cache: 3 MByte, 12-way set associative, 64 byte line size"
-	JclResources_RsIntelCacheDescrDE,	L"3rd-level cache: 6 MByte, 12-way set associative, 64 byte line size"
-	JclResources_RsIntelCacheDescrE2,	L"3rd-level cache: 2 MByte, 16-way set associative, 64 byte line size"
-	JclResources_RsIntelCacheDescrE3,	L"3rd-level cache: 4 MByte, 16-way set associative, 64 byte line size"
-	JclResources_RsIntelCacheDescrE4,	L"3rd-level cache: 8 MByte, 16-way set associative, 64 byte line size"
-	JclResources_RsIntelCacheDescrEA,	L"3rd-level cache: 12 MByte, 24-way set associative, 64 byte line size"
-	JclResources_RsIntelCacheDescrEB,	L"3rd-level cache: 18 MByte, 24-way set associative, 64 byte line size"
+	JvResources_RsClOlive,	L"Olive green"
+	JvResources_RsClNavy,	L"Navy blue"
+	JvResources_RsClPurple,	L"Purple"
+	JvResources_RsClTeal,	L"Teal"
+	JvResources_RsClGray,	L"Gray"
+	JvResources_RsClSilver,	L"Silver"
+	JvResources_RsClRed,	L"Red"
 	JclResources_RsIntelCacheDescrEC,	L"3rd-level cache: 24 MByte, 24-way set associative, 64 byte line size"
 	JclResources_RsIntelCacheDescrF0,	L"64-Byte Prefetching"
 	JclResources_RsIntelCacheDescrF1,	L"128-Byte Prefetching"
@@ -1494,13 +1471,13 @@ BEGIN
 	JclResources_RsOSVersionWin81,	L"Windows 8.1"
 	JclResources_RsOSVersionWinServer2012R2,	L"Windows Server 2012 R2"
 	JclResources_RsWin32Error,	L"Win32 error: %s (%u)%s%s"
-	JclResources_RsIntelCacheDescr87,	L"2nd-level cache: 1 MByte, 8-way set associative, 64 byte line size"
-	JclResources_RsIntelCacheDescrB0,	L"Instruction TLB: 4 KByte pages, 4-way set associative, 128 entries"
-	JclResources_RsIntelCacheDescrB1,	L"Instruction TLB: 2 MByte pages, 4-way, 8 entries or 4 MByte pages, 4-way, 4 entries"
-	JclResources_RsIntelCacheDescrB2,	L"Instruction TLB: 4 KByte pages, 4-way set associative, 64 entries"
-	JclResources_RsIntelCacheDescrB3,	L"Data TLB: 4 KByte pages, 4-way set associative, 128 entries"
-	JclResources_RsIntelCacheDescrB4,	L"Data TLB1: 4 KByte pages, 4-way set associative, 256 entries"
-	JclResources_RsIntelCacheDescrBA,	L"Data TLB1: 4 KByte pages, 4-way set associative, 64 entries"
+	JclResources_RsELibraryNotFound,	L"Library not found: %s"
+	JclResources_RsEFunctionNotFound,	L"Function not found: %s.%s"
+	JvResources_RsUndoItem,	L"&Undo"
+	JvResources_RsCutItem,	L"Cu&t"
+	JvResources_RsCopyItem,	L"&Copy"
+	JvResources_RsPasteItem,	L"&Paste"
+	JvResources_RsDeleteItem,	L"&Delete"
 	JclResources_RsIntelCacheDescrC0,	L"Data TLB: 4 KByte and 4 MByte pages, 4-way set associative, 8 entries"
 	JclResources_RsIntelCacheDescrCA,	L"Shared 2nd-Level TLB: 4 KByte pages, 4-way associative, 512 entries"
 	JclResources_RsIntelCacheDescrD0,	L"3rd-level cache: 512 KByte, 4-way set associative, 64 byte line size"
@@ -1510,13 +1487,13 @@ BEGIN
 	JclResources_RsIntelCacheDescrD7,	L"3rd-level cache: 2 MByte, 8-way set associative, 64 byte line size"
 	JclResources_RsIntelCacheDescrD8,	L"3rd-level cache: 4 MByte, 8-way set associative, 64 byte line size"
 	JclResources_RsIntelCacheDescrDC,	L"3rd-level cache: 1.5 MByte, 12-way set associative, 64 byte line size"
-	JclResources_RsIntelCacheDescr72,	L"Trace cache: 32 K-Ops, 8-way set associative"
-	JclResources_RsIntelCacheDescr73,	L"Trace cache: 64 K-Ops, 8-way set associative"
-	JclResources_RsIntelCacheDescr76,	L"Instruction TLB: 2M/4M pages, fully associative, 8 entries"
-	JclResources_RsIntelCacheDescr78,	L"2nd-level cache: 1 MBytes, 4-way set associative, 64 bytes line size"
-	JclResources_RsIntelCacheDescr79,	L"2nd-level cache: 128 KBytes, 8-way set associative, 64 bytes line size, 2 lines per sector"
-	JclResources_RsIntelCacheDescr7A,	L"2nd-level cache: 256 KBytes, 8-way set associative, 64 bytes line size, 2 lines per sector"
-	JclResources_RsIntelCacheDescr7B,	L"2nd-level cache: 512 KBytes, 8-way set associative, 64 bytes line size, 2 lines per sector"
+	JclResources_RsIntelCacheDescrDD,	L"3rd-level cache: 3 MByte, 12-way set associative, 64 byte line size"
+	JclResources_RsIntelCacheDescrDE,	L"3rd-level cache: 6 MByte, 12-way set associative, 64 byte line size"
+	JclResources_RsIntelCacheDescrE2,	L"3rd-level cache: 2 MByte, 16-way set associative, 64 byte line size"
+	JclResources_RsIntelCacheDescrE3,	L"3rd-level cache: 4 MByte, 16-way set associative, 64 byte line size"
+	JclResources_RsIntelCacheDescrE4,	L"3rd-level cache: 8 MByte, 16-way set associative, 64 byte line size"
+	JclResources_RsIntelCacheDescrEA,	L"3rd-level cache: 12 MByte, 24-way set associative, 64 byte line size"
+	JclResources_RsIntelCacheDescrEB,	L"3rd-level cache: 18 MByte, 24-way set associative, 64 byte line size"
 	JclResources_RsIntelCacheDescr7C,	L"2nd-level cache: 1 MBytes, 8-way set associative, 64 bytes line size, 2 lines per sector"
 	JclResources_RsIntelCacheDescr7D,	L"2nd-level cache: 2 MBytes, 8-way set associative, 64 byte line size"
 	JclResources_RsIntelCacheDescr7F,	L"2nd-level cache: 512 KBytes, 2-way set associative, 64 byte line size"
@@ -1526,13 +1503,13 @@ BEGIN
 	JclResources_RsIntelCacheDescr84,	L"2nd-level cache: 1 MBytes, 8-way associative, 32 byte line size"
 	JclResources_RsIntelCacheDescr85,	L"2nd-level cache: 2 MBytes, 8-way associative, 32 byte line size"
 	JclResources_RsIntelCacheDescr86,	L"2nd-level cache: 512 KByte, 4-way set associative, 64 byte line size"
-	JclResources_RsIntelCacheDescr51,	L"Instruction TLB: 4 KByte and 2 MByte or 4 MByte pages, 128 Entries"
-	JclResources_RsIntelCacheDescr52,	L"Instruction TLB: 4 KByte and 2 MByte or 4 MByte pages, 256 Entries"
-	JclResources_RsIntelCacheDescr55,	L"Instruction TLB: 2-MByte or 4-MByte pages, fully associative, 7 entries"
-	JclResources_RsIntelCacheDescr56,	L"Data TLB0: 4 MByte pages, 4-way set associative, 16 entries"
-	JclResources_RsIntelCacheDescr57,	L"Data TLB0: 4 KByte pages, 4-way associative, 16 entries"
-	JclResources_RsIntelCacheDescr59,	L"Data TLB0: 4 KByte pages, fully associative, 16 entries"
-	JclResources_RsIntelCacheDescr5A,	L"Data TLB0: 2 MByte or 4 MByte pages, 4-way set associative, 32 entries"
+	JclResources_RsIntelCacheDescr87,	L"2nd-level cache: 1 MByte, 8-way set associative, 64 byte line size"
+	JclResources_RsIntelCacheDescrB0,	L"Instruction TLB: 4 KByte pages, 4-way set associative, 128 entries"
+	JclResources_RsIntelCacheDescrB1,	L"Instruction TLB: 2 MByte pages, 4-way, 8 entries or 4 MByte pages, 4-way, 4 entries"
+	JclResources_RsIntelCacheDescrB2,	L"Instruction TLB: 4 KByte pages, 4-way set associative, 64 entries"
+	JclResources_RsIntelCacheDescrB3,	L"Data TLB: 4 KByte pages, 4-way set associative, 128 entries"
+	JclResources_RsIntelCacheDescrB4,	L"Data TLB1: 4 KByte pages, 4-way set associative, 256 entries"
+	JclResources_RsIntelCacheDescrBA,	L"Data TLB1: 4 KByte pages, 4-way set associative, 64 entries"
 	JclResources_RsIntelCacheDescr5B,	L"Data TLB: 4 KByte and 4 MByte pages, 64 Entries"
 	JclResources_RsIntelCacheDescr5C,	L"Data TLB: 4 KByte and 4 MByte pages, 128 Entries"
 	JclResources_RsIntelCacheDescr5D,	L"Data TLB: 4 KByte and 4 MByte pages, 256 Entries"
@@ -1542,13 +1519,13 @@ BEGIN
 	JclResources_RsIntelCacheDescr68,	L"1st-level data cache: 32 KBytes, 4-way set associative, 64 byte line size"
 	JclResources_RsIntelCacheDescr70,	L"Trace cache: 12 K-Ops, 8-way set associative"
 	JclResources_RsIntelCacheDescr71,	L"Trace cache: 16 K-Ops, 8-way set associative"
-	JclResources_RsIntelCacheDescr41,	L"2nd-level cache: 128 KBytes, 4-way set associative, 32 byte line size"
-	JclResources_RsIntelCacheDescr42,	L"2nd-level cache: 256 KBytes, 4-way set associative, 32 byte line size"
-	JclResources_RsIntelCacheDescr43,	L"2nd-level cache: 512 KBytes, 4-way set associative, 32 byte line size"
-	JclResources_RsIntelCacheDescr44,	L"2nd-level cache: 1 MBytes, 4-way set associative, 32 byte line size"
-	JclResources_RsIntelCacheDescr45,	L"2nd-level cache: 2 MBytes, 4-way set associative, 32 byte line size"
-	JclResources_RsIntelCacheDescr46,	L"3rd-level cache: 4 MBytes, 4-way set associative, 64 byte line size"
-	JclResources_RsIntelCacheDescr47,	L"3rd-level cache: 8 MBytes, 4-way set associative, 64 byte line size"
+	JclResources_RsIntelCacheDescr72,	L"Trace cache: 32 K-Ops, 8-way set associative"
+	JclResources_RsIntelCacheDescr73,	L"Trace cache: 64 K-Ops, 8-way set associative"
+	JclResources_RsIntelCacheDescr76,	L"Instruction TLB: 2M/4M pages, fully associative, 8 entries"
+	JclResources_RsIntelCacheDescr78,	L"2nd-level cache: 1 MBytes, 4-way set associative, 64 bytes line size"
+	JclResources_RsIntelCacheDescr79,	L"2nd-level cache: 128 KBytes, 8-way set associative, 64 bytes line size, 2 lines per sector"
+	JclResources_RsIntelCacheDescr7A,	L"2nd-level cache: 256 KBytes, 8-way set associative, 64 bytes line size, 2 lines per sector"
+	JclResources_RsIntelCacheDescr7B,	L"2nd-level cache: 512 KBytes, 8-way set associative, 64 bytes line size, 2 lines per sector"
 	JclResources_RsIntelCacheDescr48,	L"3rd-level cache: 8 MByte, 8-way set associative, 64 byte line size"
 	JclResources_RsIntelCacheDescr49,	L"2nd-level cache: 4 MBytes, 16-way set associative, 64 byte line size"
 	JclResources_RsIntelCacheDescr4A,	L"3rd-level cache: 6MByte, 12-way set associative, 64 byte line size"
@@ -1558,13 +1535,13 @@ BEGIN
 	JclResources_RsIntelCacheDescr4E,	L"2nd-level cache: 6MByte, 24-way set associative, 64 byte line size"
 	JclResources_RsIntelCacheDescr4F,	L"Instruction TLB: 4 KByte pages, 32 Entries"
 	JclResources_RsIntelCacheDescr50,	L"Instruction TLB: 4 KByte and 2 MByte or 4 MByte pages, 64 Entries"
-	JclResources_RsIntelCacheDescr0D,	L"1st level data cache: 16 KBytes, 4-way set associative, 64 byte line size"
-	JclResources_RsIntelCacheDescr0E,	L"1st level data cache: 24 KBytes, 6-way set associative, 64 byte line size"
-	JclResources_RsIntelCacheDescr21,	L"2nd level cache: 256 KBytes, 8-way set associative, 64 byte line size"
-	JclResources_RsIntelCacheDescr22,	L"3rd level cache: 512 KBytes, 4-way set associative, 64 byte line size, 2 lines per sector"
-	JclResources_RsIntelCacheDescr23,	L"3rd level cache: 1 MBytes, 8-way set associative, 64 byte line size, 2 lines per sector"
-	JclResources_RsIntelCacheDescr25,	L"3rd level cache: 2 MBytes, 8-way set associative, 64 byte line size, 2 lines per sector"
-	JclResources_RsIntelCacheDescr29,	L"3rd level cache: 4 MBytes, 8-way set associative, 64 byte line size, 2 lines per sector"
+	JclResources_RsIntelCacheDescr51,	L"Instruction TLB: 4 KByte and 2 MByte or 4 MByte pages, 128 Entries"
+	JclResources_RsIntelCacheDescr52,	L"Instruction TLB: 4 KByte and 2 MByte or 4 MByte pages, 256 Entries"
+	JclResources_RsIntelCacheDescr55,	L"Instruction TLB: 2-MByte or 4-MByte pages, fully associative, 7 entries"
+	JclResources_RsIntelCacheDescr56,	L"Data TLB0: 4 MByte pages, 4-way set associative, 16 entries"
+	JclResources_RsIntelCacheDescr57,	L"Data TLB0: 4 KByte pages, 4-way associative, 16 entries"
+	JclResources_RsIntelCacheDescr59,	L"Data TLB0: 4 KByte pages, fully associative, 16 entries"
+	JclResources_RsIntelCacheDescr5A,	L"Data TLB0: 2 MByte or 4 MByte pages, 4-way set associative, 32 entries"
 	JclResources_RsIntelCacheDescr2C,	L"1st level data cache: 32 KBytes, 8-way set associative, 64 byte line size"
 	JclResources_RsIntelCacheDescr30,	L"1st level instruction cache: 32 KBytes, 8-way set associative, 64 byte line size"
 	JclResources_RsIntelCacheDescr39,	L"2nd-level cache: 128 KBytes, 4-way set associative, sectored cache, 64-byte line size"
@@ -1574,13 +1551,13 @@ BEGIN
 	JclResources_RsIntelCacheDescr3D,	L"2nd-level cache: 384 KBytes, 6-way set associative, sectored cache, 64-byte line size"
 	JclResources_RsIntelCacheDescr3E,	L"2nd-level cache: 512 KBytes, 4-way set associative, sectored cache, 64-byte line size"
 	JclResources_RsIntelCacheDescr40,	L"No 2nd-level cache or, if processor contains a valid 2nd-level cache, no 3rd-level cache"
-	JclResources_RsUnableToOpenKeyRead,	L"Unable to open key ""%s\\%s"" for read"
-	JclResources_RsUnableToAccessValue,	L"Unable to open key ""%s\\%s"" and access value ""%s"""
-	JclResources_RsWrongDataType,	L"""%s\\%s\\%s"" is of wrong kind or size"
-	JclResources_RsInconsistentPath,	L"""%s"" does not match RootKey"
-	JclResources_RsIntelCacheDescr00,	L"Null descriptor"
-	JclResources_RsIntelCacheDescr01,	L"Instruction TLB: 4 KByte pages, 4-way set associative, 32 entries"
-	JclResources_RsIntelCacheDescr02,	L"Instruction TLB: 4 MByte pages, 4-way set associative, 2 entries"
+	JclResources_RsIntelCacheDescr41,	L"2nd-level cache: 128 KBytes, 4-way set associative, 32 byte line size"
+	JclResources_RsIntelCacheDescr42,	L"2nd-level cache: 256 KBytes, 4-way set associative, 32 byte line size"
+	JclResources_RsIntelCacheDescr43,	L"2nd-level cache: 512 KBytes, 4-way set associative, 32 byte line size"
+	JclResources_RsIntelCacheDescr44,	L"2nd-level cache: 1 MBytes, 4-way set associative, 32 byte line size"
+	JclResources_RsIntelCacheDescr45,	L"2nd-level cache: 2 MBytes, 4-way set associative, 32 byte line size"
+	JclResources_RsIntelCacheDescr46,	L"3rd-level cache: 4 MBytes, 4-way set associative, 64 byte line size"
+	JclResources_RsIntelCacheDescr47,	L"3rd-level cache: 8 MBytes, 4-way set associative, 64 byte line size"
 	JclResources_RsIntelCacheDescr03,	L"Data TLB: 4 KByte pages, 4-way set associative, 64 entries"
 	JclResources_RsIntelCacheDescr04,	L"Data TLB: 4 MByte pages, 4-way set associative, 8 entries"
 	JclResources_RsIntelCacheDescr05,	L"Data TLB1: 4 MByte pages, 4-way set associative, 32 entries"
@@ -1590,13 +1567,13 @@ BEGIN
 	JclResources_RsIntelCacheDescr0A,	L"1st level data cache: 8 KBytes, 2-way set associative, 32 byte line size"
 	JclResources_RsIntelCacheDescr0B,	L"Instruction TLB: 4 MByte pages, 4-way set associative, 4 entries"
 	JclResources_RsIntelCacheDescr0C,	L"1st level data cache: 16 KBytes, 4-way set associative, 32 byte line size"
-	REST_Consts_sResponseContentIsEmpty,	L"Response content is empty"
-	REST_Consts_sResponseInvalidRootElement,	L"Response RootElement, ""%s"",  is not a valid path for the response JSON"
-	REST_Consts_sNoClientAttached,	L"Request has no client component"
-	REST_Consts_sUnknownRequestMethod,	L"Unknown request-method. Cannot execute request."
-	REST_Consts_sRESTRequestFailed,	L"REST request failed: %s"
-	JclResources_RsEReplacementChar,	L"Failed to get ANSI replacement character"
-	JclResources_RsCannotCreateDir,	L"Impossibile creare la cartella"
+	JclResources_RsIntelCacheDescr0D,	L"1st level data cache: 16 KBytes, 4-way set associative, 64 byte line size"
+	JclResources_RsIntelCacheDescr0E,	L"1st level data cache: 24 KBytes, 6-way set associative, 64 byte line size"
+	JclResources_RsIntelCacheDescr21,	L"2nd level cache: 256 KBytes, 8-way set associative, 64 byte line size"
+	JclResources_RsIntelCacheDescr22,	L"3rd level cache: 512 KBytes, 4-way set associative, 64 byte line size, 2 lines per sector"
+	JclResources_RsIntelCacheDescr23,	L"3rd level cache: 1 MBytes, 8-way set associative, 64 byte line size, 2 lines per sector"
+	JclResources_RsIntelCacheDescr25,	L"3rd level cache: 2 MBytes, 8-way set associative, 64 byte line size, 2 lines per sector"
+	JclResources_RsIntelCacheDescr29,	L"3rd level cache: 4 MBytes, 8-way set associative, 64 byte line size, 2 lines per sector"
 	JclResources_RsEWindowsVersionNotSupported,	L"This windows version is not supported"
 	JclResources_RsEWindowNotValid,	L"The window with handle %d is not valid"
 	JclResources_RsEProcessNotValid,	L"The process with ID %d is not valid"
@@ -1606,6 +1583,29 @@ BEGIN
 	JclResources_RsFileUtilsLanguageIndex,	L"Illegal language index"
 	JclResources_RsFileUtilsEmptyValue,	L"No value was supplied"
 	JclResources_RsFileUtilsValueNotFound,	L"The value %s was not found."
+	JclResources_RsUnableToOpenKeyRead,	L"Unable to open key ""%s\\%s"" for read"
+	JclResources_RsUnableToAccessValue,	L"Unable to open key ""%s\\%s"" and access value ""%s"""
+	JclResources_RsWrongDataType,	L"""%s\\%s\\%s"" is of wrong kind or size"
+	JclResources_RsInconsistentPath,	L"""%s"" does not match RootKey"
+	JclResources_RsIntelCacheDescr00,	L"Null descriptor"
+	JclResources_RsIntelCacheDescr01,	L"Instruction TLB: 4 KByte pages, 4-way set associative, 32 entries"
+	JclResources_RsIntelCacheDescr02,	L"Instruction TLB: 4 MByte pages, 4-way set associative, 2 entries"
+	REST_Consts_sResponseContentIsEmpty,	L"Response content is empty"
+	REST_Consts_sResponseInvalidRootElement,	L"Response RootElement, ""%s"",  is not a valid path for the response JSON"
+	REST_Consts_sNoClientAttached,	L"Request has no client component"
+	REST_Consts_sUnknownRequestMethod,	L"Unknown request-method. Cannot execute request."
+	REST_Consts_sRESTRequestFailed,	L"REST request failed: %s"
+	Vcl_OleConst_SBadPropValue,	L"'%s' is not a valid property value"
+	Vcl_OleConst_SCannotActivate,	L"OLE control activation failed"
+	Vcl_OleConst_SNoWindowHandle,	L"Could not obtain OLE control window handle"
+	Vcl_OleConst_SInvalidLicense,	L"License information for %s is invalid"
+	Vcl_OleConst_SNotLicensed,	L"License information for %s not found. You cannot use this control in design mode"
+	Vcl_OleConst_sNoRunningObject,	L"Unable to retrieve a pointer to a running object registered with OLE for %s/%s"
+	Vcl_EdgeConst_SWebViewFailure,	L"Failed to create Edge browser control"
+	Vcl_EdgeConst_SNoWebView,	L"The underlying WebView2 control is not initialized"
+	IEConst_sNotSupportedByEdge,	L"Operation not supported by Edge WebView2 control"
+	JclResources_RsEReplacementChar,	L"Failed to get ANSI replacement character"
+	JclResources_RsCannotCreateDir,	L"Impossibile creare la cartella"
 	System_Bindings_Consts_sUpperCaseDesc,	L""
 	System_Bindings_Consts_sLowerCaseDesc,	L""
 	Data_Bind_Consts_sNameAttr,	L"Name"
