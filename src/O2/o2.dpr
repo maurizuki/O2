@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2023 the initial Contributor. All rights reserved.              }
+{ 2004-2024 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -43,7 +43,9 @@ uses
   uXmlImportExport in 'uXmlImportExport.pas',
   uO2ImportExport in 'uO2ImportExport.pas',
   uiCalendarExport in 'uiCalendarExport.pas',
-  uPasswordScoreProvider in 'uPasswordScoreProvider.pas';
+  uPasswordScoreProvider in 'uPasswordScoreProvider.pas',
+  uRTFViewer in 'uRTFViewer.pas' {RTFViewer},
+  uHTMLHelper in 'uHTMLHelper.pas';
 
 {$R *.res}
 
@@ -51,5 +53,6 @@ begin
   Application.Initialize;
   Application.Title := 'O2';
   Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(TRTFViewer, RTFViewer);
   Application.Run;
 end.

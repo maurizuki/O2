@@ -11,6 +11,7 @@ library o2;
 {ITE} {DFMFileType} {uPrintPreview.dfm}
 {ITE} {DFMFileType} {uRelationPropsDlg.dfm}
 {ITE} {DFMFileType} {uReplaceDlg.dfm}
+{ITE} {DFMFileType} {uRTFViewer.dfm}
 {ITE} {DFMFileType} {uRulePropsDlg.dfm}
 {ITE} {DFMFileType} {uSetPassword.dfm}
 {ITE} {RCFileType} {o2_DRC.rc}
@@ -24,6 +25,7 @@ library o2;
 {$R 'uPrintPreview.dfm' 'PrintPreview:TForm'}
 {$R 'uRelationPropsDlg.dfm' 'RelationPropsDlg:TForm'}
 {$R 'uReplaceDlg.dfm' 'ReplaceDlg:TForm'}
+{$R 'uRTFViewer.dfm' 'RTFViewer:TForm'}
 {$R 'uRulePropsDlg.dfm' 'RulePropsDlg:TForm'}
 {$R 'uSetPassword.dfm' 'SetPasswordDlg:TForm'}
 {$R 'o2_DRC.res' 'o2_DRC.rc'}

@@ -60,7 +60,7 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.2.1.445;InternalName=O2;LegalCopyright=(C) 2004-2021 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.2.1;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
-        <DCC_UnitSearchPath>..\Library;..\DCPcrypt2;..\DCPcrypt2\Ciphers;..\DCPcrypt2\Hashes;..\Zxcvbn\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <DCC_UnitSearchPath>..\Library;..\DCPcrypt2;..\DCPcrypt2\Ciphers;..\DCPcrypt2\Hashes;..\Markdown;..\Zxcvbn\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_DependencyCheckOutputName>o2.exe</DCC_DependencyCheckOutputName>
@@ -69,10 +69,10 @@
         <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
         <Manifest_File>(None)</Manifest_File>
-        <VerInfo_MinorVer>3</VerInfo_MinorVer>
-        <VerInfo_Release>0</VerInfo_Release>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.3.0.445;InternalName=O2;LegalCopyright=(C) 2004-2023 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.3;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
+        <VerInfo_MinorVer>4</VerInfo_MinorVer>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.4.0.445;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.4;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
+        <VerInfo_Release>0</VerInfo_Release>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
@@ -91,11 +91,11 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_DependencyCheckOutputName>o2.exe</DCC_DependencyCheckOutputName>
         <SanitizedProjectName>o2</SanitizedProjectName>
-        <VerInfo_Build>507</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.3.0.507;InternalName=O2;LegalCopyright=(C) 2004-2023 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.3;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
+        <VerInfo_Build>520</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.4.0.520;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.4;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
+        <VerInfo_MinorVer>4</VerInfo_MinorVer>
         <VerInfo_Release>0</VerInfo_Release>
-        <VerInfo_MinorVer>3</VerInfo_MinorVer>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <Version>7.0</Version>
@@ -108,9 +108,9 @@
         <VerInfo_Debug>true</VerInfo_Debug>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_Build>462</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.3.0.462;InternalName=O2;LegalCopyright=(C) 2004-2023 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.3;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.4.0.462;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.4;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
+        <VerInfo_MinorVer>4</VerInfo_MinorVer>
         <VerInfo_Release>0</VerInfo_Release>
-        <VerInfo_MinorVer>3</VerInfo_MinorVer>
     </PropertyGroup>
     <ProjectExtensions>
         <Borland.Personality>Delphi.Personality.12</Borland.Personality>
@@ -186,7 +186,8 @@
                     <RDP_Source_Files Name="Item11">uReplaceDlg.dfm</RDP_Source_Files>
                     <RDP_Source_Files Name="Item12">uPrintPreview.dfm</RDP_Source_Files>
                     <RDP_Source_Files Name="Item13">uHTMLExport.dfm</RDP_Source_Files>
-                    <RDP_Source_Files Name="Item14">o2.drc</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item14">uRTFViewer.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item15">o2.drc</RDP_Source_Files>
                 </RDP_Source_Files>
             </Delphi.Personality>
             <Platforms>
@@ -984,6 +985,11 @@
         <DCCReference Include="uO2ImportExport.pas"/>
         <DCCReference Include="uiCalendarExport.pas"/>
         <DCCReference Include="uPasswordScoreProvider.pas"/>
+        <DCCReference Include="uRTFViewer.pas">
+            <Form>RTFViewer</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="uHTMLHelper.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2023 the initial Contributor. All rights reserved.              }
+{ 2004-2024 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -26,6 +26,7 @@ type
     FDocumentElementName: string;
     FXML: IXMLDocument;
   protected
+    const SchemaLocation = 'https://maurizuki.github.io/O2/xml/settings.xsd';
     const SettingsIdent = 'Settings';
     const SettingIdent = 'setting';
     const SettingNameIdent = 'name';
@@ -275,6 +276,13 @@ end;
 
 procedure TXmlStorage.SaveToFile(const FileName: string);
 begin
+  if not XML.DocumentElement.HasAttribute('xmlns:xsi') then
+  begin
+    XML.DocumentElement
+      .Attributes['xmlns:xsi'] := 'http://www.w3.org/2001/XMLSchema-instance';
+    XML.DocumentElement
+      .Attributes['xsi:noNamespaceSchemaLocation'] := SchemaLocation;
+  end;
   XML.SaveToFile(FileName);
 end;
 

@@ -157,22 +157,19 @@ object MainForm: TMainForm
       object tsNotes: TTabSheet
         Caption = 'Notes'
         ImageIndex = 1
-        object Notes: TMemo
-          AlignWithMargins = True
-          Left = 3
-          Top = 3
-          Width = 576
-          Height = 166
+        object NotesView: TWebBrowser
+          Left = 0
+          Top = 0
+          Width = 582
+          Height = 172
           Align = alClient
-          Font.Charset = ANSI_CHARSET
-          Font.Color = clWindowText
-          Font.Height = -13
-          Font.Name = 'Courier New'
-          Font.Style = []
-          ParentFont = False
-          ReadOnly = True
-          ScrollBars = ssVertical
           TabOrder = 0
+          ControlData = {
+            4C000000273C0000C71100000100000001020000000000000000000000000000
+            000000004C000000000000000000000001000000E0D057007335CF11AE690800
+            2B2E126208000000000000004C0000000114020000000000C000000000000046
+            8000000000000000000000000000000000000000000000000000000000000000
+            00000000000000000100000000000000000000000000000000000000}
         end
       end
       object tsRelations: TTabSheet
@@ -4670,6 +4667,7 @@ object MainForm: TMainForm
     OnActivate = ApplicationEventsActivate
     OnDeactivate = ApplicationEventsDeactivate
     OnIdle = ApplicationEventsIdle
+    OnMessage = ApplicationEventsMessage
     Left = 392
     Top = 40
   end
@@ -4778,7 +4776,6 @@ object MainForm: TMainForm
     end
     object LanguageMenu: TMenuItem
       Caption = 'Language'
-      GroupIndex = 2
       object Systemdefault1: TMenuItem
         Action = DefaultLanguage
       end
@@ -4788,7 +4785,6 @@ object MainForm: TMainForm
     end
     object Transparency1: TMenuItem
       Caption = 'Transparency'
-      GroupIndex = 2
       object N01: TMenuItem
         Action = Transparency0
         RadioItem = True
@@ -4838,27 +4834,21 @@ object MainForm: TMainForm
     end
     object Stayontop1: TMenuItem
       Action = ViewStayOnTop
-      GroupIndex = 2
     end
     object N20: TMenuItem
       Caption = '-'
-      GroupIndex = 2
     end
     object Checkforupdatesnow1: TMenuItem
       Action = CheckForUpdatesNow
-      GroupIndex = 2
     end
     object Checkforupdatesperiodically1: TMenuItem
       Action = CheckForUpdatesPeriodically
-      GroupIndex = 2
     end
     object N23: TMenuItem
       Caption = '-'
-      GroupIndex = 2
     end
     object Installonremovablemedia1: TMenuItem
       Action = InstallOnRemovableMedia
-      GroupIndex = 2
     end
   end
   object PrintDialog: TPrintDialog

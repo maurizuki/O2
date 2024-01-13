@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2023 the initial Contributor. All rights reserved.              }
+{ 2004-2024 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -24,14 +24,6 @@ uses
   System.Actions;
 
 type
-  TStringBuilderHelper = class helper for TStringBuilder
-  private
-    class function EncodeHTML(const S: string): string;
-  public
-    function AppendHTML(const S: string): TStringBuilder; overload;
-    function AppendHTML(const Lines: TStrings): TStringBuilder; overload;
-  end;
-
   TExportToHTMLOption = (xoIncludeIndex, xoIncludeTags, xoIncludeNotes,
     xoIncludeRelations, xoIncludePasswords);
   TExportToHTMLOptions = set of TExportToHTMLOption;
@@ -72,6 +64,7 @@ type
     Matcha1: TMenuItem;
     Sakura1: TMenuItem;
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure ActionUpdate(Sender: TObject);
     procedure ExportFileExecute(Sender: TObject);
     procedure OptionExecute(Sender: TObject);
@@ -84,6 +77,8 @@ type
     FO2File: TO2File;
     FObjects: TO2ObjectList;
     FStyleIndex: Integer;
+    OriginalApplicationMessage: TMessageEvent;
+    procedure ApplicationMessage(var Msg: TMsg; var Handled: Boolean);
     procedure SetStyleIndex(const Value: Integer);
     procedure SetStyleCaption(Action: TCustomAction);
   protected
@@ -115,7 +110,7 @@ implementation
 
 uses
   System.Generics.Collections, JclFileUtils, uGlobal, uAppFiles, uStuffHTML,
-  uUtils;
+  uHTMLHelper, uUtils;
 
 {$R *.dfm}
 
@@ -132,29 +127,6 @@ const
     ( LinkColor: '#a1952e'; BorderColor: '#d5e3c0'; AltBgColor: '#f1f6ea' ),
     ( LinkColor: '#c3829e'; BorderColor: '#fcc9b9'; AltBgColor: '#fff5f2' )
   );
-
-{ TStringBuilderHelper }
-
-class function TStringBuilderHelper.EncodeHTML(const S: string): string;
-begin
-  Result := StringReplace(S, '&', '&amp;', [rfReplaceAll]);
-  Result := StringReplace(Result, '<', '&lt;', [rfReplaceAll]);
-  Result := StringReplace(Result, '>', '&gt;', [rfReplaceAll]);
-end;
-
-function TStringBuilderHelper.AppendHTML(const S: string): TStringBuilder;
-begin
-  Result := Self.Append(EncodeHTML(S));
-end;
-
-function TStringBuilderHelper.AppendHTML(const Lines: TStrings): TStringBuilder;
-var
-  S: string;
-begin
-  Self.Append('<pre>');
-  for S in Lines do Self.Append(EncodeHTML(S)).Append('<br>');
-  Result := Self.Append('</pre>');
-end;
 
 { THTMLExport }
 
@@ -208,9 +180,13 @@ begin
   end;
 end;
 
-procedure THTMLExport.RefreshPreview;
+procedure THTMLExport.ApplicationMessage(var Msg: TMsg; var Handled: Boolean);
 begin
-  StuffHTML(WebBrowser.DefaultInterface, ExportToHTML);
+  if ((Msg.Message = WM_RBUTTONDOWN) or (Msg.Message = WM_RBUTTONDBLCLK))
+    and IsChild(WebBrowser.Handle, Msg.hwnd) then
+    Handled := True
+  else
+    OriginalApplicationMessage(Msg, Handled);
 end;
 
 procedure THTMLExport.SetStyleIndex(const Value: Integer);
@@ -269,7 +245,8 @@ begin
 
       if IncludeNotes.Checked and (Objects[I].Text.Count > 0) then
         SB.Append('<div class="notes">')
-          .AppendHTML(Objects[I].Text).Append('</div>');
+          .AppendHTML(Objects[I].Text, Objects[I].TextType)
+          .Append('</div>');
 
       SB.Append('</div>');
     end;
@@ -336,7 +313,8 @@ begin
         if Assigned(ARule) then
           case ARule.RuleType of
             rtHyperLink:
-              SB.AppendFormat('<a href="%s">', [ARule.GetHyperLink(Fields[I])])
+              SB.AppendFormat('<a href="%s" target="_blank">',
+                [ARule.GetHyperLink(Fields[I])])
                 .AppendHTML(Fields[I].FieldValue).Append('</a>');
             rtEmail:
               SB.AppendFormat('<a href="mailto:%s">', [Fields[I].FieldValue])
@@ -413,11 +391,11 @@ begin
       SB.AppendLine('<!DOCTYPE html>')
         .AppendLine('<html>')
         .AppendLine('<head>')
-        .AppendFormat('<meta name="generator" content="%s %s">',
+        .AppendFormat('<meta name="generator" content="%s %s" />',
           [VersionInfo.ProductName, VersionInfo.BinFileVersion])
-        .AppendFormat('<meta name="description" content="%s">',
+        .AppendFormat('<meta name="description" content="%s" />',
           [O2File.Description])
-        .AppendFormat('<meta name="author" content="%s">', [O2File.Author])
+        .AppendFormat('<meta name="author" content="%s" />', [O2File.Author])
         .AppendLine('<style>')
         .AppendLine(DefaultStyle.ExpandMacros)
         .AppendLine('</style>')
@@ -441,6 +419,11 @@ begin
   end;
 end;
 
+procedure THTMLExport.RefreshPreview;
+begin
+  StuffHTML(WebBrowser.DefaultInterface, ExportToHTML);
+end;
+
 procedure THTMLExport.FormCreate(Sender: TObject);
 var
   WorkArea: TRect;
@@ -448,6 +431,14 @@ begin
   SystemParametersInfo(SPI_GETWORKAREA, 0, @WorkArea, 0);
   SetBounds(WorkArea.Left, WorkArea.Top,
     WorkArea.Right - WorkArea.Left, WorkArea.Bottom - WorkArea.Top);
+
+  OriginalApplicationMessage := Application.OnMessage;
+  Application.OnMessage := ApplicationMessage;
+end;
+
+procedure THTMLExport.FormDestroy(Sender: TObject);
+begin
+  Application.OnMessage := OriginalApplicationMessage;
 end;
 
 procedure THTMLExport.ActionUpdate(Sender: TObject);

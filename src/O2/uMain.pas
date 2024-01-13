@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2023 the initial Contributor. All rights reserved.              }
+{ 2004-2024 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -26,7 +26,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, ToolWin, ImgList, ActnList, Menus, XPMan, AppEvnts,
   StdCtrls, ExtCtrls, FileCtrl, Types, System.ImageList, System.Actions,
-  REST.Client, Data.Bind.Components, Data.Bind.ObjectScope,
+  REST.Client, Data.Bind.Components, Data.Bind.ObjectScope, OleCtrls, SHDocVw,
   JvComponentBase, JvDragDrop,
   uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist,
   uPasswordScoreProvider;
@@ -308,7 +308,7 @@ type
     tsRelations: TTabSheet;
     tsRules: TTabSheet;
     FieldsView: TListView;
-    Notes: TMemo;
+    NotesView: TWebBrowser;
     RelationsView: TListView;
     RulesView: TListView;
     HSplitter: TSplitter;
@@ -345,6 +345,7 @@ type
     procedure ApplicationEventsActivate(Sender: TObject);
     procedure ApplicationEventsDeactivate(Sender: TObject);
     procedure ApplicationEventsIdle(Sender: TObject; var Done: Boolean);
+    procedure ApplicationEventsMessage(var Msg: tagMSG; var Handled: Boolean);
     procedure ObjectsViewChange(Sender: TObject; Item: TListItem;
       Change: TItemChange);
     procedure ObjectsViewColumnClick(Sender: TObject; Column: TListColumn);
@@ -535,6 +536,10 @@ type
     CheckForUpdatesSilent: Boolean;
 
     function GetFile: TO2File;
+    function GetHasSelectedObject: Boolean;
+    function GetSelectedObject: TO2Object;
+    function GetHasSelectedField: Boolean;
+    function GetSelectedField: TO2Field;
     function GetEventFilter: TEventFilter;
     procedure SetFileName(const Value: string);
     procedure SetBusy(const Value: Boolean);
@@ -605,6 +610,10 @@ type
 
     property O2File: TO2File read GetFile;
     property O2FileName: string read FFileName write SetFileName;
+    property HasSelectedObject: Boolean read GetHasSelectedObject;
+    property SelectedObject: TO2Object read GetSelectedObject;
+    property HasSelectedField: Boolean read GetHasSelectedField;
+    property SelectedField: TO2Field read GetSelectedField;
     property Busy: Boolean read FBusy;
   end;
 
@@ -620,7 +629,7 @@ uses
   uSetPassword, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
   uReplaceDlg, uPrintPreview, uHTMLExport, uXmlStorage, uO2Xml, uO2Defs,
   uBrowserEmulation, uCtrlHelpers, uImportExport, uO2ImportExport,
-  uXmlImportExport, uiCalendarExport;
+  uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper;
 
 {$R *.dfm}
 
@@ -855,11 +864,12 @@ begin
   begin
     StatusBar.Panels[0].Text :=
       Format(SStatusSelectedItemsCount, [ObjectsView.SelCount]);
-    with TO2Object(ObjectsView.Selected.Data) do
-      if Tag <> '' then
-        StatusBar.Panels[1].Text := Format(SStatusObject, [Name, Tag])
-      else
-        StatusBar.Panels[1].Text := Format(SStatusObject, [Name, STagsNone]);
+    if SelectedObject.Tag <> '' then
+      StatusBar.Panels[1].Text := Format(SStatusObject, [SelectedObject.Name,
+        SelectedObject.Tag])
+    else
+      StatusBar.Panels[1].Text := Format(SStatusObject, [SelectedObject.Name,
+        STagsNone]);
   end;
 
   if AutoCheckForUpdates and (LastCheckForUpdates < Today) then
@@ -868,6 +878,14 @@ begin
     CheckForUpdatesSilent := True;
     CheckForUpdatesNow.Execute;
   end;
+end;
+
+procedure TMainForm.ApplicationEventsMessage(var Msg: tagMSG;
+  var Handled: Boolean);
+begin
+  if ((Msg.Message = WM_RBUTTONDOWN) or (Msg.Message = WM_RBUTTONDBLCLK))
+    and IsChild(NotesView.Handle, Msg.hwnd) then
+    Handled := True;
 end;
 
 procedure TMainForm.ObjectsViewChange(Sender: TObject; Item: TListItem;
@@ -1539,6 +1557,26 @@ begin
   Result := FFile;
 end;
 
+function TMainForm.GetHasSelectedObject: Boolean;
+begin
+  Result := Assigned(ObjectsView.Selected);
+end;
+
+function TMainForm.GetSelectedObject: TO2Object;
+begin
+  Result := TO2Object(ObjectsView.Selected.Data);
+end;
+
+function TMainForm.GetHasSelectedField: Boolean;
+begin
+  Result := Assigned(FieldsView.Selected);
+end;
+
+function TMainForm.GetSelectedField: TO2Field;
+begin
+  Result := TO2Field(FieldsView.Selected.Data);
+end;
+
 function TMainForm.GetEventFilter: TEventFilter;
 begin
   Result := TEventFilter(TEventFilterLookup.SelectedValue(FindByEvent));
@@ -2197,8 +2235,8 @@ begin
     FieldsView.Items.BeginUpdate;
     try
       FieldsView.Clear;
-      if Assigned(ObjectsView.Selected) then
-        for AField in TO2Object(ObjectsView.Selected.Data).Fields do
+      if HasSelectedObject then
+        for AField in SelectedObject.Fields do
           FieldToListItem(AField, nil);
       ResizeFieldsViewColumns;
       FieldsView.SelectItemsByData(Selection);
@@ -2211,17 +2249,23 @@ begin
 end;
 
 procedure TMainForm.UpdateNotesView;
+var
+  SB: TStringBuilder;
 begin
-  Notes.Lines.BeginUpdate;
+  SB := TStringBuilder.Create;
   try
-    Notes.Clear;
-    if Assigned(ObjectsView.Selected) then
-    begin
-      Notes.Lines := TO2Object(ObjectsView.Selected.Data).Text;
-      Notes.SelStart := 0;
-    end;
+    SB.AppendLine('<!DOCTYPE html>')
+      .AppendLine('<html>')
+      .Append('<body style="color: #000; background-color: #fff; font-family: sans-serif; font-size: 1rem;">');
+
+    if HasSelectedObject then
+      SB.AppendHTML(SelectedObject.Text, SelectedObject.TextType);
+
+    SB.AppendLine('</body>').Append('</html>');
+
+    StuffHTML(NotesView.DefaultInterface, SB.ToString);
   finally
-    Notes.Lines.EndUpdate;
+    SB.Free;
   end;
 end;
 
@@ -2236,10 +2280,9 @@ begin
     RelationsView.Items.BeginUpdate;
     try
       RelationsView.Clear;
-      if Assigned(ObjectsView.Selected) then
+      if HasSelectedObject then
       begin
-        ObjRelations := O2File.Relations.GetObjectRelations(
-          TO2Object(ObjectsView.Selected.Data));
+        ObjRelations := O2File.Relations.GetObjectRelations(SelectedObject);
         try
           for AObjRelation in ObjRelations do
             RelationToListItem(AObjRelation, nil);
@@ -2568,7 +2611,7 @@ begin
   XmlStorage.WriteBoolean(IdStayOnTop, StayOnTop);
   XmlStorage.WriteInteger(IdTransparency, Transparency);
   XmlStorage.WriteBoolean(IdAutoCheckForUpdates, AutoCheckForUpdates);
-  XmlStorage.WriteBoolean(IdTransparencyOnlyIfDeactivated, 
+  XmlStorage.WriteBoolean(IdTransparencyOnlyIfDeactivated,
     FTransparencyOnlyIfDeactivated);
   XmlStorage.WriteFloat(IdLastCheckForUpdates, LastCheckForUpdates);
   XmlStorage.WriteIntIdent(IdViewStyle, ViewStyles,
@@ -2590,7 +2633,7 @@ var
 begin
   AddTag.Clear;
   DeleteTag.Clear;
-  if Assigned(ObjectsView.Selected) then
+  if HasSelectedObject then
   begin
     Selection := TO2ObjectList.Create;
     Tags := TStringList.Create;
@@ -2652,7 +2695,7 @@ var
   Item: TListItem;
   Index: Integer;
 begin
-  Index := TO2Object(ObjectsView.Selected.Data).Index;
+  Index := SelectedObject.Index;
   if TObjPropsDlg.Execute(Application, O2File.Objects, Index, True,
     pgGeneral) then
   begin
@@ -2698,7 +2741,7 @@ procedure TMainForm.ObjectTagsExecute(Sender: TObject);
 var
   Index: Integer;
 begin
-  Index := TO2Object(ObjectsView.Selected.Data).Index;
+  Index := SelectedObject.Index;
   if TObjPropsDlg.Execute(Application, O2File.Objects, Index, False,
     pgGeneralTags) then
   begin
@@ -2853,7 +2896,7 @@ begin
     1: Page := pgNotes;
     else Page := pgGeneral;
   end;
-  Index := TO2Object(ObjectsView.Selected.Data).Index;
+  Index := SelectedObject.Index;
   if TObjPropsDlg.Execute(Application, O2File.Objects, Index, False, Page) then
   begin
     FPasswordScoreProvider.Update(O2File, Index);
@@ -2864,7 +2907,7 @@ end;
 
 procedure TMainForm.ObjectActionUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and Assigned(ObjectsView.Selected);
+  TAction(Sender).Enabled := not Busy and HasSelectedObject;
 end;
 
 procedure TMainForm.FieldsViewDblClick(Sender: TObject);
@@ -2935,24 +2978,23 @@ end;
 
 procedure TMainForm.CopyValueExecute(Sender: TObject);
 begin
-  Clipboard.AsText := TO2Field(FieldsView.Selected.Data).FieldValue;
+  Clipboard.AsText := SelectedField.FieldValue;
 end;
 
 procedure TMainForm.CopyNameValueAsRowExecute(Sender: TObject);
 begin
-  Clipboard.AsText := TO2Field(FieldsView.Selected.Data).FieldName + #9
-    + TO2Field(FieldsView.Selected.Data).FieldValue;
+  Clipboard.AsText := SelectedField.FieldName + #9 + SelectedField.FieldValue;
 end;
 
 procedure TMainForm.CopyNameValueAsColumnExecute(Sender: TObject);
 begin
-  Clipboard.AsText := TO2Field(FieldsView.Selected.Data).FieldName + #13#10
-    + TO2Field(FieldsView.Selected.Data).FieldValue;
+  Clipboard.AsText := SelectedField.FieldName + #13#10
+    + SelectedField.FieldValue;
 end;
 
 procedure TMainForm.CopyNameValueUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and Assigned(FieldsView.Selected);
+  TAction(Sender).Enabled := not Busy and HasSelectedField;
 end;
 
 procedure TMainForm.CopyValuesAsRowsExecute(Sender: TObject);
@@ -3020,10 +3062,9 @@ begin
   URLFile := TStringList.Create;
   try
     URLFile.Add('[InternetShortcut]');
-    URLFile.Add('URL='
-      + O2File.Rules.GetHyperLink(TO2Field(FieldsView.Selected.Data)));
+    URLFile.Add('URL=' + O2File.Rules.GetHyperLink(SelectedField));
     URLFile.SaveToFile(IncludeTrailingPathDelimiter(TShellFolders.Favorites)
-      + TO2Object(ObjectsView.Selected.Data).Name + '.url');
+      + SelectedObject.Name + '.url');
   finally
     URLFile.Free;
   end;
@@ -3031,29 +3072,25 @@ end;
 
 procedure TMainForm.OpenLinkExecute(Sender: TObject);
 begin
-  ShellOpen(O2File.Rules.GetHyperLink(TO2Field(FieldsView.Selected.Data)));
+  ShellOpen(O2File.Rules.GetHyperLink(SelectedField));
 end;
 
 procedure TMainForm.OpenLinkUpdate(Sender: TObject);
 begin
-  with FieldsView do
-    TAction(Sender).Visible := not Busy and Assigned(Selected)
-      and Assigned(O2File.Rules.FindFirstRule(
-        TO2Field(Selected.Data), [rtHyperLink]));
+  TAction(Sender).Visible := not Busy and HasSelectedField
+    and Assigned(O2File.Rules.FindFirstRule(SelectedField, [rtHyperLink]));
   TAction(Sender).Enabled := TAction(Sender).Visible;
 end;
 
 procedure TMainForm.SendEmailExecute(Sender: TObject);
 begin
-  ShellMailTo(TO2Field(FieldsView.Selected.Data).FieldValue);
+  ShellMailTo(SelectedField.FieldValue);
 end;
 
 procedure TMainForm.SendEmailUpdate(Sender: TObject);
 begin
-  with FieldsView do
-    TAction(Sender).Visible := not Busy and Assigned(Selected)
-      and Assigned(O2File.Rules.FindFirstRule(
-        TO2Field(Selected.Data), [rtEmail]));
+  TAction(Sender).Visible := not Busy and HasSelectedField
+    and Assigned(O2File.Rules.FindFirstRule(SelectedField, [rtEmail]));
   TAction(Sender).Enabled := TAction(Sender).Visible;
 end;
 
@@ -3102,7 +3139,7 @@ begin
     FillObjList(Selection);
     if TRelationPropsDlg.Execute(Application,
       O2File, Selection[0], Selection[1], ARelation) then
-      RelationToListItem(ARelation, TO2Object(ObjectsView.Selected.Data), nil);
+      RelationToListItem(ARelation, SelectedObject, nil);
   finally
     Selection.Free;
   end;
@@ -3128,7 +3165,7 @@ var
   Item: TListItem;
 begin
   AObjRelation := TO2Relation(RelationsView.Selected.Data).GetObjectRelation(
-    TO2Object(ObjectsView.Selected.Data));
+    SelectedObject);
   try
     Item := ObjectsView.FindData(0, AObjRelation.Obj, True, False);
     if Assigned(Item) then
@@ -3148,8 +3185,7 @@ var
 begin
   ARelation := TO2Relation(RelationsView.Selected.Data);
   if TRelationPropsDlg.Execute(Application, O2File, nil, nil, ARelation) then
-    RelationToListItem(ARelation, TO2Object(ObjectsView.Selected.Data),
-      RelationsView.Selected);
+    RelationToListItem(ARelation, SelectedObject, RelationsView.Selected);
 end;
 
 procedure TMainForm.RelationActionUpdate(Sender: TObject);

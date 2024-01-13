@@ -42,6 +42,7 @@
 			<File FileName="uSetPassword.dfm" ContainerId="W32Form" ModuleName="uSetPassword.dfm"/>
 			<File FileName="o2_DRC.rc" ContainerId="W32RC" ModuleName="o2_DRC.rc"/>
 			<File FileName="uHTMLExport.dfm" ContainerId="W32Form" ModuleName="uHTMLExport.dfm"/>
+			<File FileName="uRTFViewer.dfm" ContainerId="W32Form" ModuleName="uRTFViewer.dfm"/>
 		</FileList>
 	</W32ResourceDLL.Personality>
 </BorlandProject>

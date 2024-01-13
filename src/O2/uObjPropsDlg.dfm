@@ -148,7 +148,6 @@ object ObjPropsDlg: TObjPropsDlg
         ViewStyle = vsReport
         OnResize = FieldsViewResize
         OnSelectItem = FieldsViewSelectItem
-        ExplicitWidth = 323
       end
       object cbFieldName: TComboBox
         Left = 3
@@ -173,7 +172,6 @@ object ObjPropsDlg: TObjPropsDlg
         TabOrder = 2
         OnChange = cbFieldValueChange
         OnEnter = cbFieldValueEnter
-        ExplicitWidth = 174
       end
       object Button1: TButton
         Left = 3
@@ -218,7 +216,6 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 6
-        ExplicitLeft = 254
       end
       object Button7: TButton
         Left = 297
@@ -230,7 +227,6 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 7
-        ExplicitLeft = 293
       end
       object ckDisplayPasswordStrength: TCheckBox
         Left = 3
@@ -241,7 +237,6 @@ object ObjPropsDlg: TObjPropsDlg
         Caption = '&Password strength'
         TabOrder = 8
         OnClick = ckDisplayPasswordStrengthClick
-        ExplicitWidth = 139
       end
     end
     object TabSheet3: TTabSheet
@@ -250,11 +245,31 @@ object ObjPropsDlg: TObjPropsDlg
       DesignSize = (
         333
         342)
+      object Label3: TLabel
+        Left = 222
+        Top = 323
+        Width = 108
+        Height = 13
+        Cursor = crHandPoint
+        Hint = 'https://commonmark.org/help/'
+        Alignment = taRightJustify
+        Anchors = [akRight, akBottom]
+        Caption = 'Markdown syntax help'
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clBlue
+        Font.Height = -11
+        Font.Name = 'Tahoma'
+        Font.Style = [fsUnderline]
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = LinkClick
+      end
       object Memo: TMemo
         Left = 3
         Top = 3
         Width = 327
-        Height = 336
+        Height = 313
         Anchors = [akLeft, akTop, akRight, akBottom]
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
@@ -265,6 +280,15 @@ object ObjPropsDlg: TObjPropsDlg
         ScrollBars = ssVertical
         TabOrder = 0
         WantTabs = True
+      end
+      object ckMarkdown: TCheckBox
+        Left = 3
+        Top = 322
+        Width = 213
+        Height = 17
+        Anchors = [akLeft, akRight, akBottom]
+        Caption = '&Markdown syntax'
+        TabOrder = 1
       end
     end
   end

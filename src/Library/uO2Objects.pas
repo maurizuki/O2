@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2023 the initial Contributor. All rights reserved.              }
+{ 2004-2024 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -21,6 +21,8 @@ uses
   Classes, Contnrs, SysUtils, Types, System.Generics.Collections, uO2Classes;
 
 type
+  TO2TextType = (ttPlainText, ttCommonMark);
+
   TO2Field = class(TO2CollectionItem)
   private
     FFieldName: string;
@@ -63,11 +65,13 @@ type
     FTag: string;
     FFields: TO2Fields;
     FText: TStrings;
+    FTextType: TO2TextType;
     procedure SetObjectID(const Value: string);
     procedure SetName(const Value: string);
     procedure SetTag(const Value: string);
     procedure SetFields(const Value: TO2Fields);
     procedure SetText(const Value: TStrings);
+    procedure SetTextType(const Value: TO2TextType);
     procedure TextChange(Sender: TObject);
   public
     constructor Create(Collection: TCollection); override;
@@ -83,6 +87,7 @@ type
     property Tag: string read FTag write SetTag;
     property Fields: TO2Fields read FFields write SetFields;
     property Text: TStrings read FText write SetText;
+    property TextType: TO2TextType read FTextType write SetTextType;
   end;
 
   TO2ObjectsEnumerator = class(TCollectionEnumerator)
@@ -416,6 +421,15 @@ end;
 procedure TO2Object.SetText(const Value: TStrings);
 begin
   FText.Assign(Value);
+end;
+
+procedure TO2Object.SetTextType(const Value: TO2TextType);
+begin
+  if FTextType <> Value then
+  begin
+    FTextType := Value;
+    NotifyChanges(Self, onPropertyChanged);
+  end;
 end;
 
 { TO2ObjectsEnumerator }
