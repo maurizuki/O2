@@ -21,6 +21,7 @@ OutputDir=setup\output
 DefaultDirName={commonpf}\{#AppName}
 DefaultGroupName={#AppName}
 AppName={#AppName}
+AppVersion={#AppVersion}
 AppVerName={#AppName} {#AppVersion}
 AppCopyright={#Copyright}
 VersionInfoVersion={#AppVersion}
