@@ -355,9 +355,15 @@ begin
           else
             SB.Append('<div class="relation-item alt-bg">');
 
-          SB.Append('<div class="relation-object">')
-            .AppendFormat('<a href="#%d">', [AObjRelations[I].Obj.Index])
-            .AppendHTML(AObjRelations[I].Obj.Name).Append('</a></div>');
+          SB.Append('<div class="relation-object">');
+
+          if Objects.Contains(AObjRelations[I].Obj) then
+            SB.AppendFormat('<a href="#%d">', [AObjRelations[I].Obj.Index])
+              .AppendHTML(AObjRelations[I].Obj.Name).Append('</a>')
+          else
+            SB.AppendHTML(AObjRelations[I].Obj.Name);
+
+          SB.Append('</div>');
 
           SB.Append('<div class="relation-role">')
             .AppendHTML(AObjRelations[I].Role).Append('</div>');
