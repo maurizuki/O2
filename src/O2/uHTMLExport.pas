@@ -205,22 +205,13 @@ end;
 
 procedure THTMLExport.AppendObjectIndex(const SB: TStringBuilder);
 var
-  I: Integer;
+  AObject: TO2Object;
 begin
   SB.Append('<div class="object-index"><ul>');
 
-  for I := 0 to Objects.Count - 1 do
-  begin
-    if I mod 2 = 0 then
-      SB.Append('<li>')
-    else
-      SB.Append('<li class="alt-bg">');
-
-    SB.AppendFormat('<a href="#%d">', [Objects[I].Index])
-      .AppendHTML(Objects[I].Name).Append('</a>');
-
-    SB.Append('</li>');
-  end;
+  for AObject in Objects do
+    SB.AppendFormat('<li><a href="#%d">', [AObject.Index])
+      .AppendHTML(AObject.Name).Append('</a></li>');
 
   SB.Append('</ul></div>');
 end;
@@ -285,7 +276,6 @@ var
   Fields: TList<TO2Field>;
   AField: TO2Field;
   ARule: TO2Rule;
-  I: Integer;
 begin
   Fields := TList<TO2Field>.Create;
   try
@@ -298,33 +288,27 @@ begin
     begin
       SB.Append('<div class="field-list">');
 
-      for I := 0 to Fields.Count - 1 do
+      for AField in Fields do
       begin
-        if I mod 2 = 0 then
-          SB.Append('<div class="field-item">')
-        else
-          SB.Append('<div class="field-item alt-bg">');
+        SB.Append('<div class="field-item"><div class="field-name">')
+          .AppendHTML(AField.FieldName)
+          .Append('</div><div class="field-value">');
 
-        SB.Append('<div class="field-name">')
-          .AppendHTML(Fields[I].FieldName).Append('</div>');
-
-        SB.Append('<div class="field-value">');
-        ARule := O2File.Rules.FindFirstRule(Fields[I], [rtHyperLink, rtEmail]);
+        ARule := O2File.Rules.FindFirstRule(AField, [rtHyperLink, rtEmail]);
         if Assigned(ARule) then
           case ARule.RuleType of
             rtHyperLink:
               SB.AppendFormat('<a href="%s" target="_blank">',
-                [ARule.GetHyperLink(Fields[I])])
-                .AppendHTML(Fields[I].FieldValue).Append('</a>');
+                [ARule.GetHyperLink(AField)])
+                .AppendHTML(AField.FieldValue).Append('</a>');
             rtEmail:
-              SB.AppendFormat('<a href="mailto:%s">', [Fields[I].FieldValue])
-                .AppendHTML(Fields[I].FieldValue).Append('</a>');
+              SB.AppendFormat('<a href="mailto:%s">', [AField.FieldValue])
+                .AppendHTML(AField.FieldValue).Append('</a>');
           end
         else
-          SB.AppendHTML(Fields[I].FieldValue);
-        SB.Append('</div>');
+          SB.AppendHTML(AField.FieldValue);
 
-        SB.Append('</div>');
+        SB.Append('</div></div>');
       end;
 
       SB.Append('</div>');
@@ -338,7 +322,7 @@ procedure THTMLExport.AppendRelationList(const SB: TStringBuilder;
   const Obj: TO2Object);
 var
   AObjRelations: TO2ObjRelations;
-  I: Integer;
+  AObjRelation: TO2ObjRelation;
 begin
   AObjRelations := O2File.Relations.GetObjectRelations(Obj);
   try
@@ -347,28 +331,19 @@ begin
       SB.Append('<div class="relation-list">');
 
       AObjRelations.SortByObjName;
-      for I := 0 to AObjRelations.Count - 1 do
-        if Assigned(AObjRelations[I].Obj) then
+      for AObjRelation in AObjRelations do
+        if Assigned(AObjRelation.Obj) then
         begin
-          if I mod 2 = 0 then
-            SB.Append('<div class="relation-item">')
+          SB.Append('<div class="relation-item"><div class="relation-object">');
+
+          if Objects.Contains(AObjRelation.Obj) then
+            SB.AppendFormat('<a href="#%d">', [AObjRelation.Obj.Index])
+              .AppendHTML(AObjRelation.Obj.Name).Append('</a>')
           else
-            SB.Append('<div class="relation-item alt-bg">');
+            SB.AppendHTML(AObjRelation.Obj.Name);
 
-          SB.Append('<div class="relation-object">');
-
-          if Objects.Contains(AObjRelations[I].Obj) then
-            SB.AppendFormat('<a href="#%d">', [AObjRelations[I].Obj.Index])
-              .AppendHTML(AObjRelations[I].Obj.Name).Append('</a>')
-          else
-            SB.AppendHTML(AObjRelations[I].Obj.Name);
-
-          SB.Append('</div>');
-
-          SB.Append('<div class="relation-role">')
-            .AppendHTML(AObjRelations[I].Role).Append('</div>');
-
-          SB.Append('</div>');
+          SB.Append('</div><div class="relation-role">')
+            .AppendHTML(AObjRelation.Role).Append('</div></div>');
         end;
 
       SB.Append('</div>');
