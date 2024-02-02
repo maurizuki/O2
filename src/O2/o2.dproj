@@ -984,7 +984,7 @@
         <DCCReference Include="uXmlImportExport.pas"/>
         <DCCReference Include="uO2ImportExport.pas"/>
         <DCCReference Include="uiCalendarExport.pas"/>
-        <DCCReference Include="uPasswordScoreProvider.pas"/>
+        <DCCReference Include="uPasswordScoreCache.pas"/>
         <DCCReference Include="uRTFViewer.pas">
             <Form>RTFViewer</Form>
             <FormType>dfm</FormType>

@@ -29,7 +29,7 @@ uses
   REST.Client, Data.Bind.Components, Data.Bind.ObjectScope, OleCtrls, SHDocVw,
   JvComponentBase, JvDragDrop,
   uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist,
-  uPasswordScoreProvider;
+  uPasswordScoreCache;
 
 type
   TCmdLineAction = (caNone, caOpenFile);
@@ -515,7 +515,7 @@ type
     FTransparency: Integer;
     FTransparencyOnlyIfDeactivated: Boolean;
     FShowPasswords: Boolean;
-    FPasswordScoreProvider: TPasswordScoreProvider;
+    FPasswordScoreCache: IPasswordScoreCache;
 
     MRUMenuItems: TList;
     MRUList: TMRUList;
@@ -780,7 +780,7 @@ begin
   ImportSettingsDlg.Filter := SImportSettingsFileFilter;
   ExportSettingsDlg.Filter := SExportSettingsFileFilter;
 
-  FPasswordScoreProvider := TPasswordScoreProvider.Create;
+  FPasswordScoreCache := TPasswordScoreCache.Create;
 
   ActiveControl := ObjectsView;
 
@@ -792,7 +792,6 @@ begin
   SaveSettings(AppFiles.FullPath[IdSettings]);
   MRUList.Free;
   MRUMenuItems.Free;
-  FPasswordScoreProvider.Free;
 end;
 
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -952,7 +951,7 @@ var
 begin
   if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data)
     and O2File.Rules.GetHighlightColors(TO2Object(Item.Data),
-    FPasswordScoreProvider, BrushColor, FontColor) then
+    FPasswordScoreCache, BrushColor, FontColor) then
   begin
     Sender.Canvas.Brush.Color := BrushColor;
     Sender.Canvas.Font.Color := FontColor;
@@ -1754,7 +1753,7 @@ begin
     BeginBatchOperation;
     try
       O2File.Load;
-      FPasswordScoreProvider.Update(O2File);
+      FPasswordScoreCache.Update(O2File);
     finally
       EndBatchOperation;
     end;
@@ -2681,7 +2680,7 @@ begin
   if TObjPropsDlg.Execute(Application, O2File.Objects, Index, False,
     pgGeneral) then
   begin
-    FPasswordScoreProvider.Update(O2File, Index);
+    FPasswordScoreCache.Update(O2File, Index);
     Item := ObjToListItem(Index, nil);
     ObjectsView.ClearSelection;
     Item.Selected := True;
@@ -2699,7 +2698,7 @@ begin
   if TObjPropsDlg.Execute(Application, O2File.Objects, Index, True,
     pgGeneral) then
   begin
-    FPasswordScoreProvider.Update(O2File, Index);
+    FPasswordScoreCache.Update(O2File, Index);
     Item := ObjToListItem(Index, nil);
     ObjectsView.ClearSelection;
     Item.Selected := True;
@@ -2906,7 +2905,7 @@ begin
   Index := SelectedObject.Index;
   if TObjPropsDlg.Execute(Application, O2File.Objects, Index, False, Page) then
   begin
-    FPasswordScoreProvider.Update(O2File, Index);
+    FPasswordScoreCache.Update(O2File, Index);
     ObjToListItem(Index, ObjectsView.Selected);
     NotifyChanges([ncObjProps, ncTagList]);
   end;
@@ -2950,7 +2949,7 @@ var
 begin
   if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data)
     and O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
-    FPasswordScoreProvider, BrushColor, FontColor) then
+    FPasswordScoreCache, BrushColor, FontColor) then
   begin
     Sender.Canvas.Brush.Color := BrushColor;
     Sender.Canvas.Font.Color := FontColor;
@@ -2967,7 +2966,7 @@ begin
   begin
     if (State * [cdsFocused, cdsHot] = [])
       and O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
-      FPasswordScoreProvider, BrushColor, FontColor) then
+      FPasswordScoreCache, BrushColor, FontColor) then
     begin
       Sender.Canvas.Brush.Color := BrushColor;
       Sender.Canvas.Font.Color := FontColor;

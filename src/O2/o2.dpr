@@ -43,7 +43,7 @@ uses
   uXmlImportExport in 'uXmlImportExport.pas',
   uO2ImportExport in 'uO2ImportExport.pas',
   uiCalendarExport in 'uiCalendarExport.pas',
-  uPasswordScoreProvider in 'uPasswordScoreProvider.pas',
+  uPasswordScoreCache in 'uPasswordScoreCache.pas',
   uRTFViewer in 'uRTFViewer.pas' {RTFViewer},
   uHTMLHelper in 'uHTMLHelper.pas',
   uO2ObjectsUtils in 'uO2ObjectsUtils.pas';
