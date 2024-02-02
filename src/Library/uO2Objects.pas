@@ -108,22 +108,14 @@ type
     function AddObject(const Name: string = ''): TO2Object;
     procedure DeleteObject(const Name: string);
     function ImportObject(const AObject: TO2Object): TO2Object;
-    procedure GetFieldNames(const List: TStrings);
-    procedure GetFieldValues(const FieldName: string; const List: TStrings);
-    procedure GetTags(const List: TStrings);
+    function ToEnumerable: IEnumerable<TO2Object>;
     property Objects[Index: Integer]: TO2Object read GetObjects; default;
   end;
 
   TO2ObjectList = class(TObjectList<TO2Object>)
   public
     constructor Create;
-    procedure GetFieldNames(const List: TStrings);
-    procedure GetTags(const List: TStrings);
-    procedure AddTag(const Tag: string);
-    procedure DeleteTag(const Tag: string);
-    function ReplaceFieldName(const FieldName, NewFieldName: string): Integer;
-    procedure ReplaceFieldValue(const FieldName, NewFieldValue: string);
-    procedure ReplaceTag(const Tag, NewTag: string);
+    function ToEnumerable: IEnumerable<TO2Object>;
   end;
 
 implementation
@@ -135,6 +127,55 @@ resourcestring
   SObjectAlreadyExists = 'Object %s already exists.';
   SObjectNameAlreadyExists = 'An object named "%s" already exists.';
   SFieldAlreadyExists = 'A field named "%s" already exists.';
+
+type
+  TO2ObjectCollectionEnumerator = class(TInterfacedObject,
+    IEnumerator<TO2Object>)
+  private
+    FCollection: TO2Objects;
+    FIndex: Integer;
+  public
+    constructor Create(const Collection: TO2Objects);
+    function GetCurrent: TObject;
+    function GetCurrentT: TO2Object;
+    function IEnumerator<TO2Object>.GetCurrent = GetCurrentT;
+    function MoveNext: Boolean;
+    procedure Reset;
+  end;
+
+  TO2ObjectCollectionEnumerable = class(TInterfacedObject,
+    IEnumerable<TO2Object>)
+  private
+    FCollection: TO2Objects;
+  public
+    constructor Create(const Collection: TO2Objects);
+    function GetEnumerator: IEnumerator;
+    function GetEnumeratorT: IEnumerator<TO2Object>;
+    function IEnumerable<TO2Object>.GetEnumerator = GetEnumeratorT;
+  end;
+
+  TO2ObjectListEnumerator = class(TInterfacedObject, IEnumerator<TO2Object>)
+  private
+    FList: TO2ObjectList;
+    FIndex: Integer;
+  public
+    constructor Create(const List: TO2ObjectList);
+    function GetCurrent: TObject;
+    function GetCurrentT: TO2Object;
+    function IEnumerator<TO2Object>.GetCurrent = GetCurrentT;
+    function MoveNext: Boolean;
+    procedure Reset;
+  end;
+
+  TO2ObjectListEnumerable = class(TInterfacedObject, IEnumerable<TO2Object>)
+  private
+    FList: TO2ObjectList;
+  public
+    constructor Create(const List: TO2ObjectList);
+    function GetEnumerator: IEnumerator;
+    function GetEnumeratorT: IEnumerator<TO2Object>;
+    function IEnumerable<TO2Object>.GetEnumerator = GetEnumeratorT;
+  end;
 
 { TO2Field }
 
@@ -514,64 +555,9 @@ begin
   Result.Assign(AObject);
 end;
 
-procedure TO2Objects.GetFieldNames(const List: TStrings);
-var
-  AList: TStringList;
-  AObject: TO2Object;
-  AField: TO2Field;
+function TO2Objects.ToEnumerable: IEnumerable<TO2Object>;
 begin
-  AList := TStringList.Create;
-  try
-    AList.CaseSensitive := False;
-    AList.Duplicates := dupIgnore;
-    AList.Sorted := True;
-    for AObject in Self do
-      for AField in AObject.Fields do
-        AList.Add(AField.FieldName);
-    List.AddStrings(AList);
-  finally
-    AList.Free;
-  end;
-end;
-
-procedure TO2Objects.GetFieldValues(const FieldName: string;
-  const List: TStrings);
-var
-  AList: TStringList;
-  AObject: TO2Object;
-  AField: TO2Field;
-begin
-  AList := TStringList.Create;
-  try
-    AList.CaseSensitive := False;
-    AList.Duplicates := dupIgnore;
-    AList.Sorted := True;
-    for AObject in Self do
-      for AField in AObject.Fields do
-        if (FieldName = '') or SameText(AField.FieldName, FieldName) then
-          AList.Add(AField.FieldValue);
-    List.AddStrings(AList);
-  finally
-    AList.Free;
-  end;
-end;
-
-procedure TO2Objects.GetTags(const List: TStrings);
-var
-  AList: TStringList;
-  AObject: TO2Object;
-begin
-  AList := TStringList.Create;
-  try
-    AList.CaseSensitive := False;
-    AList.Duplicates := dupIgnore;
-    AList.Sorted := True;
-    for AObject in Self do
-      AObject.GetTags(AList);
-    List.AddStrings(AList);
-  finally
-    AList.Free;
-  end;
+  Result := TO2ObjectCollectionEnumerable.Create(Self);
 end;
 
 { TO2ObjectList }
@@ -581,113 +567,107 @@ begin
   inherited Create(False);
 end;
 
-procedure TO2ObjectList.GetFieldNames(const List: TStrings);
-var
-  AList: TStringList;
-  AObject: TO2Object;
-  AField: TO2Field;
+function TO2ObjectList.ToEnumerable: IEnumerable<TO2Object>;
 begin
-  AList := TStringList.Create;
-  try
-    AList.CaseSensitive := False;
-    AList.Duplicates := dupIgnore;
-    AList.Sorted := True;
-    for AObject in Self do
-      for AField in AObject.Fields do
-        AList.Add(AField.FieldName);
-    List.AddStrings(AList);
-  finally
-    AList.Free;
-  end;
+  Result := TO2ObjectListEnumerable.Create(Self);
 end;
 
-procedure TO2ObjectList.GetTags(const List: TStrings);
-var
-  AList: TStringList;
-  AObject: TO2Object;
+{ TO2ObjectCollectionEnumerator }
+
+constructor TO2ObjectCollectionEnumerator.Create(const Collection: TO2Objects);
 begin
-  AList := TStringList.Create;
-  try
-    AList.CaseSensitive := False;
-    AList.Duplicates := dupIgnore;
-    AList.Sorted := True;
-    for AObject in Self do
-      AObject.GetTags(AList);
-    List.AddStrings(AList);
-  finally
-    AList.Free;
-  end;
+  FCollection := Collection;
+  FIndex := -1;
 end;
 
-procedure TO2ObjectList.AddTag(const Tag: string);
-var
-  AObject: TO2Object;
+function TO2ObjectCollectionEnumerator.GetCurrent: TObject;
 begin
-  for AObject in Self do
-    AObject.AddTag(Tag);
+  Result := GetCurrentT;
 end;
 
-procedure TO2ObjectList.DeleteTag(const Tag: string);
-var
-  AObject: TO2Object;
+function TO2ObjectCollectionEnumerator.GetCurrentT: TO2Object;
 begin
-  for AObject in Self do
-    AObject.DeleteTag(Tag);
+  Result := FCollection[FIndex];
 end;
 
-function TO2ObjectList.ReplaceFieldName(const FieldName,
-  NewFieldName: string): Integer;
-var
-  AObject: TO2Object;
-  AField: TO2Field;
+function TO2ObjectCollectionEnumerator.MoveNext: Boolean;
 begin
-  Result := 0;
-  for AObject in Self do
-  begin
-    AField := AObject.Fields.FindField(FieldName);
-    if Assigned(AField) then
-    try
-      AField.FieldName := NewFieldName;
-    except
-      Inc(Result);
-    end;
-  end;
+  Result := True;
+  if FIndex < FCollection.Count - 1 then
+    Inc(FIndex)
+  else
+    Result := False;
 end;
 
-procedure TO2ObjectList.ReplaceFieldValue(const FieldName,
-  NewFieldValue: string);
-var
-  AObject: TO2Object;
-  AField: TO2Field;
+procedure TO2ObjectCollectionEnumerator.Reset;
 begin
-  for AObject in Self do
-  begin
-    AField := AObject.Fields.FindField(FieldName);
-    if Assigned(AField) then
-      AField.FieldValue := NewFieldValue;
-  end;
+  FIndex := -1;
 end;
 
-procedure TO2ObjectList.ReplaceTag(const Tag, NewTag: string);
-var
-  AObject: TO2Object;
-  List: TStringList;
-  Index: Integer;
+{ TO2ObjectCollectionEnumerable }
+
+constructor TO2ObjectCollectionEnumerable.Create(const Collection: TO2Objects);
 begin
-  List := TStringList.Create;
-  try
-    for AObject in Self do
-    begin
-      List.Clear;
-      AObject.GetTags(List);
-      Index := List.IndexOf(Tag);
-      if Index > -1 then
-        List[Index] := NewTag;
-      AObject.SetTags(List);
-    end;
-  finally
-    List.Free;
-  end;
+  FCollection := Collection;
+end;
+
+function TO2ObjectCollectionEnumerable.GetEnumerator: IEnumerator;
+begin
+  Result := GetEnumeratorT;
+end;
+
+function TO2ObjectCollectionEnumerable.GetEnumeratorT: IEnumerator<TO2Object>;
+begin
+  Result := TO2ObjectCollectionEnumerator.Create(FCollection);
+end;
+
+{ TO2ObjectListEnumerator }
+
+constructor TO2ObjectListEnumerator.Create(const List: TO2ObjectList);
+begin
+  FList := List;
+  FIndex := -1;
+end;
+
+function TO2ObjectListEnumerator.GetCurrent: TObject;
+begin
+  Result := GetCurrentT;
+end;
+
+function TO2ObjectListEnumerator.GetCurrentT: TO2Object;
+begin
+  Result := FList[FIndex];
+end;
+
+function TO2ObjectListEnumerator.MoveNext: Boolean;
+begin
+  Result := True;
+  if FIndex < FList.Count - 1 then
+    Inc(FIndex)
+  else
+    Result := False;
+end;
+
+procedure TO2ObjectListEnumerator.Reset;
+begin
+  FIndex := -1;
+end;
+
+{ TO2ObjectListEnumerable }
+
+constructor TO2ObjectListEnumerable.Create(const List: TO2ObjectList);
+begin
+  FList := List;
+end;
+
+function TO2ObjectListEnumerable.GetEnumerator: IEnumerator;
+begin
+  Result := GetEnumeratorT;
+end;
+
+function TO2ObjectListEnumerable.GetEnumeratorT: IEnumerator<TO2Object>;
+begin
+  Result := TO2ObjectListEnumerator.Create(FList);
 end;
 
 end.

@@ -45,7 +45,8 @@ uses
   uiCalendarExport in 'uiCalendarExport.pas',
   uPasswordScoreProvider in 'uPasswordScoreProvider.pas',
   uRTFViewer in 'uRTFViewer.pas' {RTFViewer},
-  uHTMLHelper in 'uHTMLHelper.pas';
+  uHTMLHelper in 'uHTMLHelper.pas',
+  uO2ObjectsUtils in 'uO2ObjectsUtils.pas';
 
 {$R *.res}
 

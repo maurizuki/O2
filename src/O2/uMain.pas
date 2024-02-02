@@ -629,7 +629,7 @@ uses
   uSetPassword, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
   uReplaceDlg, uPrintPreview, uHTMLExport, uXmlStorage, uO2Xml, uO2Defs,
   uBrowserEmulation, uCtrlHelpers, uImportExport, uO2ImportExport,
-  uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper;
+  uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper, uO2ObjectsUtils;
 
 {$R *.dfm}
 
@@ -2346,7 +2346,7 @@ begin
     try
       FindByTag.Items.Clear;
       FindByTag.Items.Add(STagsNone);
-      O2File.Objects.GetTags(FindByTag.Items);
+      AppendTagsToList(O2File.Objects.ToEnumerable, FindByTag.Items);
     finally
       FindByTag.Items.EndUpdate;
     end;
@@ -2640,7 +2640,7 @@ begin
     try
       FillObjList(Selection);
 
-      O2File.Objects.GetTags(Tags);
+      AppendTagsToList(O2File.Objects.ToEnumerable, Tags);
       for Tag in Tags do
       begin
         Item := TMenuItem.Create(Self);
@@ -2651,7 +2651,7 @@ begin
       AddTag.Enabled := AddTag.Count > 0;
 
       Tags.Clear;
-      Selection.GetTags(Tags);
+      AppendTagsToList(Selection.ToEnumerable, Tags);
       for Tag in Tags do
       begin
         Item := TMenuItem.Create(Self);
@@ -2753,13 +2753,15 @@ end;
 procedure TMainForm.AddTagClick(Sender: TObject);
 var
   Selection: TO2ObjectList;
+  AObject: TO2Object;
   Tag: string;
 begin
   Selection := TO2ObjectList.Create;
   try
     FillObjList(Selection);
     Tag := StringReplace(TMenuItem(Sender).Caption, '&&', '&', [rfReplaceAll]);
-    Selection.AddTag(Tag);
+    for AObject in Selection do
+      AObject.AddTag(Tag);
   finally
     Selection.Free;
   end;
@@ -2768,13 +2770,15 @@ end;
 procedure TMainForm.DeleteTagClick(Sender: TObject);
 var
   Selection: TO2ObjectList;
+  AObject: TO2Object;
   Tag: string;
 begin
   Selection := TO2ObjectList.Create;
   try
     FillObjList(Selection);
     Tag := StringReplace(TMenuItem(Sender).Caption, '&&', '&', [rfReplaceAll]);
-    Selection.DeleteTag(Tag);
+    for AObject in Selection do
+      AObject.DeleteTag(Tag);
   finally
     Selection.Free;
   end;
@@ -2791,12 +2795,12 @@ begin
   ReplaceTags := TStringList.Create;
   try
     FillObjList(Selection);
-    Selection.GetTags(SearchTags);
-    O2File.Objects.GetTags(ReplaceTags);
+    AppendTagsToList(Selection.ToEnumerable, SearchTags);
+    AppendTagsToList(O2File.Objects.ToEnumerable, ReplaceTags);
     if TReplaceDlg.Execute(Application, acReplaceTag,
       SearchTags, ReplaceTags, SearchTag, ReplaceTag) then
     begin
-      Selection.ReplaceTag(SearchTag, ReplaceTag);
+      ReplaceObjectsTag(Selection.ToEnumerable, SearchTag, ReplaceTag);
       NotifyChanges([ncObjects, ncTagList]);
     end;
   finally
@@ -2817,13 +2821,14 @@ begin
   ReplaceFieldNames := TStringList.Create;
   try
     FillObjList(Selection);
-    Selection.GetFieldNames(SearchFieldNames);
-    O2File.Objects.GetFieldNames(ReplaceFieldNames);
+    AppendFieldNamesToList(Selection.ToEnumerable, SearchFieldNames);
+    AppendFieldNamesToList(O2File.Objects.ToEnumerable, ReplaceFieldNames);
     if TReplaceDlg.Execute(Application, acReplaceFieldName,
       SearchFieldNames, ReplaceFieldNames,
       SearchFieldName, ReplaceFieldName) then
     begin
-      Selection.ReplaceFieldName(SearchFieldName, ReplaceFieldName);
+      ReplaceObjectsFieldName(Selection.ToEnumerable, SearchFieldName,
+        ReplaceFieldName);
       NotifyChanges([ncObjects]);
     end;
   finally
@@ -2844,13 +2849,15 @@ begin
   ReplaceFieldValues := TStringList.Create;
   try
     FillObjList(Selection);
-    Selection.GetFieldNames(SearchFieldNames);
-    O2File.Objects.GetFieldValues('', ReplaceFieldValues);
+    AppendFieldNamesToList(Selection.ToEnumerable, SearchFieldNames);
+    AppendFieldValuesToList(O2File.Objects.ToEnumerable, '',
+      ReplaceFieldValues);
     if TReplaceDlg.Execute(Application, acReplaceFieldValue,
       SearchFieldNames, ReplaceFieldValues,
       SearchFieldName, ReplaceFieldValue) then
     begin
-      Selection.ReplaceFieldValue(SearchFieldName, ReplaceFieldValue);
+      ReplaceObjectsFieldValue(Selection.ToEnumerable, SearchFieldName,
+        ReplaceFieldValue);
       NotifyChanges([ncObjects]);
     end;
   finally

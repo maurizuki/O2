@@ -990,6 +990,7 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="uHTMLHelper.pas"/>
+        <DCCReference Include="uO2ObjectsUtils.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

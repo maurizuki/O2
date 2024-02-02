@@ -124,7 +124,7 @@ implementation
 
 uses
   Zxcvbn.Result, Zxcvbn.Utility, uO2Rules, uGlobal, uCtrlHelpers, uUtils,
-  uShellUtils;
+  uShellUtils, uO2ObjectsUtils;
 
 {$R *.dfm}
 
@@ -197,8 +197,8 @@ begin
     ckMarkdown.Checked := AObject.TextType = ttCommonMark;
   end;
   UpdateFieldsView;
-  Objects.GetTags(cbTag.Items);
-  Objects.GetFieldNames(cbFieldName.Items);
+  AppendTagsToList(Objects.ToEnumerable, cbTag.Items);
+  AppendFieldNamesToList(Objects.ToEnumerable, cbFieldName.Items);
 
   if Duplicate then ObjectIndex := -1;
 end;
@@ -330,7 +330,8 @@ end;
 procedure TObjPropsDlg.cbFieldValueEnter(Sender: TObject);
 begin
   TComboBox(Sender).Items.Clear;
-  Objects.GetFieldValues(cbFieldName.Text, TComboBox(Sender).Items);
+  AppendFieldValuesToList(Objects.ToEnumerable,	cbFieldName.Text,
+    TComboBox(Sender).Items);
 end;
 
 procedure TObjPropsDlg.cbFieldValueChange(Sender: TObject);
