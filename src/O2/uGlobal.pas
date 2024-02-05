@@ -85,6 +85,11 @@ const
   IdPrintIncludeRelations = 'Print.Include.Relations';
   IdPrintIncludePasswords = 'Print.Include.Passwords';
 
+{ Password score colors }
+
+  PasswordScoreColors: array [0..4] of TColor = (
+    $00241CED, $00277FFF, $000EC9FF, $00E8A200, $004CB122);
+
 { UI localization languages }
 
 type

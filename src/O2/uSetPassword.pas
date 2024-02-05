@@ -59,7 +59,7 @@ var
 implementation
 
 uses
-  uO2Defs, uO2Rules, uGlobal, uUtils, Zxcvbn.Result, Zxcvbn.Utility;
+  uO2Defs, uGlobal, uUtils, Zxcvbn.Result, Zxcvbn.Utility;
 
 {$R *.dfm}
 

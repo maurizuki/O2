@@ -645,6 +645,22 @@ const
     (Value: Integer(ocTags);      Name: 'Tags'),
     (Value: Integer(ocNextEvent); Name: 'NextEvent'));
 
+procedure SetHighlightColors(const Canvas: TCanvas; Highlight: THighlight);
+begin
+  case Highlight.Highlight of
+    htCustom:
+    begin
+      Canvas.Brush.Color := Highlight.Color;
+      Canvas.Font.Color := Highlight.TextColor;
+    end;
+    htPasswordScore:
+    begin
+      Canvas.Brush.Color := PasswordScoreColors[Highlight.PasswordScore];
+      Canvas.Font.Color := clBlack;
+    end;
+  end;
+end;
+
 procedure TMainForm.FormCreate(Sender: TObject);
 var
   AppPath, SettingsPath, LauncherPath, PortablePath: string;
@@ -946,15 +962,12 @@ end;
 
 procedure TMainForm.ObjectsViewCustomDrawItem(Sender: TCustomListView;
   Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
-var
-  BrushColor, FontColor: TColor;
 begin
-  if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data)
-    and O2File.Rules.GetHighlightColors(TO2Object(Item.Data),
-    FPasswordScoreCache, BrushColor, FontColor) then
+  if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data) then
   begin
-    Sender.Canvas.Brush.Color := BrushColor;
-    Sender.Canvas.Font.Color := FontColor;
+    SetHighlightColors(Sender.Canvas,
+      O2File.Rules.GetHighlightColors(TO2Object(Item.Data),
+      FPasswordScoreCache));
   end;
 end;
 
@@ -2944,32 +2957,26 @@ end;
 
 procedure TMainForm.FieldsViewCustomDrawItem(Sender: TCustomListView;
   Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
-var
-  BrushColor, FontColor: TColor;
 begin
-  if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data)
-    and O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
-    FPasswordScoreCache, BrushColor, FontColor) then
+  if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data) then
   begin
-    Sender.Canvas.Brush.Color := BrushColor;
-    Sender.Canvas.Font.Color := FontColor;
+    SetHighlightColors(Sender.Canvas,
+      O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
+      FPasswordScoreCache));
   end;
 end;
 
 procedure TMainForm.FieldsViewCustomDrawSubItem(Sender: TCustomListView;
   Item: TListItem; SubItem: Integer; State: TCustomDrawState;
   var DefaultDraw: Boolean);
-var
-  BrushColor, FontColor: TColor;
 begin
   if Assigned(Item.Data) then
   begin
-    if (State * [cdsFocused, cdsHot] = [])
-      and O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
-      FPasswordScoreCache, BrushColor, FontColor) then
+    if (State * [cdsFocused, cdsHot] = []) then
     begin
-      Sender.Canvas.Brush.Color := BrushColor;
-      Sender.Canvas.Font.Color := FontColor;
+      SetHighlightColors(Sender.Canvas,
+        O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
+        FPasswordScoreCache));
     end;
     if Assigned(O2File.Rules.FindFirstRule(
       TO2Field(Item.Data), HyperlinkRules)) then

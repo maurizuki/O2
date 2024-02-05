@@ -123,8 +123,8 @@ var
 implementation
 
 uses
-  Zxcvbn.Result, Zxcvbn.Utility, uO2Rules, uGlobal, uCtrlHelpers, uUtils,
-  uShellUtils, uO2ObjectsUtils;
+  Zxcvbn.Result, Zxcvbn.Utility, uGlobal, uCtrlHelpers, uUtils,  uShellUtils,
+  uO2ObjectsUtils;
 
 {$R *.dfm}
 
