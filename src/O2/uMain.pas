@@ -40,7 +40,7 @@ type
 
   TObjectViewColumn = (ocName, ocTags, ocNextEvent);
 
-  TMainForm = class(TForm)
+  TMainForm = class(TForm, IPasswordProvider)
     ToolBar: TToolBar;
     StatusBar: TStatusBar;
     ActionList: TActionList;
@@ -547,8 +547,7 @@ type
     procedure SetTransparency(const Value: Integer);
 
     function CanCloseFile: Boolean;
-    procedure PasswordQuery(Sender: TObject; var APassword: string;
-      var Acknowledge: Boolean);
+    function TryGetPassword(var Password: string): Boolean;
     procedure Initialize;
     procedure InitializeSearch;
     procedure LoadLanguageList;
@@ -1130,7 +1129,7 @@ begin
       Import := nil;
       case ImportDialog.FilterIndex of
         idxImportFromO2File:
-          Import := TO2Import.Create(O2File, PasswordQuery);
+          Import := TO2Import.Create(O2File, Self);
         idxImportFromXmlFile:
           Import := TXmlImport.Create(O2File);
       end;
@@ -1564,7 +1563,6 @@ begin
   if FFile = nil then
   begin
     FFile := TO2File.Create;
-    FFile.OnPasswordQuery := PasswordQuery;
   end;
   Result := FFile;
 end;
@@ -1663,11 +1661,9 @@ begin
     end;
 end;
 
-procedure TMainForm.PasswordQuery(Sender: TObject;
-  var APassword: string; var Acknowledge: Boolean);
+function TMainForm.TryGetPassword(var Password: string): Boolean;
 begin
-  APassword := '';
-  Acknowledge := TGetPasswordDlg.Execute(Application, APassword);
+  Result := TGetPasswordDlg.Execute(Application, Password);
 end;
 
 procedure TMainForm.Initialize;
@@ -1765,7 +1761,7 @@ begin
 
     BeginBatchOperation;
     try
-      O2File.Load;
+      O2File.Load(Self);
       FPasswordScoreCache.Update(O2File);
     finally
       EndBatchOperation;

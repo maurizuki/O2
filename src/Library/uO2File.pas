@@ -22,8 +22,9 @@ uses
   uO2Defs, uO2Classes, uO2Objects, uO2Relations, uO2Rules;
 
 type
-  TPasswordQueryEvent = procedure(Sender: TObject; var APassword: string;
-    var Acknowledge: Boolean) of object;
+  IPasswordProvider = interface
+    function TryGetPassword(var Password: string): Boolean;
+  end;
 
   TO2File = class(TO2Persistent)
   private
@@ -34,7 +35,6 @@ type
     FCRC32: Longword;
     FPassword: string;
     FModified: Boolean;
-    FOnPasswordQuery: TPasswordQueryEvent;
     FTitle: string;
     FDescription: string;
     FAuthor: string;
@@ -65,12 +65,11 @@ type
     procedure Decompress(InputStream, OutputStream: TStream); virtual;
     procedure Encrypt(InputStream, OutputStream: TStream); virtual;
     procedure Decrypt(InputStream, OutputStream: TStream); virtual;
-    function PasswordQuery: Boolean;
   public
     constructor Create;
     destructor Destroy; override;
     class procedure TestAlgorithms;
-    procedure Load; virtual;
+    procedure Load(PasswordProvider: IPasswordProvider); virtual;
     procedure Save(KeepModified: Boolean = False); virtual;
     property FileName: string read FFileName write FFileName;
     property Encrypted: Boolean read FEncrypted write FEncrypted;
@@ -79,8 +78,6 @@ type
     property CRC32: Longword read FCRC32 write FCRC32;
     property Password: string read FPassword write FPassword;
     property Modified: Boolean read FModified write FModified;
-    property OnPasswordQuery: TPasswordQueryEvent read FOnPasswordQuery
-      write FOnPasswordQuery;
   published
     property Title: string read FTitle write SetTitle;
     property Description: string read FDescription write SetDescription;
@@ -119,7 +116,6 @@ begin
   FHash := ohDefault;
   FPassword := '';
   FModified := False;
-  FOnPasswordQuery := nil;
   FTitle := '';
   FDescription := '';
   FAuthor := '';
@@ -197,7 +193,7 @@ begin
   TestHash(TDCP_tiger);
 end;
 
-procedure TO2File.Load;
+procedure TO2File.Load(PasswordProvider: IPasswordProvider);
 const
   Version2_0: WordRec = (Lo: 0; Hi: 2);
 var
@@ -205,12 +201,14 @@ var
   XmlStream, RawStream: TMemoryStream;
   InputStream: TFileStream;
   FileVersion: Word;
+  APassword: string;
 begin
   InputStream := TFileStream.Create(FileName, fmOpenRead);
   try
     FileVersion := ReadHeader(InputStream);
 
-    if Encrypted and not PasswordQuery then Abort;
+    if Encrypted and not PasswordProvider.TryGetPassword(APassword) then Abort;
+    Password := APassword;
 
     XmlStream := TMemoryStream.Create;
     try
@@ -513,19 +511,6 @@ begin
     Cipher.Burn;
   finally
     Cipher.Free;
-  end;
-end;
-
-function TO2File.PasswordQuery: Boolean;
-var
-  APassword: string;
-begin
-  Result := True;
-  APassword := Password;
-  if Assigned(OnPasswordQuery) then
-  begin
-    OnPasswordQuery(Self, APassword, Result);
-    if Result then Password := APassword;
   end;
 end;
 

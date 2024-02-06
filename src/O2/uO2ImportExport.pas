@@ -23,12 +23,11 @@ uses
 type
   TO2Import = class(TImportExport)
   private
-    FPasswordQuery: TPasswordQueryEvent;
+    FPasswordProvider: IPasswordProvider;
   public
     constructor Create(const O2File: TO2File;
-      const PasswordQuery: TPasswordQueryEvent); overload;
+      PasswordProvider: IPasswordProvider); overload;
     procedure Execute(const FileName: string); override;
-    property PasswordQuery: TPasswordQueryEvent read FPasswordQuery;
   end;
 
   TO2Export = class(TImportExport)
@@ -38,7 +37,6 @@ type
     constructor Create(const O2File: TO2File;
       const Selection: TO2ObjectList); overload;
     procedure Execute(const FileName: string); override;
-    property Selection: TO2ObjectList read FSelection;
   end;
 
 implementation
@@ -49,10 +47,10 @@ uses
 { TO2Import }
 
 constructor TO2Import.Create(const O2File: TO2File;
-  const PasswordQuery: TPasswordQueryEvent);
+  PasswordProvider: IPasswordProvider);
 begin
   inherited Create(O2File);
-  FPasswordQuery := PasswordQuery;
+  FPasswordProvider := PasswordProvider;
 end;
 
 procedure TO2Import.Execute(const FileName: string);
@@ -64,9 +62,8 @@ var
 begin
   InputFile := TO2File.Create;
   try
-    InputFile.OnPasswordQuery := PasswordQuery;
     InputFile.FileName := FileName;
-    InputFile.Load;
+    InputFile.Load(FPasswordProvider);
     for AObject in InputFile.Objects do
       O2File.Objects.ImportObject(AObject);
     for ARelation in InputFile.Relations do
@@ -95,7 +92,7 @@ var
 begin
   OutputFile := TO2File.Create;
   try
-    for AObject in Selection do
+    for AObject in FSelection do
     begin
       NewObject := OutputFile.Objects.AddObject;
       NewObject.Assign(AObject);
