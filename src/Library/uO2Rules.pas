@@ -18,7 +18,7 @@ unit uO2Rules;
 interface
 
 uses
-  Classes, Windows, SysUtils, Graphics, uO2Classes, uO2Objects;
+  Classes, Windows, SysUtils, Graphics, Masks, uO2Classes, uO2Objects;
 
 const
   PasswordChar = '●';
@@ -151,16 +151,20 @@ type
     FName: string;
     FRuleType: TO2RuleType;
     FFieldName: string;
+    FFieldNameMask: TMask;
     FFieldValue: string;
+    FFieldValueMask: TMask;
     FParams: TO2Params;
     FActive: Boolean;
+    function GetFieldNameMask: TMask;
+    function GetFieldValueMask: TMask;
     procedure SetName(const Value: string);
     procedure SetRuleType(const Value: TO2RuleType);
     procedure SetFieldName(const Value: string);
     procedure SetFieldValue(const Value: string);
     procedure SetParams(const Value: TO2Params);
     procedure SetActive(const Value: Boolean);
-  protected
+
     function GetFormatSettings: TFormatSettings;
     function GetEventDisplayText(const AField: TO2Field): string;
   public
@@ -228,7 +232,7 @@ type
 implementation
 
 uses
-  Masks, DateUtils, uO2File, uO2Utils;
+  DateUtils, uO2File, uO2Utils;
 
 resourcestring
   SRuleAlreadyExists = 'A rule named "%s" already exists.';
@@ -402,13 +406,17 @@ begin
   FName := '';
   FRuleType := rtNone;
   FFieldName := '';
+  FFieldNameMask := nil;
   FFieldValue := '';
+  FFieldValueMask := nil;
   FParams := TO2Params.Create(Self);
   FActive := False;
 end;
 
 destructor TO2Rule.Destroy;
 begin
+  if Assigned(FFieldNameMask) then FFieldNameMask.Free;
+  if Assigned(FFieldValueMask) then FFieldValueMask.Free;
   FParams.Free;
   inherited Destroy;
 end;
@@ -432,8 +440,8 @@ function TO2Rule.Matches(const AField: TO2Field): Boolean;
 begin
   try
     Result := Active
-      and MatchesMask(AField.FieldName, FieldName)
-      and MatchesMask(AField.FieldValue, FieldValue);
+      and GetFieldNameMask.Matches(AField.FieldName)
+      and GetFieldValueMask.Matches(AField.FieldValue);
   except
     Result := False;
   end;
@@ -631,6 +639,20 @@ begin
     Result.ShortDateFormat);
 end;
 
+function TO2Rule.GetFieldNameMask: TMask;
+begin
+  if FFieldNameMask = nil then
+    FFieldNameMask := TMask.Create(FFieldName);
+  Result := FFieldNameMask;
+end;
+
+function TO2Rule.GetFieldValueMask: TMask;
+begin
+  if FFieldValueMask = nil then
+    FFieldValueMask := TMask.Create(FFieldValue);
+  Result := FFieldValueMask;
+end;
+
 procedure TO2Rule.SetName(const Value: string);
 var
   ARule: TO2Rule;
@@ -659,6 +681,7 @@ begin
   if FFieldName <> Value then
   begin
     FFieldName := Value;
+    if Assigned(FFieldNameMask) then FreeAndNil(FFieldNameMask);
     NotifyChanges(Self, onPropertyChanged);
   end;
 end;
@@ -668,6 +691,7 @@ begin
   if FFieldValue <> Value then
   begin
     FFieldValue := Value;
+    if Assigned(FFieldValueMask) then FreeAndNil(FFieldValueMask);
     NotifyChanges(Self, onPropertyChanged);
   end;
 end;
