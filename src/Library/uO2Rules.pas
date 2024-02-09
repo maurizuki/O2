@@ -214,12 +214,8 @@ type
     function GetDisplayText(const AField: TO2Field;
       ShowPasswords: Boolean): string;
     function GetHyperLink(const AField: TO2Field): string;
-    function CheckEvents(const AField: TO2Field; Date1,
-      Date2: TDateTime; UseParams: Boolean = False): Boolean; overload;
     function CheckEvents(const AObject: TO2Object; Date1,
       Date2: TDateTime; UseParams: Boolean = False): Boolean; overload;
-    function GetNextEvent(const AField: TO2Field; StartDate: TDateTime;
-      out NextDate: TDateTime; UseParams: Boolean = False): Boolean; overload;
     function GetNextEvent(const AObject: TO2Object; StartDate: TDateTime;
       out NextDate: TDateTime; UseParams: Boolean = False): Boolean; overload;
     function GetHighlightColors(const AField: TO2Field;
@@ -817,48 +813,16 @@ begin
     Result := ARule.GetHyperLink(AField);
 end;
 
-function TO2Rules.CheckEvents(const AField: TO2Field; Date1,
-  Date2: TDateTime; UseParams: Boolean): Boolean;
-var
-  ARule: TO2Rule;
-begin
-  Result := False;
-  for ARule in Self do
-    if ARule.CheckEvents(AField, Date1, Date2, UseParams) then
-    begin
-      Result := True;
-      Break;
-    end;
-end;
-
 function TO2Rules.CheckEvents(const AObject: TO2Object; Date1,
   Date2: TDateTime; UseParams: Boolean): Boolean;
 var
   AField: TO2Field;
-begin
-  Result := False;
-  for AField in AObject.Fields do
-    if CheckEvents(AField, Date1, Date2, UseParams) then
-    begin
-      Result := True;
-      Break;
-    end;
-end;
-
-function TO2Rules.GetNextEvent(const AField: TO2Field; StartDate: TDateTime;
-  out NextDate: TDateTime; UseParams: Boolean): Boolean;
-var
-  ANextDate: TDateTime;
   ARule: TO2Rule;
 begin
   Result := False;
-  for ARule in Self do
-    if ARule.GetNextEvent(AField, StartDate, ANextDate, UseParams) then
-    begin
-      if not Result or (ANextDate < NextDate) then
-        NextDate := ANextDate;
-      Result := True;
-    end;
+  for AField in AObject.Fields do
+    for ARule in Self do
+      if ARule.CheckEvents(AField, Date1, Date2, UseParams) then Exit(True);
 end;
 
 function TO2Rules.GetNextEvent(const AObject: TO2Object; StartDate: TDateTime;
@@ -866,15 +830,16 @@ function TO2Rules.GetNextEvent(const AObject: TO2Object; StartDate: TDateTime;
 var
   ANextDate: TDateTime;
   AField: TO2Field;
+  ARule: TO2Rule;
 begin
   Result := False;
   for AField in AObject.Fields do
-    if GetNextEvent(AField, StartDate, ANextDate, UseParams) then
-    begin
-      if not Result or (ANextDate < NextDate) then
-        NextDate := ANextDate;
-      Result := True;
-    end;
+    for ARule in Self do
+      if ARule.GetNextEvent(AField, StartDate, ANextDate, UseParams) then
+      begin
+        if not Result or (ANextDate < NextDate) then NextDate := ANextDate;
+        Result := True;
+      end;
 end;
 
 function TO2Rules.GetHighlightColors(const AField: TO2Field;
