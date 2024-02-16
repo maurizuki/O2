@@ -449,6 +449,7 @@ var
   Years, MonthsOfYear, DaysOfMonth: Word;
   Months, Days: Integer;
   ADate: TDateTime;
+  AMask: string;
 begin
   if TryStrToDate(AField.FieldValue, ADate, GetFormatSettings)
     and ((RuleType = rtExpirationDate) and (ADate >= Date)
@@ -457,26 +458,29 @@ begin
     DateSpan(Date, ADate, Years, MonthsOfYear, DaysOfMonth);
     Months := MonthsBetween(Date, ADate);
     Days := DaysBetween(Date, ADate);
-    MacroProcessor := TMacroProcessor.Create;
+
+    if Params.Values[DisplayMaskParam] <> '' then
+      AMask := Params.Values[DisplayMaskParam]
+    else
+      case RuleType of
+        rtExpirationDate:
+          AMask := DefaultExpirationDateMask;
+        rtRecurrence:
+          AMask := DefaultRecurrenceMask;
+      end;
+
+    MacroProcessor := TMacroProcessor.Create(AMask, MacroStartDelimiter,
+      MacroEndDelimiter);
     try
-      MacroProcessor.StartDelimiter := MacroStartDelimiter;
-      MacroProcessor.EndDelimiter := MacroEndDelimiter;
-      MacroProcessor.Macros.Values[FieldNameMacro] := AField.FieldName;
-      MacroProcessor.Macros.Values[FieldValueMacro] := AField.FieldValue;
-      MacroProcessor.Macros.Values[YearsMacro] := IntToStr(Years);
-      MacroProcessor.Macros.Values[MonthsOfYearMacro] := IntToStr(MonthsOfYear);
-      MacroProcessor.Macros.Values[DaysOfMonthMacro] := IntToStr(DaysOfMonth);
-      MacroProcessor.Macros.Values[MonthsMacro] := IntToStr(Months);
-      MacroProcessor.Macros.Values[DaysMacro] := IntToStr(Days);
-      if Params.Values[DisplayMaskParam] = '' then
-        case RuleType of
-          rtExpirationDate:
-            Result := MacroProcessor.ExpandMacros(DefaultExpirationDateMask);
-          rtRecurrence:
-            Result := MacroProcessor.ExpandMacros(DefaultRecurrenceMask);
-        end
-      else
-        Result := MacroProcessor.ExpandMacros(Params.Values[DisplayMaskParam]);
+      Result := MacroProcessor
+        .Macro(FieldNameMacro, AField.FieldName)
+        .Macro(FieldValueMacro, AField.FieldValue)
+        .Macro(YearsMacro, Years)
+        .Macro(MonthsOfYearMacro, MonthsOfYear)
+        .Macro(DaysOfMonthMacro, DaysOfMonth)
+        .Macro(MonthsMacro, Months)
+        .Macro(DaysMacro, Days)
+        .ToString;
     finally
       MacroProcessor.Free;
     end;
@@ -504,31 +508,33 @@ end;
 function TO2Rule.GetHyperLink(const AField: TO2Field): string;
 var
   EncodedFieldName, EncodedFieldValue: string;
-  MacroProcessor: TMacroProcessor;
+  LegacyMacroProcessor, MacroProcessor: TMacroProcessor;
 begin
   if Params.Values[HyperLinkMaskParam] = '' then
     Result := AField.FieldValue
   else
   begin
-    Result := Params.Values[HyperLinkMaskParam];
     EncodedFieldName := UrlEscape(AField.FieldName);
     EncodedFieldValue := UrlEscape(AField.FieldValue);
-    MacroProcessor := TMacroProcessor.Create;
-    try
-      MacroProcessor.StartDelimiter := LegacyMacroStartDelimiter;
-      MacroProcessor.EndDelimiter := LegacyMacroEndDelimiter;
-      MacroProcessor.Macros.Values[LegacyFieldNameMacro] := EncodedFieldName;
-      MacroProcessor.Macros.Values[LegacyFieldValueMacro] := EncodedFieldValue;
-      Result := MacroProcessor.ExpandMacros(Result);
 
-      MacroProcessor.StartDelimiter := MacroStartDelimiter;
-      MacroProcessor.EndDelimiter := MacroEndDelimiter;
-      MacroProcessor.Macros.Clear;
-      MacroProcessor.Macros.Values[FieldNameMacro] := EncodedFieldName;
-      MacroProcessor.Macros.Values[FieldValueMacro] := EncodedFieldValue;
-      Result := MacroProcessor.ExpandMacros(Result);
+    LegacyMacroProcessor := TMacroProcessor.Create(
+      Params.Values[HyperLinkMaskParam], LegacyMacroStartDelimiter,
+      LegacyMacroEndDelimiter);
+    try
+      MacroProcessor := TMacroProcessor.Create(LegacyMacroProcessor
+        .Macro(LegacyFieldNameMacro, EncodedFieldName)
+        .Macro(LegacyFieldValueMacro, EncodedFieldValue)
+        .ToString, MacroStartDelimiter, MacroEndDelimiter);
+      try
+        Result := MacroProcessor
+          .Macro(FieldNameMacro, EncodedFieldName)
+          .Macro(FieldValueMacro, EncodedFieldValue)
+          .ToString;
+      finally
+        MacroProcessor.Free;
+      end;
     finally
-      MacroProcessor.Free;
+      LegacyMacroProcessor.Free;
     end;
   end;
 end;
