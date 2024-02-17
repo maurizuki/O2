@@ -626,7 +626,7 @@ uses
   xmldom, msxmldom, System.JSON, JclFileUtils,
   uAppFiles, uUtils, uShellUtils, uPAFConsts, uAbout, uGetPassword,
   uSetPassword, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
-  uReplaceDlg, uPrintPreview, uHTMLExport, uXmlStorage, uO2Xml, uO2Defs,
+  uReplaceDlg, uPrint, uPrintPreview, uHTMLExport, uXmlStorage, uO2Xml, uO2Defs,
   uBrowserEmulation, uCtrlHelpers, uImportExport, uO2ImportExport,
   uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper, uO2ObjectsUtils;
 
@@ -1257,35 +1257,42 @@ end;
 
 procedure TMainForm.PrintFileExecute(Sender: TObject);
 var
+  PrintDocument: TPrintDocument;
   Selection: TO2ObjectList;
   Options: TPrintOptions;
 begin
   Options := [];
-  TPrintPreview.IncludeOption(Options, poIncludeTags,
-    XmlStorage.ReadBoolean(IdPrintIncludeTags, True));
-  TPrintPreview.IncludeOption(Options, poIncludeNotes,
-    XmlStorage.ReadBoolean(IdPrintIncludeNotes, True));
-  TPrintPreview.IncludeOption(Options, poIncludeRelations,
-    XmlStorage.ReadBoolean(IdPrintIncludeRelations, True));
-  TPrintPreview.IncludeOption(Options, poIncludePasswords,
-    XmlStorage.ReadBoolean(IdPrintIncludePasswords, True));
+  if XmlStorage.ReadBoolean(IdPrintIncludeTags, True) then
+    Include(Options, poIncludeTags);
+  if XmlStorage.ReadBoolean(IdPrintIncludeNotes, True) then
+    Include(Options, poIncludeNotes);
+  if XmlStorage.ReadBoolean(IdPrintIncludeRelations, True) then
+    Include(Options, poIncludeRelations);
+  if XmlStorage.ReadBoolean(IdPrintIncludePasswords, True) then
+    Include(Options, poIncludePasswords);
 
   Selection := TO2ObjectList.Create;
   try
     FillObjList(Selection);
-    TPrintPreview.Execute(Application, O2FileName, O2File, Selection, Options);
+
+    PrintDocument := TPrintDocument.Create(O2File, Selection, Options);
+    try
+      TPrintPreview.Execute(Application, PrintDocument);
+
+      XmlStorage.WriteBoolean(IdPrintIncludeTags,
+        poIncludeTags in PrintDocument.Options);
+      XmlStorage.WriteBoolean(IdPrintIncludeNotes,
+        poIncludeNotes in PrintDocument.Options);
+      XmlStorage.WriteBoolean(IdPrintIncludeRelations,
+        poIncludeRelations in PrintDocument.Options);
+      XmlStorage.WriteBoolean(IdPrintIncludePasswords,
+        poIncludePasswords in PrintDocument.Options);
+    finally
+      PrintDocument.Free;
+    end;
   finally
     Selection.Free;
   end;
-
-  XmlStorage.WriteBoolean(IdPrintIncludeTags,
-    poIncludeTags in Options);
-  XmlStorage.WriteBoolean(IdPrintIncludeNotes,
-    poIncludeNotes in Options);
-  XmlStorage.WriteBoolean(IdPrintIncludeRelations,
-    poIncludeRelations in Options);
-  XmlStorage.WriteBoolean(IdPrintIncludePasswords,
-    poIncludePasswords in Options);
 end;
 
 procedure TMainForm.PrintFileUpdate(Sender: TObject);

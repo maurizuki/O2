@@ -46,7 +46,8 @@ uses
   uPasswordScoreCache in 'uPasswordScoreCache.pas',
   uRTFViewer in 'uRTFViewer.pas' {RTFViewer},
   uHTMLHelper in 'uHTMLHelper.pas',
-  uO2ObjectsUtils in 'uO2ObjectsUtils.pas';
+  uO2ObjectsUtils in 'uO2ObjectsUtils.pas',
+  uPrint in 'uPrint.pas';
 
 {$R *.res}
 

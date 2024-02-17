@@ -20,14 +20,9 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, JvComponentBase, JvExControls, JvPrvwRender, JvPrvwDoc, ToolWin,
-  ComCtrls, ActnList, ImgList, Menus, uO2File, uO2Objects, uO2Relations,
-  System.ImageList, System.Actions;
+  ComCtrls, ActnList, ImgList, Menus, System.ImageList, System.Actions, uPrint;
 
 type
-  TPrintOption = (poIncludeTags, poIncludeNotes, poIncludeRelations,
-    poIncludePasswords);
-  TPrintOptions = set of TPrintOption;
-
   TPrintPreview = class(TForm)
     PreviewControl: TJvPreviewControl;
     ToolBar: TToolBar;
@@ -88,28 +83,14 @@ type
       Canvas: TCanvas; PageRect, PrintRect: TRect; var NeedMorePages: Boolean);
     procedure PreviewControlChange(Sender: TObject);
   private
-    FFileName: string;
-    FTitle: string;
-    FO2File: TO2File;
-    FObjects: TO2ObjectList;
-    ObjRelations: TO2ObjRelations;
-    ObjectIndex: Integer;
-    FieldIndex: Integer;
-    ObjRelationIndex: Integer;
-    ItemIndex: Integer;
+    FPrintDocument: TPrintDocument;
+    procedure SetPrintDocument(const Value: TPrintDocument);
     procedure SetZoomCaption(Action: TCustomAction);
-  protected
     procedure RefreshPreview;
   public
-    class procedure IncludeOption(var Options: TPrintOptions;
-      AOption: TPrintOption; Include: Boolean);
-    class procedure Execute(AOwner: TComponent; const FileName: string;
-      const O2File: TO2File; const Selection: TO2ObjectList;
-      var Options: TPrintOptions);
-    property FileName: string read FFileName write FFileName;
-    property Title: string read FTitle write FTitle;
-    property O2File: TO2File read FO2File write FO2File;
-    property Objects: TO2ObjectList read FObjects write FObjects;
+    class procedure Execute(AOwner: TComponent; PrintDocument: TPrintDocument);
+    property PrintDocument: TPrintDocument read FPrintDocument
+      write SetPrintDocument;
   end;
 
 var
@@ -118,43 +99,38 @@ var
 implementation
 
 uses
-  Printers, Math, uGlobal, uO2Rules;
+  Printers, Math, uGlobal;
 
 {$R *.dfm}
 
 { TPrintPreview }
 
-class procedure TPrintPreview.IncludeOption(var Options: TPrintOptions;
-  AOption: TPrintOption; Include: Boolean);
-begin
-  if Include then
-    System.Include(Options, AOption)
-  else
-    System.Exclude(Options, AOption);
-end;
-
 class procedure TPrintPreview.Execute(AOwner: TComponent;
-  const FileName: string; const O2File: TO2File;
-  const Selection: TO2ObjectList; var Options: TPrintOptions);
+  PrintDocument: TPrintDocument);
 var
   Form: TPrintPreview;
 begin
   Form := TPrintPreview.Create(AOwner);
   try
-    Form.FileName := FileName;
-    if O2File.Title = '' then
-      Form.Title := ChangeFileExt(ExtractFileName(FileName), '')
-    else
-      Form.Title := O2File.Title;
-    Form.O2File := O2File;
-    Form.Objects := Selection;
+    Form.PrintDocument := PrintDocument;
+    Form.ShowModal;
+  finally
+    Form.Free;
+  end;
+end;
 
-    Form.IncludeTags.Checked := poIncludeTags in Options;
-    Form.IncludeNotes.Checked := poIncludeNotes in Options;
-    Form.IncludeRelations.Checked := poIncludeRelations in Options;
-    Form.IncludePasswords.Checked := poIncludePasswords in Options;
+procedure TPrintPreview.SetPrintDocument(const Value: TPrintDocument);
+begin
+  if FPrintDocument <> Value then
+  begin
+    FPrintDocument := Value;
 
-    with Form.PreviewControl.DeviceInfo do
+    IncludeTags.Checked := poIncludeTags in FPrintDocument.Options;
+    IncludeNotes.Checked := poIncludeNotes in FPrintDocument.Options;
+    IncludeRelations.Checked := poIncludeRelations in FPrintDocument.Options;
+    IncludePasswords.Checked := poIncludePasswords in FPrintDocument.Options;
+
+    with PreviewControl.DeviceInfo do
     begin
       ReferenceHandle := Printer.Handle;
       OffsetLeft := Max(MMToXPx(10), OffsetLeft);
@@ -163,37 +139,21 @@ begin
       OffsetBottom := Max(MMToYPx(10), OffsetBottom);
     end;
 
-    Form.RefreshPreview;
-    Form.ZoomWholePage.Execute;
-    Form.ShowModal;
-
-    TPrintPreview.IncludeOption(Options, poIncludeTags,
-      Form.IncludeTags.Checked);
-    TPrintPreview.IncludeOption(Options, poIncludeNotes,
-      Form.IncludeNotes.Checked);
-    TPrintPreview.IncludeOption(Options, poIncludeRelations,
-      Form.IncludeRelations.Checked);
-    TPrintPreview.IncludeOption(Options, poIncludePasswords,
-      Form.IncludePasswords.Checked);
-  finally
-    Form.Free;
+    RefreshPreview;
+    ZoomWholePage.Execute;
   end;
-end;
-
-procedure TPrintPreview.RefreshPreview;
-begin
-  ObjectIndex := 0;
-  FieldIndex := 0;
-  ObjRelationIndex := 0;
-  ItemIndex := 0;
-
-  PreviewControl.Clear;
-  PreviewControl.Add;
 end;
 
 procedure TPrintPreview.SetZoomCaption(Action: TCustomAction);
 begin
   PreviewZoom.Caption := Format('%s (%s)', [SPrintPreviewZoom, Action.Caption]);
+end;
+
+procedure TPrintPreview.RefreshPreview;
+begin
+  FPrintDocument.Reset;
+  PreviewControl.Clear;
+  PreviewControl.Add;
 end;
 
 procedure TPrintPreview.FormCreate(Sender: TObject);
@@ -229,14 +189,24 @@ begin
   begin
     PreviewPrinter.Assign(PrintDialog);
     PreviewPrinter.Printer := Printer;
-    PreviewPrinter.Title := Title;
+    PreviewPrinter.Title := FPrintDocument.Title;
     PreviewPrinter.Print;
   end;
 end;
 
 procedure TPrintPreview.OptionExecute(Sender: TObject);
+var
+  Options: TPrintOptions;
 begin
   TAction(Sender).Checked := not TAction(Sender).Checked;
+
+  Options := [];
+  if IncludeTags.Checked then Include(Options, poIncludeTags);
+  if IncludeNotes.Checked then Include(Options, poIncludeNotes);
+  if IncludeRelations.Checked then Include(Options, poIncludeRelations);
+  if IncludePasswords.Checked then Include(Options, poIncludePasswords);
+  FPrintDocument.Options := Options;
+
   RefreshPreview;
 end;
 
@@ -278,285 +248,9 @@ end;
 procedure TPrintPreview.PreviewControlAddPage(Sender: TObject;
   PageIndex: Integer; Canvas: TCanvas; PageRect, PrintRect: TRect;
   var NeedMorePages: Boolean);
-var
-  AObject: TO2Object;
-  AField: TO2Field;
-  TextMetric: TTextMetric;
-  Rect, Rect2: TRect;
-  W, H: Integer;
-  S: string;
 begin
-  NeedMorePages := True;
-
-  with TJvPreviewControl(Sender).DeviceInfo do
-  begin
-    Canvas.Font.Name := 'Arial';
-    Canvas.Font.Size := 8;
-    GetTextMetrics(Canvas.Handle, TextMetric);
-    W := (PrintRect.Right - PrintRect.Left) div 2;
-    H := TextMetric.tmHeight + TextMetric.tmInternalLeading
-      + TextMetric.tmExternalLeading;
-
-    S := Title;
-    Rect.Left := PrintRect.Left;
-    Rect.Top := PrintRect.Top;
-    Rect.Right := PrintRect.Left + W;
-    Rect.Bottom := PrintRect.Top + H;
-    DrawText(Canvas.Handle, PChar(S), Length(S), Rect,
-      DT_NOPREFIX or DT_LEFT or DT_TOP);
-
-    S := FileName;
-    Rect.Left := PrintRect.Right - W;
-    Rect.Right := PrintRect.Right;
-    DrawText(Canvas.Handle, PChar(S), Length(S), Rect,
-      DT_NOPREFIX or DT_RIGHT or DT_TOP);
-
-    S := DateTimeToStr(Now);
-    Rect.Left := PrintRect.Left;
-    Rect.Top := PrintRect.Bottom - H;
-    Rect.Right := PrintRect.Left + W;
-    Rect.Bottom := PrintRect.Bottom;
-    DrawText(Canvas.Handle, PChar(S), Length(S), Rect,
-      DT_NOPREFIX or DT_LEFT or DT_BOTTOM);
-
-    S := IntToStr(PageIndex + 1);
-    Rect.Left := PrintRect.Right - W;
-    Rect.Right := PrintRect.Right;
-    DrawText(Canvas.Handle, PChar(S), Length(S), Rect,
-      DT_NOPREFIX or DT_RIGHT or DT_BOTTOM);
-
-    Inc(PrintRect.Top, H + MMToYPx(5));
-    Dec(PrintRect.Bottom, H + MMToYPx(5));
-
-    Rect.Top := PrintRect.Top;
-
-    if PageIndex = 0 then
-    begin
-      Canvas.Font.Size := 24;
-      GetTextMetrics(Canvas.Handle, TextMetric);
-      H := TextMetric.tmHeight + TextMetric.tmInternalLeading
-        + TextMetric.tmExternalLeading;
-
-      S := Title;
-      Rect.Left := PrintRect.Left;
-      Rect.Right := PrintRect.Right;
-      Rect.Bottom := Rect.Top + H;
-      DrawText(Canvas.Handle, PChar(S), Length(S), Rect,
-        DT_NOPREFIX or DT_LEFT or DT_TOP);
-
-      Inc(Rect.Top, H + MMToYPx(5));
-    end;
-
-    { Objects }
-
-    while ObjectIndex < Objects.Count do
-    begin
-      Canvas.Font.Name := 'Arial';
-      Canvas.Font.Size := 12;
-      GetTextMetrics(Canvas.Handle, TextMetric);
-      H := TextMetric.tmHeight + TextMetric.tmInternalLeading
-        + TextMetric.tmExternalLeading;
-
-      if Rect.Top + H + MMToYPx(3) > PrintRect.Bottom then Exit;
-
-      S := Objects[ObjectIndex].Name;
-      W := Canvas.TextWidth(S);
-      Rect.Left := PrintRect.Left;
-      Rect.Right := PrintRect.Right;
-      Rect.Bottom := Rect.Top + H;
-      DrawText(Canvas.Handle, PChar(S), Length(S), Rect,
-        DT_NOPREFIX or DT_LEFT or DT_TOP);
-
-      Canvas.Pen.Width := 1;
-      Canvas.Pen.Style := psSolid;
-      Canvas.MoveTo(Rect.Left, Rect.Bottom);
-      Canvas.LineTo(Rect.Left + W, Rect.Bottom);
-
-      Inc(Rect.Top, H + MMToYPx(3));
-
-      { Fields }
-
-      Canvas.Font.Name := 'Arial';
-      Canvas.Font.Size := 10;
-      GetTextMetrics(Canvas.Handle, TextMetric);
-      W := Round((PrintRect.Right - PrintRect.Left) * 0.3);
-      H := TextMetric.tmHeight + TextMetric.tmInternalLeading
-        + TextMetric.tmExternalLeading;
-
-      Rect.Left := PrintRect.Left;
-      Rect.Right := PrintRect.Left + W;
-      Rect.Bottom := Rect.Top + H;
-
-      Rect2.Top := Rect.Top;
-      Rect2.Left := PrintRect.Left + W;
-      Rect2.Right := PrintRect.Right;
-      Rect2.Bottom := Rect2.Top + H;
-
-      if IncludeTags.Checked and (FieldIndex = 0)
-        and (Objects[ObjectIndex].Tag <> '') then
-      begin
-        if Rect.Top + H > PrintRect.Bottom then Exit;
-
-        S := STags;
-        DrawText(Canvas.Handle, PChar(S), Length(S), Rect,
-          DT_NOPREFIX or DT_LEFT or DT_TOP);
-
-        S := Objects[ObjectIndex].Tag;
-        DrawText(Canvas.Handle, PChar(S), Length(S), Rect2,
-          DT_NOPREFIX or DT_LEFT or DT_TOP);
-
-        OffsetRect(Rect, 0, H);
-        OffsetRect(Rect2, 0, H);
-      end;
-
-      while FieldIndex < Objects[ObjectIndex].Fields.Count do
-      begin
-        AField := Objects[ObjectIndex].Fields[FieldIndex];
-
-        if IncludePasswords.Checked
-          or not Assigned(O2File.Rules.FindFirstRule(AField, [rtPassword])) then
-        begin
-          if Rect.Top + H > PrintRect.Bottom then Exit;
-
-          S := AField.FieldName;
-          DrawText(Canvas.Handle, PChar(S), Length(S), Rect,
-            DT_NOPREFIX or DT_LEFT or DT_TOP);
-
-          S := AField.FieldValue;
-          DrawText(Canvas.Handle, PChar(S), Length(S), Rect2,
-            DT_NOPREFIX or DT_LEFT or DT_TOP);
-
-          OffsetRect(Rect, 0, H);
-          OffsetRect(Rect2, 0, H);
-        end;
-
-        Inc(FieldIndex);
-      end;
-
-      { Relations }
-
-      if IncludeRelations.Checked then
-      begin
-        if ObjRelations = nil then
-        begin
-          ObjRelations :=
-            O2File.Relations.GetObjectRelations(Objects[ObjectIndex]);
-          ObjRelations.SortByObjName;
-        end;
-
-        Canvas.Font.Name := 'Arial';
-        Canvas.Font.Size := 10;
-        GetTextMetrics(Canvas.Handle, TextMetric);
-        H := TextMetric.tmHeight + TextMetric.tmInternalLeading
-          + TextMetric.tmExternalLeading;
-
-        if (ObjRelationIndex = 0) and (ObjRelations.Count > 0) then
-        begin
-          Inc(Rect.Top, MMToYPx(1));
-
-          Canvas.Pen.Width := 1;
-          Canvas.Pen.Style := psDot;
-          Canvas.MoveTo(PrintRect.Left, Rect.Top);
-          Canvas.LineTo(PrintRect.Right, Rect.Top);
-
-          Inc(Rect.Top, MMToYPx(1));
-        end;
-
-        Rect.Left := PrintRect.Left;
-        Rect.Right := PrintRect.Right - W;
-        Rect.Bottom := Rect.Top + H;
-
-        Rect2.Top := Rect.Top;
-        Rect2.Left := PrintRect.Right - W;
-        Rect2.Right := PrintRect.Right;
-        Rect2.Bottom := Rect2.Top + H;
-
-        while ObjRelationIndex < ObjRelations.Count do
-        begin
-          if Rect.Top + H > PrintRect.Bottom then Exit;
-
-          if Assigned(ObjRelations[ObjRelationIndex].Obj) then
-            S := ObjRelations[ObjRelationIndex].Obj.Name
-          else
-            S := '';
-          DrawText(Canvas.Handle, PChar(S), Length(S), Rect,
-            DT_NOPREFIX or DT_LEFT or DT_TOP);
-
-          S := ObjRelations[ObjRelationIndex].Role;
-          DrawText(Canvas.Handle, PChar(S), Length(S), Rect2,
-            DT_NOPREFIX or DT_LEFT or DT_TOP);
-
-          OffsetRect(Rect, 0, H);
-          OffsetRect(Rect2, 0, H);
-          Inc(ObjRelationIndex);
-        end;
-      end;
-
-      { Text }
-
-      if IncludeNotes.Checked then
-      begin
-        Canvas.Font.Name := 'Courier New';
-        Canvas.Font.Size := 10;
-        GetTextMetrics(Canvas.Handle, TextMetric);
-        H := TextMetric.tmHeight + TextMetric.tmInternalLeading
-          + TextMetric.tmExternalLeading;
-
-        if (ItemIndex = 0) and (Objects[ObjectIndex].Text.Count > 0) then
-        begin
-          Inc(Rect.Top, MMToYPx(1));
-
-          Canvas.Pen.Width := 1;
-          Canvas.Pen.Style := psDot;
-          Canvas.MoveTo(PrintRect.Left, Rect.Top);
-          Canvas.LineTo(PrintRect.Right, Rect.Top);
-
-          Inc(Rect.Top, MMToYPx(1));
-        end;
-
-        Rect.Left := PrintRect.Left;
-        Rect.Bottom := Rect.Top + H;
-
-        while ItemIndex < Objects[ObjectIndex].Text.Count do
-        begin
-          Rect.Right := PrintRect.Right;
-
-          S := Objects[ObjectIndex].Text[ItemIndex];
-          H := DrawText(Canvas.Handle, PChar(S), Length(S), Rect,
-            DT_CALCRECT or DT_NOPREFIX or DT_EXPANDTABS or DT_WORDBREAK
-            or DT_LEFT or DT_TOP);
-
-          if Rect.Right > PrintRect.Right then
-          begin
-            Rect.Right := PrintRect.Right;
-            Insert(#13#10, S, Length(S) div 2);
-            H := DrawText(Canvas.Handle, PChar(S), Length(S), Rect,
-              DT_CALCRECT or DT_NOPREFIX or DT_EXPANDTABS or DT_WORDBREAK
-              or DT_LEFT or DT_TOP);
-          end;
-
-          if Rect.Bottom > PrintRect.Bottom then Exit;
-
-          DrawText(Canvas.Handle, PChar(S), Length(S), Rect,
-            DT_NOPREFIX or DT_EXPANDTABS or DT_WORDBREAK or DT_LEFT or DT_TOP);
-
-          OffsetRect(Rect, 0, H);
-          Inc(ItemIndex);
-        end;
-      end;
-
-      Inc(Rect.Top, MMToYPx(5));
-      Inc(ObjectIndex);
-
-      FieldIndex := 0;
-      ObjRelationIndex := 0;
-      ItemIndex := 0;
-
-      FreeAndNil(ObjRelations);
-    end;
-  end;
-
-  NeedMorePages := False;
+  NeedMorePages := FPrintDocument.DrawNextPage(Canvas, PageRect, PrintRect,
+    PageIndex);
 end;
 
 procedure TPrintPreview.PreviewControlChange(Sender: TObject);
