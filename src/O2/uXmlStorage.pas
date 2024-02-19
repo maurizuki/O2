@@ -18,14 +18,13 @@ unit uXmlStorage;
 interface
 
 uses
-  Classes, XMLDoc, XMLIntf, xmldom, msxmldom;
+  Classes, XMLDoc, XMLIntf, xmldom, msxmldom, uServices;
 
 type
-  TXmlStorage = class
+  TXmlStorage = class(TInterfacedObject, IStorage)
   private
     FDocumentElementName: string;
     FXML: IXMLDocument;
-  protected
     const SchemaLocation = 'https://maurizuki.github.io/O2/xml/settings.xsd';
     const SettingsIdent = 'Settings';
     const SettingIdent = 'setting';
@@ -74,12 +73,12 @@ uses
   SysUtils, Variants;
 
 var
-  XmlStorageInt: TXmlStorage;
+  XmlStorageInt: IStorage;
 
 function XmlStorage: TXmlStorage;
 begin
   if XmlStorageInt = nil then XmlStorageInt := TXmlStorage.Create;
-  Result := XmlStorageInt;
+  Result := TXmlStorage(XmlStorageInt);
 end;
 
 { TXmlStorage }
@@ -288,8 +287,5 @@ end;
 
 initialization
   XmlStorageInt := nil;
-
-finalization
-  if Assigned(XmlStorageInt) then XmlStorageInt.Free;
 
 end.

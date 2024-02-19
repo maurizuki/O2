@@ -120,6 +120,7 @@ begin
   try
     Form.Model := Model;
     Form.ShowModal;
+    Model.StoreSettings;
   finally
     Form.Free;
   end;

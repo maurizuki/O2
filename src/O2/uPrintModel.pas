@@ -18,7 +18,7 @@ unit uPrintModel;
 interface
 
 uses
-  Windows, Graphics, uO2File, uO2Objects, uO2Relations;
+  Windows, Graphics, uO2File, uO2Objects, uO2Relations, uServices;
 
 type
   TPrintModel = class
@@ -26,6 +26,7 @@ type
     FTitle: string;
     FO2File: TO2File;
     FSelectedObjects: TO2ObjectList;
+    FStorage: IStorage;
     FIncludeTags: Boolean;
     FIncludeNotes: Boolean;
     FIncludeRelations: Boolean;
@@ -38,7 +39,8 @@ type
     FPrintDate: string;
   public
     constructor Create(const O2File: TO2File;
-      const SelectedObjects: TO2ObjectList);
+      const SelectedObjects: TO2ObjectList; Storage: IStorage);
+    procedure StoreSettings;
     function DrawNextPage(const Canvas: TCanvas; PageRect, PrintRect: TRect;
       PageIndex: Integer): Boolean;
     property Title: string read FTitle;
@@ -55,10 +57,10 @@ implementation
 uses
   Classes, SysUtils, uGlobal, uO2Rules;
 
-{ TPrintDocument }
+{ TPrintModel }
 
 constructor TPrintModel.Create(const O2File: TO2File;
-  const SelectedObjects: TO2ObjectList);
+  const SelectedObjects: TO2ObjectList; Storage: IStorage);
 begin
   if O2File.Title = '' then
     FTitle := ChangeFileExt(ExtractFileName(O2File.FileName), '')
@@ -66,10 +68,19 @@ begin
     FTitle := O2File.Title;
   FO2File := O2File;
   FSelectedObjects := SelectedObjects;
-  FIncludeTags := True;
-  FIncludeNotes := True;
-  FIncludeRelations := True;
-  FIncludePasswords := True;
+  FStorage := Storage;
+  FIncludeTags := FStorage.ReadBoolean(IdPrintIncludeTags, True);
+  FIncludeNotes := FStorage.ReadBoolean(IdPrintIncludeNotes, True);
+  FIncludeRelations := FStorage.ReadBoolean(IdPrintIncludeRelations, True);
+  FIncludePasswords := FStorage.ReadBoolean(IdPrintIncludePasswords, True);
+end;
+
+procedure TPrintModel.StoreSettings;
+begin
+  FStorage.WriteBoolean(IdPrintIncludeTags, FIncludeTags);
+  FStorage.WriteBoolean(IdPrintIncludeNotes, FIncludeNotes);
+  FStorage.WriteBoolean(IdPrintIncludeRelations, FIncludeRelations);
+  FStorage.WriteBoolean(IdPrintIncludePasswords, FIncludePasswords);
 end;
 
 function TPrintModel.DrawNextPage(const Canvas: TCanvas; PageRect,

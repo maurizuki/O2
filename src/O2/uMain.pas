@@ -1264,21 +1264,9 @@ begin
   try
     FillObjList(Selection);
 
-    Model := TPrintModel.Create(O2File, Selection);
+    Model := TPrintModel.Create(O2File, Selection, XmlStorage);
     try
-      Model.IncludeTags := XmlStorage.ReadBoolean(IdPrintIncludeTags, True);
-      Model.IncludeNotes := XmlStorage.ReadBoolean(IdPrintIncludeNotes, True);
-      Model.IncludeRelations := XmlStorage.ReadBoolean(IdPrintIncludeRelations,
-        True);
-      Model.IncludePasswords := XmlStorage.ReadBoolean(IdPrintIncludePasswords,
-        True);
-
       TPrintPreview.Execute(Application, Model);
-
-      XmlStorage.WriteBoolean(IdPrintIncludeTags, Model.IncludeTags);
-      XmlStorage.WriteBoolean(IdPrintIncludeNotes, Model.IncludeNotes);
-      XmlStorage.WriteBoolean(IdPrintIncludeRelations, Model.IncludeRelations);
-      XmlStorage.WriteBoolean(IdPrintIncludePasswords, Model.IncludePasswords);
     finally
       Model.Free;
     end;
