@@ -13,7 +13,7 @@
 {                                                                      }
 { ******************************************************************** }
 
-unit uPrint;
+unit uPrintModel;
 
 interface
 
@@ -30,7 +30,7 @@ type
 
   TPrintOptions = set of TPrintOption;
 
-  TPrintDocument = class
+  TPrintModel = class
   private
     FTitle: string;
     FO2File: TO2File;
@@ -59,7 +59,7 @@ uses
 
 { TPrintDocument }
 
-constructor TPrintDocument.Create(const O2File: TO2File;
+constructor TPrintModel.Create(const O2File: TO2File;
   const SelectedObjects: TO2ObjectList; Options: TPrintOptions);
 begin
   if O2File.Title = '' then
@@ -77,7 +77,7 @@ begin
   FNoteLineIndex := 0;
 end;
 
-procedure TPrintDocument.Reset;
+procedure TPrintModel.Reset;
 begin
   FObjectIndex := 0;
   FFieldIndex := 0;
@@ -85,7 +85,7 @@ begin
   FNoteLineIndex := 0;
 end;
 
-function TPrintDocument.DrawNextPage(const Canvas: TCanvas; PageRect,
+function TPrintModel.DrawNextPage(const Canvas: TCanvas; PageRect,
   PrintRect: TRect; PageIndex: Integer): Boolean;
 var
   AObject: TO2Object;

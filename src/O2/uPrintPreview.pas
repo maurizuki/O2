@@ -20,7 +20,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, JvComponentBase, JvExControls, JvPrvwRender, JvPrvwDoc, ToolWin,
-  ComCtrls, ActnList, ImgList, Menus, System.ImageList, System.Actions, uPrint;
+  ComCtrls, ActnList, ImgList, Menus, System.ImageList, System.Actions,
+  uPrintModel;
 
 type
   TPrintPreview = class(TForm)
@@ -83,14 +84,13 @@ type
       Canvas: TCanvas; PageRect, PrintRect: TRect; var NeedMorePages: Boolean);
     procedure PreviewControlChange(Sender: TObject);
   private
-    FPrintDocument: TPrintDocument;
-    procedure SetPrintDocument(const Value: TPrintDocument);
+    FModel: TPrintModel;
+    procedure SetModel(const Value: TPrintModel);
     procedure SetZoomCaption(Action: TCustomAction);
     procedure RefreshPreview;
   public
-    class procedure Execute(AOwner: TComponent; PrintDocument: TPrintDocument);
-    property PrintDocument: TPrintDocument read FPrintDocument
-      write SetPrintDocument;
+    class procedure Execute(AOwner: TComponent; Model: TPrintModel);
+    property Model: TPrintModel read FModel write SetModel;
   end;
 
 var
@@ -105,30 +105,29 @@ uses
 
 { TPrintPreview }
 
-class procedure TPrintPreview.Execute(AOwner: TComponent;
-  PrintDocument: TPrintDocument);
+class procedure TPrintPreview.Execute(AOwner: TComponent; Model: TPrintModel);
 var
   Form: TPrintPreview;
 begin
   Form := TPrintPreview.Create(AOwner);
   try
-    Form.PrintDocument := PrintDocument;
+    Form.Model := Model;
     Form.ShowModal;
   finally
     Form.Free;
   end;
 end;
 
-procedure TPrintPreview.SetPrintDocument(const Value: TPrintDocument);
+procedure TPrintPreview.SetModel(const Value: TPrintModel);
 begin
-  if FPrintDocument <> Value then
+  if FModel <> Value then
   begin
-    FPrintDocument := Value;
+    FModel := Value;
 
-    IncludeTags.Checked := poIncludeTags in FPrintDocument.Options;
-    IncludeNotes.Checked := poIncludeNotes in FPrintDocument.Options;
-    IncludeRelations.Checked := poIncludeRelations in FPrintDocument.Options;
-    IncludePasswords.Checked := poIncludePasswords in FPrintDocument.Options;
+    IncludeTags.Checked := poIncludeTags in FModel.Options;
+    IncludeNotes.Checked := poIncludeNotes in FModel.Options;
+    IncludeRelations.Checked := poIncludeRelations in FModel.Options;
+    IncludePasswords.Checked := poIncludePasswords in FModel.Options;
 
     with PreviewControl.DeviceInfo do
     begin
@@ -151,7 +150,7 @@ end;
 
 procedure TPrintPreview.RefreshPreview;
 begin
-  FPrintDocument.Reset;
+  FModel.Reset;
   PreviewControl.Clear;
   PreviewControl.Add;
 end;
@@ -189,7 +188,7 @@ begin
   begin
     PreviewPrinter.Assign(PrintDialog);
     PreviewPrinter.Printer := Printer;
-    PreviewPrinter.Title := FPrintDocument.Title;
+    PreviewPrinter.Title := FModel.Title;
     PreviewPrinter.Print;
   end;
 end;
@@ -205,7 +204,7 @@ begin
   if IncludeNotes.Checked then Include(Options, poIncludeNotes);
   if IncludeRelations.Checked then Include(Options, poIncludeRelations);
   if IncludePasswords.Checked then Include(Options, poIncludePasswords);
-  FPrintDocument.Options := Options;
+  FModel.Options := Options;
 
   RefreshPreview;
 end;
@@ -249,7 +248,7 @@ procedure TPrintPreview.PreviewControlAddPage(Sender: TObject;
   PageIndex: Integer; Canvas: TCanvas; PageRect, PrintRect: TRect;
   var NeedMorePages: Boolean);
 begin
-  NeedMorePages := FPrintDocument.DrawNextPage(Canvas, PageRect, PrintRect,
+  NeedMorePages := FModel.DrawNextPage(Canvas, PageRect, PrintRect,
     PageIndex);
 end;
 

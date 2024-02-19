@@ -626,8 +626,8 @@ uses
   xmldom, msxmldom, System.JSON, JclFileUtils,
   uAppFiles, uUtils, uShellUtils, uPAFConsts, uAbout, uGetPassword,
   uSetPassword, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
-  uReplaceDlg, uPrint, uPrintPreview, uHTMLExport, uXmlStorage, uO2Xml, uO2Defs,
-  uBrowserEmulation, uCtrlHelpers, uImportExport, uO2ImportExport,
+  uReplaceDlg, uPrintModel, uPrintPreview, uHTMLExport, uXmlStorage, uO2Xml,
+  uO2Defs, uBrowserEmulation, uCtrlHelpers, uImportExport, uO2ImportExport,
   uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper, uO2ObjectsUtils;
 
 {$R *.dfm}
@@ -1257,9 +1257,9 @@ end;
 
 procedure TMainForm.PrintFileExecute(Sender: TObject);
 var
-  PrintDocument: TPrintDocument;
   Selection: TO2ObjectList;
   Options: TPrintOptions;
+  Model: TPrintModel;
 begin
   Options := [];
   if XmlStorage.ReadBoolean(IdPrintIncludeTags, True) then
@@ -1275,20 +1275,20 @@ begin
   try
     FillObjList(Selection);
 
-    PrintDocument := TPrintDocument.Create(O2File, Selection, Options);
+    Model := TPrintModel.Create(O2File, Selection, Options);
     try
-      TPrintPreview.Execute(Application, PrintDocument);
+      TPrintPreview.Execute(Application, Model);
 
       XmlStorage.WriteBoolean(IdPrintIncludeTags,
-        poIncludeTags in PrintDocument.Options);
+        poIncludeTags in Model.Options);
       XmlStorage.WriteBoolean(IdPrintIncludeNotes,
-        poIncludeNotes in PrintDocument.Options);
+        poIncludeNotes in Model.Options);
       XmlStorage.WriteBoolean(IdPrintIncludeRelations,
-        poIncludeRelations in PrintDocument.Options);
+        poIncludeRelations in Model.Options);
       XmlStorage.WriteBoolean(IdPrintIncludePasswords,
-        poIncludePasswords in PrintDocument.Options);
+        poIncludePasswords in Model.Options);
     finally
-      PrintDocument.Free;
+      Model.Free;
     end;
   finally
     Selection.Free;

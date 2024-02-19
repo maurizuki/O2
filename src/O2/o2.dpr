@@ -47,7 +47,7 @@ uses
   uRTFViewer in 'uRTFViewer.pas' {RTFViewer},
   uHTMLHelper in 'uHTMLHelper.pas',
   uO2ObjectsUtils in 'uO2ObjectsUtils.pas',
-  uPrint in 'uPrint.pas';
+  uPrintModel in 'uPrintModel.pas';
 
 {$R *.res}
 

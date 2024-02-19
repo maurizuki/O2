@@ -991,7 +991,7 @@
         </DCCReference>
         <DCCReference Include="uHTMLHelper.pas"/>
         <DCCReference Include="uO2ObjectsUtils.pas"/>
-        <DCCReference Include="uPrint.pas"/>
+        <DCCReference Include="uPrintModel.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
