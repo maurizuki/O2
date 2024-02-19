@@ -73,7 +73,14 @@ type
     procedure FormCreate(Sender: TObject);
     procedure ActionUpdate(Sender: TObject);
     procedure PrintFileExecute(Sender: TObject);
-    procedure OptionExecute(Sender: TObject);
+    procedure IncludeTagsExecute(Sender: TObject);
+    procedure IncludeTagsUpdate(Sender: TObject);
+    procedure IncludeNotesExecute(Sender: TObject);
+    procedure IncludeNotesUpdate(Sender: TObject);
+    procedure IncludeRelationsExecute(Sender: TObject);
+    procedure IncludeRelationsUpdate(Sender: TObject);
+    procedure IncludePasswordsExecute(Sender: TObject);
+    procedure IncludePasswordsUpdate(Sender: TObject);
     procedure ZoomWholePageExecute(Sender: TObject);
     procedure ZoomWholePageUpdate(Sender: TObject);
     procedure ZoomPageWidthExecute(Sender: TObject);
@@ -123,21 +130,6 @@ begin
   if FModel <> Value then
   begin
     FModel := Value;
-
-    IncludeTags.Checked := poIncludeTags in FModel.Options;
-    IncludeNotes.Checked := poIncludeNotes in FModel.Options;
-    IncludeRelations.Checked := poIncludeRelations in FModel.Options;
-    IncludePasswords.Checked := poIncludePasswords in FModel.Options;
-
-    with PreviewControl.DeviceInfo do
-    begin
-      ReferenceHandle := Printer.Handle;
-      OffsetLeft := Max(MMToXPx(10), OffsetLeft);
-      OffsetRight := Max(MMToXPx(10), OffsetRight);
-      OffsetTop := Max(MMToYPx(10), OffsetTop);
-      OffsetBottom := Max(MMToYPx(10), OffsetBottom);
-    end;
-
     RefreshPreview;
     ZoomWholePage.Execute;
   end;
@@ -150,7 +142,6 @@ end;
 
 procedure TPrintPreview.RefreshPreview;
 begin
-  FModel.Reset;
   PreviewControl.Clear;
   PreviewControl.Add;
 end;
@@ -162,11 +153,15 @@ begin
   SystemParametersInfo(SPI_GETWORKAREA, 0, @WorkArea, 0);
   SetBounds(WorkArea.Left, WorkArea.Top,
     WorkArea.Right - WorkArea.Left, WorkArea.Bottom - WorkArea.Top);
-end;
 
-procedure TPrintPreview.ActionUpdate(Sender: TObject);
-begin
-  TAction(Sender).Enabled := True;
+  with PreviewControl.DeviceInfo do
+  begin
+    ReferenceHandle := Printer.Handle;
+    OffsetLeft := Max(MMToXPx(10), OffsetLeft);
+    OffsetRight := Max(MMToXPx(10), OffsetRight);
+    OffsetTop := Max(MMToYPx(10), OffsetTop);
+    OffsetBottom := Max(MMToYPx(10), OffsetBottom);
+  end;
 end;
 
 procedure TPrintPreview.PrintFileExecute(Sender: TObject);
@@ -193,20 +188,53 @@ begin
   end;
 end;
 
-procedure TPrintPreview.OptionExecute(Sender: TObject);
-var
-  Options: TPrintOptions;
+procedure TPrintPreview.IncludeTagsExecute(Sender: TObject);
 begin
-  TAction(Sender).Checked := not TAction(Sender).Checked;
-
-  Options := [];
-  if IncludeTags.Checked then Include(Options, poIncludeTags);
-  if IncludeNotes.Checked then Include(Options, poIncludeNotes);
-  if IncludeRelations.Checked then Include(Options, poIncludeRelations);
-  if IncludePasswords.Checked then Include(Options, poIncludePasswords);
-  FModel.Options := Options;
-
+  FModel.IncludeTags := not FModel.IncludeTags;
   RefreshPreview;
+end;
+
+procedure TPrintPreview.IncludeTagsUpdate(Sender: TObject);
+begin
+  TAction(Sender).Checked := FModel.IncludeTags;
+end;
+
+procedure TPrintPreview.IncludeNotesExecute(Sender: TObject);
+begin
+  FModel.IncludeNotes := not FModel.IncludeNotes;
+  RefreshPreview;
+end;
+
+procedure TPrintPreview.IncludeNotesUpdate(Sender: TObject);
+begin
+  TAction(Sender).Checked := FModel.IncludeNotes;
+end;
+
+procedure TPrintPreview.IncludeRelationsExecute(Sender: TObject);
+begin
+  FModel.IncludeRelations := not FModel.IncludeRelations;
+  RefreshPreview;
+end;
+
+procedure TPrintPreview.IncludeRelationsUpdate(Sender: TObject);
+begin
+  TAction(Sender).Checked := FModel.IncludeRelations;
+end;
+
+procedure TPrintPreview.IncludePasswordsExecute(Sender: TObject);
+begin
+  FModel.IncludePasswords := not FModel.IncludePasswords;
+  RefreshPreview;
+end;
+
+procedure TPrintPreview.IncludePasswordsUpdate(Sender: TObject);
+begin
+  TAction(Sender).Checked := FModel.IncludePasswords;
+end;
+
+procedure TPrintPreview.ActionUpdate(Sender: TObject);
+begin
+  TAction(Sender).Enabled := True;
 end;
 
 procedure TPrintPreview.ZoomWholePageExecute(Sender: TObject);

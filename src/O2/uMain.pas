@@ -1258,35 +1258,27 @@ end;
 procedure TMainForm.PrintFileExecute(Sender: TObject);
 var
   Selection: TO2ObjectList;
-  Options: TPrintOptions;
   Model: TPrintModel;
 begin
-  Options := [];
-  if XmlStorage.ReadBoolean(IdPrintIncludeTags, True) then
-    Include(Options, poIncludeTags);
-  if XmlStorage.ReadBoolean(IdPrintIncludeNotes, True) then
-    Include(Options, poIncludeNotes);
-  if XmlStorage.ReadBoolean(IdPrintIncludeRelations, True) then
-    Include(Options, poIncludeRelations);
-  if XmlStorage.ReadBoolean(IdPrintIncludePasswords, True) then
-    Include(Options, poIncludePasswords);
-
   Selection := TO2ObjectList.Create;
   try
     FillObjList(Selection);
 
-    Model := TPrintModel.Create(O2File, Selection, Options);
+    Model := TPrintModel.Create(O2File, Selection);
     try
+      Model.IncludeTags := XmlStorage.ReadBoolean(IdPrintIncludeTags, True);
+      Model.IncludeNotes := XmlStorage.ReadBoolean(IdPrintIncludeNotes, True);
+      Model.IncludeRelations := XmlStorage.ReadBoolean(IdPrintIncludeRelations,
+        True);
+      Model.IncludePasswords := XmlStorage.ReadBoolean(IdPrintIncludePasswords,
+        True);
+
       TPrintPreview.Execute(Application, Model);
 
-      XmlStorage.WriteBoolean(IdPrintIncludeTags,
-        poIncludeTags in Model.Options);
-      XmlStorage.WriteBoolean(IdPrintIncludeNotes,
-        poIncludeNotes in Model.Options);
-      XmlStorage.WriteBoolean(IdPrintIncludeRelations,
-        poIncludeRelations in Model.Options);
-      XmlStorage.WriteBoolean(IdPrintIncludePasswords,
-        poIncludePasswords in Model.Options);
+      XmlStorage.WriteBoolean(IdPrintIncludeTags, Model.IncludeTags);
+      XmlStorage.WriteBoolean(IdPrintIncludeNotes, Model.IncludeNotes);
+      XmlStorage.WriteBoolean(IdPrintIncludeRelations, Model.IncludeRelations);
+      XmlStorage.WriteBoolean(IdPrintIncludePasswords, Model.IncludePasswords);
     finally
       Model.Free;
     end;

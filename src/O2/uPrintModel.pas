@@ -21,21 +21,15 @@ uses
   Windows, Graphics, uO2File, uO2Objects, uO2Relations;
 
 type
-  TPrintOption = (
-    poIncludeTags,
-    poIncludeNotes,
-    poIncludeRelations,
-    poIncludePasswords
-    );
-
-  TPrintOptions = set of TPrintOption;
-
   TPrintModel = class
   private
     FTitle: string;
     FO2File: TO2File;
     FSelectedObjects: TO2ObjectList;
-    FOptions: TPrintOptions;
+    FIncludeTags: Boolean;
+    FIncludeNotes: Boolean;
+    FIncludeRelations: Boolean;
+    FIncludePasswords: Boolean;
     FObjectIndex: Integer;
     FFieldIndex: Integer;
     FObjRelations: TO2ObjRelations;
@@ -44,12 +38,16 @@ type
     FPrintDate: string;
   public
     constructor Create(const O2File: TO2File;
-      const SelectedObjects: TO2ObjectList; Options: TPrintOptions);
-    procedure Reset;
+      const SelectedObjects: TO2ObjectList);
     function DrawNextPage(const Canvas: TCanvas; PageRect, PrintRect: TRect;
       PageIndex: Integer): Boolean;
     property Title: string read FTitle;
-    property Options: TPrintOptions read FOptions write FOptions;
+    property IncludeTags: Boolean read FIncludeTags write FIncludeTags;
+    property IncludeNotes: Boolean read FIncludeNotes write FIncludeNotes;
+    property IncludeRelations: Boolean read FIncludeRelations
+      write FIncludeRelations;
+    property IncludePasswords: Boolean read FIncludePasswords
+      write FIncludePasswords;
   end;
 
 implementation
@@ -60,7 +58,7 @@ uses
 { TPrintDocument }
 
 constructor TPrintModel.Create(const O2File: TO2File;
-  const SelectedObjects: TO2ObjectList; Options: TPrintOptions);
+  const SelectedObjects: TO2ObjectList);
 begin
   if O2File.Title = '' then
     FTitle := ChangeFileExt(ExtractFileName(O2File.FileName), '')
@@ -68,21 +66,10 @@ begin
     FTitle := O2File.Title;
   FO2File := O2File;
   FSelectedObjects := SelectedObjects;
-  FOptions := Options;
-
-  FObjectIndex := 0;
-  FFieldIndex := 0;
-  FObjRelations := nil;
-  FObjRelationIndex := 0;
-  FNoteLineIndex := 0;
-end;
-
-procedure TPrintModel.Reset;
-begin
-  FObjectIndex := 0;
-  FFieldIndex := 0;
-  FObjRelationIndex := 0;
-  FNoteLineIndex := 0;
+  FIncludeTags := True;
+  FIncludeNotes := True;
+  FIncludeRelations := True;
+  FIncludePasswords := True;
 end;
 
 function TPrintModel.DrawNextPage(const Canvas: TCanvas; PageRect,
@@ -106,6 +93,16 @@ begin
 
   LogPixelsY := GetDeviceCaps(Canvas.Handle, Windows.LOGPIXELSY);
 
+  if PageIndex = 0 then
+  begin
+    FObjectIndex := 0;
+    FFieldIndex := 0;
+    FObjRelations := nil;
+    FObjRelationIndex := 0;
+    FNoteLineIndex := 0;
+    FPrintDate := DateTimeToStr(Now);
+  end;
+
   Canvas.Font.Name := 'Arial';
   Canvas.Font.Size := 8;
   GetTextMetrics(Canvas.Handle, TextMetric);
@@ -126,8 +123,6 @@ begin
   Rect.Right := PrintRect.Right;
   DrawText(Canvas.Handle, PChar(S), Length(S), Rect,
     DT_NOPREFIX or DT_RIGHT or DT_TOP);
-
-  if PageIndex = 0 then FPrintDate := DateTimeToStr(Now);
 
   S := FPrintDate;
   Rect.Left := PrintRect.Left;
@@ -210,7 +205,7 @@ begin
     Rect2.Right := PrintRect.Right;
     Rect2.Bottom := Rect2.Top + H;
 
-    if (poIncludeTags in FOptions) and (FFieldIndex = 0)
+    if FIncludeTags and (FFieldIndex = 0)
       and (FSelectedObjects[FObjectIndex].Tag <> '') then
     begin
       if Rect.Top + H > PrintRect.Bottom then Exit;
@@ -231,7 +226,7 @@ begin
     begin
       AField := FSelectedObjects[FObjectIndex].Fields[FFieldIndex];
 
-      if (poIncludePasswords in FOptions)
+      if FIncludePasswords
         or not Assigned(FO2File.Rules.FindFirstRule(AField, [rtPassword])) then
       begin
         if Rect.Top + H > PrintRect.Bottom then Exit;
@@ -253,7 +248,7 @@ begin
 
     { Relations }
 
-    if poIncludeRelations in FOptions then
+    if FIncludeRelations then
     begin
       if FObjRelations = nil then
       begin
@@ -312,7 +307,7 @@ begin
 
     { Text }
 
-    if poIncludeNotes in FOptions then
+    if FIncludeNotes then
     begin
       Canvas.Font.Name := 'Courier New';
       Canvas.Font.Size := 10;
