@@ -626,9 +626,10 @@ uses
   xmldom, msxmldom, System.JSON, JclFileUtils,
   uAppFiles, uUtils, uShellUtils, uPAFConsts, uAbout, uGetPassword,
   uSetPassword, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
-  uReplaceDlg, uPrintModel, uPrintPreview, uHTMLExport, uXmlStorage, uO2Xml,
-  uO2Defs, uBrowserEmulation, uCtrlHelpers, uImportExport, uO2ImportExport,
-  uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper, uO2ObjectsUtils;
+  uReplaceDlg, uPrintModel, uPrintPreview, uHTMLExportModel, uHTMLExport,
+  uXmlStorage, uO2Xml, uO2Defs, uBrowserEmulation, uCtrlHelpers, uImportExport,
+  uO2ImportExport, uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper,
+  uO2ObjectsUtils;
 
 {$R *.dfm}
 
@@ -1221,38 +1222,21 @@ end;
 procedure TMainForm.ExportToHTMLExecute(Sender: TObject);
 var
   Selection: TO2ObjectList;
-  Options: TExportToHTMLOptions;
+  Model: THTMLExportModel;
 begin
-  Options := [];
-  THTMLExport.IncludeOption(Options, xoIncludeIndex,
-    XmlStorage.ReadBoolean(IdHTMLExportIncludeIndex, True));
-  THTMLExport.IncludeOption(Options, xoIncludeTags,
-    XmlStorage.ReadBoolean(IdHTMLExportIncludeTags, True));
-  THTMLExport.IncludeOption(Options, xoIncludeNotes,
-    XmlStorage.ReadBoolean(IdHTMLExportIncludeNotes, True));
-  THTMLExport.IncludeOption(Options, xoIncludeRelations,
-    XmlStorage.ReadBoolean(IdHTMLExportIncludeRelations, True));
-  THTMLExport.IncludeOption(Options, xoIncludePasswords,
-    XmlStorage.ReadBoolean(IdHTMLExportIncludePasswords, True));
-
   Selection := TO2ObjectList.Create;
   try
     FillObjList(Selection);
-    THTMLExport.Execute(Application, O2FileName, O2File, Selection, Options);
+
+    Model := THTMLExportModel.Create(O2File, Selection, XmlStorage);
+    try
+      THTMLExport.Execute(Application, Model);
+    finally
+      Model.Free;
+    end;
   finally
     Selection.Free;
   end;
-
-  XmlStorage.WriteBoolean(IdHTMLExportIncludeIndex,
-    xoIncludeIndex in Options);
-  XmlStorage.WriteBoolean(IdHTMLExportIncludeTags,
-    xoIncludeTags in Options);
-  XmlStorage.WriteBoolean(IdHTMLExportIncludeNotes,
-    xoIncludeNotes in Options);
-  XmlStorage.WriteBoolean(IdHTMLExportIncludeRelations,
-    xoIncludeRelations in Options);
-  XmlStorage.WriteBoolean(IdHTMLExportIncludePasswords,
-    xoIncludePasswords in Options);
 end;
 
 procedure TMainForm.PrintFileExecute(Sender: TObject);

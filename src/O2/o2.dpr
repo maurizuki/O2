@@ -48,7 +48,8 @@ uses
   uHTMLHelper in 'uHTMLHelper.pas',
   uO2ObjectsUtils in 'uO2ObjectsUtils.pas',
   uPrintModel in 'uPrintModel.pas',
-  uServices in 'uServices.pas';
+  uServices in 'uServices.pas',
+  uHTMLExportModel in 'uHTMLExportModel.pas';
 
 {$R *.res}
 

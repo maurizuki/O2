@@ -97,36 +97,36 @@ object HTMLExport: THTMLExport
       Category = 'Options'
       Caption = 'Include index'
       Hint = 'Include index'
-      OnExecute = OptionExecute
-      OnUpdate = ActionUpdate
+      OnExecute = IncludeIndexExecute
+      OnUpdate = IncludeIndexUpdate
     end
     object IncludeTags: TAction
       Category = 'Options'
       Caption = 'Include tags'
       Hint = 'Include tags'
-      OnExecute = OptionExecute
-      OnUpdate = ActionUpdate
+      OnExecute = IncludeTagsExecute
+      OnUpdate = IncludeTagsUpdate
     end
     object IncludeNotes: TAction
       Category = 'Options'
       Caption = 'Include notes'
       Hint = 'Include notes'
-      OnExecute = OptionExecute
-      OnUpdate = ActionUpdate
+      OnExecute = IncludeNotesExecute
+      OnUpdate = IncludeNotesUpdate
     end
     object IncludeRelations: TAction
       Category = 'Options'
       Caption = 'Include relations'
       Hint = 'Include relations'
-      OnExecute = OptionExecute
-      OnUpdate = ActionUpdate
+      OnExecute = IncludeRelationsExecute
+      OnUpdate = IncludeRelationsUpdate
     end
     object IncludePasswords: TAction
       Category = 'Options'
       Caption = 'Include passwords'
       Hint = 'Include passwords'
-      OnExecute = OptionExecute
-      OnUpdate = ActionUpdate
+      OnExecute = IncludePasswordsExecute
+      OnUpdate = IncludePasswordsUpdate
     end
     object HTMLStyle: TAction
       Category = 'Style'
