@@ -664,7 +664,6 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 var
   AppPath, SettingsPath, LauncherPath, PortablePath: string;
-  AppFile: TAppFile;
 begin
   FBusy := False;
   BatchOperationCount := 0;
@@ -698,72 +697,24 @@ begin
     LauncherPath := AppPath;
   end;
 
-  AppFile := TPortableAppFile.Create(ExtractFileName(Application.ExeName));
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableAppPath;
-  AppFiles.Add(IdAppExe, AppFile);
-
-  AppFile := TPortableAppFile.Create(AppInfoFile);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableAppInfoPath;
-  TPortableAppFile(AppFile).OnGetData := GetAppInfo;
-  AppFiles.Add(IdAppInfo, AppFile);
-
-  AppFile := TPortableAppFile.Create(AppIconFile);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableAppInfoPath;
-  AppFiles.Add(IdAppIcon, AppFile);
-
-  AppFile := TPortableAppFile.Create(AppIcon16File);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableAppInfoPath;
-  AppFiles.Add(IdAppIcon16, AppFile);
-
-  AppFile := TPortableAppFile.Create(AppIcon32File);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableAppInfoPath;
-  AppFiles.Add(IdAppIcon32, AppFile);
-
-  AppFile := TPortableAppFile.Create(FileTypeIconFile);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableFileTypeIconsPath;
-  AppFiles.Add(IdFileTypeIcon, AppFile);
-
-  AppFile := TPortableAppFile.Create(FileTypeIcon16File);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableFileTypeIconsPath;
-  AppFiles.Add(IdFileTypeIcon16, AppFile);
-
-  AppFile := TPortableAppFile.Create(FileTypeIcon32File);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableFileTypeIconsPath;
-  AppFiles.Add(IdFileTypeIcon32, AppFile);
-
-  AppFile := TPortableAppFile.Create(LauncherFile);
-  AppFile.Path := LauncherPath;
-  TPortableAppFile(AppFile).PortablePath := PortableLauncherPath;
-  AppFiles.Add(IdLauncher, AppFile);
-
-  AppFile := TPortableAppFile.Create(SettingsFile);
-  AppFile.Path := SettingsPath;
-  TPortableAppFile(AppFile).PortablePath := PortableSettingsPath;
-  TPortableAppFile(AppFile).OverwritePrompt := SSettingsOverwriteQuery;
-  AppFiles.Add(IdSettings, AppFile);
-
-  AppFile := TPortableAppFile.Create(HTMLHelpFile);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableLauncherPath;
-  AppFiles.Add(IdHelp, AppFile);
-
-  AppFile := TPortableAppFile.Create(LicenseFile);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableAppPath;
-  AppFiles.Add(IdLicense, AppFile);
-
-  AppFile := TPortableAppFile.Create(ReadMeFile);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableAppPath;
-  AppFiles.Add(IdReadMe, AppFile);
+  AppFiles
+    .Add(IdAppExe, ExtractFileName(Application.ExeName), AppPath,
+      PortableAppPath)
+    .Add(IdAppInfo, AppInfoFile, AppPath, PortableAppInfoPath, GetAppInfo)
+    .Add(IdAppIcon, AppIconFile, AppPath, PortableAppInfoPath)
+    .Add(IdAppIcon16, AppIcon16File, AppPath, PortableAppInfoPath)
+    .Add(IdAppIcon32, AppIcon32File, AppPath, PortableAppInfoPath)
+    .Add(IdFileTypeIcon, FileTypeIconFile, AppPath, PortableFileTypeIconsPath)
+    .Add(IdFileTypeIcon16, FileTypeIcon16File, AppPath,
+      PortableFileTypeIconsPath)
+    .Add(IdFileTypeIcon32, FileTypeIcon32File, AppPath,
+      PortableFileTypeIconsPath)
+    .Add(IdLauncher, LauncherFile, LauncherPath, PortableLauncherPath)
+    .Add(IdSettings, SettingsFile, SettingsPath, PortableSettingsPath,
+      SSettingsOverwriteQuery)
+    .Add(IdHelp, HTMLHelpFile, AppPath, PortableLauncherPath)
+    .Add(IdLicense, LicenseFile, AppPath, PortableAppPath)
+    .Add(IdReadMe, ReadMeFile, AppPath, PortableAppPath);
 
   LoadLanguageList;
 
@@ -1296,7 +1247,7 @@ begin
   Dir := '';
   if SelectDirectory(Format(SInstallOnRemovableMediaPrompt +
     #13#10 + SInstallOnRemovableMediaFolderPrompt,
-    [AppFiles.InstallPortableSpaceRequired / (1024 * 1024)]),
+    [AppFiles.PortableFilesTotalSize / (1024 * 1024)]),
     '', Dir, [sdNewUI, sdNewFolder]) then
   begin
     BeginBatchOperation;
@@ -1654,7 +1605,6 @@ end;
 procedure TMainForm.LoadLanguageList;
 var
   LanguageModule: string;
-  AppFile: TAppFile;
   Item: TMenuItem;
   I: Integer;
 begin
@@ -1664,10 +1614,9 @@ begin
       '.' + Languages[I].Language);
     if FileExists(LanguageModule) then
     begin
-      AppFile := TPortableAppFile.Create(ExtractFileName(LanguageModule));
-      AppFile.Path := ExtractFilePath(LanguageModule);
-      TPortableAppFile(AppFile).PortablePath := PortableAppPath;
-      AppFiles.Add(IdResourceModule + Languages[I].Language, AppFile);
+      AppFiles.Add(IdResourceModule + Languages[I].Language,
+        ExtractFileName(LanguageModule), ExtractFilePath(LanguageModule),
+        PortableAppPath);
 
       Item := TMenuItem.Create(LanguageMenu);
       Item.Caption := GetLanguageName(Languages[I].LangId);

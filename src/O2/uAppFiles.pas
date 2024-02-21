@@ -26,13 +26,12 @@ type
     FFileName: string;
     FPath: string;
     function GetFullPath: string;
-    procedure SetPath(const Value: string);
   protected
     function GetSize: Int64;
   public
-    constructor Create(const FileName: string);
+    constructor Create(const FileName, Path: string);
     property FileName: string read FFileName;
-    property Path: string read FPath write SetPath;
+    property Path: string read FPath;
     property FullPath: string read GetFullPath;
     property Size: Int64 read GetSize;
   end;
@@ -44,13 +43,13 @@ type
     FPortablePath: string;
     FOverwritePrompt: string;
     FOnGetData: TGetDataEvent;
-    procedure SetPortablePath(const Value: string);
     procedure SetOverwritePrompt(const Value: string);
   protected
     function GetSize: Int64;
   public
+    constructor Create(const FileName, Path, PortablePath: string);
     procedure InstallPortable(InstallPath: string);
-    property PortablePath: string read FPortablePath write SetPortablePath;
+    property PortablePath: string read FPortablePath;
     property OverwritePrompt: string read FOverwritePrompt
       write SetOverwritePrompt;
     property OnGetData: TGetDataEvent read FOnGetData write FOnGetData;
@@ -65,9 +64,14 @@ type
   public
     constructor Create;
     destructor Destroy; override;
-    function Add(const Name: string; const AppFile: TAppFile): Integer;
+    function Add(const Name, FileName, Path, PortablePath: string): TAppFiles;
+      overload;
+    function Add(const Name, FileName, Path, PortablePath,
+      OverwritePrompt: string): TAppFiles; overload;
+    function Add(const Name, FileName, Path, PortablePath: string;
+      OnGetData: TGetDataEvent): TAppFiles; overload;
     function Exists(const Name: string): Boolean;
-    function InstallPortableSpaceRequired: Int64;
+    function PortableFilesTotalSize: Int64;
     procedure InstallPortable(const Path: string);
     property Count: Integer read GetCount;
     property Files[IndexOrName: Variant]: TAppFile read GetFiles;
@@ -82,19 +86,20 @@ uses
   Windows, Forms, SysUtils, Variants, uUtils;
 
 var
-  FAppFiles: TAppFiles = nil;
+  AppFilesInt: TAppFiles = nil;
 
 function AppFiles: TAppFiles;
 begin
-  if FAppFiles = nil then FAppFiles := TAppFiles.Create;
-  Result := FAppFiles;
+  if AppFilesInt = nil then AppFilesInt := TAppFiles.Create;
+  Result := AppFilesInt;
 end;
 
 { TAppFile }
 
-constructor TAppFile.Create(const FileName: string);
+constructor TAppFile.Create(const FileName, Path: string);
 begin
   FFileName := FileName;
+  FPath := Path;
 end;
 
 function TAppFile.GetFullPath: string;
@@ -107,16 +112,12 @@ begin
   Result := GetFileSize(FullPath);
 end;
 
-procedure TAppFile.SetPath(const Value: string);
-begin
-  FPath := Value;
-end;
-
 { TPortableAppFile }
 
-procedure TPortableAppFile.SetPortablePath(const Value: string);
+constructor TPortableAppFile.Create(const FileName, Path, PortablePath: string);
 begin
-  FPortablePath := Value;
+  inherited Create(FileName, Path);
+  FPortablePath := PortablePath;
 end;
 
 procedure TPortableAppFile.SetOverwritePrompt(const Value: string);
@@ -179,8 +180,7 @@ destructor TAppFiles.Destroy;
 var
   I: Integer;
 begin
-  for I := 0 to FFiles.Count - 1 do
-    FFiles.Objects[I].Free;
+  for I := 0 to FFiles.Count - 1 do FFiles.Objects[I].Free;
   FFiles.Free;
   inherited Destroy;
 end;
@@ -203,9 +203,33 @@ begin
   Result := Files[IndexOrName].FullPath;
 end;
 
-function TAppFiles.Add(const Name: string; const AppFile: TAppFile): Integer;
+function TAppFiles.Add(const Name, FileName, Path,
+  PortablePath: string): TAppFiles;
 begin
-  Result := FFiles.AddObject(Name, AppFile);
+  FFiles.AddObject(Name, TPortableAppFile.Create(FileName, Path, PortablePath));
+  Result := Self;
+end;
+
+function TAppFiles.Add(const Name, FileName, Path, PortablePath,
+  OverwritePrompt: string): TAppFiles;
+var
+  AppFile: TPortableAppFile;
+begin
+  AppFile := TPortableAppFile.Create(FileName, Path, PortablePath);
+  AppFile.OverwritePrompt := OverwritePrompt;
+  FFiles.AddObject(Name, AppFile);
+  Result := Self;
+end;
+
+function TAppFiles.Add(const Name, FileName, Path, PortablePath: string;
+  OnGetData: TGetDataEvent): TAppFiles;
+var
+  AppFile: TPortableAppFile;
+begin
+  AppFile := TPortableAppFile.Create(FileName, Path, PortablePath);
+  AppFile.OnGetData := OnGetData;
+  FFiles.AddObject(Name, AppFile);
+  Result := Self;
 end;
 
 function TAppFiles.Exists(const Name: string): Boolean;
@@ -213,7 +237,7 @@ begin
   Result := FileExists(FullPath[Name]);
 end;
 
-function TAppFiles.InstallPortableSpaceRequired: Int64;
+function TAppFiles.PortableFilesTotalSize: Int64;
 var
   I: Integer;
 begin
@@ -233,8 +257,9 @@ begin
 end;
 
 initialization
+  AppFilesInt := nil;
 
 finalization
-  if Assigned(FAppFiles) then FAppFiles.Free;
+  if Assigned(AppFilesInt) then AppFilesInt.Free;
 
 end.
