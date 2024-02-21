@@ -556,7 +556,6 @@ type
     procedure OpenNewInstance(const FileName: string = '');
     procedure LoadFromFile(const FileName: string);
     procedure SaveToFile(const FileName: string; Copy: Boolean = False);
-    procedure GetAppInfo(Sender: TObject; F: TStream);
     procedure LoadMRUList;
     procedure SaveMRUList;
     procedure ConvertSettings;
@@ -663,7 +662,9 @@ end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 var
-  AppPath, SettingsPath, LauncherPath, PortablePath: string;
+  AppPath, SettingsPath, LauncherPath, PortablePath, AppInfo: string;
+  VersionInfo: TJclFileVersionInfo;
+  AppInfoBuilder: TStringBuilder;
 begin
   FBusy := False;
   BatchOperationCount := 0;
@@ -677,6 +678,52 @@ begin
   Application.HintHidePause := 4500;
 
   DecodeCommandLine(CmdLineAction, CmdLineFileName, PortablePath);
+
+  AppInfoBuilder := TStringBuilder.Create;
+  try
+    VersionInfo := TJclFileVersionInfo.Create(Application.ExeName);
+    try
+      AppInfo := AppInfoBuilder
+        .AppendLine('[' + PAF_FormatSection + ']')
+        .AppendLine(PAF_FormatTypeId + '=' + PAF_FormatType)
+        .AppendLine(PAF_FormatVersionId + '=' + PAF_FormatVersion)
+        .AppendLine('')
+        .AppendLine('[' + PAF_DetailsSection + ']')
+        .AppendLine(PAF_AppNameId + '=' + VersionInfo.ProductName + ' Portable')
+        .AppendLine(PAF_AppIDId + '=' + VersionInfo.ProductName)
+        .AppendLine(PAF_PublisherId + '=' + VersionInfo.CompanyName)
+        .AppendLine(PAF_HomepageId + '='
+          + VersionInfo.GetCustomFieldValue('Homepage'))
+        .AppendLine(PAF_CategoryId + '=' + PAF_CategorySecurity)
+        .AppendLine(PAF_DescriptionId + '=' + VersionInfo.Comments)
+        .AppendLine(PAF_LanguageId + '=' + PAF_LanguageMultilingual)
+        .AppendLine('')
+        .AppendLine('[' + PAF_LicenseSection + ']')
+        .AppendLine(PAF_ShareableId + '=' + BoolToStr(True, True))
+        .AppendLine(PAF_OpenSourceId + '=' + BoolToStr(True, True))
+        .AppendLine(PAF_FreewareId + '=' + BoolToStr(True, True))
+        .AppendLine(PAF_CommercialUseId + '=' + BoolToStr(True, True))
+        .AppendLine('')
+        .AppendLine('[' + PAF_VersionSection + ']')
+        .AppendLine(PAF_PackageVersionId + '=' + VersionInfo.BinFileVersion)
+        .AppendLine(PAF_DisplayVersionId + '=' + VersionInfo.BinFileVersion)
+        .AppendLine('')
+        .AppendLine('[' + PAF_ControlSection + ']')
+        .AppendLine(PAF_IconsId + '=' + IntToStr(1))
+        .AppendLine(PAF_StartId + '=' + LauncherFile)
+        .AppendLine('')
+        .AppendLine('[' + PAF_AssociationsSection + ']')
+        .AppendLine(PAF_FileTypesId + '=' + DefaultFileExt)
+        .AppendLine('')
+        .AppendLine('[' + PAF_FileTypeIconsSection + ']')
+        .AppendLine(DefaultFileExt + '=' + PAF_FileTypeIconCustom)
+        .ToString;
+    finally
+      VersionInfo.Free;
+    end;
+  finally
+    AppInfoBuilder.Free;
+  end;
 
   if PortablePath <> '' then
   begin
@@ -700,7 +747,7 @@ begin
   AppFiles
     .Add(IdAppExe, ExtractFileName(Application.ExeName), AppPath,
       PortableAppPath)
-    .Add(IdAppInfo, AppInfoFile, AppPath, PortableAppInfoPath, GetAppInfo)
+    .AddInMemory(IdAppInfo, AppInfoFile, AppPath, PortableAppInfoPath, AppInfo)
     .Add(IdAppIcon, AppIconFile, AppPath, PortableAppInfoPath)
     .Add(IdAppIcon16, AppIcon16File, AppPath, PortableAppInfoPath)
     .Add(IdAppIcon32, AppIcon32File, AppPath, PortableAppInfoPath)
@@ -2339,55 +2386,6 @@ begin
       end
       else
         Visible := False;
-  end;
-end;
-
-procedure TMainForm.GetAppInfo(Sender: TObject; F: TStream);
-var
-  VersionInfo: TJclFileVersionInfo;
-begin
-  VersionInfo := TJclFileVersionInfo.Create(AppFiles.FullPath[IdAppExe]);
-  try
-    with TStringList.Create do
-    try
-      Add('[' + PAF_FormatSection + ']');
-      Add(PAF_FormatTypeId + '=' + PAF_FormatType);
-      Add(PAF_FormatVersionId + '=' + PAF_FormatVersion);
-      Add('');
-      Add('[' + PAF_DetailsSection + ']');
-      Add(PAF_AppNameId + '=' + VersionInfo.ProductName + ' ' + 'Portable');
-      Add(PAF_AppIDId + '=' + VersionInfo.ProductName);
-      Add(PAF_PublisherId + '=' + VersionInfo.CompanyName);
-      Add(PAF_HomepageId + '=' + VersionInfo.GetCustomFieldValue('Homepage'));
-      Add(PAF_CategoryId + '=' + PAF_CategorySecurity);
-      Add(PAF_DescriptionId + '=' + VersionInfo.Comments);
-      Add(PAF_LanguageId + '=' + PAF_LanguageMultilingual);
-      Add('');
-      Add('[' + PAF_LicenseSection + ']');
-      Add(PAF_ShareableId + '=' + BoolToStr(True, True));
-      Add(PAF_OpenSourceId + '=' + BoolToStr(True, True));
-      Add(PAF_FreewareId + '=' + BoolToStr(True, True));
-      Add(PAF_CommercialUseId + '=' + BoolToStr(True, True));
-      Add('');
-      Add('[' + PAF_VersionSection + ']');
-      Add(PAF_PackageVersionId + '=' + VersionInfo.BinFileVersion);
-      Add(PAF_DisplayVersionId + '=' + VersionInfo.BinFileVersion);
-      Add('');
-      Add('[' + PAF_ControlSection + ']');
-      Add(PAF_IconsId + '=' + IntToStr(1));
-      Add(PAF_StartId + '=' + LauncherFile);
-      Add('');
-      Add('[' + PAF_AssociationsSection + ']');
-      Add(PAF_FileTypesId + '=' + DefaultFileExt);
-      Add('');
-      Add('[' + PAF_FileTypeIconsSection + ']');
-      Add(DefaultFileExt + '=' + PAF_FileTypeIconCustom);
-      SaveToStream(F);
-    finally
-      Free;
-    end;
-  finally
-    VersionInfo.Free;
   end;
 end;
 

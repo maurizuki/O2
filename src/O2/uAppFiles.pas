@@ -36,14 +36,11 @@ type
     property Size: Int64 read GetSize;
   end;
 
-  TGetDataEvent = procedure(Sender: TObject; F: TStream) of object;
-
   TPortableAppFile = class(TAppFile)
   private
     FPortablePath: string;
     FOverwritePrompt: string;
-    FOnGetData: TGetDataEvent;
-    procedure SetOverwritePrompt(const Value: string);
+    FContent: string;
   protected
     function GetSize: Int64;
   public
@@ -51,8 +48,8 @@ type
     procedure InstallPortable(InstallPath: string);
     property PortablePath: string read FPortablePath;
     property OverwritePrompt: string read FOverwritePrompt
-      write SetOverwritePrompt;
-    property OnGetData: TGetDataEvent read FOnGetData write FOnGetData;
+      write FOverwritePrompt;
+    property Content: string read FContent write FContent;
   end;
 
   TAppFiles = class
@@ -68,8 +65,8 @@ type
       overload;
     function Add(const Name, FileName, Path, PortablePath,
       OverwritePrompt: string): TAppFiles; overload;
-    function Add(const Name, FileName, Path, PortablePath: string;
-      OnGetData: TGetDataEvent): TAppFiles; overload;
+    function AddInMemory(const Name, FileName, Path, PortablePath,
+      Content: string): TAppFiles;
     function Exists(const Name: string): Boolean;
     function PortableFilesTotalSize: Int64;
     procedure InstallPortable(const Path: string);
@@ -120,20 +117,22 @@ begin
   FPortablePath := PortablePath;
 end;
 
-procedure TPortableAppFile.SetOverwritePrompt(const Value: string);
-begin
-  FOverwritePrompt := Value;
-end;
-
 function TPortableAppFile.GetSize: Int64;
 var
+  Writer: TTextWriter;
   F: TMemoryStream;
 begin
-  if Assigned(OnGetData) then
+  if FContent <> '' then
   begin
     F := TMemoryStream.Create;
     try
-      OnGetData(Self, F);
+      Writer := TStreamWriter.Create(F);
+      try
+        Writer.Write(FContent);
+      finally
+        Writer.Free;
+      end;
+
       Result := F.Size;
     finally
       F.Free;
@@ -145,6 +144,7 @@ end;
 
 procedure TPortableAppFile.InstallPortable(InstallPath: string);
 var
+  Writer: TTextWriter;
   F: TFileStream;
 begin
   InstallPath := IncludeTrailingPathDelimiter(InstallPath)
@@ -154,11 +154,16 @@ begin
     or YesNoBox(OverwritePrompt) then
   begin
     ForceDirectories(InstallPath);
-    if Assigned(OnGetData) then
+    if FContent <> '' then
     begin
       F := TFileStream.Create(InstallPath + FileName, fmCreate);
       try
-        OnGetData(Self, F);
+        Writer := TStreamWriter.Create(F);
+        try
+          Writer.Write(FContent);
+        finally
+          Writer.Free;
+        end;
       finally
         F.Free;
       end;
@@ -221,13 +226,13 @@ begin
   Result := Self;
 end;
 
-function TAppFiles.Add(const Name, FileName, Path, PortablePath: string;
-  OnGetData: TGetDataEvent): TAppFiles;
+function TAppFiles.AddInMemory(const Name, FileName, Path, PortablePath,
+  Content: string): TAppFiles;
 var
   AppFile: TPortableAppFile;
 begin
   AppFile := TPortableAppFile.Create(FileName, Path, PortablePath);
-  AppFile.OnGetData := OnGetData;
+  AppFile.Content := Content;
   FFiles.AddObject(Name, AppFile);
   Result := Self;
 end;
