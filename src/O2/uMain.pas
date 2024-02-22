@@ -510,6 +510,7 @@ type
   private
     FFile: TO2File;
     FFileName: string;
+    FSelectedObjects: IEnumerable<TO2Object>;
     FBusy: Boolean;
     FStayOnTop: Boolean;
     FTransparency: Integer;
@@ -605,7 +606,6 @@ type
     procedure BeginBatchOperation;
     procedure EndBatchOperation;
     procedure FillObjList(const Objects: TO2ObjectList);
-    function GetSelectedObjects: IEnumerable<TO2Object>;
 
     property O2File: TO2File read GetFile;
     property O2FileName: string read FFileName write SetFileName;
@@ -795,6 +795,7 @@ begin
   ImportSettingsDlg.Filter := SImportSettingsFileFilter;
   ExportSettingsDlg.Filter := SExportSettingsFileFilter;
 
+  FSelectedObjects := TO2ObjectListViewEnumerable.Create(ObjectsView);
   FPasswordScoreCache := TPasswordScoreCache.Create;
 
   ActiveControl := ObjectsView;
@@ -1222,7 +1223,7 @@ procedure TMainForm.ExportToHTMLExecute(Sender: TObject);
 var
   Model: THTMLExportModel;
 begin
-  Model := THTMLExportModel.Create(O2File, GetSelectedObjects, XmlStorage);
+  Model := THTMLExportModel.Create(O2File, FSelectedObjects, XmlStorage);
   try
     THTMLExport.Execute(Application, Model);
   finally
@@ -3303,14 +3304,6 @@ begin
   NoneSelected := ObjectsView.SelCount = 0;
   for AItem in ObjectsView.Items do
     if NoneSelected or AItem.Selected then Objects.Add(AItem.Data);
-end;
-
-function TMainForm.GetSelectedObjects: IEnumerable<TO2Object>;
-begin
-  if Assigned(ObjectsView.Selected) then
-    Result := TO2ObjectListViewSelectionEnumerable.Create(ObjectsView)
-  else
-    Result := O2File.Objects.ToEnumerable;
 end;
 
 end.
