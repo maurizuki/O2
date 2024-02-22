@@ -28,8 +28,7 @@ uses
   StdCtrls, ExtCtrls, FileCtrl, Types, System.ImageList, System.Actions,
   REST.Client, Data.Bind.Components, Data.Bind.ObjectScope, OleCtrls, SHDocVw,
   JvComponentBase, JvDragDrop,
-  uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist,
-  uPasswordScoreCache;
+  uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist, uServices;
 
 type
   TCmdLineAction = (caNone, caOpenFile);
@@ -629,7 +628,7 @@ uses
   uReplaceDlg, uPrintModel, uPrintPreview, uHTMLExportModel, uHTMLExport,
   uXmlStorage, uO2Xml, uO2Defs, uBrowserEmulation, uCtrlHelpers, uImportExport,
   uO2ImportExport, uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper,
-  uO2ObjectsUtils;
+  uO2ObjectsUtils, uPasswordScoreCache;
 
 {$R *.dfm}
 

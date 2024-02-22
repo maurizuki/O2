@@ -18,7 +18,7 @@ unit uServices;
 interface
 
 uses
-  Classes;
+  Classes, uO2File, uO2Rules;
 
 type
   IStorage = interface
@@ -38,6 +38,11 @@ type
     procedure WriteFloat(const Name: string; Value: Double);
     procedure WriteString(const Name, Value: string);
     procedure WriteStringList(const Name: string; const AStringList: TStrings);
+  end;
+
+  IPasswordScoreCache = interface(IPasswordScoreProvider)
+    procedure Update(const O2File: TO2File); overload;
+    procedure Update(const O2File: TO2File; ObjectIndex: Integer); overload;
   end;
 
 implementation

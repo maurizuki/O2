@@ -18,20 +18,15 @@ unit uPasswordScoreCache;
 interface
 
 uses
-  System.Generics.Collections, DCPcrypt2, Zxcvbn, uO2File, uO2Rules;
+  Generics.Collections, DCPcrypt2, Zxcvbn, uO2File, uServices;
 
 type
-  IPasswordScoreCache = interface(IPasswordScoreProvider)
-    procedure Update(const O2File: TO2File); overload;
-    procedure Update(const O2File: TO2File; ObjectIndex: Integer); overload;
-  end;
-
   TPasswordScoreCache = class(TInterfacedObject, IPasswordScoreCache)
   private
     FPasswordScores: TDictionary<string, Integer>;
     FHash: TDCP_hash;
     FZxcvbn: TZxcvbn;
-    function GetHash(const s: string): string;
+    function GetHash(const S: string): string;
   public
     constructor Create;
     destructor Destroy; override;
@@ -44,7 +39,7 @@ type
 implementation
 
 uses
-  System.Classes, DCPsha256, Zxcvbn.Result, uO2Objects;
+  Classes, DCPsha256, Zxcvbn.Result, uO2Objects, uO2Rules;
 
 { TPasswordScoreCache }
 
@@ -62,12 +57,12 @@ begin
   FZxcvbn.Free;
 end;
 
-function TPasswordScoreCache.GetHash(const s: string): string;
+function TPasswordScoreCache.GetHash(const S: string): string;
 var
   Digest: array[0..31] of byte;
 begin
   FHash.Init;
-  FHash.UpdateStr(s);
+  FHash.UpdateStr(S);
   FHash.Final(Digest);
   SetString(Result, PAnsiChar(@Digest[0]), Length(Digest));
 end;
