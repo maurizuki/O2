@@ -605,6 +605,7 @@ type
     procedure BeginBatchOperation;
     procedure EndBatchOperation;
     procedure FillObjList(const Objects: TO2ObjectList);
+    function GetSelectedObjects: IEnumerable<TO2Object>;
 
     property O2File: TO2File read GetFile;
     property O2FileName: string read FFileName write SetFileName;
@@ -1219,21 +1220,13 @@ end;
 
 procedure TMainForm.ExportToHTMLExecute(Sender: TObject);
 var
-  Selection: TO2ObjectList;
   Model: THTMLExportModel;
 begin
-  Selection := TO2ObjectList.Create;
+  Model := THTMLExportModel.Create(O2File, GetSelectedObjects, XmlStorage);
   try
-    FillObjList(Selection);
-
-    Model := THTMLExportModel.Create(O2File, Selection, XmlStorage);
-    try
-      THTMLExport.Execute(Application, Model);
-    finally
-      Model.Free;
-    end;
+    THTMLExport.Execute(Application, Model);
   finally
-    Selection.Free;
+    Model.Free;
   end;
 end;
 
@@ -3310,6 +3303,14 @@ begin
   NoneSelected := ObjectsView.SelCount = 0;
   for AItem in ObjectsView.Items do
     if NoneSelected or AItem.Selected then Objects.Add(AItem.Data);
+end;
+
+function TMainForm.GetSelectedObjects: IEnumerable<TO2Object>;
+begin
+  if Assigned(ObjectsView.Selected) then
+    Result := TO2ObjectListViewSelectionEnumerable.Create(ObjectsView)
+  else
+    Result := O2File.Objects.ToEnumerable;
 end;
 
 end.

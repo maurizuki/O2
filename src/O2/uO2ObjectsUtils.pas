@@ -18,7 +18,36 @@ unit uO2ObjectsUtils;
 interface
 
 uses
-  Classes, uO2Objects;
+  Classes, ComCtrls, uO2Objects;
+
+type
+  TO2ObjectListViewSelectionEnumerator = class(TInterfacedObject,
+    IEnumerator<TO2Object>)
+  private
+    FListView: TCustomListView;
+    FListItem: TListItem;
+  public
+    constructor Create(const ListView: TCustomListView);
+    function GetCurrent: TObject;
+    function GetCurrentT: TO2Object;
+    function IEnumerator<TO2Object>.GetCurrent = GetCurrentT;
+    function MoveNext: Boolean;
+    procedure Reset;
+  end;
+
+  TO2ObjectListViewSelectionEnumerable = class(TInterfacedObject,
+    IEnumerable<TO2Object>)
+  private
+    FListView: TCustomListView;
+  public
+    constructor Create(const ListView: TCustomListView);
+    function GetEnumerator: IEnumerator;
+    function GetEnumeratorT: IEnumerator<TO2Object>;
+    function IEnumerable<TO2Object>.GetEnumerator = GetEnumeratorT;
+  end;
+
+function ObjectExists(Objects: IEnumerable<TO2Object>;
+  const Obj: TO2Object): Boolean;
 
 procedure AppendFieldNamesToList(Objects: IEnumerable<TO2Object>;
   const FieldNames: TStrings);
@@ -42,6 +71,15 @@ implementation
 
 uses
   SysUtils;
+
+function ObjectExists(Objects: IEnumerable<TO2Object>;
+  const Obj: TO2Object): Boolean;
+var
+  AObject: TO2Object;
+begin
+  Result := False;
+  for AObject in Objects do if AObject = Obj then Exit(True);
+end;
 
 procedure AppendFieldNamesToList(Objects: IEnumerable<TO2Object>;
   const FieldNames: TStrings);
@@ -159,6 +197,64 @@ begin
   finally
     TempList.Free;
   end;
+end;
+
+{ TO2ObjectListViewSelectionEnumerator }
+
+constructor TO2ObjectListViewSelectionEnumerator.Create(
+  const ListView: TCustomListView);
+begin
+  FListView := ListView;
+  FListItem := nil;
+end;
+
+function TO2ObjectListViewSelectionEnumerator.GetCurrent: TObject;
+begin
+  Result := GetCurrentT;
+end;
+
+function TO2ObjectListViewSelectionEnumerator.GetCurrentT: TO2Object;
+begin
+  Result := FListItem.Data;
+end;
+
+function TO2ObjectListViewSelectionEnumerator.MoveNext: Boolean;
+begin
+  Result := True;
+  if FListItem = nil then
+    if FListView.Selected = nil then
+      Result := False
+    else
+      FListItem := FListView.Selected
+  else
+  begin
+    FListItem := FListView.GetNextItem(FListItem, sdAll, [isSelected]);
+    Result := Assigned(FListItem);
+  end;
+end;
+
+procedure TO2ObjectListViewSelectionEnumerator.Reset;
+begin
+  FListItem := nil;
+end;
+
+{ TO2ObjectListViewSelectionEnumerable }
+
+constructor TO2ObjectListViewSelectionEnumerable.Create(
+  const ListView: TCustomListView);
+begin
+  FListView := ListView;
+end;
+
+function TO2ObjectListViewSelectionEnumerable.GetEnumerator: IEnumerator;
+begin
+  Result := GetEnumeratorT;
+end;
+
+function TO2ObjectListViewSelectionEnumerable.GetEnumeratorT:
+  IEnumerator<TO2Object>;
+begin
+  Result := TO2ObjectListViewSelectionEnumerator.Create(FListView);
 end;
 
 end.

@@ -26,7 +26,7 @@ type
   private
     FTitle: string;
     FO2File: TO2File;
-    FSelectedObjects: TO2ObjectList;
+    FSelectedObjects: IEnumerable<TO2Object>;
     FStorage: IStorage;
     FIncludeIndex: Boolean;
     FIncludeTags: Boolean;
@@ -43,7 +43,7 @@ type
     procedure AppendRelationList(const Obj: TO2Object);
   public
     constructor Create(const O2File: TO2File;
-      const SelectedObjects: TO2ObjectList; Storage: IStorage);
+      SelectedObjects: IEnumerable<TO2Object>; Storage: IStorage);
     destructor Destroy; override;
     procedure StoreSettings;
     function AddStyle(const Style: string): Integer;
@@ -63,12 +63,12 @@ implementation
 
 uses
   Classes, JclFileUtils, uGlobal, uAppFiles, uHTMLHelper, uO2Relations,
-  uO2Rules;
+  uO2Rules, uO2ObjectsUtils;
 
 { THTMLExportModel }
 
 constructor THTMLExportModel.Create(const O2File: TO2File;
-  const SelectedObjects: TO2ObjectList; Storage: IStorage);
+  SelectedObjects: IEnumerable<TO2Object>; Storage: IStorage);
 begin
   if O2File.Title = '' then
     FTitle := ChangeFileExt(ExtractFileName(O2File.FileName), '')
@@ -173,25 +173,25 @@ end;
 
 procedure THTMLExportModel.AppendObjectList;
 var
-  I: Integer;
+  AObject: TO2Object;
 begin
     FBuilder.Append('<div class="object-list">');
 
-    for I := 0 to FSelectedObjects.Count - 1 do
+    for AObject in FSelectedObjects do
     begin
-      FBuilder.AppendFormat('<a name="%d"></a>', [FSelectedObjects[I].Index])
+      FBuilder.AppendFormat('<a name="%d"></a>', [AObject.Index])
         .Append('<div class="object-item"><h2>')
-        .AppendHTML(FSelectedObjects[I].Name).Append('</h2>');
+        .AppendHTML(AObject.Name).Append('</h2>');
 
-      if FIncludeTags then AppendTagList(FSelectedObjects[I]);
+      if FIncludeTags then AppendTagList(AObject);
 
-      AppendFieldList(FSelectedObjects[I]);
+      AppendFieldList(AObject);
 
-      if FIncludeRelations then AppendRelationList(FSelectedObjects[I]);
+      if FIncludeRelations then AppendRelationList(AObject);
 
-      if FIncludeNotes and (FSelectedObjects[I].Text.Count > 0) then
+      if FIncludeNotes and (AObject.Text.Count > 0) then
         FBuilder.Append('<div class="notes">')
-          .AppendHTML(FSelectedObjects[I].Text, FSelectedObjects[I].TextType)
+          .AppendHTML(AObject.Text, AObject.TextType)
           .Append('</div>');
 
       FBuilder.Append('</div>');
@@ -289,7 +289,7 @@ begin
           FBuilder
             .Append('<div class="relation-item"><div class="relation-object">');
 
-          if FSelectedObjects.Contains(AObjRelation.Obj) then
+          if ObjectExists(FSelectedObjects, AObjRelation.Obj) then
             FBuilder.AppendFormat('<a href="#%d">', [AObjRelation.Obj.Index])
               .AppendHTML(AObjRelation.Obj.Name).Append('</a>')
           else
