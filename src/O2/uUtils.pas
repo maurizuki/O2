@@ -21,6 +21,11 @@ uses
   Classes, Types, Graphics, JSON;
 
 type
+  TAppVersionInfo = record
+    ProductName, Version: string;
+    MajorVersion, MinorVersion, Release, Build: Word;
+  end;
+
   TAppVersion = class(TPersistent)
   private
     FMajorVersion: Integer;

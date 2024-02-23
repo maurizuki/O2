@@ -57,6 +57,5 @@ begin
   Application.Initialize;
   Application.Title := 'O2';
   Application.CreateForm(TMainForm, MainForm);
-  Application.CreateForm(TRTFViewer, RTFViewer);
   Application.Run;
 end.

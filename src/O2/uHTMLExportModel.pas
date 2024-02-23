@@ -18,8 +18,8 @@ unit uHTMLExportModel;
 interface
 
 uses
-  Windows, System.Generics.Collections, SysUtils, uO2File, uO2Objects,
-  uServices;
+  Windows, Generics.Collections, SysUtils, uO2File, uO2Objects, uServices,
+  uUtils;
 
 type
   THTMLExportModel = class
@@ -27,6 +27,7 @@ type
     FTitle: string;
     FO2File: TO2File;
     FSelectedObjects: IEnumerable<TO2Object>;
+    FAppVersionInfo: TAppVersionInfo;
     FStorage: IStorage;
     FIncludeIndex: Boolean;
     FIncludeTags: Boolean;
@@ -43,7 +44,8 @@ type
     procedure AppendRelationList(const Obj: TO2Object);
   public
     constructor Create(const O2File: TO2File;
-      SelectedObjects: IEnumerable<TO2Object>; Storage: IStorage);
+      SelectedObjects: IEnumerable<TO2Object>; AppVersionInfo: TAppVersionInfo;
+      Storage: IStorage);
     destructor Destroy; override;
     procedure StoreSettings;
     function AddStyle(const Style: string): Integer;
@@ -62,13 +64,13 @@ type
 implementation
 
 uses
-  Classes, JclFileUtils, uGlobal, uAppFiles, uHTMLHelper, uO2Relations,
-  uO2Rules, uO2ObjectsUtils;
+  Classes, uGlobal, uHTMLHelper, uO2Relations, uO2Rules, uO2ObjectsUtils;
 
 { THTMLExportModel }
 
 constructor THTMLExportModel.Create(const O2File: TO2File;
-  SelectedObjects: IEnumerable<TO2Object>; Storage: IStorage);
+  SelectedObjects: IEnumerable<TO2Object>; AppVersionInfo: TAppVersionInfo;
+  Storage: IStorage);
 begin
   if O2File.Title = '' then
     FTitle := ChangeFileExt(ExtractFileName(O2File.FileName), '')
@@ -76,6 +78,7 @@ begin
     FTitle := O2File.Title;
   FO2File := O2File;
   FSelectedObjects := SelectedObjects;
+  FAppVersionInfo := AppVersionInfo;
   FStorage := Storage;
   FIncludeIndex := FStorage.ReadBoolean(IdHTMLExportIncludeIndex, True);
   FIncludeTags := FStorage.ReadBoolean(IdHTMLExportIncludeTags, True);
@@ -109,24 +112,15 @@ begin
 end;
 
 function THTMLExportModel.ExportToHTML: string;
-var
-  VersionInfo: TJclFileVersionInfo;
 begin
   FBuilder.Clear;
 
   FBuilder.AppendLine('<!DOCTYPE html>')
     .AppendLine('<html>')
-    .AppendLine('<head>');
-
-  VersionInfo := TJclFileVersionInfo.Create(AppFiles.FullPath[IdAppExe]);
-  try
-    FBuilder.AppendFormat('<meta name="generator" content="%s %s" />',
-        [VersionInfo.ProductName, VersionInfo.BinFileVersion]);
-  finally
-    VersionInfo.Free;
-  end;
-
-  FBuilder.AppendFormat('<meta name="description" content="%s" />',
+    .AppendLine('<head>')
+    .AppendFormat('<meta name="generator" content="%s %s" />',
+      [FAppVersionInfo.ProductName, FAppVersionInfo.Version])
+    .AppendFormat('<meta name="description" content="%s" />',
       [FO2File.Description])
     .AppendFormat('<meta name="author" content="%s" />', [FO2File.Author])
     .AppendLine('<style>')

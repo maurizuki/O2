@@ -28,7 +28,8 @@ uses
   StdCtrls, ExtCtrls, FileCtrl, Types, System.ImageList, System.Actions,
   REST.Client, Data.Bind.Components, Data.Bind.ObjectScope, OleCtrls, SHDocVw,
   JvComponentBase, JvDragDrop,
-  uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist, uServices;
+  uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist, uServices,
+  uUtils;
 
 type
   TCmdLineAction = (caNone, caOpenFile);
@@ -510,6 +511,7 @@ type
     FFile: TO2File;
     FFileName: string;
     FSelectedObjects: IEnumerable<TO2Object>;
+    FAppVersionInfo: TAppVersionInfo;
     FBusy: Boolean;
     FStayOnTop: Boolean;
     FTransparency: Integer;
@@ -623,8 +625,8 @@ implementation
 uses
   TypInfo, StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, XMLDoc, XMLIntf,
   xmldom, msxmldom, System.JSON, JclFileUtils,
-  uAppFiles, uUtils, uShellUtils, uPAFConsts, uAbout, uGetPassword,
-  uSetPassword, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
+  uAppFiles, uShellUtils, uPAFConsts, uAbout, uGetPassword, uSetPassword,
+  uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
   uReplaceDlg, uPrintModel, uPrintPreview, uHTMLExportModel, uHTMLExport,
   uXmlStorage, uO2Xml, uO2Defs, uBrowserEmulation, uCtrlHelpers, uImportExport,
   uO2ImportExport, uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper,
@@ -663,7 +665,7 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 var
   AppPath, SettingsPath, LauncherPath, PortablePath, AppInfo: string;
-  VersionInfo: TJclFileVersionInfo;
+  ExeVersionInfo: TJclFileVersionInfo;
   AppInfoBuilder: TStringBuilder;
 begin
   FBusy := False;
@@ -679,50 +681,57 @@ begin
 
   DecodeCommandLine(CmdLineAction, CmdLineFileName, PortablePath);
 
-  AppInfoBuilder := TStringBuilder.Create;
+  ExeVersionInfo := TJclFileVersionInfo.Create(Application.ExeName);
   try
-    VersionInfo := TJclFileVersionInfo.Create(Application.ExeName);
+    FAppVersionInfo.ProductName := ExeVersionInfo.ProductName;
+    FAppVersionInfo.Version := ExeVersionInfo.BinFileVersion;
+    VersionExtractFileInfo(ExeVersionInfo.FixedInfo,
+      FAppVersionInfo.MajorVersion, FAppVersionInfo.MinorVersion,
+      FAppVersionInfo.Release, FAppVersionInfo.Build);
+
+    AppInfoBuilder := TStringBuilder.Create;
     try
       AppInfo := AppInfoBuilder
         .AppendLine('[' + PAF_FormatSection + ']')
         .AppendLine(PAF_FormatTypeId + '=' + PAF_FormatType)
         .AppendLine(PAF_FormatVersionId + '=' + PAF_FormatVersion)
-        .AppendLine('')
+        .AppendLine
         .AppendLine('[' + PAF_DetailsSection + ']')
-        .AppendLine(PAF_AppNameId + '=' + VersionInfo.ProductName + ' Portable')
-        .AppendLine(PAF_AppIDId + '=' + VersionInfo.ProductName)
-        .AppendLine(PAF_PublisherId + '=' + VersionInfo.CompanyName)
+        .AppendLine(PAF_AppNameId + '='
+          + ExeVersionInfo.ProductName + ' Portable')
+        .AppendLine(PAF_AppIDId + '=' + ExeVersionInfo.ProductName)
+        .AppendLine(PAF_PublisherId + '=' + ExeVersionInfo.CompanyName)
         .AppendLine(PAF_HomepageId + '='
-          + VersionInfo.GetCustomFieldValue('Homepage'))
+          + ExeVersionInfo.GetCustomFieldValue('Homepage'))
         .AppendLine(PAF_CategoryId + '=' + PAF_CategorySecurity)
-        .AppendLine(PAF_DescriptionId + '=' + VersionInfo.Comments)
+        .AppendLine(PAF_DescriptionId + '=' + ExeVersionInfo.Comments)
         .AppendLine(PAF_LanguageId + '=' + PAF_LanguageMultilingual)
-        .AppendLine('')
+        .AppendLine
         .AppendLine('[' + PAF_LicenseSection + ']')
         .AppendLine(PAF_ShareableId + '=' + BoolToStr(True, True))
         .AppendLine(PAF_OpenSourceId + '=' + BoolToStr(True, True))
         .AppendLine(PAF_FreewareId + '=' + BoolToStr(True, True))
         .AppendLine(PAF_CommercialUseId + '=' + BoolToStr(True, True))
-        .AppendLine('')
+        .AppendLine
         .AppendLine('[' + PAF_VersionSection + ']')
-        .AppendLine(PAF_PackageVersionId + '=' + VersionInfo.BinFileVersion)
-        .AppendLine(PAF_DisplayVersionId + '=' + VersionInfo.BinFileVersion)
-        .AppendLine('')
+        .AppendLine(PAF_PackageVersionId + '=' + ExeVersionInfo.BinFileVersion)
+        .AppendLine(PAF_DisplayVersionId + '=' + ExeVersionInfo.BinFileVersion)
+        .AppendLine
         .AppendLine('[' + PAF_ControlSection + ']')
-        .AppendLine(PAF_IconsId + '=' + IntToStr(1))
+        .AppendLine(PAF_IconsId + '=1')
         .AppendLine(PAF_StartId + '=' + LauncherFile)
-        .AppendLine('')
+        .AppendLine
         .AppendLine('[' + PAF_AssociationsSection + ']')
         .AppendLine(PAF_FileTypesId + '=' + DefaultFileExt)
-        .AppendLine('')
+        .AppendLine
         .AppendLine('[' + PAF_FileTypeIconsSection + ']')
         .AppendLine(DefaultFileExt + '=' + PAF_FileTypeIconCustom)
         .ToString;
     finally
-      VersionInfo.Free;
+      AppInfoBuilder.Free;
     end;
   finally
-    AppInfoBuilder.Free;
+    ExeVersionInfo.Free;
   end;
 
   if PortablePath <> '' then
@@ -1222,7 +1231,8 @@ procedure TMainForm.ExportToHTMLExecute(Sender: TObject);
 var
   Model: THTMLExportModel;
 begin
-  Model := THTMLExportModel.Create(O2File, FSelectedObjects, XmlStorage);
+  Model := THTMLExportModel.Create(O2File, FSelectedObjects, FAppVersionInfo,
+    XmlStorage);
   try
     THTMLExport.Execute(Application, Model);
   finally
@@ -1308,32 +1318,25 @@ begin
         + 'Current Version: %d.%d.%d.%d. Available Version %d.%d.%d.%d. '
         + 'Download URL: %s.';
     var
-      MajorVersion, MinorVersion, Release, Build: Word;
       AppUpdate: TAppUpdate;
       DebugOutput: string;
     begin
-      with TJclFileVersionInfo.Create(AppFiles.FullPath[IdAppExe]) do
-      try
-        VersionExtractFileInfo(FixedInfo,
-          MajorVersion, MinorVersion, Release, Build);
-      finally
-        Free;
-      end;
-
       AppUpdate := TAppUpdate.Create;
       try
         AppUpdate.AppName := 'O2';
         AppUpdate.LoadFromJSON(CheckForUpdatesResponse.JSONValue);
 
         DebugOutput := Format(DebugOutputFmt, [AppUpdate.AppName,
-          MajorVersion, MinorVersion, Release, Build,
+          FAppVersionInfo.MajorVersion, FAppVersionInfo.MinorVersion,
+          FAppVersionInfo.Release, FAppVersionInfo.Build,
           AppUpdate.AppVersion.MajorVersion, AppUpdate.AppVersion.MinorVersion,
           AppUpdate.AppVersion.Release, AppUpdate.AppVersion.Build,
           AppUpdate.DownloadURL]);
         OutputDebugString(PChar(DebugOutput));
 
-        if AppUpdate.AppVersion.Compare(
-          MajorVersion, MinorVersion, Release, Build) = GreaterThanValue then
+        if AppUpdate.AppVersion.Compare(FAppVersionInfo.MajorVersion,
+          FAppVersionInfo.MinorVersion, FAppVersionInfo.Release,
+          FAppVersionInfo.Build) = GreaterThanValue then
         begin
           if YesNoBox(Format(SDownloadUpdatesQuery,
             [AppUpdate.AppVersion.MajorVersion,
