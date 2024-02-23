@@ -13,7 +13,6 @@ object AboutForm: TAboutForm
   Font.Style = []
   KeyPreview = True
   Position = poMainFormCenter
-  OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   DesignSize = (
     295

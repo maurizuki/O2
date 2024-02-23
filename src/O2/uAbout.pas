@@ -19,7 +19,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ExtCtrls, StdCtrls;
+  Dialogs, ExtCtrls, StdCtrls, uServices, uUtils;
 
 type
   TAboutForm = class(TForm)
@@ -34,10 +34,13 @@ type
     btOk: TButton;
     btReadMe: TButton;
     Memo1: TMemo;
-    procedure FormCreate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure LinkClick(Sender: TObject);
     procedure btReadMeClick(Sender: TObject);
+  public
+    FAppFiles: IAppFiles;
+    class procedure Execute(AOwner: TComponent; AppVersionInfo: TAppVersionInfo;
+      AppFiles: IAppFiles);
   end;
 
 var
@@ -46,20 +49,22 @@ var
 implementation
 
 uses
-  JclBase, JclFileUtils, JVCLVer, uGlobal, uAppFiles, uShellUtils, uRTFViewer,
-  uO2Defs;
+  JclBase, JVCLVer, uGlobal, uShellUtils, uRTFViewer, uO2Defs;
 
 {$R *.dfm}
 
-procedure TAboutForm.FormCreate(Sender: TObject);
+class procedure TAboutForm.Execute(AOwner: TComponent;
+  AppVersionInfo: TAppVersionInfo; AppFiles: IAppFiles);
 var
-  VersionInfo: TJclFileVersionInfo;
+  Form: TAboutForm;
 begin
-  VersionInfo := TJclFileVersionInfo.Create(AppFiles.FullPath[IdAppExe]);
+  Form := TAboutForm.Create(AOwner);
   try
-    lbVersion.Caption := VersionInfo.BinFileVersion;
+    Form.FAppFiles := AppFiles;
+    Form.lbVersion.Caption := AppVersionInfo.Version;
+    Form.ShowModal;
   finally
-    VersionInfo.Free;
+    Form.Free;
   end;
 end;
 
@@ -85,7 +90,7 @@ begin
     Memo1.Lines.Add('O2 file identifier: ' + GUIDToString(O2FileGUID));
     Memo1.Lines.Add('');
     Memo1.Lines.Add('EXE path: ' + Application.ExeName);
-    Memo1.Lines.Add('Settings path: ' + AppFiles.FullPath[IdSettings]);
+    Memo1.Lines.Add('Settings path: ' + FAppFiles.FullPath[IdSettings]);
     Memo1.Lines.EndUpdate;
   end;
 end;
@@ -97,7 +102,7 @@ end;
 
 procedure TAboutForm.btReadMeClick(Sender: TObject);
 begin
-  TRTFViewer.Execute(Application, AppFiles.FullPath[IdReadMe]);
+  TRTFViewer.Execute(Application, FAppFiles.FullPath[IdReadMe]);
 end;
 
 end.

@@ -21,6 +21,11 @@ uses
   Classes, uO2File, uO2Rules;
 
 type
+  IAppFiles = interface
+    function GetFullPath(IndexOrName: Variant): string;
+    property FullPath[IndexOrName: Variant]: string read GetFullPath;
+  end;
+
   IStorage = interface
     function Exists(const Name: string): Boolean;
     procedure Delete(const Name: string);

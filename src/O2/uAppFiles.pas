@@ -18,7 +18,7 @@ unit uAppFiles;
 interface
 
 uses
-  Classes;
+  Classes, uServices;
 
 type
   TAppFile = class
@@ -52,7 +52,7 @@ type
     property Content: string read FContent write FContent;
   end;
 
-  TAppFiles = class
+  TAppFiles = class(TInterfacedObject, IAppFiles)
   private
     FFiles: TStrings;
     function GetFiles(IndexOrName: Variant): TAppFile;
@@ -83,12 +83,12 @@ uses
   Windows, Forms, SysUtils, Variants, uUtils;
 
 var
-  AppFilesInt: TAppFiles = nil;
+  AppFilesInt: IAppFiles = nil;
 
 function AppFiles: TAppFiles;
 begin
   if AppFilesInt = nil then AppFilesInt := TAppFiles.Create;
-  Result := AppFilesInt;
+  Result := TAppFiles(AppFilesInt);
 end;
 
 { TAppFile }
@@ -260,11 +260,5 @@ begin
     if Files[I] is TPortableAppFile then
       TPortableAppFile(Files[I]).InstallPortable(Path);
 end;
-
-initialization
-  AppFilesInt := nil;
-
-finalization
-  if Assigned(AppFilesInt) then AppFilesInt.Free;
 
 end.

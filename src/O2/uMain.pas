@@ -1510,12 +1510,7 @@ end;
 
 procedure TMainForm.AboutExecute(Sender: TObject);
 begin
-  AboutForm := TAboutForm.Create(Self);
-  try
-    AboutForm.ShowModal;
-  finally
-    FreeAndNil(AboutForm);
-  end;
+  TAboutForm.Execute(Application, FAppVersionInfo, AppFiles);
 end;
 
 procedure TMainForm.WebExecute(Sender: TObject);
