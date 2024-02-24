@@ -21,6 +21,8 @@ uses
   Windows, Classes, Graphics, ComCtrls, StdCtrls, uO2Defs, uO2Rules,
   uLookupHelper;
 
+{$I PAFConsts.inc}
+
 const
   DefaultFileExt = 'o2';
 

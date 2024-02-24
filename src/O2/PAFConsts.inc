@@ -1,18 +1,3 @@
-{ ******************************************************************** }
-{                                                                      }
-{ This Source Code Form is subject to the terms of the Mozilla Public  }
-{ License, v. 2.0. If a copy of the MPL was not distributed with this  }
-{ file, You can obtain one at http://mozilla.org/MPL/2.0/.             }
-{                                                                      }
-{ The initial Contributor is Maurizio Basaglia.                        }
-{                                                                      }
-{ Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2024 the initial Contributor. All rights reserved.              }
-{                                                                      }
-{ Contributor(s):                                                      }
-{                                                                      }
-{ ******************************************************************** }
-
 { ******************************** }
 {                                  }
 {   PortableApps.com Format        }
@@ -22,10 +7,6 @@
 {   http://portableapps.com        }
 {                                  }
 { ******************************** }
-
-unit uPAFConsts;
-
-interface
 
 const
 
@@ -220,7 +201,3 @@ const
 { PortableApps.com Format "FileTypeIcons" section IDs }
 
   PAF_AllOtherIconsId = 'AllOtherIcons';
-
-implementation
-
-end.

@@ -32,7 +32,6 @@ uses
   uReplaceDlg in 'uReplaceDlg.pas' {ReplaceDlg},
   uPrintPreview in 'uPrintPreview.pas' {PrintPreview},
   uLookupHelper in 'uLookupHelper.pas',
-  uPAFConsts in 'uPAFConsts.pas',
   uXmlStorage in 'uXmlStorage.pas',
   uHTMLExport in 'uHTMLExport.pas' {HTMLExport},
   uStuffHTML in 'uStuffHTML.pas',

@@ -625,7 +625,7 @@ implementation
 uses
   TypInfo, StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, XMLDoc, XMLIntf,
   xmldom, msxmldom, System.JSON, JclFileUtils,
-  uAppFiles, uShellUtils, uPAFConsts, uAbout, uGetPassword, uSetPassword,
+  uAppFiles, uShellUtils, uAbout, uGetPassword, uSetPassword,
   uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
   uReplaceDlg, uPrintModel, uPrintPreview, uHTMLExportModel, uHTMLExport,
   uXmlStorage, uO2Xml, uO2Defs, uBrowserEmulation, uCtrlHelpers, uFileOperation,
