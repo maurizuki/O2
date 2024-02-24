@@ -13,28 +13,29 @@
 {                                                                      }
 { ******************************************************************** }
 
-unit uImportExport;
+unit uFileOperation;
 
 interface
 
 uses
-  uO2File;
+  uO2File, uServices;
 
 type
-  TImportExport = class
+  TFileOperation = class(TInterfacedObject, IFileOperation)
   private
     FO2File: TO2File;
+  protected
+    property O2File: TO2File read FO2File;
   public
     constructor Create(const O2File: TO2File);
     procedure Execute(const FileName: string); virtual; abstract;
-    property O2File: TO2File read FO2File;
   end;
 
 implementation
 
 { TImportExport }
 
-constructor TImportExport.Create(const O2File: TO2File);
+constructor TFileOperation.Create(const O2File: TO2File);
 begin
   FO2File := O2File;
 end;

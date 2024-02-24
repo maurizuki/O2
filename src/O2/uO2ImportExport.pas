@@ -18,10 +18,10 @@ unit uO2ImportExport;
 interface
 
 uses
-  uImportExport, uO2File, uO2Objects;
+  uFileOperation, uO2File, uO2Objects;
 
 type
-  TO2Import = class(TImportExport)
+  TO2Import = class(TFileOperation)
   private
     FPasswordProvider: IPasswordProvider;
   public
@@ -30,12 +30,12 @@ type
     procedure Execute(const FileName: string); override;
   end;
 
-  TO2Export = class(TImportExport)
+  TO2Export = class(TFileOperation)
   private
-    FSelection: TO2ObjectList;
+    FSelectedObjects: IEnumerable<TO2Object>;
   public
     constructor Create(const O2File: TO2File;
-      const Selection: TO2ObjectList); overload;
+      SelectedObjects: IEnumerable<TO2Object>); overload;
     procedure Execute(const FileName: string); override;
   end;
 
@@ -78,10 +78,10 @@ end;
 { TO2Export }
 
 constructor TO2Export.Create(const O2File: TO2File;
-  const Selection: TO2ObjectList);
+  SelectedObjects: IEnumerable<TO2Object>);
 begin
   inherited Create(O2File);
-  FSelection := Selection;
+  FSelectedObjects := SelectedObjects;
 end;
 
 procedure TO2Export.Execute(const FileName: string);
@@ -92,7 +92,7 @@ var
 begin
   OutputFile := TO2File.Create;
   try
-    for AObject in FSelection do
+    for AObject in FSelectedObjects do
     begin
       NewObject := OutputFile.Objects.AddObject;
       NewObject.Assign(AObject);

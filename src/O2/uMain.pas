@@ -628,7 +628,7 @@ uses
   uAppFiles, uShellUtils, uPAFConsts, uAbout, uGetPassword, uSetPassword,
   uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
   uReplaceDlg, uPrintModel, uPrintPreview, uHTMLExportModel, uHTMLExport,
-  uXmlStorage, uO2Xml, uO2Defs, uBrowserEmulation, uCtrlHelpers, uImportExport,
+  uXmlStorage, uO2Xml, uO2Defs, uBrowserEmulation, uCtrlHelpers, uFileOperation,
   uO2ImportExport, uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper,
   uO2ObjectsUtils, uPasswordScoreCache;
 
@@ -1128,27 +1128,23 @@ const
   idxImportFromO2File = 1;
   idxImportFromXmlFile = 2;
 var
-  Import: TImportExport;
+  ImportFile: IFileOperation;
 begin
   ImportDialog.FileName := '';
   if ImportDialog.Execute then
   begin
     BeginBatchOperation;
     try
-      Import := nil;
       case ImportDialog.FilterIndex of
         idxImportFromO2File:
-          Import := TO2Import.Create(O2File, Self);
+          ImportFile := TO2Import.Create(O2File, Self);
         idxImportFromXmlFile:
-          Import := TXmlImport.Create(O2File);
+          ImportFile := TXmlImport.Create(O2File);
+        else
+          Exit;
       end;
 
-      try
-        if Assigned(Import) then
-          Import.Execute(ImportDialog.FileName);
-      finally
-        Import.Free;
-      end;
+      ImportFile.Execute(ImportDialog.FileName);
     finally
       EndBatchOperation;
     end;
@@ -1186,41 +1182,25 @@ const
   idxExportToXmlFile = 2;
   idxExportToIcsFile = 3;
 var
-  Export: TImportExport;
-  Selection: TO2ObjectList;
+  ExportFile: IFileOperation;
 begin
   ExportDialog.FileName := '';
   if ExportDialog.Execute then
   begin
     BeginBatchOperation;
     try
-      Selection := TO2ObjectList.Create;
-      try
-        Export := nil;
-        case ExportDialog.FilterIndex of
-          idxExportToO2File:
-          begin
-            FillObjList(Selection);
-            Export := TO2Export.Create(O2File, Selection);
-          end;
-          idxExportToXmlFile:
-            Export := TXmlExport.Create(O2File);
-          idxExportToIcsFile:
-          begin
-            FillObjList(Selection);
-            Export := TiCalendarExport.Create(O2File, Selection);
-          end;
-        end;
-
-        try
-          if Assigned(Export) then
-            Export.Execute(ExportDialog.FileName);
-        finally
-          Export.Free;
-        end;
-      finally
-        Selection.Free;
+      case ExportDialog.FilterIndex of
+        idxExportToO2File:
+          ExportFile := TO2Export.Create(O2File, FSelectedObjects);
+        idxExportToXmlFile:
+          ExportFile := TXmlExport.Create(O2File);
+        idxExportToIcsFile:
+          ExportFile := TiCalendarExport.Create(O2File, FSelectedObjects);
+        else
+          Exit;
       end;
+
+      ExportFile.Execute(ExportDialog.FileName);
     finally
       EndBatchOperation;
     end;

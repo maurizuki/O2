@@ -18,15 +18,15 @@ unit uXmlImportExport;
 interface
 
 uses
-  uImportExport;
+  uFileOperation;
 
 type
-  TXmlImport = class(TImportExport)
+  TXmlImport = class(TFileOperation)
   public
     procedure Execute(const FileName: string); override;
   end;
 
-  TXmlExport = class(TImportExport)
+  TXmlExport = class(TFileOperation)
   public
     procedure Execute(const FileName: string); override;
   end;

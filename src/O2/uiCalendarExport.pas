@@ -29,21 +29,17 @@ unit uiCalendarExport;
 interface
 
 uses
-  Classes, uImportExport, uO2File, uO2Objects;
+  Classes, uFileOperation, uO2File, uO2Objects;
 
 type
-  TiCalendarExport = class(TImportExport)
+  TiCalendarExport = class(TFileOperation)
   private
-    FSelection: TO2ObjectList;
+    FSelectedObjects: IEnumerable<TO2Object>;
   public
     constructor Create(const O2File: TO2File;
-      const Selection: TO2ObjectList); overload;
+      SelectedObjects: IEnumerable<TO2Object>); overload;
     procedure Execute(const FileName: string); override;
-    property Selection: TO2ObjectList read FSelection;
   end;
-
-  TiCalendarClassification = (clPublic, clPrivate, clConfidential);
-  TiCalendarTimeTransparency = (ttOpaque, ttTransparent);
 
   TiCalendarWriter = class
   private
@@ -69,10 +65,10 @@ end;
 { TiCalendarExport }
 
 constructor TiCalendarExport.Create(const O2File: TO2File;
-  const Selection: TO2ObjectList);
+  SelectedObjects: IEnumerable<TO2Object>);
 begin
   inherited Create(O2File);
-  FSelection := Selection;
+  FSelectedObjects := SelectedObjects;
 end;
 
 procedure TiCalendarExport.Execute(const FileName: string);
@@ -94,7 +90,7 @@ begin
       Writer.WriteLines('VERSION:2.0');
       Writer.WriteLines('CALSCALE:GREGORIAN');
 
-      for AObject in Selection do
+      for AObject in FSelectedObjects do
         for AField in AObject.Fields do
         begin
           ARule := O2File.Rules.FindFirstRule(AField, EventRules);

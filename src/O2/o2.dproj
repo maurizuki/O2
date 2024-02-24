@@ -980,7 +980,7 @@
         <DCCReference Include="uMRUList.pas"/>
         <DCCReference Include="uBrowserEmulation.pas"/>
         <DCCReference Include="uCtrlHelpers.pas"/>
-        <DCCReference Include="uImportExport.pas"/>
+        <DCCReference Include="uFileOperation.pas"/>
         <DCCReference Include="uXmlImportExport.pas"/>
         <DCCReference Include="uO2ImportExport.pas"/>
         <DCCReference Include="uiCalendarExport.pas"/>

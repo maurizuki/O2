@@ -50,6 +50,10 @@ type
     procedure Update(const O2File: TO2File; ObjectIndex: Integer); overload;
   end;
 
+  IFileOperation = interface
+    procedure Execute(const FileName: string);
+  end;
+
 implementation
 
 end.
