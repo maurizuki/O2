@@ -683,11 +683,13 @@ begin
 
   ExeVersionInfo := TJclFileVersionInfo.Create(Application.ExeName);
   try
-    FAppVersionInfo.ProductName := ExeVersionInfo.ProductName;
-    FAppVersionInfo.Version := ExeVersionInfo.BinFileVersion;
+    FAppVersionInfo.AppName := ExeVersionInfo.ProductName;
+    FAppVersionInfo.DisplayVersion := ExeVersionInfo.BinFileVersion;
     VersionExtractFileInfo(ExeVersionInfo.FixedInfo,
-      FAppVersionInfo.MajorVersion, FAppVersionInfo.MinorVersion,
-      FAppVersionInfo.Release, FAppVersionInfo.Build);
+      FAppVersionInfo.Version.MajorVersion,
+      FAppVersionInfo.Version.MinorVersion,
+      FAppVersionInfo.Version.Release,
+      FAppVersionInfo.Version.Build);
 
     AppInfoBuilder := TStringBuilder.Create;
     try
@@ -1294,35 +1296,36 @@ begin
   CheckForUpdatesRequest.ExecuteAsync(
     procedure
     const
-      DebugOutputFmt = 'Application Version Check: Application ID: %s. '
-        + 'Current Version: %d.%d.%d.%d. Available Version %d.%d.%d.%d. '
-        + 'Download URL: %s.';
+      DebugOutputFmt =
+        'Application Version Check: Current Version: %d.%d.%d.%d. Available Version %d.%d.%d.%d. Download URL: %s.';
     var
-      AppUpdate: TAppUpdate;
+      AppUpdateInfo: TAppUpdateInfo;
       DebugOutput: string;
     begin
-      AppUpdate := TAppUpdate.Create;
       try
-        AppUpdate.AppName := 'O2';
-        AppUpdate.LoadFromJSON(CheckForUpdatesResponse.JSONValue);
+        AppUpdateInfo := TAppUpdateInfo
+          .Create(CheckForUpdatesResponse.JSONValue);
 
-        DebugOutput := Format(DebugOutputFmt, [AppUpdate.AppName,
-          FAppVersionInfo.MajorVersion, FAppVersionInfo.MinorVersion,
-          FAppVersionInfo.Release, FAppVersionInfo.Build,
-          AppUpdate.AppVersion.MajorVersion, AppUpdate.AppVersion.MinorVersion,
-          AppUpdate.AppVersion.Release, AppUpdate.AppVersion.Build,
-          AppUpdate.DownloadURL]);
+        DebugOutput := Format(DebugOutputFmt,
+          [FAppVersionInfo.Version.MajorVersion,
+          FAppVersionInfo.Version.MinorVersion,
+          FAppVersionInfo.Version.Release,
+          FAppVersionInfo.Version.Build,
+          AppUpdateInfo.Version.MajorVersion,
+          AppUpdateInfo.Version.MinorVersion,
+          AppUpdateInfo.Version.Release,
+          AppUpdateInfo.Version.Build,
+          AppUpdateInfo.DownloadURL]);
         OutputDebugString(PChar(DebugOutput));
 
-        if AppUpdate.AppVersion.Compare(FAppVersionInfo.MajorVersion,
-          FAppVersionInfo.MinorVersion, FAppVersionInfo.Release,
-          FAppVersionInfo.Build) = GreaterThanValue then
+        if AppUpdateInfo.Version
+          .Compare(FAppVersionInfo.Version) = GreaterThanValue then
         begin
           if YesNoBox(Format(SDownloadUpdatesQuery,
-            [AppUpdate.AppVersion.MajorVersion,
-            AppUpdate.AppVersion.MinorVersion,
-            AppUpdate.AppVersion.Release])) then
-            ShellOpen(AppUpdate.DownloadURL);
+            [AppUpdateInfo.Version.MajorVersion,
+            AppUpdateInfo.Version.MinorVersion,
+            AppUpdateInfo.Version.Release])) then
+            ShellOpen(AppUpdateInfo.DownloadURL);
         end
         else if not CheckForUpdatesSilent then
           InfoBox(SNoAvailableUpdates);
@@ -1330,7 +1333,6 @@ begin
         if not CheckForUpdatesSilent then
           ErrorBox(SCannotCheckForUpdates);
       end;
-      AppUpdate.Free;
 
       CheckForUpdatesSilent := False;
     end,

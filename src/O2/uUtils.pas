@@ -18,52 +18,23 @@ unit uUtils;
 interface
 
 uses
-  Classes, Types, Graphics, JSON;
+  Types, Graphics, JSON;
 
 type
-  TAppVersionInfo = record
-    ProductName, Version: string;
+  TVersion = record
     MajorVersion, MinorVersion, Release, Build: Word;
+    function Compare(Other: TVersion): TValueRelationship;
   end;
 
-  TAppVersion = class(TPersistent)
-  private
-    FMajorVersion: Integer;
-    FMinorVersion: Integer;
-    FRelease: Integer;
-    FBuild: Integer;
-  public
-    const Unused = Integer(-1);
-    constructor Create; overload;
-    constructor Create(AMajorVersion, AMinorVersion, ARelease,
-      ABuild: Integer); overload;
-    procedure Assign(Source: TPersistent); override;
-    function Compare(AMajorVersion: Integer;
-      AMinorVersion: Integer = TAppVersion.Unused;
-      ARelease: Integer = TAppVersion.Unused;
-      ABuild: Integer = TAppVersion.Unused): TValueRelationship; overload;
-    function Compare(const AVersion: TAppVersion): TValueRelationship; overload;
-  published
-    property MajorVersion: Integer read FMajorVersion write FMajorVersion;
-    property MinorVersion: Integer read FMinorVersion write FMinorVersion;
-    property Release: Integer read FRelease write FRelease;
-    property Build: Integer read FBuild write FBuild;
+  TAppVersionInfo = record
+    AppName, DisplayVersion: string;
+    Version: TVersion;
   end;
 
-  TAppUpdate = class(TPersistent)
-  private
-    FAppName: string;
-    FAppVersion: TAppVersion;
-    FDownloadURL: string;
-    procedure SetAppVersion(const Value: TAppVersion);
-  public
-    constructor Create;
-    destructor Destroy; override;
-    procedure LoadFromJSON(const JSON: TJSONValue);
-  published
-    property AppName: string read FAppName write FAppName;
-    property AppVersion: TAppVersion read FAppVersion write SetAppVersion;
-    property DownloadURL: string read FDownloadURL write FDownloadURL;
+  TAppUpdateInfo = record
+    Version: TVersion;
+    DownloadURL: string;
+    constructor Create(const JSON: TJSONValue);
   end;
 
 function MsgBox(const Text: string; Flags: Integer): Integer; inline;
@@ -221,80 +192,22 @@ begin
   end;
 end;
 
-{ TAppVersion }
+{ TVersion }
 
-constructor TAppVersion.Create;
+function TVersion.Compare(Other: TVersion): TValueRelationship;
 begin
-  inherited Create;
-  FMajorVersion := 0;
-  FMinorVersion := 0;
-  FRelease := 0;
-  FBuild := 0;
+  Result := CompareValue(MajorVersion, Other.MajorVersion);
+  if (Result <> EqualsValue) then Exit;
+  Result := CompareValue(MinorVersion, Other.MinorVersion);
+  if (Result <> EqualsValue) then Exit;
+  Result := CompareValue(Release, Other.Release);
+  if (Result <> EqualsValue) then Exit;
+  Result := CompareValue(Build, Other.Build);
 end;
 
-constructor TAppVersion.Create(AMajorVersion, AMinorVersion, ARelease,
-  ABuild: Integer);
-begin
-  inherited Create;
-  FMajorVersion := AMajorVersion;
-  FMinorVersion := AMinorVersion;
-  FRelease := ARelease;
-  FBuild := ABuild;
-end;
+{ TAppUpdateInfo }
 
-procedure TAppVersion.Assign(Source: TPersistent);
-begin
-  if Source is TAppVersion then
-  begin
-    MajorVersion := TAppVersion(Source).MajorVersion;
-    MinorVersion := TAppVersion(Source).MinorVersion;
-    Release := TAppVersion(Source).Release;
-    Build := TAppVersion(Source).Build;
-  end
-  else
-    inherited Assign(Source);
-end;
-
-function TAppVersion.Compare(AMajorVersion, AMinorVersion, ARelease,
-  ABuild: Integer): TValueRelationship;
-begin
-  Result := CompareValue(MajorVersion, AMajorVersion);
-  if (Result <> EqualsValue) or (AMinorVersion = Unused) then Exit;
-  Result := CompareValue(MinorVersion, AMinorVersion);
-  if (Result <> EqualsValue) or (ARelease = Unused) then Exit;
-  Result := CompareValue(Release, ARelease);
-  if (Result <> EqualsValue) or (ABuild = Unused) then Exit;
-  Result := CompareValue(Build, ABuild);
-end;
-
-function TAppVersion.Compare(const AVersion: TAppVersion): TValueRelationship;
-begin
-  Result := Compare(AVersion.MajorVersion, AVersion.MinorVersion,
-    AVersion.FRelease, AVersion.Build);
-end;
-
-{ TAppUpdate }
-
-constructor TAppUpdate.Create;
-begin
-  inherited Create;
-  FAppName := '';
-  FAppVersion := TAppVersion.Create;
-  FDownloadURL := '';
-end;
-
-destructor TAppUpdate.Destroy;
-begin
-  FAppVersion.Free;
-  inherited Destroy;
-end;
-
-procedure TAppUpdate.SetAppVersion(const Value: TAppVersion);
-begin
-  FAppVersion.Assign(Value);
-end;
-
-procedure TAppUpdate.LoadFromJSON(const JSON: TJSONValue);
+constructor TAppUpdateInfo.Create(const JSON: TJSONValue);
 const
   AppVersionPattern =
     '^v(?<MajorVersion>[0-9]+)\.(?<MinorVersion>[0-9]+)(?:\.(?<Release>[0-9]+))?$';
@@ -304,14 +217,15 @@ var
 begin
     RegEx := TRegEx.Create(AppVersionPattern);
     Match := RegEx.Match(JSON.GetValue<string>('tag_name'));
-    AppVersion.MajorVersion := StrToInt(Match.Groups['MajorVersion'].Value);
-    AppVersion.MinorVersion := StrToInt(Match.Groups['MinorVersion'].Value);
+    Version.MajorVersion := StrToInt(Match.Groups['MajorVersion'].Value);
+    Version.MinorVersion := StrToInt(Match.Groups['MinorVersion'].Value);
     try
-      AppVersion.Release := StrToIntDef(Match.Groups['Release'].Value, 0)
+      Version.Release := StrToIntDef(Match.Groups['Release'].Value, 0)
     except
-      AppVersion.Release := 0;
+      Version.Release := 0;
     end;
-    AppVersion.Build := 0;
+    Version.Build := 0;
+
     DownloadURL := JSON.GetValue<string>('html_url');
 end;
 

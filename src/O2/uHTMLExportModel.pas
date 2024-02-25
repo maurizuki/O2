@@ -119,7 +119,7 @@ begin
     .AppendLine('<html>')
     .AppendLine('<head>')
     .AppendFormat('<meta name="generator" content="%s %s" />',
-      [FAppVersionInfo.ProductName, FAppVersionInfo.Version])
+      [FAppVersionInfo.AppName, FAppVersionInfo.DisplayVersion])
     .AppendFormat('<meta name="description" content="%s" />',
       [FO2File.Description])
     .AppendFormat('<meta name="author" content="%s" />', [FO2File.Author])

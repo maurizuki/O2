@@ -61,7 +61,7 @@ begin
   Form := TAboutForm.Create(AOwner);
   try
     Form.FAppFiles := AppFiles;
-    Form.lbVersion.Caption := AppVersionInfo.Version;
+    Form.lbVersion.Caption := AppVersionInfo.DisplayVersion;
     Form.ShowModal;
   finally
     Form.Free;
