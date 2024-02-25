@@ -302,11 +302,7 @@ var
 begin
   Result := nil;
   for AParam in Self do
-    if SameText(AParam.ParamName, ParamName) then
-    begin
-      Result := AParam;
-      Break;
-    end;
+    if SameText(AParam.ParamName, ParamName) then Exit(AParam);
 end;
 
 function TO2Params.ParamExists(const ParamName: string): Boolean;
@@ -742,11 +738,7 @@ var
 begin
   Result := nil;
   for ARule in Self do
-    if SameText(ARule.Name, Name) then
-    begin
-      Result := ARule;
-      Break;
-    end;
+    if SameText(ARule.Name, Name) then Exit(ARule);
 end;
 
 function TO2Rules.FindFirstRule(const AField: TO2Field;
@@ -756,11 +748,7 @@ var
 begin
   Result := nil;
   for ARule in Self do
-    if (ARule.RuleType in RuleTypes) and ARule.Matches(AField) then
-    begin
-      Result := ARule;
-      Break;
-    end;
+    if (ARule.RuleType in RuleTypes) and ARule.Matches(AField) then Exit(ARule);
 end;
 
 function TO2Rules.RuleExists(const Name: string): Boolean;
