@@ -233,11 +233,7 @@ var
 begin
   Result := nil;
   for ARelation in Self do
-    if SameText(ARelation.RelationID, RelationID) then
-    begin
-      Result := ARelation;
-      Break;
-    end;
+    if SameText(ARelation.RelationID, RelationID) then Exit(ARelation);
 end;
 
 function TO2Relations.GetObjectRelations(
