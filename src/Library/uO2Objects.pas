@@ -245,11 +245,7 @@ var
 begin
   Result := nil;
   for AField in Self do
-    if SameText(AField.FieldName, FieldName) then
-    begin
-      Result := AField;
-      Break;
-    end;
+    if SameText(AField.FieldName, FieldName) then Exit(AField);
 end;
 
 function TO2Fields.FieldExists(const FieldName: string): Boolean;
@@ -503,11 +499,7 @@ var
 begin
   Result := nil;
   for AObject in Self do
-    if SameText(AObject.Name, Name) then
-    begin
-      Result := AObject;
-      Break;
-    end;
+    if SameText(AObject.Name, Name) then Exit(AObject);
 end;
 
 function TO2Objects.FindObjectByID(const ObjectID: string): TO2Object;
@@ -516,11 +508,7 @@ var
 begin
   Result := nil;
   for AObject in Self do
-    if SameText(AObject.ObjectID, ObjectID) then
-    begin
-      Result := AObject;
-      Break;
-    end;
+    if SameText(AObject.ObjectID, ObjectID) then Exit(AObject);
 end;
 
 function TO2Objects.ObjectExists(const Name: string): Boolean;
