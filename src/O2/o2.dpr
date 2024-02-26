@@ -48,13 +48,15 @@ uses
   uO2ObjectsUtils in 'uO2ObjectsUtils.pas',
   uPrintModel in 'uPrintModel.pas',
   uServices in 'uServices.pas',
-  uHTMLExportModel in 'uHTMLExportModel.pas';
+  uHTMLExportModel in 'uHTMLExportModel.pas',
+  uStartup in 'uStartup.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.Title := 'O2';
+  ConfigureServices;
   Application.CreateForm(TMainForm, MainForm);
   Application.Run;
 end.

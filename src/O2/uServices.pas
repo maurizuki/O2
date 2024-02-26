@@ -22,6 +22,9 @@ uses
 
 type
   IAppFiles = interface
+    function FileExists(const Name: string): Boolean;
+    function GetPortableFilesTotalSize: Int64;
+    procedure InstallPortable(const Path: string);
     function GetFullPath(IndexOrName: Variant): string;
     property FullPath[IndexOrName: Variant]: string read GetFullPath;
   end;
@@ -43,6 +46,8 @@ type
     procedure WriteFloat(const Name: string; Value: Double);
     procedure WriteString(const Name, Value: string);
     procedure WriteStringList(const Name: string; const AStringList: TStrings);
+    procedure LoadFromFile(const FileName: string);
+    procedure SaveToFile(const FileName: string);
   end;
 
   IPasswordScoreCache = interface(IPasswordScoreProvider)

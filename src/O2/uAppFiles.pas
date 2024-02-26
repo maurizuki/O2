@@ -67,29 +67,18 @@ type
       OverwritePrompt: string): TAppFiles; overload;
     function AddInMemory(const Name, FileName, Path, PortablePath,
       Content: string): TAppFiles;
-    function Exists(const Name: string): Boolean;
-    function PortableFilesTotalSize: Int64;
+    function FileExists(const Name: string): Boolean;
+    function GetPortableFilesTotalSize: Int64;
     procedure InstallPortable(const Path: string);
     property Count: Integer read GetCount;
     property Files[IndexOrName: Variant]: TAppFile read GetFiles;
     property FullPath[IndexOrName: Variant]: string read GetFullPath;
   end;
 
-function AppFiles: TAppFiles;
-
 implementation
 
 uses
   Windows, Forms, SysUtils, Variants, uUtils;
-
-var
-  AppFilesInt: IAppFiles = nil;
-
-function AppFiles: TAppFiles;
-begin
-  if AppFilesInt = nil then AppFilesInt := TAppFiles.Create;
-  Result := TAppFiles(AppFilesInt);
-end;
 
 { TAppFile }
 
@@ -237,12 +226,18 @@ begin
   Result := Self;
 end;
 
-function TAppFiles.Exists(const Name: string): Boolean;
+function TAppFiles.FileExists(const Name: string): Boolean;
+var
+  Index: Integer;
 begin
-  Result := FileExists(FullPath[Name]);
+  Index := FFiles.IndexOf(Name);
+  if Index >= 0 then
+    Result := SysUtils.FileExists(FullPath[Index])
+  else
+    Result := False;
 end;
 
-function TAppFiles.PortableFilesTotalSize: Int64;
+function TAppFiles.GetPortableFilesTotalSize: Int64;
 var
   I: Integer;
 begin

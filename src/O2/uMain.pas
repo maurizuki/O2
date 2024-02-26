@@ -511,13 +511,11 @@ type
     FFile: TO2File;
     FFileName: string;
     FSelectedObjects: IEnumerable<TO2Object>;
-    FAppVersionInfo: TAppVersionInfo;
     FBusy: Boolean;
     FStayOnTop: Boolean;
     FTransparency: Integer;
     FTransparencyOnlyIfDeactivated: Boolean;
     FShowPasswords: Boolean;
-    FPasswordScoreCache: IPasswordScoreCache;
 
     MRUMenuItems: TList;
     MRUList: TMRUList;
@@ -552,7 +550,7 @@ type
     function TryGetPassword(var Password: string): Boolean;
     procedure Initialize;
     procedure InitializeSearch;
-    procedure LoadLanguageList;
+    procedure LoadLanguageMenu;
     procedure DecodeCommandLine(out ACmdLineAction: TCmdLineAction;
       out ACmdLineFileName, APortablePath: string);
     procedure OpenNewInstance(const FileName: string = '');
@@ -560,7 +558,6 @@ type
     procedure SaveToFile(const FileName: string; Copy: Boolean = False);
     procedure LoadMRUList;
     procedure SaveMRUList;
-    procedure ConvertSettings;
     procedure LoadSettings(const FileName: string);
     procedure SaveSettings(const FileName: string);
 
@@ -624,13 +621,12 @@ implementation
 
 uses
   TypInfo, StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, XMLDoc, XMLIntf,
-  xmldom, msxmldom, System.JSON, JclFileUtils,
-  uAppFiles, uShellUtils, uAbout, uGetPassword, uSetPassword,
-  uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
-  uReplaceDlg, uPrintModel, uPrintPreview, uHTMLExportModel, uHTMLExport,
-  uXmlStorage, uO2Xml, uO2Defs, uBrowserEmulation, uCtrlHelpers, uFileOperation,
-  uO2ImportExport, uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper,
-  uO2ObjectsUtils, uPasswordScoreCache;
+  xmldom, msxmldom, System.JSON,
+  uStartup, uShellUtils, uAbout, uGetPassword, uSetPassword, uFilePropsDlg,
+  uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg, uReplaceDlg, uPrintModel,
+  uPrintPreview, uHTMLExportModel, uHTMLExport, uO2Xml, uO2Defs,
+  uBrowserEmulation, uCtrlHelpers, uFileOperation, uO2ImportExport,
+  uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper, uO2ObjectsUtils;
 
 {$R *.dfm}
 
@@ -664,9 +660,7 @@ end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 var
-  AppPath, SettingsPath, LauncherPath, PortablePath, AppInfo: string;
-  ExeVersionInfo: TJclFileVersionInfo;
-  AppInfoBuilder: TStringBuilder;
+  PortablePath: string;
 begin
   FBusy := False;
   BatchOperationCount := 0;
@@ -677,106 +671,15 @@ begin
   PendingChanges := [];
   ApplyingChanges := False;
 
+  FSelectedObjects := TO2ObjectListViewEnumerable.Create(ObjectsView);
+
   Application.HintHidePause := 4500;
 
   DecodeCommandLine(CmdLineAction, CmdLineFileName, PortablePath);
 
-  ExeVersionInfo := TJclFileVersionInfo.Create(Application.ExeName);
-  try
-    FAppVersionInfo.AppName := ExeVersionInfo.ProductName;
-    FAppVersionInfo.DisplayVersion := ExeVersionInfo.BinFileVersion;
-    VersionExtractFileInfo(ExeVersionInfo.FixedInfo,
-      FAppVersionInfo.Version.MajorVersion,
-      FAppVersionInfo.Version.MinorVersion,
-      FAppVersionInfo.Version.Release,
-      FAppVersionInfo.Version.Build);
+  LoadLanguageMenu;
 
-    AppInfoBuilder := TStringBuilder.Create;
-    try
-      AppInfo := AppInfoBuilder
-        .AppendLine('[' + PAF_FormatSection + ']')
-        .AppendLine(PAF_FormatTypeId + '=' + PAF_FormatType)
-        .AppendLine(PAF_FormatVersionId + '=' + PAF_FormatVersion)
-        .AppendLine
-        .AppendLine('[' + PAF_DetailsSection + ']')
-        .AppendLine(PAF_AppNameId + '='
-          + ExeVersionInfo.ProductName + ' Portable')
-        .AppendLine(PAF_AppIDId + '=' + ExeVersionInfo.ProductName)
-        .AppendLine(PAF_PublisherId + '=' + ExeVersionInfo.CompanyName)
-        .AppendLine(PAF_HomepageId + '='
-          + ExeVersionInfo.GetCustomFieldValue('Homepage'))
-        .AppendLine(PAF_CategoryId + '=' + PAF_CategorySecurity)
-        .AppendLine(PAF_DescriptionId + '=' + ExeVersionInfo.Comments)
-        .AppendLine(PAF_LanguageId + '=' + PAF_LanguageMultilingual)
-        .AppendLine
-        .AppendLine('[' + PAF_LicenseSection + ']')
-        .AppendLine(PAF_ShareableId + '=' + BoolToStr(True, True))
-        .AppendLine(PAF_OpenSourceId + '=' + BoolToStr(True, True))
-        .AppendLine(PAF_FreewareId + '=' + BoolToStr(True, True))
-        .AppendLine(PAF_CommercialUseId + '=' + BoolToStr(True, True))
-        .AppendLine
-        .AppendLine('[' + PAF_VersionSection + ']')
-        .AppendLine(PAF_PackageVersionId + '=' + ExeVersionInfo.BinFileVersion)
-        .AppendLine(PAF_DisplayVersionId + '=' + ExeVersionInfo.BinFileVersion)
-        .AppendLine
-        .AppendLine('[' + PAF_ControlSection + ']')
-        .AppendLine(PAF_IconsId + '=1')
-        .AppendLine(PAF_StartId + '=' + LauncherFile)
-        .AppendLine
-        .AppendLine('[' + PAF_AssociationsSection + ']')
-        .AppendLine(PAF_FileTypesId + '=' + DefaultFileExt)
-        .AppendLine
-        .AppendLine('[' + PAF_FileTypeIconsSection + ']')
-        .AppendLine(DefaultFileExt + '=' + PAF_FileTypeIconCustom)
-        .ToString;
-    finally
-      AppInfoBuilder.Free;
-    end;
-  finally
-    ExeVersionInfo.Free;
-  end;
-
-  if PortablePath <> '' then
-  begin
-    AppPath :=
-      IncludeTrailingPathDelimiter(PortablePath) + PortableAppPath;
-    if not GetSettingsOverride(Application.ExeName, SettingsPath) then
-      SettingsPath :=
-        IncludeTrailingPathDelimiter(PortablePath) + PortableSettingsPath;
-    LauncherPath :=
-      IncludeTrailingPathDelimiter(PortablePath) + PortableLauncherPath;
-  end
-  else
-  begin
-    AppPath := ExtractFilePath(Application.ExeName);
-    if not GetSettingsOverride(Application.ExeName, SettingsPath) then
-      SettingsPath :=
-        IncludeTrailingPathDelimiter(TShellFolders.AppData) + LocalSettingsDir;
-    LauncherPath := AppPath;
-  end;
-
-  AppFiles
-    .Add(IdAppExe, ExtractFileName(Application.ExeName), AppPath,
-      PortableAppPath)
-    .AddInMemory(IdAppInfo, AppInfoFile, AppPath, PortableAppInfoPath, AppInfo)
-    .Add(IdAppIcon, AppIconFile, AppPath, PortableAppInfoPath)
-    .Add(IdAppIcon16, AppIcon16File, AppPath, PortableAppInfoPath)
-    .Add(IdAppIcon32, AppIcon32File, AppPath, PortableAppInfoPath)
-    .Add(IdFileTypeIcon, FileTypeIconFile, AppPath, PortableFileTypeIconsPath)
-    .Add(IdFileTypeIcon16, FileTypeIcon16File, AppPath,
-      PortableFileTypeIconsPath)
-    .Add(IdFileTypeIcon32, FileTypeIcon32File, AppPath,
-      PortableFileTypeIconsPath)
-    .Add(IdLauncher, LauncherFile, LauncherPath, PortableLauncherPath)
-    .Add(IdSettings, SettingsFile, SettingsPath, PortableSettingsPath,
-      SSettingsOverwriteQuery)
-    .Add(IdHelp, HTMLHelpFile, AppPath, PortableLauncherPath)
-    .Add(IdLicense, LicenseFile, AppPath, PortableAppPath)
-    .Add(IdReadMe, ReadMeFile, AppPath, PortableAppPath);
-
-  LoadLanguageList;
-
-  InstallOnRemovableMedia.Visible := AppFiles.Exists(IdLauncher);
+  InstallOnRemovableMedia.Visible := AppFiles.FileExists(IdLauncher);
 
   TEventFilterLookup.Fill(FindByEvent);
 
@@ -792,9 +695,6 @@ begin
   MRUMenuItems.Add(MRU8);
   MRUMenuItems.Add(MRU9);
 
-  LoadSettings(AppFiles.FullPath[IdSettings]);
-  Initialize;
-
   FieldsView.Hint := SFieldsViewHint + #13#10 + SFieldsViewHint2;
   RelationsView.Hint := SRelationsViewHint + #13#10 + SRelationsViewHint2;
   OpenDialog.Filter := SOpenFileFilter;
@@ -805,8 +705,8 @@ begin
   ImportSettingsDlg.Filter := SImportSettingsFileFilter;
   ExportSettingsDlg.Filter := SExportSettingsFileFilter;
 
-  FSelectedObjects := TO2ObjectListViewEnumerable.Create(ObjectsView);
-  FPasswordScoreCache := TPasswordScoreCache.Create;
+  LoadSettings(AppFiles.FullPath[IdSettings]);
+  Initialize;
 
   ActiveControl := ObjectsView;
 
@@ -977,7 +877,7 @@ begin
   begin
     SetHighlightColors(Sender.Canvas,
       O2File.Rules.GetHighlightColors(TO2Object(Item.Data),
-      FPasswordScoreCache));
+      PasswordScoreCache));
   end;
 end;
 
@@ -1213,8 +1113,8 @@ procedure TMainForm.ExportToHTMLExecute(Sender: TObject);
 var
   Model: THTMLExportModel;
 begin
-  Model := THTMLExportModel.Create(O2File, FSelectedObjects, FAppVersionInfo,
-    XmlStorage);
+  Model := THTMLExportModel.Create(O2File, FSelectedObjects, AppVersionInfo,
+    Storage);
   try
     THTMLExport.Execute(Application, Model);
   finally
@@ -1231,7 +1131,7 @@ begin
   try
     FillObjList(Selection);
 
-    Model := TPrintModel.Create(O2File, Selection, XmlStorage);
+    Model := TPrintModel.Create(O2File, Selection, Storage);
     try
       TPrintPreview.Execute(Application, Model);
     finally
@@ -1279,7 +1179,7 @@ begin
   Dir := '';
   if SelectDirectory(Format(SInstallOnRemovableMediaPrompt +
     #13#10 + SInstallOnRemovableMediaFolderPrompt,
-    [AppFiles.PortableFilesTotalSize / (1024 * 1024)]),
+    [AppFiles.GetPortableFilesTotalSize / (1024 * 1024)]),
     '', Dir, [sdNewUI, sdNewFolder]) then
   begin
     BeginBatchOperation;
@@ -1307,10 +1207,10 @@ begin
           .Create(CheckForUpdatesResponse.JSONValue);
 
         DebugOutput := Format(DebugOutputFmt,
-          [FAppVersionInfo.Version.MajorVersion,
-          FAppVersionInfo.Version.MinorVersion,
-          FAppVersionInfo.Version.Release,
-          FAppVersionInfo.Version.Build,
+          [AppVersionInfo.Version.MajorVersion,
+          AppVersionInfo.Version.MinorVersion,
+          AppVersionInfo.Version.Release,
+          AppVersionInfo.Version.Build,
           AppUpdateInfo.Version.MajorVersion,
           AppUpdateInfo.Version.MinorVersion,
           AppUpdateInfo.Version.Release,
@@ -1319,7 +1219,7 @@ begin
         OutputDebugString(PChar(DebugOutput));
 
         if AppUpdateInfo.Version
-          .Compare(FAppVersionInfo.Version) = GreaterThanValue then
+          .Compare(AppVersionInfo.Version) = GreaterThanValue then
         begin
           if YesNoBox(Format(SDownloadUpdatesQuery,
             [AppUpdateInfo.Version.MajorVersion,
@@ -1492,7 +1392,7 @@ end;
 
 procedure TMainForm.AboutExecute(Sender: TObject);
 begin
-  TAboutForm.Execute(Application, FAppVersionInfo, AppFiles);
+  TAboutForm.Execute(Application, AppVersionInfo, AppFiles);
 end;
 
 procedure TMainForm.WebExecute(Sender: TObject);
@@ -1622,29 +1522,20 @@ begin
   FindByRule.ClearSelection;
 end;
 
-procedure TMainForm.LoadLanguageList;
+procedure TMainForm.LoadLanguageMenu;
 var
-  LanguageModule: string;
   Item: TMenuItem;
   I: Integer;
 begin
   for I := Low(Languages) to High(Languages) do
-  begin
-    LanguageModule := ChangeFileExt(AppFiles.FullPath[IdAppExe],
-      '.' + Languages[I].Language);
-    if FileExists(LanguageModule) then
+    if AppFiles.FileExists(IdResourceModule + Languages[I].Language) then
     begin
-      AppFiles.Add(IdResourceModule + Languages[I].Language,
-        ExtractFileName(LanguageModule), ExtractFilePath(LanguageModule),
-        PortableAppPath);
-
       Item := TMenuItem.Create(LanguageMenu);
       Item.Caption := GetLanguageName(Languages[I].LangId);
       Item.Tag := I;
       Item.OnClick := LanguageClick;
       LanguageMenu.Add(Item);
     end;
-  end;
 end;
 
 procedure TMainForm.DecodeCommandLine(out ACmdLineAction: TCmdLineAction;
@@ -1702,7 +1593,7 @@ begin
     BeginBatchOperation;
     try
       O2File.Load(Self);
-      FPasswordScoreCache.Update(O2File);
+      PasswordScoreCache.Update(O2File);
     finally
       EndBatchOperation;
     end;
@@ -2371,11 +2262,11 @@ var
   I: Integer;
 begin
   MRUList.Clear;
-  for I := 0 to XmlStorage.ReadInteger(IdMRUList, 0) - 1 do
+  for I := 0 to Storage.ReadInteger(IdMRUList, 0) - 1 do
   begin
     MRUList.Add(TMRUItem.Create(
-      XmlStorage.ReadString(Format(IdMRUListItemFmt, [IdMRUList, I]), ''),
-      XmlStorage.ReadInteger(Format(IdMRUListItemCntFmt, [IdMRUList, I]), 1)));
+      Storage.ReadString(Format(IdMRUListItemFmt, [IdMRUList, I]), ''),
+      Storage.ReadInteger(Format(IdMRUListItemCntFmt, [IdMRUList, I]), 1)));
   end;
 end;
 
@@ -2383,144 +2274,141 @@ procedure TMainForm.SaveMRUList;
 var
   I: Integer;
 begin
-  XmlStorage.WriteInteger(IdMRUList, MRUList.Count);
+  Storage.WriteInteger(IdMRUList, MRUList.Count);
   for I := 0 to MRUList.Count - 1 do
   begin
-    XmlStorage.WriteString(Format(IdMRUListItemFmt,
+    Storage.WriteString(Format(IdMRUListItemFmt,
       [IdMRUList, I]), MRUList[I].Item);
-    XmlStorage.WriteInteger(Format(IdMRUListItemCntFmt,
+    Storage.WriteInteger(Format(IdMRUListItemCntFmt,
       [IdMRUList, I]), MRUList[I].Count);
   end;
 end;
 
-procedure TMainForm.ConvertSettings;
-var
-  XML: IXMLDocument;
-  Node: IXMLNode;
-  NodeValue: Variant;
-  I: Integer;
-begin
-  if SameText(XmlStorage.XML.DocumentElement.NodeName, 'Configuration') then
-  begin
-    XML := XmlStorage.XML;
-    XmlStorage.XML := nil;
-
-    Node := XML.DocumentElement.ChildNodes.FindNode('MRUList');
-    if Assigned(Node) then
-    begin
-      NodeValue := Node.ChildValues['Count'];
-      if not VarIsNull(NodeValue) then
-      begin
-        MRUList.Clear;
-        for I := 0 to StrToIntDef(NodeValue, 0) - 1 do
-        begin
-          NodeValue := Node.ChildValues['Item' + IntToStr(I)];
-          if not VarIsNull(NodeValue) then
-            MRUList.Add(TMRUItem.Create(NodeValue));
-        end;
-        SaveMRUList;
-      end;
-    end;
-
-    NodeValue := XML.DocumentElement.ChildValues['StayOnTop'];
-    if not VarIsNull(NodeValue) then
-      XmlStorage.WriteBoolean(IdStayOnTop,
-        StrToBoolDef(NodeValue, False));
-
-    NodeValue := XML.DocumentElement.ChildValues['Transparency'];
-    if not VarIsNull(NodeValue) then
-      XmlStorage.WriteInteger(IdTransparency,
-        StrToIntDef(NodeValue, 0));
-
-    NodeValue := XML.DocumentElement.ChildValues['AutoCheckForUpdates'];
-    if not VarIsNull(NodeValue) then
-      XmlStorage.WriteBoolean(IdAutoCheckForUpdates,
-        StrToBoolDef(NodeValue, True));
-
-    NodeValue := XML.DocumentElement.ChildValues['ViewStyle'];
-    if not VarIsNull(NodeValue) then
-      XmlStorage.WriteIntIdent(IdViewStyle, ViewStyles,
-        GetEnumValue(TypeInfo(TViewStyle), NodeValue));
-
-    NodeValue := XML.DocumentElement.ChildValues['SortColumn'];
-    if not VarIsNull(NodeValue) then
-      XmlStorage.WriteIntIdent(IdSortColumn, SortColumns,
-        GetEnumValue(TypeInfo(TObjectViewColumn), NodeValue));
-
-    NodeValue := XML.DocumentElement.ChildValues['SortSign'];
-    if not VarIsNull(NodeValue) then
-      XmlStorage.WriteBoolean(IdSortAscending,
-        StrToIntDef(NodeValue, 1) > 0);
-
-    Node := XML.DocumentElement.ChildNodes.FindNode('Print');
-    if Assigned(Node) then
-    begin
-      NodeValue := Node.ChildValues['IncludeTags'];
-      if not VarIsNull(NodeValue) then
-        XmlStorage.WriteBoolean(IdPrintIncludeTags,
-          StrToBoolDef(NodeValue, True));
-
-      NodeValue := Node.ChildValues['IncludeNotes'];
-      if not VarIsNull(NodeValue) then
-        XmlStorage.WriteBoolean(IdPrintIncludeNotes,
-          StrToBoolDef(NodeValue, True));
-
-      NodeValue := Node.ChildValues['IncludeRelations'];
-      if not VarIsNull(NodeValue) then
-        XmlStorage.WriteBoolean(IdPrintIncludeRelations,
-          StrToBoolDef(NodeValue, True));
-
-      NodeValue := Node.ChildValues['IncludePasswords'];
-      if not VarIsNull(NodeValue) then
-        XmlStorage.WriteBoolean(IdPrintIncludePasswords,
-          StrToBoolDef(NodeValue, True));
-    end;
-  end;
-end;
+//procedure TMainForm.ConvertSettings;
+//var
+//  XML: IXMLDocument;
+//  Node: IXMLNode;
+//  NodeValue: Variant;
+//  I: Integer;
+//begin
+//  if SameText(Storage.XML.DocumentElement.NodeName, 'Configuration') then
+//  begin
+//    XML := Storage.XML;
+//    Storage.XML := nil;
+//
+//    Node := XML.DocumentElement.ChildNodes.FindNode('MRUList');
+//    if Assigned(Node) then
+//    begin
+//      NodeValue := Node.ChildValues['Count'];
+//      if not VarIsNull(NodeValue) then
+//      begin
+//        MRUList.Clear;
+//        for I := 0 to StrToIntDef(NodeValue, 0) - 1 do
+//        begin
+//          NodeValue := Node.ChildValues['Item' + IntToStr(I)];
+//          if not VarIsNull(NodeValue) then
+//            MRUList.Add(TMRUItem.Create(NodeValue));
+//        end;
+//        SaveMRUList;
+//      end;
+//    end;
+//
+//    NodeValue := XML.DocumentElement.ChildValues['StayOnTop'];
+//    if not VarIsNull(NodeValue) then
+//      Storage.WriteBoolean(IdStayOnTop,
+//        StrToBoolDef(NodeValue, False));
+//
+//    NodeValue := XML.DocumentElement.ChildValues['Transparency'];
+//    if not VarIsNull(NodeValue) then
+//      Storage.WriteInteger(IdTransparency,
+//        StrToIntDef(NodeValue, 0));
+//
+//    NodeValue := XML.DocumentElement.ChildValues['AutoCheckForUpdates'];
+//    if not VarIsNull(NodeValue) then
+//      Storage.WriteBoolean(IdAutoCheckForUpdates,
+//        StrToBoolDef(NodeValue, True));
+//
+//    NodeValue := XML.DocumentElement.ChildValues['ViewStyle'];
+//    if not VarIsNull(NodeValue) then
+//      Storage.WriteIntIdent(IdViewStyle, ViewStyles,
+//        GetEnumValue(TypeInfo(TViewStyle), NodeValue));
+//
+//    NodeValue := XML.DocumentElement.ChildValues['SortColumn'];
+//    if not VarIsNull(NodeValue) then
+//      Storage.WriteIntIdent(IdSortColumn, SortColumns,
+//        GetEnumValue(TypeInfo(TObjectViewColumn), NodeValue));
+//
+//    NodeValue := XML.DocumentElement.ChildValues['SortSign'];
+//    if not VarIsNull(NodeValue) then
+//      Storage.WriteBoolean(IdSortAscending,
+//        StrToIntDef(NodeValue, 1) > 0);
+//
+//    Node := XML.DocumentElement.ChildNodes.FindNode('Print');
+//    if Assigned(Node) then
+//    begin
+//      NodeValue := Node.ChildValues['IncludeTags'];
+//      if not VarIsNull(NodeValue) then
+//        Storage.WriteBoolean(IdPrintIncludeTags,
+//          StrToBoolDef(NodeValue, True));
+//
+//      NodeValue := Node.ChildValues['IncludeNotes'];
+//      if not VarIsNull(NodeValue) then
+//        Storage.WriteBoolean(IdPrintIncludeNotes,
+//          StrToBoolDef(NodeValue, True));
+//
+//      NodeValue := Node.ChildValues['IncludeRelations'];
+//      if not VarIsNull(NodeValue) then
+//        Storage.WriteBoolean(IdPrintIncludeRelations,
+//          StrToBoolDef(NodeValue, True));
+//
+//      NodeValue := Node.ChildValues['IncludePasswords'];
+//      if not VarIsNull(NodeValue) then
+//        Storage.WriteBoolean(IdPrintIncludePasswords,
+//          StrToBoolDef(NodeValue, True));
+//    end;
+//  end;
+//end;
 
 procedure TMainForm.LoadSettings(const FileName: string);
 const
   SortSigns: array[Boolean] of Integer = (-1, 1);
 begin
-  XmlStorage.DocumentElementName := 'O2';
-  XmlStorage.LoadFromFile(FileName);
-
-  ConvertSettings;
+  Storage.LoadFromFile(FileName);
 
   LoadMRUList;
   UpdateMRUList;
 
-  StayOnTop := XmlStorage.ReadBoolean(IdStayOnTop, False);
+  StayOnTop := Storage.ReadBoolean(IdStayOnTop, False);
   FTransparencyOnlyIfDeactivated :=
-    XmlStorage.ReadBoolean(IdTransparencyOnlyIfDeactivated, True);
-  Transparency := XmlStorage.ReadInteger(IdTransparency, 0);
-  AutoCheckForUpdates := XmlStorage.ReadBoolean(IdAutoCheckForUpdates, True);
-  LastCheckForUpdates := XmlStorage.ReadFloat(IdLastCheckForUpdates, Yesterday);
-  ObjectsView.ViewStyle := TViewStyle(XmlStorage.ReadIntIdent(IdViewStyle,
+    Storage.ReadBoolean(IdTransparencyOnlyIfDeactivated, True);
+  Transparency := Storage.ReadInteger(IdTransparency, 0);
+  AutoCheckForUpdates := Storage.ReadBoolean(IdAutoCheckForUpdates, True);
+  LastCheckForUpdates := Storage.ReadFloat(IdLastCheckForUpdates, Yesterday);
+  ObjectsView.ViewStyle := TViewStyle(Storage.ReadIntIdent(IdViewStyle,
     ViewStyles, Integer(vsIcon)));
-  SortColumn := TObjectViewColumn(XmlStorage.ReadIntIdent(IdSortColumn,
+  SortColumn := TObjectViewColumn(Storage.ReadIntIdent(IdSortColumn,
     SortColumns, Integer(ocName)));
-  SortSign := SortSigns[XmlStorage.ReadBoolean(IdSortAscending, True)];
+  SortSign := SortSigns[Storage.ReadBoolean(IdSortAscending, True)];
 end;
 
 procedure TMainForm.SaveSettings(const FileName: string);
 begin
   SaveMRUList;
 
-  XmlStorage.WriteBoolean(IdStayOnTop, StayOnTop);
-  XmlStorage.WriteInteger(IdTransparency, Transparency);
-  XmlStorage.WriteBoolean(IdAutoCheckForUpdates, AutoCheckForUpdates);
-  XmlStorage.WriteBoolean(IdTransparencyOnlyIfDeactivated,
+  Storage.WriteBoolean(IdStayOnTop, StayOnTop);
+  Storage.WriteInteger(IdTransparency, Transparency);
+  Storage.WriteBoolean(IdAutoCheckForUpdates, AutoCheckForUpdates);
+  Storage.WriteBoolean(IdTransparencyOnlyIfDeactivated,
     FTransparencyOnlyIfDeactivated);
-  XmlStorage.WriteFloat(IdLastCheckForUpdates, LastCheckForUpdates);
-  XmlStorage.WriteIntIdent(IdViewStyle, ViewStyles,
+  Storage.WriteFloat(IdLastCheckForUpdates, LastCheckForUpdates);
+  Storage.WriteIntIdent(IdViewStyle, ViewStyles,
     Integer(ObjectsView.ViewStyle));
-  XmlStorage.WriteIntIdent(IdSortColumn, SortColumns,
+  Storage.WriteIntIdent(IdSortColumn, SortColumns,
     Integer(SortColumn));
-  XmlStorage.WriteBoolean(IdSortAscending, SortSign > 0);
+  Storage.WriteBoolean(IdSortAscending, SortSign > 0);
 
-  ForceDirectories(ExtractFileDir(FileName));
-  XmlStorage.SaveToFile(FileName);
+  SysUtils.ForceDirectories(ExtractFileDir(FileName));
+  Storage.SaveToFile(FileName);
 end;
 
 procedure TMainForm.ObjectMenuPopup(Sender: TObject);
@@ -2580,7 +2468,7 @@ begin
   if TObjPropsDlg.Execute(Application, O2File.Objects, Index, False,
     pgGeneral) then
   begin
-    FPasswordScoreCache.Update(O2File, Index);
+    PasswordScoreCache.Update(O2File, Index);
     Item := ObjToListItem(Index, nil);
     ObjectsView.ClearSelection;
     Item.Selected := True;
@@ -2598,7 +2486,7 @@ begin
   if TObjPropsDlg.Execute(Application, O2File.Objects, Index, True,
     pgGeneral) then
   begin
-    FPasswordScoreCache.Update(O2File, Index);
+    PasswordScoreCache.Update(O2File, Index);
     Item := ObjToListItem(Index, nil);
     ObjectsView.ClearSelection;
     Item.Selected := True;
@@ -2805,7 +2693,7 @@ begin
   Index := SelectedObject.Index;
   if TObjPropsDlg.Execute(Application, O2File.Objects, Index, False, Page) then
   begin
-    FPasswordScoreCache.Update(O2File, Index);
+    PasswordScoreCache.Update(O2File, Index);
     ObjToListItem(Index, ObjectsView.Selected);
     NotifyChanges([ncObjProps, ncTagList]);
   end;
@@ -2849,7 +2737,7 @@ begin
   begin
     SetHighlightColors(Sender.Canvas,
       O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
-      FPasswordScoreCache));
+      PasswordScoreCache));
   end;
 end;
 
@@ -2863,7 +2751,7 @@ begin
     begin
       SetHighlightColors(Sender.Canvas,
         O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
-        FPasswordScoreCache));
+        PasswordScoreCache));
     end;
     if Assigned(O2File.Rules.FindFirstRule(
       TO2Field(Item.Data), HyperlinkRules)) then

@@ -65,21 +65,10 @@ type
     property XML: IXMLDocument read GetXML write FXML;
   end;
 
-function XmlStorage: TXmlStorage;
-
 implementation
 
 uses
   SysUtils, Variants;
-
-var
-  XmlStorageInt: IStorage;
-
-function XmlStorage: TXmlStorage;
-begin
-  if XmlStorageInt = nil then XmlStorageInt := TXmlStorage.Create;
-  Result := TXmlStorage(XmlStorageInt);
-end;
 
 { TXmlStorage }
 
@@ -284,8 +273,5 @@ begin
   end;
   XML.SaveToFile(FileName);
 end;
-
-initialization
-  XmlStorageInt := nil;
 
 end.
