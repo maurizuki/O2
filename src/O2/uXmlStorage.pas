@@ -18,14 +18,15 @@ unit uXmlStorage;
 interface
 
 uses
-  Classes, XMLDoc, XMLIntf, xmldom, msxmldom, uServices;
+  Classes, SysUtils, XMLDoc, XMLIntf, xmldom, msxmldom, uServices;
 
 type
   TXmlStorage = class(TInterfacedObject, IStorage)
   private
-    FDocumentElementName: string;
     FXML: IXMLDocument;
+    FMigrationHandler: TFunc<IStorage, IXMLDocument, IXMLDocument>;
     const SchemaLocation = 'https://maurizuki.github.io/O2/xml/settings.xsd';
+    const DocumentElementIdent = 'O2';
     const SettingsIdent = 'Settings';
     const SettingIdent = 'setting';
     const SettingNameIdent = 'name';
@@ -40,8 +41,11 @@ type
     function NodeIsSetting(Node: IXMLNode; const Name: string): Boolean;
     function ReadValue(const Name: string; Default: Variant): Variant;
     procedure WriteValue(const Name, ValueType: string; Value: Variant);
+  protected
+    property XML: IXMLDocument read GetXML write FXML;
   public
-    constructor Create;
+    constructor Create(const MigrationHandler:
+      TFunc<IStorage, IXMLDocument, IXMLDocument> = nil);
     function Exists(const Name: string): Boolean;
     procedure Delete(const Name: string);
     function ReadBoolean(const Name: string; Default: Boolean = False): Boolean;
@@ -60,23 +64,21 @@ type
     procedure WriteStringList(const Name: string; const AStringList: TStrings);
     procedure LoadFromFile(const FileName: string);
     procedure SaveToFile(const FileName: string);
-    property DocumentElementName: string
-      read FDocumentElementName write FDocumentElementName;
-    property XML: IXMLDocument read GetXML write FXML;
   end;
 
 implementation
 
 uses
-  SysUtils, Variants;
+  Variants;
 
 { TXmlStorage }
 
-constructor TXmlStorage.Create;
+constructor TXmlStorage.Create(const MigrationHandler:
+  TFunc<IStorage, IXMLDocument, IXMLDocument>);
 begin
   inherited Create;
+  FMigrationHandler := MigrationHandler;
   FXML := nil;
-  FDocumentElementName := ClassName;
 end;
 
 function TXmlStorage.GetXML: IXMLDocument;
@@ -87,7 +89,7 @@ begin
     FXML.Active := True;
     FXML.Encoding := 'utf-8';
     FXML.StandAlone := 'yes';
-    FXML.DocumentElement := FXML.CreateNode(DocumentElementName);
+    FXML.DocumentElement := FXML.CreateNode(DocumentElementIdent);
   end;
   Result := FXML;
 end;
@@ -255,9 +257,20 @@ begin
 end;
 
 procedure TXmlStorage.LoadFromFile(const FileName: string);
+var
+  TempXML: IXMLDocument;
 begin
   if FileExists(FileName) then
-    XML.LoadFromFile(FileName)
+  begin
+    XML.LoadFromFile(FileName);
+
+    if Assigned(FMigrationHandler) then
+    begin
+      TempXML := XML; XML := nil;
+      TempXML := FMigrationHandler(Self, TempXML);
+      if Assigned(TempXML) then XML := TempXML;
+    end;
+  end
   else
     XML := nil;
 end;

@@ -617,19 +617,6 @@ type
 var
   MainForm: TMainForm;
 
-implementation
-
-uses
-  TypInfo, StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, XMLDoc, XMLIntf,
-  xmldom, msxmldom, System.JSON,
-  uStartup, uShellUtils, uAbout, uGetPassword, uSetPassword, uFilePropsDlg,
-  uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg, uReplaceDlg, uPrintModel,
-  uPrintPreview, uHTMLExportModel, uHTMLExport, uO2Xml, uO2Defs,
-  uBrowserEmulation, uCtrlHelpers, uFileOperation, uO2ImportExport,
-  uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper, uO2ObjectsUtils;
-
-{$R *.dfm}
-
 const
   ViewStyles: array[0..3] of TIdentMapEntry = (
     (Value: Integer(vsIcon);      Name: 'Icons'),
@@ -641,6 +628,18 @@ const
     (Value: Integer(ocName);      Name: 'Name'),
     (Value: Integer(ocTags);      Name: 'Tags'),
     (Value: Integer(ocNextEvent); Name: 'NextEvent'));
+
+implementation
+
+uses
+  StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, System.JSON,
+  uStartup, uShellUtils, uAbout, uGetPassword, uSetPassword, uFilePropsDlg,
+  uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg, uReplaceDlg, uPrintModel,
+  uPrintPreview, uHTMLExportModel, uHTMLExport, uO2Xml, uO2Defs,
+  uBrowserEmulation, uCtrlHelpers, uFileOperation, uO2ImportExport,
+  uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper, uO2ObjectsUtils;
+
+{$R *.dfm}
 
 procedure SetHighlightColors(const Canvas: TCanvas; Highlight: THighlight);
 begin
@@ -2253,10 +2252,6 @@ begin
   end;
 end;
 
-const
-  IdMRUListItemFmt = '%s.%d';
-  IdMRUListItemCntFmt = '%s.%d.Count';
-
 procedure TMainForm.LoadMRUList;
 var
   I: Integer;
@@ -2265,8 +2260,8 @@ begin
   for I := 0 to Storage.ReadInteger(IdMRUList, 0) - 1 do
   begin
     MRUList.Add(TMRUItem.Create(
-      Storage.ReadString(Format(IdMRUListItemFmt, [IdMRUList, I]), ''),
-      Storage.ReadInteger(Format(IdMRUListItemCntFmt, [IdMRUList, I]), 1)));
+      Storage.ReadString(Format(IdMRUListItemFmt, [I]), ''),
+      Storage.ReadInteger(Format(IdMRUListItemCntFmt, [I]), 1)));
   end;
 end;
 
@@ -2277,97 +2272,10 @@ begin
   Storage.WriteInteger(IdMRUList, MRUList.Count);
   for I := 0 to MRUList.Count - 1 do
   begin
-    Storage.WriteString(Format(IdMRUListItemFmt,
-      [IdMRUList, I]), MRUList[I].Item);
-    Storage.WriteInteger(Format(IdMRUListItemCntFmt,
-      [IdMRUList, I]), MRUList[I].Count);
+    Storage.WriteString(Format(IdMRUListItemFmt, [I]), MRUList[I].Item);
+    Storage.WriteInteger(Format(IdMRUListItemCntFmt, [I]), MRUList[I].Count);
   end;
 end;
-
-//procedure TMainForm.ConvertSettings;
-//var
-//  XML: IXMLDocument;
-//  Node: IXMLNode;
-//  NodeValue: Variant;
-//  I: Integer;
-//begin
-//  if SameText(Storage.XML.DocumentElement.NodeName, 'Configuration') then
-//  begin
-//    XML := Storage.XML;
-//    Storage.XML := nil;
-//
-//    Node := XML.DocumentElement.ChildNodes.FindNode('MRUList');
-//    if Assigned(Node) then
-//    begin
-//      NodeValue := Node.ChildValues['Count'];
-//      if not VarIsNull(NodeValue) then
-//      begin
-//        MRUList.Clear;
-//        for I := 0 to StrToIntDef(NodeValue, 0) - 1 do
-//        begin
-//          NodeValue := Node.ChildValues['Item' + IntToStr(I)];
-//          if not VarIsNull(NodeValue) then
-//            MRUList.Add(TMRUItem.Create(NodeValue));
-//        end;
-//        SaveMRUList;
-//      end;
-//    end;
-//
-//    NodeValue := XML.DocumentElement.ChildValues['StayOnTop'];
-//    if not VarIsNull(NodeValue) then
-//      Storage.WriteBoolean(IdStayOnTop,
-//        StrToBoolDef(NodeValue, False));
-//
-//    NodeValue := XML.DocumentElement.ChildValues['Transparency'];
-//    if not VarIsNull(NodeValue) then
-//      Storage.WriteInteger(IdTransparency,
-//        StrToIntDef(NodeValue, 0));
-//
-//    NodeValue := XML.DocumentElement.ChildValues['AutoCheckForUpdates'];
-//    if not VarIsNull(NodeValue) then
-//      Storage.WriteBoolean(IdAutoCheckForUpdates,
-//        StrToBoolDef(NodeValue, True));
-//
-//    NodeValue := XML.DocumentElement.ChildValues['ViewStyle'];
-//    if not VarIsNull(NodeValue) then
-//      Storage.WriteIntIdent(IdViewStyle, ViewStyles,
-//        GetEnumValue(TypeInfo(TViewStyle), NodeValue));
-//
-//    NodeValue := XML.DocumentElement.ChildValues['SortColumn'];
-//    if not VarIsNull(NodeValue) then
-//      Storage.WriteIntIdent(IdSortColumn, SortColumns,
-//        GetEnumValue(TypeInfo(TObjectViewColumn), NodeValue));
-//
-//    NodeValue := XML.DocumentElement.ChildValues['SortSign'];
-//    if not VarIsNull(NodeValue) then
-//      Storage.WriteBoolean(IdSortAscending,
-//        StrToIntDef(NodeValue, 1) > 0);
-//
-//    Node := XML.DocumentElement.ChildNodes.FindNode('Print');
-//    if Assigned(Node) then
-//    begin
-//      NodeValue := Node.ChildValues['IncludeTags'];
-//      if not VarIsNull(NodeValue) then
-//        Storage.WriteBoolean(IdPrintIncludeTags,
-//          StrToBoolDef(NodeValue, True));
-//
-//      NodeValue := Node.ChildValues['IncludeNotes'];
-//      if not VarIsNull(NodeValue) then
-//        Storage.WriteBoolean(IdPrintIncludeNotes,
-//          StrToBoolDef(NodeValue, True));
-//
-//      NodeValue := Node.ChildValues['IncludeRelations'];
-//      if not VarIsNull(NodeValue) then
-//        Storage.WriteBoolean(IdPrintIncludeRelations,
-//          StrToBoolDef(NodeValue, True));
-//
-//      NodeValue := Node.ChildValues['IncludePasswords'];
-//      if not VarIsNull(NodeValue) then
-//        Storage.WriteBoolean(IdPrintIncludePasswords,
-//          StrToBoolDef(NodeValue, True));
-//    end;
-//  end;
-//end;
 
 procedure TMainForm.LoadSettings(const FileName: string);
 const

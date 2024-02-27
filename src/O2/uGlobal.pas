@@ -69,6 +69,8 @@ const
 { Configuration file IDs }
 
   IdMRUList = 'Application.MRU';
+  IdMRUListItemFmt = IdMRUList + '.%d';
+  IdMRUListItemCntFmt = IdMRUList + '.%d.Count';
   IdStayOnTop = 'Application.StayOnTop';
   IdTransparency = 'Application.Transparency';
   IdTransparencyOnlyIfDeactivated = 'Application.Transparency.OnlyIfDeactivated';
