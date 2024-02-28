@@ -32,8 +32,6 @@ uses
   uUtils;
 
 type
-  TCmdLineAction = (caNone, caOpenFile);
-
   TNotifyChange = (ncObjects, ncObjProps, ncRelations, ncRules,
     ncTagList, ncRuleList);
   TNotifyChanges = set of TNotifyChange;
@@ -520,7 +518,6 @@ type
     MRUMenuItems: TList;
     MRUList: TMRUList;
 
-    CmdLineAction: TCmdLineAction;
     CmdLineFileName: string;
 
     BatchOperationCount: Integer;
@@ -551,8 +548,6 @@ type
     procedure Initialize;
     procedure InitializeSearch;
     procedure LoadLanguageMenu;
-    procedure DecodeCommandLine(out ACmdLineAction: TCmdLineAction;
-      out ACmdLineFileName, APortablePath: string);
     procedure OpenNewInstance(const FileName: string = '');
     procedure LoadFromFile(const FileName: string);
     procedure SaveToFile(const FileName: string; Copy: Boolean = False);
@@ -674,7 +669,7 @@ begin
 
   Application.HintHidePause := 4500;
 
-  DecodeCommandLine(CmdLineAction, CmdLineFileName, PortablePath);
+  GetCommandLineParams(CmdLineFileName, PortablePath);
 
   LoadLanguageMenu;
 
@@ -738,6 +733,8 @@ end;
 
 procedure TMainForm.ApplicationEventsIdle(Sender: TObject;
   var Done: Boolean);
+var
+  OpenFileName: string;
 begin
   if (PendingChanges <> []) and not ApplyingChanges then
   begin
@@ -772,10 +769,11 @@ begin
     end;
   end;
 
-  if CmdLineAction = caOpenFile then
+  if CmdLineFileName <> '' then
   begin
-    CmdLineAction := caNone;
-    LoadFromFile(CmdLineFileName);
+    OpenFileName := CmdLineFileName;
+    CmdLineFileName := '';
+    LoadFromFile(OpenFileName);
   end;
 
   if ObjectsView.SelCount = 0 then
@@ -1537,35 +1535,11 @@ begin
     end;
 end;
 
-procedure TMainForm.DecodeCommandLine(out ACmdLineAction: TCmdLineAction;
-  out ACmdLineFileName, APortablePath: string);
-var
-  I: Integer;
-begin
-  ACmdLineAction := caNone;
-  ACmdLineFileName := '';
-  APortablePath := '';
-  I := 1;
-  while I <= ParamCount do
-    if SameText(ParamStr(I), 'portable') and (ParamStr(I + 1) <> '') then
-    begin
-      APortablePath := ParamStr(I + 1);
-      Inc(I, 2);
-    end
-    else
-    begin
-      ACmdLineAction := caOpenFile;
-      ACmdLineFileName := ParamStr(I);
-      Inc(I);
-    end;
-end;
-
 procedure TMainForm.OpenNewInstance(const FileName: string);
 var
-  ACmdLineAction: TCmdLineAction;
   ACmdLineFileName, APortablePath, AppExe, Parameters: string;
 begin
-  DecodeCommandLine(ACmdLineAction, ACmdLineFileName, APortablePath);
+  GetCommandLineParams(ACmdLineFileName, APortablePath);
 
   if APortablePath <> '' then
     Parameters := 'portable "' + APortablePath + '" '
