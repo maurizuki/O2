@@ -2754,19 +2754,21 @@ end;
 
 procedure TMainForm.NewRelationExecute(Sender: TObject);
 var
+  ObjEnum: IEnumerator<TO2Object>;
+  Obj1, Obj2: TO2Object;
   ARelation: TO2Relation;
-  Selection: TO2ObjectList;
 begin
+  ObjEnum := FSelectedObjects.GetEnumerator;
+
+  if not ObjEnum.MoveNext then Exit;
+  Obj1 := ObjEnum.Current;
+
+  if not ObjEnum.MoveNext then Exit;
+  Obj2 := ObjEnum.Current;
+
   ARelation := nil;
-  Selection := TO2ObjectList.Create;
-  try
-    FillObjList(Selection);
-    if TRelationPropsDlg.Execute(Application,
-      O2File, Selection[0], Selection[1], ARelation) then
-      RelationToListItem(ARelation, SelectedObject, nil);
-  finally
-    Selection.Free;
-  end;
+  if TRelationPropsDlg.Execute(Application, O2File, Obj1, Obj2, ARelation) then
+    RelationToListItem(ARelation, SelectedObject, nil);
 end;
 
 procedure TMainForm.NewRelationUpdate(Sender: TObject);
