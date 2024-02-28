@@ -506,31 +506,25 @@ type
     procedure DragDropDrop(Sender: TObject; Pos: TPoint;
       Value: TStrings);
   private
+    FBusy: Boolean;
+    FBatchOperationCount: Integer;
+    FPendingChanges: TNotifyChanges;
+    FApplyingChanges: Boolean;
+    FOpenFileName: string;
     FFile: TO2File;
     FFileName: string;
-    FSelectedObjects: IEnumerable<TO2Object>;
-    FBusy: Boolean;
+    FMRUMenuItems: TList;
+    FMRUList: TMRUList;
     FStayOnTop: Boolean;
     FTransparency: Integer;
     FTransparencyOnlyIfDeactivated: Boolean;
+    FSortColumn: TObjectViewColumn;
+    FSortSign: Integer;
+    FAutoCheckForUpdates: Boolean;
+    FLastCheckForUpdates: TDateTime;
+    FCheckForUpdatesSilent: Boolean;
+    FSelectedObjects: IEnumerable<TO2Object>;
     FShowPasswords: Boolean;
-
-    MRUMenuItems: TList;
-    MRUList: TMRUList;
-
-    CmdLineFileName: string;
-
-    BatchOperationCount: Integer;
-
-    PendingChanges: TNotifyChanges;
-    ApplyingChanges: Boolean;
-
-    SortColumn: TObjectViewColumn;
-    SortSign: Integer;
-
-    AutoCheckForUpdates: Boolean;
-    LastCheckForUpdates: TDateTime;
-    CheckForUpdatesSilent: Boolean;
 
     function GetFile: TO2File;
     function GetHasSelectedObject: Boolean;
@@ -538,11 +532,13 @@ type
     function GetHasSelectedField: Boolean;
     function GetSelectedField: TO2Field;
     function GetEventFilter: TEventFilter;
-    procedure SetFileName(const Value: string);
     procedure SetBusy(const Value: Boolean);
+    procedure SetFileName(const Value: string);
     procedure SetStayOnTop(const Value: Boolean);
     procedure SetTransparency(const Value: Integer);
 
+    procedure BeginBatchOperation;
+    procedure EndBatchOperation;
     function CanCloseFile: Boolean;
     function TryGetPassword(var Password: string): Boolean;
     procedure Initialize;
@@ -556,6 +552,7 @@ type
     procedure LoadSettings(const FileName: string);
     procedure SaveSettings(const FileName: string);
 
+    procedure FillObjList(const Objects: TO2ObjectList);
     procedure GetStartDate(out StartDate: TDateTime; out UseParams: Boolean);
     function ObjToListItem(const AObject: TO2Object;
       const Item: TListItem): TListItem; overload;
@@ -591,14 +588,6 @@ type
     procedure UpdateTagList;
     procedure UpdateRuleList;
     procedure UpdateMRUList(const FileName: string = '');
-  protected
-    property EventFilter: TEventFilter read GetEventFilter;
-    property StayOnTop: Boolean read FStayOnTop write SetStayOnTop;
-    property Transparency: Integer read FTransparency write SetTransparency;
-  public
-    procedure BeginBatchOperation;
-    procedure EndBatchOperation;
-    procedure FillObjList(const Objects: TO2ObjectList);
 
     property O2File: TO2File read GetFile;
     property O2FileName: string read FFileName write SetFileName;
@@ -606,7 +595,9 @@ type
     property SelectedObject: TO2Object read GetSelectedObject;
     property HasSelectedField: Boolean read GetHasSelectedField;
     property SelectedField: TO2Field read GetSelectedField;
-    property Busy: Boolean read FBusy;
+    property EventFilter: TEventFilter read GetEventFilter;
+    property StayOnTop: Boolean read FStayOnTop write SetStayOnTop;
+    property Transparency: Integer read FTransparency write SetTransparency;
   end;
 
 var
@@ -657,37 +648,34 @@ var
   PortablePath: string;
 begin
   FBusy := False;
-  BatchOperationCount := 0;
-
+  FBatchOperationCount := 0;
+  FPendingChanges := [];
+  FApplyingChanges := False;
   FStayOnTop := False;
   FTransparency := 0;
-
-  PendingChanges := [];
-  ApplyingChanges := False;
-
   FSelectedObjects := TO2ObjectListViewEnumerable.Create(ObjectsView);
 
   Application.HintHidePause := 4500;
 
-  GetCommandLineParams(CmdLineFileName, PortablePath);
+  GetCommandLineParams(FOpenFileName, PortablePath);
+
+  FMRUList := TMRUList.Create;
+  FMRUMenuItems := TList.Create;
+  FMRUMenuItems.Add(MRU1);
+  FMRUMenuItems.Add(MRU2);
+  FMRUMenuItems.Add(MRU3);
+  FMRUMenuItems.Add(MRU4);
+  FMRUMenuItems.Add(MRU5);
+  FMRUMenuItems.Add(MRU6);
+  FMRUMenuItems.Add(MRU7);
+  FMRUMenuItems.Add(MRU8);
+  FMRUMenuItems.Add(MRU9);
 
   LoadLanguageMenu;
 
   InstallOnRemovableMedia.Visible := AppFiles.FileExists(IdLauncher);
 
   TEventFilterLookup.Fill(FindByEvent);
-
-  MRUList := TMRUList.Create;
-  MRUMenuItems := TList.Create;
-  MRUMenuItems.Add(MRU1);
-  MRUMenuItems.Add(MRU2);
-  MRUMenuItems.Add(MRU3);
-  MRUMenuItems.Add(MRU4);
-  MRUMenuItems.Add(MRU5);
-  MRUMenuItems.Add(MRU6);
-  MRUMenuItems.Add(MRU7);
-  MRUMenuItems.Add(MRU8);
-  MRUMenuItems.Add(MRU9);
 
   FieldsView.Hint := SFieldsViewHint + #13#10 + SFieldsViewHint2;
   RelationsView.Hint := SRelationsViewHint + #13#10 + SRelationsViewHint2;
@@ -710,8 +698,8 @@ end;
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
   SaveSettings(AppFiles.FullPath[IdSettings]);
-  MRUList.Free;
-  MRUMenuItems.Free;
+  FMRUList.Free;
+  FMRUMenuItems.Free;
 end;
 
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -736,43 +724,43 @@ procedure TMainForm.ApplicationEventsIdle(Sender: TObject;
 var
   OpenFileName: string;
 begin
-  if (PendingChanges <> []) and not ApplyingChanges then
+  if (FPendingChanges <> []) and not FApplyingChanges then
   begin
-    ApplyingChanges := True;
+    FApplyingChanges := True;
     try
-      if ncObjects in PendingChanges then
+      if ncObjects in FPendingChanges then
       begin
         UpdateObjectsView;
-        PendingChanges := PendingChanges + [ncObjProps, ncRelations];
+        FPendingChanges := FPendingChanges + [ncObjProps, ncRelations];
       end;
 
-      if ncObjProps in PendingChanges then
+      if ncObjProps in FPendingChanges then
       begin
         UpdateFieldsView;
         UpdateNotesView;
       end;
 
-      if ncRelations in PendingChanges then
+      if ncRelations in FPendingChanges then
         UpdateRelationsView;
 
-      if ncRules in PendingChanges then
+      if ncRules in FPendingChanges then
         UpdateRulesView;
 
-      if ncTagList in PendingChanges then
+      if ncTagList in FPendingChanges then
         UpdateTagList;
 
-      if ncRuleList in PendingChanges then
+      if ncRuleList in FPendingChanges then
         UpdateRuleList;
     finally
-      PendingChanges := [];
-      ApplyingChanges := False;
+      FPendingChanges := [];
+      FApplyingChanges := False;
     end;
   end;
 
-  if CmdLineFileName <> '' then
+  if FOpenFileName <> '' then
   begin
-    OpenFileName := CmdLineFileName;
-    CmdLineFileName := '';
+    OpenFileName := FOpenFileName;
+    FOpenFileName := '';
     LoadFromFile(OpenFileName);
   end;
 
@@ -794,10 +782,10 @@ begin
         STagsNone]);
   end;
 
-  if AutoCheckForUpdates and (LastCheckForUpdates < Today) then
+  if FAutoCheckForUpdates and (FLastCheckForUpdates < Today) then
   begin
-    LastCheckForUpdates := Today;
-    CheckForUpdatesSilent := True;
+    FLastCheckForUpdates := Today;
+    FCheckForUpdatesSilent := True;
     CheckForUpdatesNow.Execute;
   end;
 end;
@@ -825,16 +813,16 @@ end;
 procedure TMainForm.ObjectsViewCompare(Sender: TObject; Item1,
   Item2: TListItem; Data: Integer; var Compare: Integer);
 begin
-  case SortColumn of
+  case FSortColumn of
     ocName:
       Compare := CompareObjectsByName(TO2Object(Item1.Data),
-        TO2Object(Item2.Data)) * SortSign;
+        TO2Object(Item2.Data)) * FSortSign;
     ocTags:
       Compare := CompareObjectsByTags(TO2Object(Item1.Data),
-        TO2Object(Item2.Data)) * SortSign;
+        TO2Object(Item2.Data)) * FSortSign;
     ocNextEvent:
       Compare := CompareObjectsByNextEvent(TO2Object(Item1.Data),
-        TO2Object(Item2.Data)) * SortSign;
+        TO2Object(Item2.Data)) * FSortSign;
     else
       Compare := 0;
   end;
@@ -944,14 +932,14 @@ procedure TMainForm.MRUItemClick(Sender: TObject);
 var
   MRUItem: TMRUItem;
 begin
-  MRUItem := MRUList[TComponent(Sender).Tag];
+  MRUItem := FMRUList[TComponent(Sender).Tag];
   if CanCloseFile then
     if FileExists(MRUItem.Item) then
       LoadFromFile(MRUItem.Item)
     else
       if YesNoWarningBox(SRemoveFromMRUListQuery) then
       begin
-        MRUList.Remove(MRUItem);
+        FMRUList.Remove(MRUItem);
         UpdateMRUList;
       end;
 end;
@@ -965,7 +953,7 @@ end;
 
 procedure TMainForm.ActionUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy;
+  TAction(Sender).Enabled := not FBusy;
 end;
 
 procedure TMainForm.NewFileExecute(Sender: TObject);
@@ -998,7 +986,7 @@ end;
 
 procedure TMainForm.ReopenFileUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and (O2FileName <> '');
+  TAction(Sender).Enabled := not FBusy and (O2FileName <> '');
 end;
 
 procedure TMainForm.OpenFolderExecute(Sender: TObject);
@@ -1008,18 +996,18 @@ end;
 
 procedure TMainForm.OpenFolderUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and (O2FileName <> '');
+  TAction(Sender).Enabled := not FBusy and (O2FileName <> '');
 end;
 
 procedure TMainForm.ClearMRUListExecute(Sender: TObject);
 begin
-  MRUList.Clear;
+  FMRUList.Clear;
   UpdateMRUList;
 end;
 
 procedure TMainForm.ClearMRUListUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := MRUList.Count > 0;
+  TAction(Sender).Enabled := FMRUList.Count > 0;
 end;
 
 procedure TMainForm.ImportExecute(Sender: TObject);
@@ -1141,7 +1129,7 @@ end;
 
 procedure TMainForm.PrintFileUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and (ObjectsView.Items.Count > 0);
+  TAction(Sender).Enabled := not FBusy and (ObjectsView.Items.Count > 0);
 end;
 
 procedure TMainForm.FilePropsExecute(Sender: TObject);
@@ -1224,20 +1212,20 @@ begin
             AppUpdateInfo.Version.Release])) then
             ShellOpen(AppUpdateInfo.DownloadURL);
         end
-        else if not CheckForUpdatesSilent then
+        else if not FCheckForUpdatesSilent then
           InfoBox(SNoAvailableUpdates);
       except
-        if not CheckForUpdatesSilent then
+        if not FCheckForUpdatesSilent then
           ErrorBox(SCannotCheckForUpdates);
       end;
 
-      CheckForUpdatesSilent := False;
+      FCheckForUpdatesSilent := False;
     end,
     True,
     True,
     procedure (Obj: TObject)
     begin
-      if not CheckForUpdatesSilent then
+      if not FCheckForUpdatesSilent then
         ErrorBox(SCannotCheckForUpdates);
     end
   );
@@ -1245,12 +1233,12 @@ end;
 
 procedure TMainForm.CheckForUpdatesPeriodicallyExecute(Sender: TObject);
 begin
-  AutoCheckForUpdates := not AutoCheckForUpdates;
+  FAutoCheckForUpdates := not FAutoCheckForUpdates;
 end;
 
 procedure TMainForm.CheckForUpdatesPeriodicallyUpdate(Sender: TObject);
 begin
-  TAction(Sender).Checked := AutoCheckForUpdates;
+  TAction(Sender).Checked := FAutoCheckForUpdates;
 end;
 
 procedure TMainForm.RefreshViewsExecute(Sender: TObject);
@@ -1305,7 +1293,7 @@ end;
 
 procedure TMainForm.SortByNameUpdate(Sender: TObject);
 begin
-  TAction(Sender).Checked := SortColumn = ocName;
+  TAction(Sender).Checked := FSortColumn = ocName;
 end;
 
 procedure TMainForm.SortByTagsExecute(Sender: TObject);
@@ -1315,7 +1303,7 @@ end;
 
 procedure TMainForm.SortByTagsUpdate(Sender: TObject);
 begin
-  TAction(Sender).Checked := SortColumn = ocTags;
+  TAction(Sender).Checked := FSortColumn = ocTags;
 end;
 
 procedure TMainForm.SortByNextEventExecute(Sender: TObject);
@@ -1325,7 +1313,7 @@ end;
 
 procedure TMainForm.SortByNextEventUpdate(Sender: TObject);
 begin
-  TAction(Sender).Checked := SortColumn = ocNextEvent;
+  TAction(Sender).Checked := FSortColumn = ocNextEvent;
 end;
 
 procedure TMainForm.TransparencyExecute(Sender: TObject);
@@ -1377,7 +1365,7 @@ end;
 
 procedure TMainForm.FindUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy;
+  TAction(Sender).Enabled := not FBusy;
   TAction(Sender).Checked := SearchBox.Visible;
 end;
 
@@ -1756,12 +1744,12 @@ end;
 
 procedure TMainForm.SortObjectsView(Column: TObjectViewColumn);
 begin
-  if SortColumn = Column then
-    SortSign := -SortSign
+  if FSortColumn = Column then
+    FSortSign := -FSortSign
   else
   begin
-    SortColumn := Column;
-    SortSign := 1;
+    FSortColumn := Column;
+    FSortSign := 1;
   end;
   ObjectsView.AlphaSort;
 end;
@@ -1829,14 +1817,14 @@ end;
 
 procedure TMainForm.BeginBatchOperation;
 begin
-  Inc(BatchOperationCount);
-  SetBusy(BatchOperationCount > 0);
+  Inc(FBatchOperationCount);
+  SetBusy(FBatchOperationCount > 0);
 end;
 
 procedure TMainForm.EndBatchOperation;
 begin
-  Dec(BatchOperationCount);
-  SetBusy(BatchOperationCount > 0);
+  Dec(FBatchOperationCount);
+  SetBusy(FBatchOperationCount > 0);
 end;
 
 procedure TMainForm.UpdateAllActions;
@@ -1849,8 +1837,8 @@ end;
 
 procedure TMainForm.NotifyChanges(Changes: TNotifyChanges);
 begin
-  if not ApplyingChanges then
-    PendingChanges := PendingChanges + Changes;
+  if not FApplyingChanges then
+    FPendingChanges := FPendingChanges + Changes;
 end;
 
 procedure TMainForm.ResizeObjectsViewColumns;
@@ -2205,18 +2193,19 @@ procedure TMainForm.UpdateMRUList(const FileName: string);
 var
   I, J: Integer;
 begin
-  if FileName <> '' then MRUList.AddItem(FileName);
+  if FileName <> '' then FMRUList.AddItem(FileName);
 
   J := 0;
-  for I := 0 to MRUMenuItems.Count - 1 do
+  for I := 0 to FMRUMenuItems.Count - 1 do
   begin
-    while (J < MRUList.Count) and SameText(MRUList[J].Item, FileName) do Inc(J);
+    while (J < FMRUList.Count) and SameText(FMRUList[J].Item, FileName) do
+      Inc(J);
 
-    with TMenuItem(MRUMenuItems[I]) do
-      if J < MRUList.Count then
+    with TMenuItem(FMRUMenuItems[I]) do
+      if J < FMRUList.Count then
       begin
         Caption := IntToStr(Succ(I)) + ' '
-          + MinimizeName(MRUList[J].Item, Canvas, 400);
+          + MinimizeName(FMRUList[J].Item, Canvas, 400);
         Visible := True;
         Tag := J;
         Inc(J);
@@ -2230,10 +2219,10 @@ procedure TMainForm.LoadMRUList;
 var
   I: Integer;
 begin
-  MRUList.Clear;
+  FMRUList.Clear;
   for I := 0 to Storage.ReadInteger(IdMRUList, 0) - 1 do
   begin
-    MRUList.Add(TMRUItem.Create(
+    FMRUList.Add(TMRUItem.Create(
       Storage.ReadString(Format(IdMRUListItemFmt, [I]), ''),
       Storage.ReadInteger(Format(IdMRUListItemCntFmt, [I]), 1)));
   end;
@@ -2243,11 +2232,11 @@ procedure TMainForm.SaveMRUList;
 var
   I: Integer;
 begin
-  Storage.WriteInteger(IdMRUList, MRUList.Count);
-  for I := 0 to MRUList.Count - 1 do
+  Storage.WriteInteger(IdMRUList, FMRUList.Count);
+  for I := 0 to FMRUList.Count - 1 do
   begin
-    Storage.WriteString(Format(IdMRUListItemFmt, [I]), MRUList[I].Item);
-    Storage.WriteInteger(Format(IdMRUListItemCntFmt, [I]), MRUList[I].Count);
+    Storage.WriteString(Format(IdMRUListItemFmt, [I]), FMRUList[I].Item);
+    Storage.WriteInteger(Format(IdMRUListItemCntFmt, [I]), FMRUList[I].Count);
   end;
 end;
 
@@ -2264,13 +2253,13 @@ begin
   FTransparencyOnlyIfDeactivated :=
     Storage.ReadBoolean(IdTransparencyOnlyIfDeactivated, True);
   Transparency := Storage.ReadInteger(IdTransparency, 0);
-  AutoCheckForUpdates := Storage.ReadBoolean(IdAutoCheckForUpdates, True);
-  LastCheckForUpdates := Storage.ReadFloat(IdLastCheckForUpdates, Yesterday);
+  FAutoCheckForUpdates := Storage.ReadBoolean(IdAutoCheckForUpdates, True);
+  FLastCheckForUpdates := Storage.ReadFloat(IdLastCheckForUpdates, Yesterday);
   ObjectsView.ViewStyle := TViewStyle(Storage.ReadIntIdent(IdViewStyle,
     ViewStyles, Integer(vsIcon)));
-  SortColumn := TObjectViewColumn(Storage.ReadIntIdent(IdSortColumn,
+  FSortColumn := TObjectViewColumn(Storage.ReadIntIdent(IdSortColumn,
     SortColumns, Integer(ocName)));
-  SortSign := SortSigns[Storage.ReadBoolean(IdSortAscending, True)];
+  FSortSign := SortSigns[Storage.ReadBoolean(IdSortAscending, True)];
 end;
 
 procedure TMainForm.SaveSettings(const FileName: string);
@@ -2279,15 +2268,15 @@ begin
 
   Storage.WriteBoolean(IdStayOnTop, StayOnTop);
   Storage.WriteInteger(IdTransparency, Transparency);
-  Storage.WriteBoolean(IdAutoCheckForUpdates, AutoCheckForUpdates);
+  Storage.WriteBoolean(IdAutoCheckForUpdates, FAutoCheckForUpdates);
   Storage.WriteBoolean(IdTransparencyOnlyIfDeactivated,
     FTransparencyOnlyIfDeactivated);
-  Storage.WriteFloat(IdLastCheckForUpdates, LastCheckForUpdates);
+  Storage.WriteFloat(IdLastCheckForUpdates, FLastCheckForUpdates);
   Storage.WriteIntIdent(IdViewStyle, ViewStyles,
     Integer(ObjectsView.ViewStyle));
   Storage.WriteIntIdent(IdSortColumn, SortColumns,
-    Integer(SortColumn));
-  Storage.WriteBoolean(IdSortAscending, SortSign > 0);
+    Integer(FSortColumn));
+  Storage.WriteBoolean(IdSortAscending, FSortSign > 0);
 
   SysUtils.ForceDirectories(ExtractFileDir(FileName));
   Storage.SaveToFile(FileName);
@@ -2583,7 +2572,7 @@ end;
 
 procedure TMainForm.ObjectActionUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and HasSelectedObject;
+  TAction(Sender).Enabled := not FBusy and HasSelectedObject;
 end;
 
 procedure TMainForm.FieldsViewDblClick(Sender: TObject);
@@ -2664,7 +2653,7 @@ end;
 
 procedure TMainForm.CopyNameValueUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and HasSelectedField;
+  TAction(Sender).Enabled := not FBusy and HasSelectedField;
 end;
 
 procedure TMainForm.CopyValuesAsRowsExecute(Sender: TObject);
@@ -2722,7 +2711,7 @@ end;
 
 procedure TMainForm.CopyUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and (FieldsView.Items.Count > 0);
+  TAction(Sender).Enabled := not FBusy and (FieldsView.Items.Count > 0);
 end;
 
 procedure TMainForm.AddToIEFavoritesExecute(Sender: TObject);
@@ -2747,7 +2736,7 @@ end;
 
 procedure TMainForm.OpenLinkUpdate(Sender: TObject);
 begin
-  TAction(Sender).Visible := not Busy and HasSelectedField
+  TAction(Sender).Visible := not FBusy and HasSelectedField
     and Assigned(O2File.Rules.FindFirstRule(SelectedField, [rtHyperLink]));
   TAction(Sender).Enabled := TAction(Sender).Visible;
 end;
@@ -2759,7 +2748,7 @@ end;
 
 procedure TMainForm.SendEmailUpdate(Sender: TObject);
 begin
-  TAction(Sender).Visible := not Busy and HasSelectedField
+  TAction(Sender).Visible := not FBusy and HasSelectedField
     and Assigned(O2File.Rules.FindFirstRule(SelectedField, [rtEmail]));
   TAction(Sender).Enabled := TAction(Sender).Visible;
 end;
@@ -2773,7 +2762,7 @@ end;
 procedure TMainForm.ShowPasswordsUpdate(Sender: TObject);
 begin
   TAction(sender).Checked := FShowPasswords;
-  TAction(sender).Enabled := not Busy;
+  TAction(sender).Enabled := not FBusy;
 end;
 
 procedure TMainForm.RelationsViewDblClick(Sender: TObject);
@@ -2817,7 +2806,7 @@ end;
 
 procedure TMainForm.NewRelationUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and (ObjectsView.SelCount = 2);
+  TAction(Sender).Enabled := not FBusy and (ObjectsView.SelCount = 2);
 end;
 
 procedure TMainForm.DeleteRelationExecute(Sender: TObject);
@@ -2860,7 +2849,7 @@ end;
 
 procedure TMainForm.RelationActionUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and Assigned(RelationsView.Selected);
+  TAction(Sender).Enabled := not FBusy and Assigned(RelationsView.Selected);
 end;
 
 procedure TMainForm.RulesViewDblClick(Sender: TObject);
@@ -2939,7 +2928,7 @@ end;
 
 procedure TMainForm.MoveUpRuleUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and Assigned(RulesView.Selected)
+  TAction(Sender).Enabled := not FBusy and Assigned(RulesView.Selected)
     and (TO2Rule(RulesView.Selected.Data).Index > 0);
 end;
 
@@ -2951,7 +2940,7 @@ end;
 
 procedure TMainForm.MoveDownRuleUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and Assigned(RulesView.Selected)
+  TAction(Sender).Enabled := not FBusy and Assigned(RulesView.Selected)
     and (TO2Rule(RulesView.Selected.Data).Index < Pred(O2File.Rules.Count));
 end;
 
@@ -2994,7 +2983,7 @@ end;
 
 procedure TMainForm.RuleActionUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and Assigned(RulesView.Selected);
+  TAction(Sender).Enabled := not FBusy and Assigned(RulesView.Selected);
 end;
 
 procedure TMainForm.SaveDialogCanClose(Sender: TObject;
