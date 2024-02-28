@@ -2496,25 +2496,21 @@ end;
 
 procedure TMainForm.ReplaceRoleExecute(Sender: TObject);
 var
-  Selection: TO2ObjectList;
   SearchRole, ReplaceRole: string;
   SearchRoles, ReplaceRoles: TStrings;
 begin
-  Selection := TO2ObjectList.Create;
   SearchRoles := TStringList.Create;
   ReplaceRoles := TStringList.Create;
   try
-    FillObjList(Selection);
-    O2File.Relations.GetRoles(Selection, SearchRoles);
+    O2File.Relations.GetRoles(FSelectedObjects, SearchRoles);
     O2File.Relations.GetRoles(ReplaceRoles);
     if TReplaceDlg.Execute(Application, acReplaceRole,
       SearchRoles, ReplaceRoles, SearchRole, ReplaceRole) then
     begin
-      O2File.Relations.ReplaceRole(Selection, SearchRole, ReplaceRole);
+      O2File.Relations.ReplaceRole(FSelectedObjects, SearchRole, ReplaceRole);
       NotifyChanges([ncRelations]);
     end;
   finally
-    Selection.Free;
     SearchRoles.Free;
     ReplaceRoles.Free;
   end;

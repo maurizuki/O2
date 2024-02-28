@@ -68,8 +68,10 @@ type
     function AddRelation: TO2Relation;
     function ImportRelation(const ARelation: TO2Relation): TO2Relation;
     procedure GetRoles(const List: TStrings); overload;
-    procedure GetRoles(const Objects: TO2ObjectList; const List: TStrings); overload;
-    procedure ReplaceRole(const Objects: TO2ObjectList; const Role, NewRole: string);
+    procedure GetRoles(const Objects: IEnumerable<TO2Object>;
+      const List: TStrings); overload;
+    procedure ReplaceRole(const Objects: IEnumerable<TO2Object>; const Role,
+      NewRole: string);
     property Relations[Index: Integer]: TO2Relation read GetRelations; default;
   end;
 
@@ -300,7 +302,7 @@ begin
   end;
 end;
 
-procedure TO2Relations.GetRoles(const Objects: TO2ObjectList;
+procedure TO2Relations.GetRoles(const Objects: IEnumerable<TO2Object>;
   const List: TStrings);
 var
   AList: TStringList;
@@ -326,8 +328,8 @@ begin
   end;
 end;
 
-procedure TO2Relations.ReplaceRole(const Objects: TO2ObjectList; const Role,
-  NewRole: string);
+procedure TO2Relations.ReplaceRole(const Objects: IEnumerable<TO2Object>;
+  const Role, NewRole: string);
 var
   AObject: TO2Object;
   ARelation: TO2Relation;
@@ -335,9 +337,11 @@ begin
   for AObject in Objects do
     for ARelation in Self do
     begin
-      if SameText(ARelation.ObjectID1, AObject.ObjectID) and SameText(ARelation.Role1, Role) then
+      if SameText(ARelation.ObjectID1, AObject.ObjectID)
+        and SameText(ARelation.Role1, Role) then
         ARelation.Role1 := NewRole;
-      if SameText(ARelation.ObjectID2, AObject.ObjectID) and SameText(ARelation.Role2, Role) then
+      if SameText(ARelation.ObjectID2, AObject.ObjectID)
+        and SameText(ARelation.Role2, Role) then
         ARelation.Role2 := NewRole;
     end;
 end;
