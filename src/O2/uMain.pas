@@ -570,7 +570,6 @@ type
     procedure EnableSelectedRules(Enable: Boolean);
     procedure UpdateRulesStatus;
     procedure SortObjectsView(Column: TObjectViewColumn);
-    function CompareObjectsByName(const Obj1, Obj2: TO2Object): Integer;
     function CompareObjectsByTags(const Obj1, Obj2: TO2Object): Integer;
     function CompareObjectsByNextEvent(const Obj1, Obj2: TO2Object): Integer;
     procedure UpdateAllActions;
@@ -814,14 +813,12 @@ procedure TMainForm.ObjectsViewCompare(Sender: TObject; Item1,
 begin
   case FSortColumn of
     ocName:
-      Compare := CompareObjectsByName(TO2Object(Item1.Data),
-        TO2Object(Item2.Data)) * FSortSign;
+      Compare := CompareText(TO2Object(Item1.Data).Name,
+        TO2Object(Item2.Data).Name) * FSortSign;
     ocTags:
-      Compare := CompareObjectsByTags(TO2Object(Item1.Data),
-        TO2Object(Item2.Data)) * FSortSign;
+      Compare := CompareObjectsByTags(Item1.Data, Item2.Data) * FSortSign;
     ocNextEvent:
-      Compare := CompareObjectsByNextEvent(TO2Object(Item1.Data),
-        TO2Object(Item2.Data)) * FSortSign;
+      Compare := CompareObjectsByNextEvent(Item1.Data, Item2.Data) * FSortSign;
     else
       Compare := 0;
   end;
@@ -1745,11 +1742,6 @@ begin
   ObjectsView.AlphaSort;
 end;
 
-function TMainForm.CompareObjectsByName(const Obj1, Obj2: TO2Object): Integer;
-begin
-  Result := CompareText(Obj1.Name, Obj2.Name);
-end;
-
 function TMainForm.CompareObjectsByTags(const Obj1, Obj2: TO2Object): Integer;
 var
   Tags1, Tags2: TStringList;
@@ -1854,15 +1846,14 @@ end;
 
 procedure TMainForm.UpdateObjectsView;
 var
+  SelectedItemsData: TList;
   Date1, Date2: TDateTime;
   UseParams: Boolean;
   AObject: TO2Object;
-  Selection: TList;
 
 function CheckName(const Obj: TO2Object): Boolean;
 begin
-  Result := (FindByName.Text = '')
-    or (Pos(LowerCase(FindByName.Text), LowerCase(Obj.Name)) > 0);
+  Result := (FindByName.Text = '') or ContainsText(Obj.Name, FindByName.Text);
 end;
 
 function CheckTag(const Obj: TO2Object): Boolean;
@@ -1870,25 +1861,19 @@ var
   Tags: TStringList;
   I: Integer;
 begin
-  if (FindByTag.SelCount = 0)
-    or FindByTag.Selected[0] and (Obj.Tag = '') then
-    Result := True
-  else
-  begin
-    Result := False;
-    Tags := TStringList.Create;
-    try
-      Obj.GetTags(Tags);
-      for I := 1 to FindByTag.Items.Count - 1 do
-        if FindByTag.Selected[I]
-          and (Tags.IndexOf(FindByTag.Items[I]) > -1) then
-        begin
-          Result := True;
-          Break;
-        end;
-    finally
-      Tags.Free;
-    end;
+  Result := False;
+
+  if (FindByTag.SelCount = 0) or FindByTag.Selected[0] and (Obj.Tag = '') then
+    Exit(True);
+
+  Tags := TStringList.Create;
+  try
+    Obj.GetTags(Tags);
+    for I := 1 to FindByTag.Items.Count - 1 do
+      if FindByTag.Selected[I] and (Tags.IndexOf(FindByTag.Items[I]) > -1) then
+        Exit(True);
+  finally
+    Tags.Free;
   end;
 end;
 
@@ -1903,99 +1888,94 @@ var
   AField: TO2Field;
   I: Integer;
 begin
-  if FindByRule.SelCount = 0 then
-    Result := True
-  else
-  begin
-    Result := False;
-    for AField in Obj.Fields do
-      for I := 0 to FindByRule.Items.Count - 1 do
-        if FindByRule.Selected[I] then
-          with TO2Rule(FindByRule.Items.Objects[I]) do
-            if not (RuleType in EventRules) and Matches(AField)
-              or CheckEvents(AField, 0, 0, True) then
-            begin
-              Result := True;
-              Break;
-            end;
-  end;
+  Result := False;
+
+  if FindByRule.SelCount = 0 then Exit(True);
+
+  for AField in Obj.Fields do
+    for I := 0 to FindByRule.Items.Count - 1 do
+      if FindByRule.Selected[I] then
+        with TO2Rule(FindByRule.Items.Objects[I]) do
+          if not (RuleType in EventRules) and Matches(AField)
+            or CheckEvents(AField, 0, 0, True) then
+            Exit(True);
 end;
 
 begin
-  Selection := ObjectsView.ListSelectedItemsData;
-  try
-    UseParams := False;
-    if FindByEvent.ItemIndex <> -1 then
-      case EventFilter of
-        efAllEvents:
-        begin
-          Date1 := EncodeDate(1, 1, 1);
-          Date2 := EncodeDate(9999, 12, 31);
-        end;
-        efCustom:
-          UseParams := True;
-        efToday:
-        begin
-          Date1 := Date;
-          Date2 := Date;
-        end;
-        efTomorrow:
-        begin
-          Date1 := Date + 1;
-          Date2 := Date + 1;
-        end;
-        efThisWeek:
-        begin
-          Date1 := StartOfTheWeek(Date);
-          Date2 := StartOfTheDay(EndOfTheWeek(Date));
-        end;
-        efThisMonth:
-        begin
-          Date1 := StartOfTheMonth(Date);
-          Date2 := StartOfTheDay(EndOfTheMonth(Date));
-        end;
-        efThisYear:
-        begin
-          Date1 := StartOfTheYear(Date);
-          Date2 := StartOfTheDay(EndOfTheYear(Date));
-        end;
-        efNext7days:
-        begin
-          Date1 := Date;
-          Date2 := Date + 7;
-        end;
-        efNext15days:
-        begin
-          Date1 := Date;
-          Date2 := Date + 15;
-        end;
-        efNext30days:
-        begin
-          Date1 := Date;
-          Date2 := Date + 30;
-        end;
-        efNext60days:
-        begin
-          Date1 := Date;
-          Date2 := Date + 60;
-        end;
-        efNext90days:
-        begin
-          Date1 := Date;
-          Date2 := Date + 90;
-        end;
-        efNext180days:
-        begin
-          Date1 := Date;
-          Date2 := Date + 180;
-        end;
-        efNext365days:
-        begin
-          Date1 := Date;
-          Date2 := Date + 365;
-        end;
+  UseParams := False;
+  if FindByEvent.ItemIndex <> -1 then
+    case EventFilter of
+      efAllEvents:
+      begin
+        Date1 := EncodeDate(1, 1, 1);
+        Date2 := EncodeDate(9999, 12, 31);
       end;
+      efCustom:
+        UseParams := True;
+      efToday:
+      begin
+        Date1 := Date;
+        Date2 := Date;
+      end;
+      efTomorrow:
+      begin
+        Date1 := Date + 1;
+        Date2 := Date + 1;
+      end;
+      efThisWeek:
+      begin
+        Date1 := StartOfTheWeek(Date);
+        Date2 := StartOfTheDay(EndOfTheWeek(Date));
+      end;
+      efThisMonth:
+      begin
+        Date1 := StartOfTheMonth(Date);
+        Date2 := StartOfTheDay(EndOfTheMonth(Date));
+      end;
+      efThisYear:
+      begin
+        Date1 := StartOfTheYear(Date);
+        Date2 := StartOfTheDay(EndOfTheYear(Date));
+      end;
+      efNext7days:
+      begin
+        Date1 := Date;
+        Date2 := Date + 7;
+      end;
+      efNext15days:
+      begin
+        Date1 := Date;
+        Date2 := Date + 15;
+      end;
+      efNext30days:
+      begin
+        Date1 := Date;
+        Date2 := Date + 30;
+      end;
+      efNext60days:
+      begin
+        Date1 := Date;
+        Date2 := Date + 60;
+      end;
+      efNext90days:
+      begin
+        Date1 := Date;
+        Date2 := Date + 90;
+      end;
+      efNext180days:
+      begin
+        Date1 := Date;
+        Date2 := Date + 180;
+      end;
+      efNext365days:
+      begin
+        Date1 := Date;
+        Date2 := Date + 365;
+      end;
+    end;
 
+  SelectedItemsData := ObjectsView.ListSelectedItemsData;
+  try
     ObjectsView.Items.BeginUpdate;
     try
       ObjectsView.Clear;
@@ -2007,21 +1987,21 @@ begin
       ObjectsView.AlphaSort;
 
       ResizeObjectsViewColumns;
-      ObjectsView.SelectItemsByData(Selection);
+      ObjectsView.SelectItemsByData(SelectedItemsData);
     finally
       ObjectsView.Items.EndUpdate;
     end;
   finally
-    Selection.Free;
+    SelectedItemsData.Free;
   end;
 end;
 
 procedure TMainForm.UpdateFieldsView;
 var
   AField: TO2Field;
-  Selection: TList;
+  SelectedItemsData: TList;
 begin
-  Selection := FieldsView.ListSelectedItemsData;
+  SelectedItemsData := FieldsView.ListSelectedItemsData;
   try
     FieldsView.Items.BeginUpdate;
     try
@@ -2030,12 +2010,12 @@ begin
         for AField in SelectedObject.Fields do
           FieldToListItem(AField, nil);
       ResizeFieldsViewColumns;
-      FieldsView.SelectItemsByData(Selection);
+      FieldsView.SelectItemsByData(SelectedItemsData);
     finally
       FieldsView.Items.EndUpdate;
     end;
   finally
-    Selection.Free;
+    SelectedItemsData.Free;
   end;
 end;
 
@@ -2064,9 +2044,9 @@ procedure TMainForm.UpdateRelationsView;
 var
   AObjRelation: TO2ObjRelation;
   ObjRelations: TO2ObjRelations;
-  Selection: TList;
+  SelectedItemsData: TList;
 begin
-  Selection := RelationsView.ListSelectedItemsData;
+  SelectedItemsData := RelationsView.ListSelectedItemsData;
   try
     RelationsView.Items.BeginUpdate;
     try
@@ -2082,28 +2062,28 @@ begin
         end;
       end;
       ResizeRelationsViewColumns;
-      RelationsView.SelectItemsByData(Selection);
+      RelationsView.SelectItemsByData(SelectedItemsData);
     finally
       RelationsView.Items.EndUpdate;
     end;
   finally
-    Selection.Free;
+    SelectedItemsData.Free;
   end;
 end;
 
 procedure TMainForm.UpdateRulesView;
 var
   ARule: TO2Rule;
-  Selection: TList;
+  SelectedItemsData: TList;
 begin
-  Selection := RulesView.ListSelectedItemsData;
+  SelectedItemsData := RulesView.ListSelectedItemsData;
   try
     RulesView.Items.BeginUpdate;
     try
       RulesView.Clear;
       for ARule in O2File.Rules do RuleToListItem(ARule, nil);
       ResizeRulesViewColumns;
-      RulesView.SelectItemsByData(Selection);
+      RulesView.SelectItemsByData(SelectedItemsData);
       if Assigned(RulesView.Selected) then
       begin
         RulesView.Selected.Focused := True;
@@ -2113,7 +2093,7 @@ begin
       RulesView.Items.EndUpdate;
     end;
   finally
-    Selection.Free;
+    SelectedItemsData.Free;
   end;
 end;
 
