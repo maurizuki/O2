@@ -25,13 +25,12 @@ type
   private
     FTitle: string;
     FO2File: TO2File;
-    FSelectedObjects: TO2ObjectList;
     FStorage: IStorage;
     FIncludeTags: Boolean;
     FIncludeNotes: Boolean;
     FIncludeRelations: Boolean;
     FIncludePasswords: Boolean;
-    FObjectIndex: Integer;
+    FObjectEnumerator: IEnumerator<TO2Object>;
     FFieldIndex: Integer;
     FObjRelations: TO2ObjRelations;
     FObjRelationIndex: Integer;
@@ -39,7 +38,7 @@ type
     FPrintDate: string;
   public
     constructor Create(const O2File: TO2File;
-      const SelectedObjects: TO2ObjectList; Storage: IStorage);
+      SelectedObjects: IEnumerable<TO2Object>; Storage: IStorage);
     procedure StoreSettings;
     function DrawNextPage(const Canvas: TCanvas; PageRect, PrintRect: TRect;
       PageIndex: Integer): Boolean;
@@ -60,14 +59,14 @@ uses
 { TPrintModel }
 
 constructor TPrintModel.Create(const O2File: TO2File;
-  const SelectedObjects: TO2ObjectList; Storage: IStorage);
+  SelectedObjects: IEnumerable<TO2Object>; Storage: IStorage);
 begin
   if O2File.Title = '' then
     FTitle := ChangeFileExt(ExtractFileName(O2File.FileName), '')
   else
     FTitle := O2File.Title;
   FO2File := O2File;
-  FSelectedObjects := SelectedObjects;
+  FObjectEnumerator := SelectedObjects.GetEnumerator;
   FStorage := Storage;
   FIncludeTags := FStorage.ReadBoolean(IdPrintIncludeTags, True);
   FIncludeNotes := FStorage.ReadBoolean(IdPrintIncludeNotes, True);
@@ -102,17 +101,19 @@ end;
 begin
   Result := True;
 
-  LogPixelsY := GetDeviceCaps(Canvas.Handle, Windows.LOGPIXELSY);
-
   if PageIndex = 0 then
   begin
-    FObjectIndex := 0;
+    FObjectEnumerator.Reset;
+    if not FObjectEnumerator.MoveNext then Exit(False);
+
     FFieldIndex := 0;
     FObjRelations := nil;
     FObjRelationIndex := 0;
     FNoteLineIndex := 0;
     FPrintDate := DateTimeToStr(Now);
   end;
+
+  LogPixelsY := GetDeviceCaps(Canvas.Handle, Windows.LOGPIXELSY);
 
   Canvas.Font.Name := 'Arial';
   Canvas.Font.Size := 8;
@@ -173,8 +174,9 @@ begin
 
   { Objects }
 
-  while FObjectIndex < FSelectedObjects.Count do
-  begin
+  repeat
+    AObject := FObjectEnumerator.Current;
+
     Canvas.Font.Name := 'Arial';
     Canvas.Font.Size := 12;
     GetTextMetrics(Canvas.Handle, TextMetric);
@@ -183,7 +185,7 @@ begin
 
     if Rect.Top + H + MillimetersToPixelsY(3) > PrintRect.Bottom then Exit;
 
-    S := FSelectedObjects[FObjectIndex].Name;
+    S := AObject.Name;
     W := Canvas.TextWidth(S);
     Rect.Left := PrintRect.Left;
     Rect.Right := PrintRect.Right;
@@ -216,8 +218,7 @@ begin
     Rect2.Right := PrintRect.Right;
     Rect2.Bottom := Rect2.Top + H;
 
-    if FIncludeTags and (FFieldIndex = 0)
-      and (FSelectedObjects[FObjectIndex].Tag <> '') then
+    if FIncludeTags and (FFieldIndex = 0) and (AObject.Tag <> '') then
     begin
       if Rect.Top + H > PrintRect.Bottom then Exit;
 
@@ -225,7 +226,7 @@ begin
       DrawText(Canvas.Handle, PChar(S), Length(S), Rect,
         DT_NOPREFIX or DT_LEFT or DT_TOP);
 
-      S := FSelectedObjects[FObjectIndex].Tag;
+      S := AObject.Tag;
       DrawText(Canvas.Handle, PChar(S), Length(S), Rect2,
         DT_NOPREFIX or DT_LEFT or DT_TOP);
 
@@ -233,9 +234,9 @@ begin
       OffsetRect(Rect2, 0, H);
     end;
 
-    while FFieldIndex < FSelectedObjects[FObjectIndex].Fields.Count do
+    while FFieldIndex < AObject.Fields.Count do
     begin
-      AField := FSelectedObjects[FObjectIndex].Fields[FFieldIndex];
+      AField := AObject.Fields[FFieldIndex];
 
       if FIncludePasswords
         or not Assigned(FO2File.Rules.FindFirstRule(AField, [rtPassword])) then
@@ -263,8 +264,7 @@ begin
     begin
       if FObjRelations = nil then
       begin
-        FObjRelations :=
-          FO2File.Relations.GetObjectRelations(FSelectedObjects[FObjectIndex]);
+        FObjRelations := FO2File.Relations.GetObjectRelations(AObject);
         FObjRelations.SortByObjName;
       end;
 
@@ -326,8 +326,7 @@ begin
       H := TextMetric.tmHeight + TextMetric.tmInternalLeading
         + TextMetric.tmExternalLeading;
 
-      if (FNoteLineIndex = 0)
-        and (FSelectedObjects[FObjectIndex].Text.Count > 0) then
+      if (FNoteLineIndex = 0) and (AObject.Text.Count > 0) then
       begin
         Inc(Rect.Top, MillimetersToPixelsY(1));
 
@@ -342,11 +341,11 @@ begin
       Rect.Left := PrintRect.Left;
       Rect.Bottom := Rect.Top + H;
 
-      while FNoteLineIndex < FSelectedObjects[FObjectIndex].Text.Count do
+      while FNoteLineIndex < AObject.Text.Count do
       begin
         Rect.Right := PrintRect.Right;
 
-        S := FSelectedObjects[FObjectIndex].Text[FNoteLineIndex];
+        S := AObject.Text[FNoteLineIndex];
         H := DrawText(Canvas.Handle, PChar(S), Length(S), Rect,
           DT_CALCRECT or DT_NOPREFIX or DT_EXPANDTABS or DT_WORDBREAK
           or DT_LEFT or DT_TOP);
@@ -371,14 +370,14 @@ begin
     end;
 
     Inc(Rect.Top, MillimetersToPixelsY(5));
-    Inc(FObjectIndex);
 
     FFieldIndex := 0;
     FObjRelationIndex := 0;
     FNoteLineIndex := 0;
 
     FreeAndNil(FObjRelations);
-  end;
+
+  until not FObjectEnumerator.MoveNext;
 
   Result := False;
 end;

@@ -112,12 +112,6 @@ type
     property Objects[Index: Integer]: TO2Object read GetObjects; default;
   end;
 
-  TO2ObjectList = class(TObjectList<TO2Object>)
-  public
-    constructor Create;
-    function ToEnumerable: IEnumerable<TO2Object>;
-  end;
-
 implementation
 
 uses
@@ -149,29 +143,6 @@ type
     FCollection: TO2Objects;
   public
     constructor Create(const Collection: TO2Objects);
-    function GetEnumerator: IEnumerator;
-    function GetEnumeratorT: IEnumerator<TO2Object>;
-    function IEnumerable<TO2Object>.GetEnumerator = GetEnumeratorT;
-  end;
-
-  TO2ObjectListEnumerator = class(TInterfacedObject, IEnumerator<TO2Object>)
-  private
-    FList: TO2ObjectList;
-    FIndex: Integer;
-  public
-    constructor Create(const List: TO2ObjectList);
-    function GetCurrent: TObject;
-    function GetCurrentT: TO2Object;
-    function IEnumerator<TO2Object>.GetCurrent = GetCurrentT;
-    function MoveNext: Boolean;
-    procedure Reset;
-  end;
-
-  TO2ObjectListEnumerable = class(TInterfacedObject, IEnumerable<TO2Object>)
-  private
-    FList: TO2ObjectList;
-  public
-    constructor Create(const List: TO2ObjectList);
     function GetEnumerator: IEnumerator;
     function GetEnumeratorT: IEnumerator<TO2Object>;
     function IEnumerable<TO2Object>.GetEnumerator = GetEnumeratorT;
@@ -548,18 +519,6 @@ begin
   Result := TO2ObjectCollectionEnumerable.Create(Self);
 end;
 
-{ TO2ObjectList }
-
-constructor TO2ObjectList.Create;
-begin
-  inherited Create(False);
-end;
-
-function TO2ObjectList.ToEnumerable: IEnumerable<TO2Object>;
-begin
-  Result := TO2ObjectListEnumerable.Create(Self);
-end;
-
 { TO2ObjectCollectionEnumerator }
 
 constructor TO2ObjectCollectionEnumerator.Create(const Collection: TO2Objects);
@@ -607,55 +566,6 @@ end;
 function TO2ObjectCollectionEnumerable.GetEnumeratorT: IEnumerator<TO2Object>;
 begin
   Result := TO2ObjectCollectionEnumerator.Create(FCollection);
-end;
-
-{ TO2ObjectListEnumerator }
-
-constructor TO2ObjectListEnumerator.Create(const List: TO2ObjectList);
-begin
-  FList := List;
-  FIndex := -1;
-end;
-
-function TO2ObjectListEnumerator.GetCurrent: TObject;
-begin
-  Result := GetCurrentT;
-end;
-
-function TO2ObjectListEnumerator.GetCurrentT: TO2Object;
-begin
-  Result := FList[FIndex];
-end;
-
-function TO2ObjectListEnumerator.MoveNext: Boolean;
-begin
-  Result := True;
-  if FIndex < FList.Count - 1 then
-    Inc(FIndex)
-  else
-    Result := False;
-end;
-
-procedure TO2ObjectListEnumerator.Reset;
-begin
-  FIndex := -1;
-end;
-
-{ TO2ObjectListEnumerable }
-
-constructor TO2ObjectListEnumerable.Create(const List: TO2ObjectList);
-begin
-  FList := List;
-end;
-
-function TO2ObjectListEnumerable.GetEnumerator: IEnumerator;
-begin
-  Result := GetEnumeratorT;
-end;
-
-function TO2ObjectListEnumerable.GetEnumeratorT: IEnumerator<TO2Object>;
-begin
-  Result := TO2ObjectListEnumerator.Create(FList);
 end;
 
 end.

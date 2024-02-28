@@ -552,7 +552,6 @@ type
     procedure LoadSettings(const FileName: string);
     procedure SaveSettings(const FileName: string);
 
-    procedure FillObjList(const Objects: TO2ObjectList);
     procedure GetStartDate(out StartDate: TDateTime; out UseParams: Boolean);
     function ObjToListItem(const AObject: TO2Object;
       const Item: TListItem): TListItem; overload;
@@ -1109,21 +1108,13 @@ end;
 
 procedure TMainForm.PrintFileExecute(Sender: TObject);
 var
-  Selection: TO2ObjectList;
   Model: TPrintModel;
 begin
-  Selection := TO2ObjectList.Create;
+  Model := TPrintModel.Create(O2File, FSelectedObjects, Storage);
   try
-    FillObjList(Selection);
-
-    Model := TPrintModel.Create(O2File, Selection, Storage);
-    try
-      TPrintPreview.Execute(Application, Model);
-    finally
-      Model.Free;
-    end;
+    TPrintPreview.Execute(Application, Model);
   finally
-    Selection.Free;
+    Model.Free;
   end;
 end;
 
@@ -2999,16 +2990,6 @@ procedure TMainForm.DragDropDrop(Sender: TObject; Pos: TPoint;
   Value: TStrings);
 begin
   if (Value.Count > 0) and CanCloseFile then LoadFromFile(Value[0]);
-end;
-
-procedure TMainForm.FillObjList(const Objects: TO2ObjectList);
-var
-  NoneSelected: Boolean;
-  AItem: TListItem;
-begin
-  NoneSelected := ObjectsView.SelCount = 0;
-  for AItem in ObjectsView.Items do
-    if NoneSelected or AItem.Selected then Objects.Add(AItem.Data);
 end;
 
 end.
