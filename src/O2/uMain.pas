@@ -2284,7 +2284,6 @@ end;
 
 procedure TMainForm.ObjectMenuPopup(Sender: TObject);
 var
-  Selection: TO2ObjectList;
   Item: TMenuItem;
   Tags: TStrings;
   Tag: string;
@@ -2293,11 +2292,8 @@ begin
   DeleteTag.Clear;
   if HasSelectedObject then
   begin
-    Selection := TO2ObjectList.Create;
     Tags := TStringList.Create;
     try
-      FillObjList(Selection);
-
       AppendTagsToList(O2File.Objects.ToEnumerable, Tags);
       for Tag in Tags do
       begin
@@ -2309,7 +2305,7 @@ begin
       AddTag.Enabled := AddTag.Count > 0;
 
       Tags.Clear;
-      AppendTagsToList(Selection.ToEnumerable, Tags);
+      AppendTagsToList(FSelectedObjects, Tags);
       for Tag in Tags do
       begin
         Item := TMenuItem.Create(Self);
@@ -2319,7 +2315,6 @@ begin
       end;
       DeleteTag.Enabled := DeleteTag.Count > 0;
     finally
-      Selection.Free;
       Tags.Free;
     end;
   end
@@ -2410,59 +2405,41 @@ end;
 
 procedure TMainForm.AddTagClick(Sender: TObject);
 var
-  Selection: TO2ObjectList;
   AObject: TO2Object;
   Tag: string;
 begin
-  Selection := TO2ObjectList.Create;
-  try
-    FillObjList(Selection);
-    Tag := StringReplace(TMenuItem(Sender).Caption, '&&', '&', [rfReplaceAll]);
-    for AObject in Selection do
-      AObject.AddTag(Tag);
-  finally
-    Selection.Free;
-  end;
+  Tag := StringReplace(TMenuItem(Sender).Caption, '&&', '&', [rfReplaceAll]);
+  for AObject in FSelectedObjects do
+    AObject.AddTag(Tag);
 end;
 
 procedure TMainForm.DeleteTagClick(Sender: TObject);
 var
-  Selection: TO2ObjectList;
   AObject: TO2Object;
   Tag: string;
 begin
-  Selection := TO2ObjectList.Create;
-  try
-    FillObjList(Selection);
-    Tag := StringReplace(TMenuItem(Sender).Caption, '&&', '&', [rfReplaceAll]);
-    for AObject in Selection do
-      AObject.DeleteTag(Tag);
-  finally
-    Selection.Free;
-  end;
+  Tag := StringReplace(TMenuItem(Sender).Caption, '&&', '&', [rfReplaceAll]);
+  for AObject in FSelectedObjects do
+    AObject.DeleteTag(Tag);
 end;
 
 procedure TMainForm.ReplaceTagExecute(Sender: TObject);
 var
-  Selection: TO2ObjectList;
   SearchTag, ReplaceTag: string;
   SearchTags, ReplaceTags: TStrings;
 begin
-  Selection := TO2ObjectList.Create;
   SearchTags := TStringList.Create;
   ReplaceTags := TStringList.Create;
   try
-    FillObjList(Selection);
-    AppendTagsToList(Selection.ToEnumerable, SearchTags);
+    AppendTagsToList(FSelectedObjects, SearchTags);
     AppendTagsToList(O2File.Objects.ToEnumerable, ReplaceTags);
     if TReplaceDlg.Execute(Application, acReplaceTag,
       SearchTags, ReplaceTags, SearchTag, ReplaceTag) then
     begin
-      ReplaceObjectsTag(Selection.ToEnumerable, SearchTag, ReplaceTag);
+      ReplaceObjectsTag(FSelectedObjects, SearchTag, ReplaceTag);
       NotifyChanges([ncObjects, ncTagList]);
     end;
   finally
-    Selection.Free;
     SearchTags.Free;
     ReplaceTags.Free;
   end;
@@ -2470,27 +2447,23 @@ end;
 
 procedure TMainForm.ReplaceFieldNameExecute(Sender: TObject);
 var
-  Selection: TO2ObjectList;
   SearchFieldName, ReplaceFieldName: string;
   SearchFieldNames, ReplaceFieldNames: TStrings;
 begin
-  Selection := TO2ObjectList.Create;
   SearchFieldNames := TStringList.Create;
   ReplaceFieldNames := TStringList.Create;
   try
-    FillObjList(Selection);
-    AppendFieldNamesToList(Selection.ToEnumerable, SearchFieldNames);
+    AppendFieldNamesToList(FSelectedObjects, SearchFieldNames);
     AppendFieldNamesToList(O2File.Objects.ToEnumerable, ReplaceFieldNames);
     if TReplaceDlg.Execute(Application, acReplaceFieldName,
       SearchFieldNames, ReplaceFieldNames,
       SearchFieldName, ReplaceFieldName) then
     begin
-      ReplaceObjectsFieldName(Selection.ToEnumerable, SearchFieldName,
+      ReplaceObjectsFieldName(FSelectedObjects, SearchFieldName,
         ReplaceFieldName);
       NotifyChanges([ncObjects]);
     end;
   finally
-    Selection.Free;
     SearchFieldNames.Free;
     ReplaceFieldNames.Free;
   end;
@@ -2498,28 +2471,24 @@ end;
 
 procedure TMainForm.ReplaceFieldValueExecute(Sender: TObject);
 var
-  Selection: TO2ObjectList;
   SearchFieldName, ReplaceFieldValue: string;
   SearchFieldNames, ReplaceFieldValues: TStrings;
 begin
-  Selection := TO2ObjectList.Create;
   SearchFieldNames := TStringList.Create;
   ReplaceFieldValues := TStringList.Create;
   try
-    FillObjList(Selection);
-    AppendFieldNamesToList(Selection.ToEnumerable, SearchFieldNames);
+    AppendFieldNamesToList(FSelectedObjects, SearchFieldNames);
     AppendFieldValuesToList(O2File.Objects.ToEnumerable, '',
       ReplaceFieldValues);
     if TReplaceDlg.Execute(Application, acReplaceFieldValue,
       SearchFieldNames, ReplaceFieldValues,
       SearchFieldName, ReplaceFieldValue) then
     begin
-      ReplaceObjectsFieldValue(Selection.ToEnumerable, SearchFieldName,
+      ReplaceObjectsFieldValue(FSelectedObjects, SearchFieldName,
         ReplaceFieldValue);
       NotifyChanges([ncObjects]);
     end;
   finally
-    Selection.Free;
     SearchFieldNames.Free;
     ReplaceFieldValues.Free;
   end;
