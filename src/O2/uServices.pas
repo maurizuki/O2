@@ -84,6 +84,9 @@ type
     procedure SetReplaceValue(const Value: string);
     property ReplaceValue: string read GetReplaceValue write SetReplaceValue;
 
+    function GetValid: Boolean;
+    property Valid: Boolean read GetValid;
+
     procedure Replace;
   end;
 

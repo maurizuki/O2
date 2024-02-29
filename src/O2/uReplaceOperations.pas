@@ -30,6 +30,7 @@ type
     function GetSearchList: TStrings;
     function GetReplaceList: TStrings;
     function GetSearchValue: string;
+    function GetValid: Boolean;
     procedure SetSearchValue(const Value: string);
     function GetReplaceValue: string;
     procedure SetReplaceValue(const Value: string);
@@ -53,6 +54,7 @@ type
     property ReplaceList: TStrings read GetReplaceList;
     property SearchValue: string read GetSearchValue write SetSearchValue;
     property ReplaceValue: string read GetReplaceValue write SetReplaceValue;
+    property Valid: Boolean read GetValid;
   end;
 
   TReplaceTagModel = class(TReplaceOperation)
@@ -137,6 +139,12 @@ end;
 function TReplaceOperation.GetSearchValue: string;
 begin
   Result := FSearchValue;
+end;
+
+function TReplaceOperation.GetValid: Boolean;
+begin
+  Result := (FSearchValue <> '') and (FReplaceValue <> '')
+    and (FSearchList.IndexOf(FSearchValue) >= 0);
 end;
 
 procedure TReplaceOperation.SetReplaceValue(const Value: string);

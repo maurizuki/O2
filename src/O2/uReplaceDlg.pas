@@ -97,8 +97,7 @@ end;
 
 procedure TReplaceDlg.EnableControls;
 begin
-  btOk.Enabled := (cbSearchValue.ItemIndex <> -1)
-    and (cbReplaceValue.Text <> '');
+  btOk.Enabled := FModel.Valid;
 end;
 
 end.
