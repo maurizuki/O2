@@ -621,7 +621,8 @@ uses
   uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg, uReplaceDlg, uPrintModel,
   uPrintPreview, uHTMLExportModel, uHTMLExport, uO2Xml, uO2Defs,
   uBrowserEmulation, uCtrlHelpers, uFileOperation, uO2ImportExport,
-  uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper, uO2ObjectsUtils;
+  uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper, uO2ObjectsUtils,
+  uReplaceOperations;
 
 {$R *.dfm}
 
@@ -2395,96 +2396,30 @@ begin
 end;
 
 procedure TMainForm.ReplaceTagExecute(Sender: TObject);
-var
-  SearchTag, ReplaceTag: string;
-  SearchTags, ReplaceTags: TStrings;
 begin
-  SearchTags := TStringList.Create;
-  ReplaceTags := TStringList.Create;
-  try
-    AppendTagsToList(FSelectedObjects, SearchTags);
-    AppendTagsToList(O2File.Objects.ToEnumerable, ReplaceTags);
-    if TReplaceDlg.Execute(Application, acReplaceTag,
-      SearchTags, ReplaceTags, SearchTag, ReplaceTag) then
-    begin
-      ReplaceObjectsTag(FSelectedObjects, SearchTag, ReplaceTag);
-      NotifyChanges([ncObjects, ncTagList]);
-    end;
-  finally
-    SearchTags.Free;
-    ReplaceTags.Free;
-  end;
+  if TReplaceDlg.Execute(TReplaceTagModel.Create(O2File, FSelectedObjects)) then
+    NotifyChanges([ncObjects, ncTagList]);
 end;
 
 procedure TMainForm.ReplaceFieldNameExecute(Sender: TObject);
-var
-  SearchFieldName, ReplaceFieldName: string;
-  SearchFieldNames, ReplaceFieldNames: TStrings;
 begin
-  SearchFieldNames := TStringList.Create;
-  ReplaceFieldNames := TStringList.Create;
-  try
-    AppendFieldNamesToList(FSelectedObjects, SearchFieldNames);
-    AppendFieldNamesToList(O2File.Objects.ToEnumerable, ReplaceFieldNames);
-    if TReplaceDlg.Execute(Application, acReplaceFieldName,
-      SearchFieldNames, ReplaceFieldNames,
-      SearchFieldName, ReplaceFieldName) then
-    begin
-      ReplaceObjectsFieldName(FSelectedObjects, SearchFieldName,
-        ReplaceFieldName);
-      NotifyChanges([ncObjects]);
-    end;
-  finally
-    SearchFieldNames.Free;
-    ReplaceFieldNames.Free;
-  end;
+  if TReplaceDlg.Execute(TReplaceFieldNameModel.Create(O2File,
+    FSelectedObjects)) then
+    NotifyChanges([ncObjects]);
 end;
 
 procedure TMainForm.ReplaceFieldValueExecute(Sender: TObject);
-var
-  SearchFieldName, ReplaceFieldValue: string;
-  SearchFieldNames, ReplaceFieldValues: TStrings;
 begin
-  SearchFieldNames := TStringList.Create;
-  ReplaceFieldValues := TStringList.Create;
-  try
-    AppendFieldNamesToList(FSelectedObjects, SearchFieldNames);
-    AppendFieldValuesToList(O2File.Objects.ToEnumerable, '',
-      ReplaceFieldValues);
-    if TReplaceDlg.Execute(Application, acReplaceFieldValue,
-      SearchFieldNames, ReplaceFieldValues,
-      SearchFieldName, ReplaceFieldValue) then
-    begin
-      ReplaceObjectsFieldValue(FSelectedObjects, SearchFieldName,
-        ReplaceFieldValue);
-      NotifyChanges([ncObjects]);
-    end;
-  finally
-    SearchFieldNames.Free;
-    ReplaceFieldValues.Free;
-  end;
+  if TReplaceDlg.Execute(TReplaceFieldValueModel.Create(O2File,
+    FSelectedObjects)) then
+    NotifyChanges([ncObjects]);
 end;
 
 procedure TMainForm.ReplaceRoleExecute(Sender: TObject);
-var
-  SearchRole, ReplaceRole: string;
-  SearchRoles, ReplaceRoles: TStrings;
 begin
-  SearchRoles := TStringList.Create;
-  ReplaceRoles := TStringList.Create;
-  try
-    O2File.Relations.GetRoles(FSelectedObjects, SearchRoles);
-    O2File.Relations.GetRoles(ReplaceRoles);
-    if TReplaceDlg.Execute(Application, acReplaceRole,
-      SearchRoles, ReplaceRoles, SearchRole, ReplaceRole) then
-    begin
-      O2File.Relations.ReplaceRole(FSelectedObjects, SearchRole, ReplaceRole);
-      NotifyChanges([ncRelations]);
-    end;
-  finally
-    SearchRoles.Free;
-    ReplaceRoles.Free;
-  end;
+  if TReplaceDlg.Execute(TReplaceRoleModel.Create(O2File,
+    FSelectedObjects)) then
+    NotifyChanges([ncRelations]);
 end;
 
 procedure TMainForm.ObjectPropsExecute(Sender: TObject);

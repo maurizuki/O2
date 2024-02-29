@@ -49,7 +49,8 @@ uses
   uPrintModel in 'uPrintModel.pas',
   uServices in 'uServices.pas',
   uHTMLExportModel in 'uHTMLExportModel.pas',
-  uStartup in 'uStartup.pas';
+  uStartup in 'uStartup.pas',
+  uReplaceOperations in 'uReplaceOperations.pas';
 
 {$R *.res}
 

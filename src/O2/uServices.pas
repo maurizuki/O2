@@ -25,6 +25,7 @@ type
     function FileExists(const Name: string): Boolean;
     function GetPortableFilesTotalSize: Int64;
     procedure InstallPortable(const Path: string);
+
     function GetFullPath(IndexOrName: Variant): string;
     property FullPath[IndexOrName: Variant]: string read GetFullPath;
   end;
@@ -57,6 +58,33 @@ type
 
   IFileOperation = interface
     procedure Execute(const FileName: string);
+  end;
+
+  IReplaceOperation = interface
+    function GetTitle: string;
+    property Title: string read GetTitle;
+
+    function GetSearchValueLabel: string;
+    property SearchValueLabel: string read GetSearchValueLabel;
+
+    function GetReplaceValueLabel: string;
+    property ReplaceValueLabel: string read GetReplaceValueLabel;
+
+    function GetSearchList: TStrings;
+    property SearchList: TStrings read GetSearchList;
+
+    function GetReplaceList: TStrings;
+    property ReplaceList: TStrings read GetReplaceList;
+
+    function GetSearchValue: string;
+    procedure SetSearchValue(const Value: string);
+    property SearchValue: string read GetSearchValue write SetSearchValue;
+
+    function GetReplaceValue: string;
+    procedure SetReplaceValue(const Value: string);
+    property ReplaceValue: string read GetReplaceValue write SetReplaceValue;
+
+    procedure Replace;
   end;
 
 implementation

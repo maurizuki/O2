@@ -52,20 +52,11 @@ function ObjectExists(Objects: IEnumerable<TO2Object>;
 procedure AppendFieldNamesToList(Objects: IEnumerable<TO2Object>;
   const FieldNames: TStrings);
 
-function ReplaceObjectsFieldName(Objects: IEnumerable<TO2Object>;
-  const FieldName, NewFieldName: string): Integer;
-
 procedure AppendFieldValuesToList(Objects: IEnumerable<TO2Object>;
   const FieldName: string; const FieldValues: TStrings);
 
-procedure ReplaceObjectsFieldValue(Objects: IEnumerable<TO2Object>;
-  const FieldName, NewFieldValue: string);
-
 procedure AppendTagsToList(Objects: IEnumerable<TO2Object>;
   const Tags: TStrings);
-
-procedure ReplaceObjectsTag(Objects: IEnumerable<TO2Object>;
-  const Tag, NewTag: string);
 
 implementation
 
@@ -102,25 +93,6 @@ begin
   end;
 end;
 
-function ReplaceObjectsFieldName(Objects: IEnumerable<TO2Object>;
-  const FieldName, NewFieldName: string): Integer;
-var
-  AObject: TO2Object;
-  AField: TO2Field;
-begin
-  Result := 0;
-  for AObject in Objects do
-  begin
-    AField := AObject.Fields.FindField(FieldName);
-    if Assigned(AField) then
-    try
-      AField.FieldName := NewFieldName;
-    except
-      Inc(Result);
-    end;
-  end;
-end;
-
 procedure AppendFieldValuesToList(Objects: IEnumerable<TO2Object>;
   const FieldName: string; const FieldValues: TStrings);
 var
@@ -143,20 +115,6 @@ begin
   end;
 end;
 
-procedure ReplaceObjectsFieldValue(Objects: IEnumerable<TO2Object>;
-  const FieldName, NewFieldValue: string);
-var
-  AObject: TO2Object;
-  AField: TO2Field;
-begin
-  for AObject in Objects do
-  begin
-    AField := AObject.Fields.FindField(FieldName);
-    if Assigned(AField) then
-      AField.FieldValue := NewFieldValue;
-  end;
-end;
-
 procedure AppendTagsToList(Objects: IEnumerable<TO2Object>;
   const Tags: TStrings);
 var
@@ -171,29 +129,6 @@ begin
     for AObject in Objects do
       AObject.GetTags(TempList);
     Tags.AddStrings(TempList);
-  finally
-    TempList.Free;
-  end;
-end;
-
-procedure ReplaceObjectsTag(Objects: IEnumerable<TO2Object>;
-  const Tag, NewTag: string);
-var
-  TempList: TStringList;
-  AObject: TO2Object;
-  Index: Integer;
-begin
-  TempList := TStringList.Create;
-  try
-    for AObject in Objects do
-    begin
-      TempList.Clear;
-      AObject.GetTags(TempList);
-      Index := TempList.IndexOf(Tag);
-      if Index > -1 then
-        TempList[Index] := NewTag;
-      AObject.SetTags(TempList);
-    end;
   finally
     TempList.Free;
   end;

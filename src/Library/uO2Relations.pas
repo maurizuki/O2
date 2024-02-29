@@ -70,8 +70,6 @@ type
     procedure GetRoles(const List: TStrings); overload;
     procedure GetRoles(const Objects: IEnumerable<TO2Object>;
       const List: TStrings); overload;
-    procedure ReplaceRole(const Objects: IEnumerable<TO2Object>; const Role,
-      NewRole: string);
     property Relations[Index: Integer]: TO2Relation read GetRelations; default;
   end;
 
@@ -326,24 +324,6 @@ begin
   finally
     AList.Free;
   end;
-end;
-
-procedure TO2Relations.ReplaceRole(const Objects: IEnumerable<TO2Object>;
-  const Role, NewRole: string);
-var
-  AObject: TO2Object;
-  ARelation: TO2Relation;
-begin
-  for AObject in Objects do
-    for ARelation in Self do
-    begin
-      if SameText(ARelation.ObjectID1, AObject.ObjectID)
-        and SameText(ARelation.Role1, Role) then
-        ARelation.Role1 := NewRole;
-      if SameText(ARelation.ObjectID2, AObject.ObjectID)
-        and SameText(ARelation.Role2, Role) then
-        ARelation.Role2 := NewRole;
-    end;
 end;
 
 function TO2Relations.GetRelations(Index: Integer): TO2Relation;
