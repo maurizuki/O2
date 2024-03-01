@@ -215,18 +215,18 @@ var
   RegEx: TRegEx;
   Match: TMatch;
 begin
-    RegEx := TRegEx.Create(AppVersionPattern);
-    Match := RegEx.Match(JSON.GetValue<string>('tag_name'));
-    Version.MajorVersion := StrToInt(Match.Groups['MajorVersion'].Value);
-    Version.MinorVersion := StrToInt(Match.Groups['MinorVersion'].Value);
-    try
-      Version.Release := StrToIntDef(Match.Groups['Release'].Value, 0)
-    except
-      Version.Release := 0;
-    end;
-    Version.Build := 0;
+  RegEx := TRegEx.Create(AppVersionPattern);
+  Match := RegEx.Match(JSON.GetValue<string>('tag_name'));
+  Version.MajorVersion := StrToInt(Match.Groups['MajorVersion'].Value);
+  Version.MinorVersion := StrToInt(Match.Groups['MinorVersion'].Value);
+  try
+    Version.Release := StrToIntDef(Match.Groups['Release'].Value, 0)
+  except
+    Version.Release := 0;
+  end;
+  Version.Build := 0;
 
-    DownloadURL := JSON.GetValue<string>('html_url');
+  DownloadURL := JSON.GetValue<string>('html_url');
 end;
 
 end.
