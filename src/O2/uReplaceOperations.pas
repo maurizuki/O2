@@ -40,11 +40,11 @@ type
     function GetTitle: string; virtual; abstract;
     function GetSearchValueLabel: string; virtual; abstract;
     function GetReplaceValueLabel: string; virtual; abstract;
+    procedure Build; virtual; abstract;
   public
     constructor Create(const O2File: TO2File;
       SelectedObjects: IEnumerable<TO2Object>);
     destructor Destroy; override;
-    procedure Build; virtual; abstract;
     procedure Replace; virtual; abstract;
 
     property Title: string read GetTitle;
@@ -62,8 +62,8 @@ type
     function GetTitle: string; override;
     function GetSearchValueLabel: string; override;
     function GetReplaceValueLabel: string; override;
-  public
     procedure Build; override;
+  public
     procedure Replace; override;
   end;
 
@@ -72,8 +72,8 @@ type
     function GetTitle: string; override;
     function GetSearchValueLabel: string; override;
     function GetReplaceValueLabel: string; override;
-  public
     procedure Build; override;
+  public
     procedure Replace; override;
   end;
 
@@ -82,8 +82,8 @@ type
     function GetTitle: string; override;
     function GetSearchValueLabel: string; override;
     function GetReplaceValueLabel: string; override;
-  public
     procedure Build; override;
+  public
     procedure Replace; override;
   end;
 
@@ -92,8 +92,8 @@ type
     function GetTitle: string; override;
     function GetSearchValueLabel: string; override;
     function GetReplaceValueLabel: string; override;
-  public
     procedure Build; override;
+  public
     procedure Replace; override;
   end;
 
