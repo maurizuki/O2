@@ -34,7 +34,7 @@ implementation
 uses
   Forms, ComCtrls, SysUtils, TypInfo, Variants, XMLDoc, XMLIntf, xmldom,
   msxmldom, JclFileUtils, uGlobal, uShellUtils, uAppFiles, uXmlStorage,
-  uPasswordScoreCache, uMain;
+  uStorageUtils, uPasswordScoreCache, uMain;
 
 function MigrateConfiguration(XmlStorage: IStorage;
   XML: IXMLDocument): IXMLDocument;
@@ -79,12 +79,12 @@ begin
 
   AValue := XML.DocumentElement.ChildValues['ViewStyle'];
   if not VarIsNull(AValue) then
-    Storage.WriteIntIdent(IdViewStyle, ViewStyles,
+    WriteIntIdent(Storage, IdViewStyle, ViewStyles,
       GetEnumValue(TypeInfo(TViewStyle), AValue));
 
   AValue := XML.DocumentElement.ChildValues['SortColumn'];
   if not VarIsNull(AValue) then
-    Storage.WriteIntIdent(IdSortColumn, SortColumns,
+    WriteIntIdent(Storage, IdSortColumn, SortColumns,
       GetEnumValue(TypeInfo(TObjectViewColumn), AValue));
 
   AValue := XML.DocumentElement.ChildValues['SortSign'];

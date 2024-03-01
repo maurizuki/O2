@@ -50,7 +50,8 @@ uses
   uServices in 'uServices.pas',
   uHTMLExportModel in 'uHTMLExportModel.pas',
   uStartup in 'uStartup.pas',
-  uReplaceOperations in 'uReplaceOperations.pas';
+  uReplaceOperations in 'uReplaceOperations.pas',
+  uStorageUtils in 'uStorageUtils.pas';
 
 {$R *.res}
 

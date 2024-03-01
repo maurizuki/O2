@@ -617,9 +617,9 @@ implementation
 
 uses
   StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, System.JSON,
-  uStartup, uShellUtils, uAbout, uGetPassword, uSetPassword, uFilePropsDlg,
-  uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg, uReplaceDlg, uPrintModel,
-  uPrintPreview, uHTMLExportModel, uHTMLExport, uO2Xml, uO2Defs,
+  uStartup, uShellUtils, uStorageUtils, uAbout, uGetPassword, uSetPassword,
+  uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg, uReplaceDlg,
+  uPrintModel, uPrintPreview, uHTMLExportModel, uHTMLExport, uO2Xml, uO2Defs,
   uBrowserEmulation, uCtrlHelpers, uFileOperation, uO2ImportExport,
   uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper, uO2ObjectsUtils,
   uReplaceOperations;
@@ -2189,15 +2189,14 @@ end;
 
 procedure TMainForm.LoadMRUList;
 var
-  I: Integer;
+  I, Count: Integer;
 begin
   FMRUList.Clear;
-  for I := 0 to Storage.ReadInteger(IdMRUList, 0) - 1 do
-  begin
+  Count := Storage.ReadInteger(IdMRUList, 0);
+  for I := 0 to Count - 1 do
     FMRUList.Add(TMRUItem.Create(
-      Storage.ReadString(Format(IdMRUListItemFmt, [I]), ''),
+      Storage.ReadString(Format(IdMRUListItemFmt, [I])),
       Storage.ReadInteger(Format(IdMRUListItemCntFmt, [I]), 1)));
-  end;
 end;
 
 procedure TMainForm.SaveMRUList;
@@ -2227,9 +2226,9 @@ begin
   Transparency := Storage.ReadInteger(IdTransparency, 0);
   FAutoCheckForUpdates := Storage.ReadBoolean(IdAutoCheckForUpdates, True);
   FLastCheckForUpdates := Storage.ReadFloat(IdLastCheckForUpdates, Yesterday);
-  ObjectsView.ViewStyle := TViewStyle(Storage.ReadIntIdent(IdViewStyle,
+  ObjectsView.ViewStyle := TViewStyle(ReadIntIdent(Storage, IdViewStyle,
     ViewStyles, Integer(vsIcon)));
-  FSortColumn := TObjectViewColumn(Storage.ReadIntIdent(IdSortColumn,
+  FSortColumn := TObjectViewColumn(ReadIntIdent(Storage, IdSortColumn,
     SortColumns, Integer(ocName)));
   FSortSign := SortSigns[Storage.ReadBoolean(IdSortAscending, True)];
 end;
@@ -2244,9 +2243,9 @@ begin
   Storage.WriteBoolean(IdTransparencyOnlyIfDeactivated,
     FTransparencyOnlyIfDeactivated);
   Storage.WriteFloat(IdLastCheckForUpdates, FLastCheckForUpdates);
-  Storage.WriteIntIdent(IdViewStyle, ViewStyles,
+  WriteIntIdent(Storage, IdViewStyle, ViewStyles,
     Integer(ObjectsView.ViewStyle));
-  Storage.WriteIntIdent(IdSortColumn, SortColumns,
+  WriteIntIdent(Storage, IdSortColumn, SortColumns,
     Integer(FSortColumn));
   Storage.WriteBoolean(IdSortAscending, FSortSign > 0);
 

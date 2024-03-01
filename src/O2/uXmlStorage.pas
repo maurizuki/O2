@@ -18,13 +18,14 @@ unit uXmlStorage;
 interface
 
 uses
-  Classes, SysUtils, XMLDoc, XMLIntf, xmldom, msxmldom, uServices;
+  SysUtils, XMLDoc, XMLIntf, xmldom, msxmldom, uServices;
 
 type
   TXmlStorage = class(TInterfacedObject, IStorage)
   private
     FXML: IXMLDocument;
     FMigrationHandler: TFunc<IStorage, IXMLDocument, IXMLDocument>;
+
     const SchemaLocation = 'https://maurizuki.github.io/O2/xml/settings.xsd';
     const DocumentElementIdent = 'O2';
     const SettingsIdent = 'Settings';
@@ -35,6 +36,7 @@ type
     const IntegerTypeIdent = 'integer';
     const FloatTypeIdent = 'float';
     const StringTypeIdent = 'string';
+
     function GetXML: IXMLDocument;
     function GetSettingsNode(CanCreate: Boolean): IXMLNode;
     function GetSettingNode(const Name: string; CanCreate: Boolean): IXMLNode;
@@ -46,22 +48,20 @@ type
   public
     constructor Create(const MigrationHandler:
       TFunc<IStorage, IXMLDocument, IXMLDocument> = nil);
+
     function Exists(const Name: string): Boolean;
     procedure Delete(const Name: string);
+
     function ReadBoolean(const Name: string; Default: Boolean = False): Boolean;
     function ReadInteger(const Name: string; Default: Integer = 0): Integer;
-    function ReadIntIdent(const Name: string;
-      const Map: array of TIdentMapEntry; Default: Integer = 0): Integer;
     function ReadFloat(const Name: string; Default: Double = 0): Double;
     function ReadString(const Name: string; Default: string = ''): string;
-    procedure ReadStringList(const Name: string; const AStringList: TStrings);
+
     procedure WriteBoolean(const Name: string; Value: Boolean);
     procedure WriteInteger(const Name: string; Value: Integer);
-    procedure WriteIntIdent(const Name: string;
-      const Map: array of TIdentMapEntry; Value: Integer);
     procedure WriteFloat(const Name: string; Value: Double);
     procedure WriteString(const Name, Value: string);
-    procedure WriteStringList(const Name: string; const AStringList: TStrings);
+
     procedure LoadFromFile(const FileName: string);
     procedure SaveToFile(const FileName: string);
   end;
@@ -167,12 +167,6 @@ begin
   Result := StrToIntDef(ReadValue(Name, Default), Default);
 end;
 
-function TXmlStorage.ReadIntIdent(const Name: string;
-  const Map: array of TIdentMapEntry; Default: Integer): Integer;
-begin
-  if not IdentToInt(ReadString(Name), Result, Map) then Result := Default;
-end;
-
 function TXmlStorage.ReadFloat(const Name: string; Default: Double): Double;
 var
   SaveSeparator: Char;
@@ -189,16 +183,6 @@ end;
 function TXmlStorage.ReadString(const Name: string; Default: string): string;
 begin
   Result := ReadValue(Name, Default);
-end;
-
-procedure TXmlStorage.ReadStringList(const Name: string;
-  const AStringList: TStrings);
-var
-  I: Integer;
-begin
-  AStringList.Clear;
-  for I := 0 to ReadInteger(Name, 0) - 1 do
-    AStringList.Add(ReadString(Name + '.' + IntToStr(I), ''));
 end;
 
 procedure TXmlStorage.WriteValue(const Name, ValueType: string; Value: Variant);
@@ -220,14 +204,6 @@ begin
   WriteValue(Name, IntegerTypeIdent, Value);
 end;
 
-procedure TXmlStorage.WriteIntIdent(const Name: string;
-  const Map: array of TIdentMapEntry; Value: Integer);
-var
-  Ident: string;
-begin
-  if IntToIdent(Value, Ident, Map) then WriteString(Name, Ident);
-end;
-
 procedure TXmlStorage.WriteFloat(const Name: string; Value: Double);
 var
   SaveSeparator: Char;
@@ -244,16 +220,6 @@ end;
 procedure TXmlStorage.WriteString(const Name, Value: string);
 begin
   WriteValue(Name, StringTypeIdent, Value);
-end;
-
-procedure TXmlStorage.WriteStringList(const Name: string;
-  const AStringList: TStrings);
-var
-  I: Integer;
-begin
-  WriteInteger(Name, AStringList.Count);
-  for I := 0 to AStringList.Count - 1 do
-    WriteString(Name + '.' + IntToStr(I), AStringList[I]);
 end;
 
 procedure TXmlStorage.LoadFromFile(const FileName: string);
