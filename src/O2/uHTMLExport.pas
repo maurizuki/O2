@@ -20,7 +20,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, ToolWin, Menus, ImgList, ActnList, OleCtrls, SHDocVw,
-  System.ImageList, System.Actions, JvStringHolder, uO2File, uHTMLExportModel;
+  System.ImageList, System.Actions, JvStringHolder, uServices;
 
 type
   THTMLExport = class(TForm)
@@ -76,15 +76,15 @@ type
     procedure StyleUpdate(Sender: TObject);
     procedure ExportDialogCanClose(Sender: TObject; var CanClose: Boolean);
   private
-    FModel: THTMLExportModel;
+    FModel: IHTMLExport;
     OriginalApplicationMessage: TMessageEvent;
     procedure ApplicationMessage(var Msg: TMsg; var Handled: Boolean);
-    procedure SetModel(const Value: THTMLExportModel);
+    procedure SetModel(Value: IHTMLExport);
     procedure SetStyleCaption(Action: TCustomAction);
     procedure RefreshPreview;
   public
-    class procedure Execute(AOwner: TComponent; Model: THTMLExportModel);
-    property Model: THTMLExportModel read FModel write SetModel;
+    class procedure Execute(Model: IHTMLExport);
+    property Model: IHTMLExport read FModel write SetModel;
   end;
 
 var
@@ -99,16 +99,14 @@ uses
 
 { THTMLExport }
 
-class procedure THTMLExport.Execute(AOwner: TComponent;
-  Model: THTMLExportModel);
+class procedure THTMLExport.Execute(Model: IHTMLExport);
 var
   Form: THTMLExport;
 begin
-  Form := THTMLExport.Create(AOwner);
+  Form := THTMLExport.Create(Application);
   try
     Form.Model := Model;
     Form.ShowModal;
-    Model.StoreSettings;
   finally
     Form.Free;
   end;
@@ -123,7 +121,7 @@ begin
     OriginalApplicationMessage(Msg, Handled);
 end;
 
-procedure THTMLExport.SetModel(const Value: THTMLExportModel);
+procedure THTMLExport.SetModel(Value: IHTMLExport);
 begin
   if FModel <> Value then
   begin
@@ -173,6 +171,7 @@ end;
 procedure THTMLExport.FormDestroy(Sender: TObject);
 begin
   Application.OnMessage := OriginalApplicationMessage;
+  FModel.StoreSettings;
 end;
 
 procedure THTMLExport.ActionUpdate(Sender: TObject);

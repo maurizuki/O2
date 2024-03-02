@@ -1092,16 +1092,9 @@ begin
 end;
 
 procedure TMainForm.ExportToHTMLExecute(Sender: TObject);
-var
-  Model: THTMLExportModel;
 begin
-  Model := THTMLExportModel.Create(O2File, FSelectedObjects, AppVersionInfo,
-    Storage);
-  try
-    THTMLExport.Execute(Application, Model);
-  finally
-    Model.Free;
-  end;
+  THTMLExport.Execute(THTMLExportModel.Create(O2File, FSelectedObjects,
+    AppVersionInfo, Storage));
 end;
 
 procedure TMainForm.PrintFileExecute(Sender: TObject);

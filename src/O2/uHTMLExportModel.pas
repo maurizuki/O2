@@ -22,7 +22,7 @@ uses
   uUtils;
 
 type
-  THTMLExportModel = class
+  THTMLExportModel = class(TInterfacedObject, IHTMLExport)
   private
     FTitle: string;
     FO2File: TO2File;
@@ -37,6 +37,18 @@ type
     FStyleIndex: Integer;
     FStyles: TList<string>;
     FBuilder: TStringBuilder;
+    function GetIncludeIndex: Boolean;
+    function GetIncludeTags: Boolean;
+    function GetIncludeNotes: Boolean;
+    function GetIncludeRelations: Boolean;
+    function GetIncludePasswords: Boolean;
+    function GetStyleIndex: Integer;
+    procedure SetIncludeIndex(Value: Boolean);
+    procedure SetIncludeTags(Value: Boolean);
+    procedure SetIncludeNotes(Value: Boolean);
+    procedure SetIncludeRelations(Value: Boolean);
+    procedure SetIncludePasswords(Value: Boolean);
+    procedure SetStyleIndex(Value: Integer);
     procedure AppendObjectIndex;
     procedure AppendObjectList;
     procedure AppendTagList(const Obj: TO2Object);
@@ -47,18 +59,22 @@ type
       SelectedObjects: IEnumerable<TO2Object>; AppVersionInfo: TAppVersionInfo;
       Storage: IStorage);
     destructor Destroy; override;
+
     procedure StoreSettings;
+
     function AddStyle(const Style: string): Integer;
+
     function ExportToHTML: string; overload;
     procedure ExportToHTML(const FileName: string); overload;
-    property IncludeIndex: Boolean read FIncludeIndex write FIncludeIndex;
-    property IncludeTags: Boolean read FIncludeTags write FIncludeTags;
-    property IncludeNotes: Boolean read FIncludeNotes write FIncludeNotes;
-    property IncludeRelations: Boolean read FIncludeRelations
-      write FIncludeRelations;
-    property IncludePasswords: Boolean read FIncludePasswords
-      write FIncludePasswords;
-    property StyleIndex: Integer read FStyleIndex write FStyleIndex;
+
+    property IncludeIndex: Boolean read GetIncludeIndex write SetIncludeIndex;
+    property IncludeTags: Boolean read GetIncludeTags write SetIncludeTags;
+    property IncludeNotes: Boolean read GetIncludeNotes write SetIncludeNotes;
+    property IncludeRelations: Boolean read GetIncludeRelations
+      write SetIncludeRelations;
+    property IncludePasswords: Boolean read GetIncludePasswords
+      write SetIncludePasswords;
+    property StyleIndex: Integer read GetStyleIndex write SetStyleIndex;
   end;
 
 implementation
@@ -95,6 +111,36 @@ begin
   FStyles.Free;
   FBuilder.Free;
   inherited;
+end;
+
+procedure THTMLExportModel.SetIncludeIndex(Value: Boolean);
+begin
+  FIncludeIndex := Value;
+end;
+
+procedure THTMLExportModel.SetIncludeNotes(Value: Boolean);
+begin
+  FIncludeNotes := Value;
+end;
+
+procedure THTMLExportModel.SetIncludePasswords(Value: Boolean);
+begin
+  FIncludePasswords := Value;
+end;
+
+procedure THTMLExportModel.SetIncludeRelations(Value: Boolean);
+begin
+  FIncludeRelations := Value;
+end;
+
+procedure THTMLExportModel.SetIncludeTags(Value: Boolean);
+begin
+  FIncludeTags := Value;
+end;
+
+procedure THTMLExportModel.SetStyleIndex(Value: Integer);
+begin
+  FStyleIndex := Value;
 end;
 
 procedure THTMLExportModel.StoreSettings;
@@ -150,6 +196,36 @@ begin
   finally
     Writer.Free;
   end;
+end;
+
+function THTMLExportModel.GetIncludeIndex: Boolean;
+begin
+  Result := FIncludeIndex;
+end;
+
+function THTMLExportModel.GetIncludeNotes: Boolean;
+begin
+  Result := FIncludeNotes;
+end;
+
+function THTMLExportModel.GetIncludePasswords: Boolean;
+begin
+  Result := FIncludePasswords;
+end;
+
+function THTMLExportModel.GetIncludeRelations: Boolean;
+begin
+  Result := FIncludeRelations;
+end;
+
+function THTMLExportModel.GetIncludeTags: Boolean;
+begin
+  Result := FIncludeTags;
+end;
+
+function THTMLExportModel.GetStyleIndex: Integer;
+begin
+  Result := FStyleIndex;
 end;
 
 procedure THTMLExportModel.AppendObjectIndex;

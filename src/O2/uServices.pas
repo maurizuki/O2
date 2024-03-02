@@ -54,6 +54,41 @@ type
     procedure Execute(const FileName: string);
   end;
 
+  IHTMLExport = interface
+    procedure StoreSettings;
+
+    function AddStyle(const Style: string): Integer;
+
+    function ExportToHTML: string; overload;
+    procedure ExportToHTML(const FileName: string); overload;
+
+    function GetIncludeIndex: Boolean;
+    procedure SetIncludeIndex(Value: Boolean);
+    property IncludeIndex: Boolean read GetIncludeIndex write SetIncludeIndex;
+
+    function GetIncludeTags: Boolean;
+    procedure SetIncludeTags(Value: Boolean);
+    property IncludeTags: Boolean read GetIncludeTags write SetIncludeTags;
+
+    function GetIncludeNotes: Boolean;
+    procedure SetIncludeNotes(Value: Boolean);
+    property IncludeNotes: Boolean read GetIncludeNotes write SetIncludeNotes;
+
+    function GetIncludeRelations: Boolean;
+    procedure SetIncludeRelations(Value: Boolean);
+    property IncludeRelations: Boolean read GetIncludeRelations
+      write SetIncludeRelations;
+
+    function GetIncludePasswords: Boolean;
+    procedure SetIncludePasswords(Value: Boolean);
+    property IncludePasswords: Boolean read GetIncludePasswords
+      write SetIncludePasswords;
+
+    function GetStyleIndex: Integer;
+    procedure SetStyleIndex(Value: Integer);
+    property StyleIndex: Integer read GetStyleIndex write SetStyleIndex;
+  end;
+
   IReplaceOperation = interface
     function GetTitle: string;
     property Title: string read GetTitle;
