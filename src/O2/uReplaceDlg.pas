@@ -32,10 +32,10 @@ type
     procedure FormShow(Sender: TObject);
     procedure cbSearchValueChange(Sender: TObject);
     procedure cbReplaceValueChange(Sender: TObject);
+    procedure btOkClick(Sender: TObject);
   private
     FModel: IReplaceOperation;
     procedure SetModel(const Value: IReplaceOperation);
-    procedure EnableControls;
   public
     class function Execute(Model: IReplaceOperation): Boolean;
     property Model: IReplaceOperation read FModel write SetModel;
@@ -56,7 +56,6 @@ begin
   try
     Form.Model := Model;
     Result := Form.ShowModal = mrOk;
-    if Result then Model.Replace;
   finally
     Form.Free;
   end;
@@ -64,7 +63,7 @@ end;
 
 procedure TReplaceDlg.FormShow(Sender: TObject);
 begin
-  EnableControls;
+  btOk.Enabled := FModel.Valid;
 end;
 
 procedure TReplaceDlg.SetModel(const Value: IReplaceOperation);
@@ -86,18 +85,18 @@ end;
 procedure TReplaceDlg.cbSearchValueChange(Sender: TObject);
 begin
   FModel.SearchValue := cbSearchValue.Text;
-  EnableControls;
+  btOk.Enabled := FModel.Valid;
 end;
 
 procedure TReplaceDlg.cbReplaceValueChange(Sender: TObject);
 begin
   FModel.ReplaceValue := cbReplaceValue.Text;
-  EnableControls;
+  btOk.Enabled := FModel.Valid;
 end;
 
-procedure TReplaceDlg.EnableControls;
+procedure TReplaceDlg.btOkClick(Sender: TObject);
 begin
-  btOk.Enabled := FModel.Valid;
+  FModel.Replace;
 end;
 
 end.
