@@ -1098,15 +1098,8 @@ begin
 end;
 
 procedure TMainForm.PrintFileExecute(Sender: TObject);
-var
-  Model: TPrintModel;
 begin
-  Model := TPrintModel.Create(O2File, FSelectedObjects, Storage);
-  try
-    TPrintPreview.Execute(Application, Model);
-  finally
-    Model.Free;
-  end;
+  TPrintPreview.Execute(TPrintModel.Create(O2File, FSelectedObjects, Storage));
 end;
 
 procedure TMainForm.PrintFileUpdate(Sender: TObject);

@@ -21,7 +21,7 @@ uses
   Windows, Graphics, uO2File, uO2Objects, uO2Relations, uServices;
 
 type
-  TPrintModel = class
+  TPrintModel = class(TInterfacedObject, IPrint)
   private
     FTitle: string;
     FO2File: TO2File;
@@ -36,19 +36,31 @@ type
     FObjRelationIndex: Integer;
     FNoteLineIndex: Integer;
     FPrintDate: string;
+    function GetTitle: string;
+    function GetIncludeTags: Boolean;
+    function GetIncludeNotes: Boolean;
+    function GetIncludeRelations: Boolean;
+    function GetIncludePasswords: Boolean;
+    procedure SetIncludeTags(Value: Boolean);
+    procedure SetIncludeNotes(Value: Boolean);
+    procedure SetIncludeRelations(Value: Boolean);
+    procedure SetIncludePasswords(Value: Boolean);
   public
     constructor Create(const O2File: TO2File;
       SelectedObjects: IEnumerable<TO2Object>; Storage: IStorage);
+
     procedure StoreSettings;
+
     function DrawNextPage(const Canvas: TCanvas; PageRect, PrintRect: TRect;
       PageIndex: Integer): Boolean;
-    property Title: string read FTitle;
-    property IncludeTags: Boolean read FIncludeTags write FIncludeTags;
-    property IncludeNotes: Boolean read FIncludeNotes write FIncludeNotes;
-    property IncludeRelations: Boolean read FIncludeRelations
-      write FIncludeRelations;
-    property IncludePasswords: Boolean read FIncludePasswords
-      write FIncludePasswords;
+
+    property Title: string read GetTitle;
+    property IncludeTags: Boolean read GetIncludeTags write SetIncludeTags;
+    property IncludeNotes: Boolean read GetIncludeNotes write SetIncludeNotes;
+    property IncludeRelations: Boolean read GetIncludeRelations
+      write SetIncludeRelations;
+    property IncludePasswords: Boolean read GetIncludePasswords
+      write SetIncludePasswords;
   end;
 
 implementation
@@ -72,6 +84,26 @@ begin
   FIncludeNotes := FStorage.ReadBoolean(IdPrintIncludeNotes, True);
   FIncludeRelations := FStorage.ReadBoolean(IdPrintIncludeRelations, True);
   FIncludePasswords := FStorage.ReadBoolean(IdPrintIncludePasswords, True);
+end;
+
+procedure TPrintModel.SetIncludeNotes(Value: Boolean);
+begin
+  FIncludeNotes := Value;
+end;
+
+procedure TPrintModel.SetIncludePasswords(Value: Boolean);
+begin
+  FIncludePasswords := Value;
+end;
+
+procedure TPrintModel.SetIncludeRelations(Value: Boolean);
+begin
+  FIncludeRelations := Value;
+end;
+
+procedure TPrintModel.SetIncludeTags(Value: Boolean);
+begin
+  FIncludeTags := Value;
 end;
 
 procedure TPrintModel.StoreSettings;
@@ -380,6 +412,31 @@ begin
   until not FObjectEnumerator.MoveNext;
 
   Result := False;
+end;
+
+function TPrintModel.GetIncludeNotes: Boolean;
+begin
+  Result := FIncludeNotes;
+end;
+
+function TPrintModel.GetIncludePasswords: Boolean;
+begin
+  Result := FIncludePasswords;
+end;
+
+function TPrintModel.GetIncludeRelations: Boolean;
+begin
+  Result := FIncludeRelations;
+end;
+
+function TPrintModel.GetIncludeTags: Boolean;
+begin
+  Result := FIncludeTags;
+end;
+
+function TPrintModel.GetTitle: string;
+begin
+  Result := FTitle;
 end;
 
 end.

@@ -12,6 +12,7 @@ object PrintPreview: TPrintPreview
   Font.Name = 'Tahoma'
   Font.Style = []
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   TextHeight = 13
   object PreviewControl: TJvPreviewControl
     Left = 0

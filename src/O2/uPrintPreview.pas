@@ -21,7 +21,7 @@ uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, JvComponentBase, JvExControls, JvPrvwRender, JvPrvwDoc, ToolWin,
   ComCtrls, ActnList, ImgList, Menus, System.ImageList, System.Actions,
-  uPrintModel;
+  uServices;
 
 type
   TPrintPreview = class(TForm)
@@ -71,6 +71,7 @@ type
     N2: TMenuItem;
     Includepasswords1: TMenuItem;
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure ActionUpdate(Sender: TObject);
     procedure PrintFileExecute(Sender: TObject);
     procedure IncludeTagsExecute(Sender: TObject);
@@ -91,13 +92,13 @@ type
       Canvas: TCanvas; PageRect, PrintRect: TRect; var NeedMorePages: Boolean);
     procedure PreviewControlChange(Sender: TObject);
   private
-    FModel: TPrintModel;
-    procedure SetModel(const Value: TPrintModel);
+    FModel: IPrint;
+    procedure SetModel(Value: IPrint);
     procedure SetZoomCaption(Action: TCustomAction);
     procedure RefreshPreview;
   public
-    class procedure Execute(AOwner: TComponent; Model: TPrintModel);
-    property Model: TPrintModel read FModel write SetModel;
+    class procedure Execute(Model: IPrint);
+    property Model: IPrint read FModel write SetModel;
   end;
 
 var
@@ -112,21 +113,20 @@ uses
 
 { TPrintPreview }
 
-class procedure TPrintPreview.Execute(AOwner: TComponent; Model: TPrintModel);
+class procedure TPrintPreview.Execute(Model: IPrint);
 var
   Form: TPrintPreview;
 begin
-  Form := TPrintPreview.Create(AOwner);
+  Form := TPrintPreview.Create(Application);
   try
     Form.Model := Model;
     Form.ShowModal;
-    Model.StoreSettings;
   finally
     Form.Free;
   end;
 end;
 
-procedure TPrintPreview.SetModel(const Value: TPrintModel);
+procedure TPrintPreview.SetModel(Value: IPrint);
 begin
   if FModel <> Value then
   begin
@@ -163,6 +163,11 @@ begin
     OffsetTop := Max(MMToYPx(10), OffsetTop);
     OffsetBottom := Max(MMToYPx(10), OffsetBottom);
   end;
+end;
+
+procedure TPrintPreview.FormDestroy(Sender: TObject);
+begin
+  FModel.StoreSettings;
 end;
 
 procedure TPrintPreview.PrintFileExecute(Sender: TObject);

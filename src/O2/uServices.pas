@@ -18,7 +18,7 @@ unit uServices;
 interface
 
 uses
-  Classes, uO2File, uO2Rules;
+  Classes, Graphics, Windows, uO2File, uO2Rules;
 
 type
   IAppFiles = interface
@@ -87,6 +87,34 @@ type
     function GetStyleIndex: Integer;
     procedure SetStyleIndex(Value: Integer);
     property StyleIndex: Integer read GetStyleIndex write SetStyleIndex;
+  end;
+
+  IPrint = interface
+    procedure StoreSettings;
+
+    function DrawNextPage(const Canvas: TCanvas; PageRect, PrintRect: TRect;
+      PageIndex: Integer): Boolean;
+
+    function GetTitle: string;
+    property Title: string read GetTitle;
+
+    function GetIncludeTags: Boolean;
+    procedure SetIncludeTags(Value: Boolean);
+    property IncludeTags: Boolean read GetIncludeTags write SetIncludeTags;
+
+    function GetIncludeNotes: Boolean;
+    procedure SetIncludeNotes(Value: Boolean);
+    property IncludeNotes: Boolean read GetIncludeNotes write SetIncludeNotes;
+
+    function GetIncludeRelations: Boolean;
+    procedure SetIncludeRelations(Value: Boolean);
+    property IncludeRelations: Boolean read GetIncludeRelations
+      write SetIncludeRelations;
+
+    function GetIncludePasswords: Boolean;
+    procedure SetIncludePasswords(Value: Boolean);
+    property IncludePasswords: Boolean read GetIncludePasswords
+      write SetIncludePasswords;
   end;
 
   IReplaceOperation = interface
