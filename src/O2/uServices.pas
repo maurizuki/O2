@@ -18,7 +18,7 @@ unit uServices;
 interface
 
 uses
-  Classes, Graphics, Windows, uO2File, uO2Rules;
+  Classes, Graphics, Windows, uO2File, uO2Relations, uO2Rules;
 
 type
   IAppFiles = interface
@@ -68,6 +68,30 @@ type
 
     function GetHash: string;
     property Hash: string read GetHash;
+
+    procedure ApplyChanges;
+  end;
+
+  IRelationProps = interface
+    function GetObjectName1: string;
+    property ObjectName1: string read GetObjectName1;
+
+    function GetObjectName2: string;
+    property ObjectName2: string read GetObjectName2;
+
+    function GetRoles: TStrings;
+    property Roles: TStrings read GetRoles;
+
+    function GetRole1: string;
+    procedure SetRole1(const Value: string);
+    property Role1: string read GetRole1 write SetRole1;
+
+    function GetRole2: string;
+    procedure SetRole2(const Value: string);
+    property Role2: string read GetRole2 write SetRole2;
+
+    function GetRelation: TO2Relation;
+    property Relation: TO2Relation read GetRelation;
 
     procedure ApplyChanges;
   end;

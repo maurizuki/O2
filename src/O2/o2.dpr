@@ -52,7 +52,8 @@ uses
   uStartup in 'uStartup.pas',
   uReplaceOperations in 'uReplaceOperations.pas',
   uStorageUtils in 'uStorageUtils.pas',
-  uFilePropsModel in 'uFilePropsModel.pas';
+  uFilePropsModel in 'uFilePropsModel.pas',
+  uRelationModels in 'uRelationModels.pas';
 
 {$R *.res}
 

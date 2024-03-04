@@ -618,11 +618,11 @@ implementation
 uses
   StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, System.JSON,
   uStartup, uShellUtils, uStorageUtils, uAbout, uGetPassword, uSetPassword,
-  uFilePropsModel, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg,
-  uRulePropsDlg, uReplaceOperations, uReplaceDlg, uPrintModel, uPrintPreview,
-  uHTMLExportModel, uHTMLExport, uO2Xml, uO2Defs, uBrowserEmulation,
-  uCtrlHelpers, uFileOperation, uO2ImportExport, uXmlImportExport,
-  uiCalendarExport, uStuffHTML, uHTMLHelper, uO2ObjectsUtils;
+  uFilePropsModel, uFilePropsDlg, uObjPropsDlg, uRelationModels,
+  uRelationPropsDlg, uRulePropsDlg, uReplaceOperations, uReplaceDlg,
+  uPrintModel, uPrintPreview, uHTMLExportModel, uHTMLExport, uO2Xml, uO2Defs,
+  uBrowserEmulation, uCtrlHelpers, uFileOperation, uO2ImportExport,
+  uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper, uO2ObjectsUtils;
 
 {$R *.dfm}
 
@@ -2645,21 +2645,11 @@ end;
 
 procedure TMainForm.NewRelationExecute(Sender: TObject);
 var
-  ObjEnum: IEnumerator<TO2Object>;
-  Obj1, Obj2: TO2Object;
-  ARelation: TO2Relation;
+  Model: IRelationProps;
 begin
-  ObjEnum := FSelectedObjects.GetEnumerator;
-
-  if not ObjEnum.MoveNext then Exit;
-  Obj1 := ObjEnum.Current;
-
-  if not ObjEnum.MoveNext then Exit;
-  Obj2 := ObjEnum.Current;
-
-  ARelation := nil;
-  if TRelationPropsDlg.Execute(Application, O2File, Obj1, Obj2, ARelation) then
-    RelationToListItem(ARelation, SelectedObject, nil);
+  Model := TNewRelationModel.Create(O2File, FSelectedObjects);
+  if TRelationPropsDlg.Execute(Model) then
+    RelationToListItem(Model.Relation, SelectedObject, nil);
 end;
 
 procedure TMainForm.NewRelationUpdate(Sender: TObject);
@@ -2698,11 +2688,11 @@ end;
 
 procedure TMainForm.RelationPropsExecute(Sender: TObject);
 var
-  ARelation: TO2Relation;
+  Model: IRelationProps;
 begin
-  ARelation := TO2Relation(RelationsView.Selected.Data);
-  if TRelationPropsDlg.Execute(Application, O2File, nil, nil, ARelation) then
-    RelationToListItem(ARelation, SelectedObject, RelationsView.Selected);
+  Model := TEditRelationModel.Create(O2File, RelationsView.Selected.Data);
+  if TRelationPropsDlg.Execute(Model) then
+    RelationToListItem(Model.Relation, SelectedObject, RelationsView.Selected);
 end;
 
 procedure TMainForm.RelationActionUpdate(Sender: TObject);
