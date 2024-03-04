@@ -618,11 +618,11 @@ implementation
 uses
   StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, System.JSON,
   uStartup, uShellUtils, uStorageUtils, uAbout, uGetPassword, uSetPassword,
-  uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg, uReplaceDlg,
-  uPrintModel, uPrintPreview, uHTMLExportModel, uHTMLExport, uO2Xml, uO2Defs,
-  uBrowserEmulation, uCtrlHelpers, uFileOperation, uO2ImportExport,
-  uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper, uO2ObjectsUtils,
-  uReplaceOperations;
+  uFilePropsModel, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg,
+  uRulePropsDlg, uReplaceOperations, uReplaceDlg, uPrintModel, uPrintPreview,
+  uHTMLExportModel, uHTMLExport, uO2Xml, uO2Defs, uBrowserEmulation,
+  uCtrlHelpers, uFileOperation, uO2ImportExport, uXmlImportExport,
+  uiCalendarExport, uStuffHTML, uHTMLHelper, uO2ObjectsUtils;
 
 {$R *.dfm}
 
@@ -1109,7 +1109,7 @@ end;
 
 procedure TMainForm.FilePropsExecute(Sender: TObject);
 begin
-  TFilePropsDlg.Execute(Application, O2File);
+  TFilePropsDlg.Execute(TFilePropsModel.Create(O2File));
 end;
 
 procedure TMainForm.ImportSettingsExecute(Sender: TObject);

@@ -51,7 +51,8 @@ uses
   uHTMLExportModel in 'uHTMLExportModel.pas',
   uStartup in 'uStartup.pas',
   uReplaceOperations in 'uReplaceOperations.pas',
-  uStorageUtils in 'uStorageUtils.pas';
+  uStorageUtils in 'uStorageUtils.pas',
+  uFilePropsModel in 'uFilePropsModel.pas';
 
 {$R *.res}
 

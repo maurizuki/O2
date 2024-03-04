@@ -50,6 +50,28 @@ type
     procedure Update(const O2File: TO2File; ObjectIndex: Integer); overload;
   end;
 
+  IFileProps = interface
+    function GetTitle: string;
+    procedure SetTitle(const Value: string);
+    property Title: string read GetTitle write SetTitle;
+
+    function GetDescription: string;
+    procedure SetDescription(const Value: string);
+    property Description: string read GetDescription write SetDescription;
+
+    function GetAuthor: string;
+    procedure SetAuthor(const Value: string);
+    property Author: string read GetAuthor write SetAuthor;
+
+    function GetCipher: string;
+    property Cipher: string read GetCipher;
+
+    function GetHash: string;
+    property Hash: string read GetHash;
+
+    procedure ApplyChanges;
+  end;
+
   IFileOperation = interface
     procedure Execute(const FileName: string);
   end;

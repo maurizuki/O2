@@ -19,7 +19,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, uO2File, StdCtrls;
+  Dialogs, StdCtrls, uServices;
 
 type
   TFilePropsDlg = class(TForm)
@@ -35,13 +35,16 @@ type
     edHash: TEdit;
     btOk: TButton;
     btCancel: TButton;
-    procedure FormShow(Sender: TObject);
+    procedure edTitleChange(Sender: TObject);
+    procedure edDescriptionChange(Sender: TObject);
+    procedure edAuthorChange(Sender: TObject);
     procedure btOkClick(Sender: TObject);
   private
-    FO2File: TO2File;
+    FModel: IFileProps;
+    procedure SetModel(const Value: IFileProps);
   public
-    class function Execute(AOwner: TComponent; O2File: TO2File): Boolean;
-    property O2File: TO2File read FO2File write FO2File;
+    class function Execute(Model: IFileProps): Boolean;
+    property Model: IFileProps read FModel write SetModel;
   end;
 
 var
@@ -49,49 +52,53 @@ var
 
 implementation
 
-uses
-  uGlobal;
-
 {$R *.dfm}
 
-class function TFilePropsDlg.Execute(AOwner: TComponent;
-  O2File: TO2File): Boolean;
+procedure TFilePropsDlg.edAuthorChange(Sender: TObject);
+begin
+  FModel.Author := edAuthor.Text;
+end;
+
+procedure TFilePropsDlg.edDescriptionChange(Sender: TObject);
+begin
+  FModel.Description := edDescription.Text;
+end;
+
+procedure TFilePropsDlg.edTitleChange(Sender: TObject);
+begin
+  FModel.Title := edTitle.Text;
+end;
+
+class function TFilePropsDlg.Execute(Model: IFileProps): Boolean;
 var
   Form: TFilePropsDlg;
 begin
-  Form := TFilePropsDlg.Create(AOwner);
+  Form := TFilePropsDlg.Create(Application);
   try
-    Form.O2File := O2File;
+    Form.Model := Model;
     Result := Form.ShowModal = mrOk;
   finally
     Form.Free;
   end;
 end;
 
-procedure TFilePropsDlg.FormShow(Sender: TObject);
+procedure TFilePropsDlg.SetModel(const Value: IFileProps);
 begin
-  edTitle.Text := O2File.Title;
-  edDescription.Text := O2File.Description;
-  edAuthor.Text := O2File.Author;
+  if FModel <> Value then
+  begin
+    FModel := Value;
 
-  if O2File.Encrypted then
-  begin
-    edCipher.Text := TCipherLookup.Lookup(O2File.Cipher);
-    edHash.Text := THashLookup.Lookup(O2File.Hash);
-  end
-  else
-  begin
-    edCipher.Text := SCipherNone;
-    edHash.Text := SHashNone;
-  end
+    edTitle.Text := FModel.Title;
+    edDescription.Text := FModel.Description;
+    edAuthor.Text := FModel.Author;
+    edCipher.Text := FModel.Cipher;
+    edHash.Text := FModel.Hash;
+  end;
 end;
 
 procedure TFilePropsDlg.btOkClick(Sender: TObject);
 begin
-  O2File.Title := edTitle.Text;
-  O2File.Description := edDescription.Text;
-  O2File.Author := edAuthor.Text;
-  ModalResult := mrOk;
+  FModel.ApplyChanges;
 end;
 
 end.
