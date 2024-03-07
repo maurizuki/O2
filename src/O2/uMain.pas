@@ -564,9 +564,7 @@ type
     function RelationToListItem(const AObjRelation: TO2ObjRelation;
       const Item: TListItem): TListItem; overload;
     function RuleToListItem(const ARule: TO2Rule;
-      const Item: TListItem): TListItem; overload;
-    function RuleToListItem(RuleIndex: Integer;
-      const Item: TListItem): TListItem; overload;
+      const Item: TListItem): TListItem;
     procedure EnableSelectedRules(Enable: Boolean);
     procedure UpdateRulesStatus;
     procedure SortObjectsView(Column: TObjectViewColumn);
@@ -619,9 +617,9 @@ uses
   StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, System.JSON,
   uStartup, uShellUtils, uStorageUtils, uAbout, uGetPassword, uSetPassword,
   uFilePropsModel, uFilePropsDlg, uObjPropsDlg, uRelationModels,
-  uRelationPropsDlg, uRulePropsDlg, uReplaceOperations, uReplaceDlg,
-  uPrintModel, uPrintPreview, uHTMLExportModel, uHTMLExport, uO2Xml, uO2Defs,
-  uBrowserEmulation, uCtrlHelpers, uFileOperation, uO2ImportExport,
+  uRelationPropsDlg, uRuleModels, uRulePropsDlg, uReplaceOperations,
+  uReplaceDlg, uPrintModel, uPrintPreview, uHTMLExportModel, uHTMLExport,
+  uO2Defs, uBrowserEmulation, uCtrlHelpers, uFileOperation, uO2ImportExport,
   uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper, uO2ObjectsUtils;
 
 {$R *.dfm}
@@ -1677,12 +1675,6 @@ begin
   Result.Data := ARule;
 end;
 
-function TMainForm.RuleToListItem(RuleIndex: Integer;
-  const Item: TListItem): TListItem;
-begin
-  Result := RuleToListItem(O2File.Rules[RuleIndex], Item);
-end;
-
 procedure TMainForm.EnableSelectedRules(Enable: Boolean);
 var
   AItem: TListItem;
@@ -2730,13 +2722,13 @@ end;
 
 procedure TMainForm.NewRuleExecute(Sender: TObject);
 var
+  Model: IRuleProps;
   Item: TListItem;
-  Index: Integer;
 begin
-  Index := -1;
-  if TRulePropsDlg.Execute(Application, O2File.Rules, Index, False) then
+  Model := TNewRuleModel.Create(O2File);
+  if TRulePropsDlg.Execute(Model) then
   begin
-    Item := RuleToListItem(Index, nil);
+    Item := RuleToListItem(Model.Rule, nil);
     Item.Selected := True;
     Item.Focused := True;
     NotifyChanges([ncObjects, ncRuleList]);
@@ -2745,13 +2737,13 @@ end;
 
 procedure TMainForm.DuplicateRuleExecute(Sender: TObject);
 var
+  Model: IRuleProps;
   Item: TListItem;
-  Index: Integer;
 begin
-  Index := TO2Rule(RulesView.Selected.Data).Index;
-  if TRulePropsDlg.Execute(Application, O2File.Rules, Index, True) then
+  Model := TDuplicateRuleModel.Create(O2File, RulesView.Selected.Data);
+  if TRulePropsDlg.Execute(Model) then
   begin
-    Item := RuleToListItem(Index, nil);
+    Item := RuleToListItem(Model.Rule, nil);
     Item.Selected := True;
     Item.Focused := True;
     NotifyChanges([ncObjects, ncRuleList]);
@@ -2819,12 +2811,12 @@ end;
 
 procedure TMainForm.RulePropsExecute(Sender: TObject);
 var
-  Index: Integer;
+  Model: IRuleProps;
 begin
-  Index := TO2Rule(RulesView.Selected.Data).Index;
-  if TRulePropsDlg.Execute(Application, O2File.Rules, Index, False) then
+  Model := TEditRuleModel.Create(RulesView.Selected.Data);
+  if TRulePropsDlg.Execute(Model) then
   begin
-    RuleToListItem(Index, RulesView.Selected);
+    RuleToListItem(Model.Rule, RulesView.Selected);
     NotifyChanges([ncObjects, ncRuleList]);
   end;
 end;

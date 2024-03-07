@@ -96,6 +96,87 @@ type
     procedure ApplyChanges;
   end;
 
+  IRuleProps = interface
+    function GetRuleName: string;
+    procedure SetRuleName(const Value: string);
+    property RuleName: string read GetRuleName write SetRuleName;
+
+    function GetRuleTypes: TStrings;
+    property RuleTypes: TStrings read GetRuleTypes;
+
+    function GetRuleTypeIndex: Integer;
+    procedure SetRuleTypeIndex(const Value: Integer);
+    property RuleTypeIndex: Integer read GetRuleTypeIndex
+      write SetRuleTypeIndex;
+
+    function GetFieldNameMask: string;
+    procedure SetFieldNameMask(const Value: string);
+    property FieldNameMask: string read GetFieldNameMask
+      write SetFieldNameMask;
+
+    function GetFieldValueMask: string;
+    procedure SetFieldValueMask(const Value: string);
+    property FieldValueMask: string read GetFieldValueMask
+      write SetFieldValueMask;
+
+    function GetHyperLinkMask: string;
+    procedure SetHyperLinkMask(const Value: string);
+    property HyperLinkMask: string read GetHyperLinkMask
+      write SetHyperLinkMask;
+
+    function GetDisplayPasswordStrength: Boolean;
+    procedure SetDisplayPasswordStrength(const Value: Boolean);
+    property DisplayPasswordStrength: Boolean read GetDisplayPasswordStrength
+      write SetDisplayPasswordStrength;
+
+    function GetDisplayMask: string;
+    procedure SetDisplayMask(const Value: string);
+    property DisplayMask: string read GetDisplayMask write SetDisplayMask;
+
+    function GetDateFormats: TStrings;
+    property DateFormats: TStrings read GetDateFormats;
+
+    function GetDateFormatIndex: Integer;
+    procedure SetDateFormatIndex(Value: Integer);
+    property DateFormatIndex: Integer read GetDateFormatIndex
+      write SetDateFormatIndex;
+
+    function GetDateSeparator: string;
+    procedure SetDateSeparator(const Value: string);
+    property DateSeparator: string read GetDateSeparator write SetDateSeparator;
+
+    function GetDaysBefore: Integer;
+    procedure SetDaysBefore(const Value: Integer);
+    property DaysBefore: Integer read GetDaysBefore write SetDaysBefore;
+
+    function GetDaysAfter: Integer;
+    procedure SetDaysAfter(const Value: Integer);
+    property DaysAfter: Integer read GetDaysAfter write SetDaysAfter;
+
+    function GetHighlightColor: TColor;
+    procedure SetHighlightColor(const Value: TColor);
+    property HighlightColor: TColor read GetHighlightColor
+      write SetHighlightColor;
+
+    function GetHighlightTextColor: TColor;
+    procedure SetHighlightTextColor(const Value: TColor);
+    property HighlightTextColor: TColor read GetHighlightTextColor
+      write SetHighlightTextColor;
+
+    function IsHyperLink: Boolean;
+    function IsPassword: Boolean;
+    function IsEvent: Boolean;
+    function IsHighlight: Boolean;
+
+    function GetRule: TO2Rule;
+    property Rule: TO2Rule read GetRule;
+
+    function GetValid: Boolean;
+    property Valid: Boolean read GetValid;
+
+    procedure ApplyChanges;
+  end;
+
   IFileOperation = interface
     procedure Execute(const FileName: string);
   end;

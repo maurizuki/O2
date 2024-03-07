@@ -998,6 +998,7 @@
         <DCCReference Include="uStorageUtils.pas"/>
         <DCCReference Include="uFilePropsModel.pas"/>
         <DCCReference Include="uRelationModels.pas"/>
+        <DCCReference Include="uRuleModels.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

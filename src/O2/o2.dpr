@@ -53,7 +53,8 @@ uses
   uReplaceOperations in 'uReplaceOperations.pas',
   uStorageUtils in 'uStorageUtils.pas',
   uFilePropsModel in 'uFilePropsModel.pas',
-  uRelationModels in 'uRelationModels.pas';
+  uRelationModels in 'uRelationModels.pas',
+  uRuleModels in 'uRuleModels.pas';
 
 {$R *.res}
 
