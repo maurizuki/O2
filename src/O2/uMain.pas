@@ -1669,7 +1669,7 @@ begin
   Result.Checked := ARule.Active;
   Result.Caption := ARule.Name;
   Result.SubItems.Clear;
-  Result.SubItems.Add(TRuleTypeLookup.Lookup(Integer(ARule.RuleType)));
+  Result.SubItems.Add(RuleTypes[ARule.RuleType]);
   Result.SubItems.Add(ARule.FieldName);
   Result.SubItems.Add(ARule.FieldValue);
   Result.Data := ARule;

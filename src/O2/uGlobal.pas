@@ -224,6 +224,16 @@ resourcestring
   SMDY = 'Month, day, year';
   SDMY = 'Day, month, year';
 
+const
+  RuleTypes: array[TO2RuleType] of string = (
+    '',
+    SRuleHyperLink,
+    SRuleEmail,
+    SRulePassword,
+    SRuleExpirationDate,
+    SRuleRecurrence,
+    SRuleHighlight);
+
 type
   TEventFilter = (
     efAll,
@@ -242,8 +252,6 @@ type
     efNext180days,
     efNext365days);
 
-  TDateFormat = (dfYMD, dfMDY, dfDMY);
-
   TCipherLookup = class(TLookupHelper)
   protected
     class procedure GetMapBounds(out LowerBound, UpperBound: Integer); override;
@@ -256,25 +264,10 @@ type
     class function GetMapEntry(Index: Integer): PLookupMapEntry; override;
   end;
 
-  TRuleTypeLookup = class(TLookupHelper)
-  protected
-    class procedure GetMapBounds(out LowerBound, UpperBound: Integer); override;
-    class function GetMapEntry(Index: Integer): PLookupMapEntry; override;
-  end;
-
   TEventFilterLookup = class(TLookupHelper)
   protected
     class procedure GetMapBounds(out LowerBound, UpperBound: Integer); override;
     class function GetMapEntry(Index: Integer): PLookupMapEntry; override;
-  end;
-
-  TDateFormatLookup = class(TLookupHelper)
-  protected
-    class procedure GetMapBounds(out LowerBound, UpperBound: Integer); override;
-    class function GetMapEntry(Index: Integer): PLookupMapEntry; override;
-  public
-    class procedure Select(const Combo: TCustomCombo; Value: string); overload;
-    class function SelectedValue(const Combo: TCustomCombo): string; overload;
   end;
 
 implementation
@@ -317,14 +310,6 @@ const
     (Value: ohSHA512;    Item: SHashSHA512),
     (Value: ohTiger;     Item: SHashTiger));
 
-  RuleTypes: array[0..5] of TLookupMapEntry = (
-    (Value: Integer(rtHyperLink);      Item: SRuleHyperLink),
-    (Value: Integer(rtEmail);          Item: SRuleEmail),
-    (Value: Integer(rtPassword);       Item: SRulePassword),
-    (Value: Integer(rtExpirationDate); Item: SRuleExpirationDate),
-    (Value: Integer(rtRecurrence);     Item: SRuleRecurrence),
-    (Value: Integer(rtHighlight);      Item: SRuleHighlight));
-
   EventFilters: array[0..14] of TLookupMapEntry = (
     (Value: Integer(efAll);         Item: SEventAll),
     (Value: Integer(efAllEvents);   Item: SEventAllEvents),
@@ -341,11 +326,6 @@ const
     (Value: Integer(efNext90days);  Item: SEventNext90days),
     (Value: Integer(efNext180days); Item: SEventNext180days),
     (Value: Integer(efNext365days); Item: SEventNext365days));
-
-  DateFormats: array[0..2] of TLookupMapEntry = (
-    (Value: Integer(dfYMD); Item: SYMD),
-    (Value: Integer(dfMDY); Item: SMDY),
-    (Value: Integer(dfDMY); Item: SDMY));
 
 { TCipherLookup }
 
@@ -375,20 +355,6 @@ begin
   Result := @Hashes[Index];
 end;
 
-{ TRuleTypeLookup }
-
-class procedure TRuleTypeLookup.GetMapBounds(out LowerBound,
-  UpperBound: Integer);
-begin
-  LowerBound := Low(RuleTypes);
-  UpperBound := High(RuleTypes);
-end;
-
-class function TRuleTypeLookup.GetMapEntry(Index: Integer): PLookupMapEntry;
-begin
-  Result := @RuleTypes[Index];
-end;
-
 { TEventFilterLookup }
 
 class procedure TEventFilterLookup.GetMapBounds(out LowerBound,
@@ -401,49 +367,6 @@ end;
 class function TEventFilterLookup.GetMapEntry(Index: Integer): PLookupMapEntry;
 begin
   Result := @EventFilters[Index];
-end;
-
-{ TDateFormatLookup }
-
-class procedure TDateFormatLookup.GetMapBounds(out LowerBound,
-  UpperBound: Integer);
-begin
-  LowerBound := Low(DateFormats);
-  UpperBound := High(DateFormats);
-end;
-
-class function TDateFormatLookup.GetMapEntry(Index: Integer): PLookupMapEntry;
-begin
-  Result := @DateFormats[Index];
-end;
-
-class procedure TDateFormatLookup.Select(const Combo: TCustomCombo;
-  Value: string);
-var
-  Y, M, D: Integer;
-begin
-  Y := Pos('y', LowerCase(Value));
-  M := Pos('m', LowerCase(Value));
-  D := Pos('d', LowerCase(Value));
-
-  if (Y < M) and (M < D) then
-    Select(Combo, Integer(dfYMD))
-  else if (M < D) and (D < Y) then
-    Select(Combo, Integer(dfMDY))
-  else if (D < M) and (M < Y) then
-    Select(Combo, Integer(dfDMY));
-end;
-
-class function TDateFormatLookup.SelectedValue(
-  const Combo: TCustomCombo): string;
-begin
-  case SelectedValue(Combo, -1) of
-    Integer(dfYMD): Result := 'yyyy/mm/dd';
-    Integer(dfMDY): Result := 'mm/dd/yyyy';
-    Integer(dfDMY): Result := 'dd/mm/yyyy';
-  else
-    Result := '';
-  end;
 end;
 
 end.
