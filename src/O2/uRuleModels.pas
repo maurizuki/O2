@@ -194,31 +194,31 @@ begin
   FFieldNameMask := FRule.FieldName;
   FFieldValueMask := FRule.FieldValue;
 
-  FHyperLinkMask := FRule.Params.StrValue(HyperLinkMaskParam, '');
+  FHyperLinkMask := FRule.Params.ReadString(HyperLinkMaskParam);
 
-  FDisplayPasswordStrength := FRule.Params.BoolValue(
+  FDisplayPasswordStrength := FRule.Params.ReadBoolean(
     DisplayPasswordStrengthParam, DefaultDisplayPasswordStrength);
 
-  FDisplayMask := FRule.Params.StrValue(DisplayMaskParam, '');
+  FDisplayMask := FRule.Params.ReadString(DisplayMaskParam);
 
   FormatSettings := TFormatSettings.Create;
 
-  DateOrder := GetDateOrder(LowerCase(FRule.Params.StrValue(
+  DateOrder := GetDateOrder(LowerCase(FRule.Params.ReadString(
     ShortDateFormatParam, FormatSettings.ShortDateFormat)));
   FDateFormatIndex := High(DateFormatValues);
   while (FDateFormatIndex > Low(DateFormatValues))
     and (GetDateOrder(DateFormatValues[FDateFormatIndex]) <> DateOrder)
     do Dec(FDateFormatIndex);
 
-  FDateSeparator := FRule.Params.StrValue(DateSeparatorParam,
+  FDateSeparator := FRule.Params.ReadString(DateSeparatorParam,
     FormatSettings.DateSeparator);
 
-  FDaysBefore := FRule.Params.IntValue(DaysBeforeParam, DefaultDaysBefore);
-  FDaysAfter := FRule.Params.IntValue(DaysAfterParam, DefaultDaysAfter);
+  FDaysBefore := FRule.Params.ReadInteger(DaysBeforeParam, DefaultDaysBefore);
+  FDaysAfter := FRule.Params.ReadInteger(DaysAfterParam, DefaultDaysAfter);
 
-  FHighlightColor := FRule.Params.IntValue(HighlightColorParam,
+  FHighlightColor := FRule.Params.ReadInteger(HighlightColorParam,
     DefaultHighlightColor);
-  FHighlightTextColor := FRule.Params.IntValue(HighlightTextColorParam,
+  FHighlightTextColor := FRule.Params.ReadInteger(HighlightTextColorParam,
     DefaultHighlightTextColor);
 end;
 

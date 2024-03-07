@@ -125,9 +125,12 @@ type
     function ParamExists(const ParamName: string): Boolean;
     function AddParam(const ParamName: string): TO2Param;
     procedure DeleteParam(const ParamName: string);
-    function BoolValue(const ParamName: string; DefaultValue: Boolean): Boolean;
-    function IntValue(const ParamName: string; DefaultValue: Integer): Integer;
-    function StrValue(const ParamName, DefaultValue: string): string;
+    function ReadBoolean(const ParamName: string;
+      DefaultValue: Boolean = False): Boolean;
+    function ReadInteger(const ParamName: string;
+      DefaultValue: Integer = 0): Integer;
+    function ReadString(const ParamName: string;
+      const DefaultValue: string = ''): string;
     property Params[Index: Integer]: TO2Param read GetParams; default;
     property Values[Name: string]: string read GetValues write SetValues;
   end;
@@ -330,7 +333,7 @@ begin
     Delete(AParam.Index);
 end;
 
-function TO2Params.BoolValue(const ParamName: string;
+function TO2Params.ReadBoolean(const ParamName: string;
   DefaultValue: Boolean): Boolean;
 var
   AParam: TO2Param;
@@ -342,7 +345,7 @@ begin
     Result := DefaultValue;
 end;
 
-function TO2Params.IntValue(const ParamName: string;
+function TO2Params.ReadInteger(const ParamName: string;
   DefaultValue: Integer): Integer;
 var
   AParam: TO2Param;
@@ -354,7 +357,7 @@ begin
     Result := DefaultValue;
 end;
 
-function TO2Params.StrValue(const ParamName, DefaultValue: string): string;
+function TO2Params.ReadString(const ParamName, DefaultValue: string): string;
 var
   AParam: TO2Param;
 begin
@@ -546,8 +549,8 @@ begin
   begin
     if UseParams then
     begin
-      Date1 := Date - Params.IntValue(DaysBeforeParam, DefaultDaysBefore);
-      Date2 := Date + Params.IntValue(DaysAfterParam, DefaultDaysAfter);
+      Date1 := Date - Params.ReadInteger(DaysBeforeParam, DefaultDaysBefore);
+      Date2 := Date + Params.ReadInteger(DaysAfterParam, DefaultDaysAfter);
     end;
 
     case RuleType of
@@ -587,7 +590,7 @@ begin
       rtRecurrence:
       begin
         if UseParams then
-          StartDate := Date - Params.IntValue(DaysBeforeParam,
+          StartDate := Date - Params.ReadInteger(DaysBeforeParam,
             DefaultDaysBefore);
 
         NextDate := SafeRecodeYear(FirstDate, YearOf(StartDate));
@@ -606,10 +609,11 @@ function TO2Rule.GetHighlightColors(const AField: TO2Field;
 var
   PasswordScore: Integer;
 begin
-  if (RuleType = rtPassword) and Params.BoolValue(DisplayPasswordStrengthParam,
-    DefaultDisplayPasswordStrength) and Matches(AField)
-    and PasswordScoreProvider.TryGetPasswordScore(AField.FieldValue,
-      PasswordScore) then
+  if (RuleType = rtPassword) and Params.ReadBoolean(
+      DisplayPasswordStrengthParam, DefaultDisplayPasswordStrength)
+    and Matches(AField)
+    and PasswordScoreProvider.TryGetPasswordScore(
+      AField.FieldValue, PasswordScore) then
   begin
     Result.Highlight := htPasswordScore;
     Result.PasswordScore := PasswordScore;
@@ -619,9 +623,9 @@ begin
       or CheckEvents(AField, 0, 0, True) then
     begin
       Result.Highlight := htCustom;
-      Result.Color := Params.IntValue(HighlightColorParam,
+      Result.Color := Params.ReadInteger(HighlightColorParam,
         DefaultHighlightColor);
-      Result.TextColor := Params.IntValue(HighlightTextColorParam,
+      Result.TextColor := Params.ReadInteger(HighlightTextColorParam,
         DefaultHighlightTextColor);
     end
     else
@@ -631,9 +635,9 @@ end;
 function TO2Rule.GetFormatSettings: TFormatSettings;
 begin
   Result := TFormatSettings.Create;
-  Result.DateSeparator := Params.StrValue(DateSeparatorParam,
+  Result.DateSeparator := Params.ReadString(DateSeparatorParam,
     Result.DateSeparator)[1];
-  Result.ShortDateFormat := Params.StrValue(ShortDateFormatParam,
+  Result.ShortDateFormat := Params.ReadString(ShortDateFormatParam,
     Result.ShortDateFormat);
 end;
 
