@@ -77,7 +77,7 @@ const
   IdAutoCheckForUpdates = 'Application.AutoCheckForUpdates';
   IdLastCheckForUpdates = 'Application.AutoCheckForUpdates.LastCheck';
   IdViewStyle = 'MainWindow.ObjectView.ViewStyle';
-  IdSortColumn = 'MainWindow.ObjectView.Sort.Column';
+  IdSortKind = 'MainWindow.ObjectView.Sort.Column';
   IdSortAscending = 'MainWindow.ObjectView.Sort.Ascending';
   IdHTMLExportIncludeIndex = 'ExportToHTML.Include.Index';
   IdHTMLExportIncludeTags = 'ExportToHTML.Include.Tags';
@@ -235,6 +235,21 @@ const
     SRuleHighlight);
 
 type
+  TObjectSortKind = (osName, osTags, osNextEvent);
+
+const
+  SortKinds: array[0..2] of TIdentMapEntry = (
+    (Value: Integer(osName);      Name: 'Name'),
+    (Value: Integer(osTags);      Name: 'Tags'),
+    (Value: Integer(osNextEvent); Name: 'NextEvent'));
+
+  ViewStyles: array[0..3] of TIdentMapEntry = (
+    (Value: Integer(vsIcon);      Name: 'Icons'),
+    (Value: Integer(vsSmallIcon); Name: 'SmallIcons'),
+    (Value: Integer(vsList);      Name: 'List'),
+    (Value: Integer(vsReport);    Name: 'Report'));
+
+type
   TEventFilter = (
     efAll,
     efAllEvents,
@@ -271,9 +286,6 @@ type
   end;
 
 implementation
-
-uses
-  SysUtils;
 
 const
   Ciphers: array[0..19] of TLookupMapEntry = (

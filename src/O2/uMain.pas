@@ -32,11 +32,16 @@ uses
   uUtils;
 
 type
-  TNotifyChange = (ncObjects, ncObjProps, ncRelations, ncRules,
-    ncTagList, ncRuleList);
-  TNotifyChanges = set of TNotifyChange;
+  TNotifyChange = (
+    ncObjects,
+    ncObjProps,
+    ncRelations,
+    ncRules,
+    ncTagList,
+    ncRuleList
+    );
 
-  TObjectViewColumn = (ocName, ocTags, ocNextEvent);
+  TNotifyChanges = set of TNotifyChange;
 
   TMainForm = class(TForm, IPasswordProvider)
     ToolBar: TToolBar;
@@ -518,7 +523,7 @@ type
     FStayOnTop: Boolean;
     FTransparency: Integer;
     FTransparencyOnlyIfDeactivated: Boolean;
-    FSortColumn: TObjectViewColumn;
+    FSortKind: TObjectSortKind;
     FSortSign: Integer;
     FAutoCheckForUpdates: Boolean;
     FLastCheckForUpdates: TDateTime;
@@ -567,7 +572,7 @@ type
       const Item: TListItem): TListItem;
     procedure EnableSelectedRules(Enable: Boolean);
     procedure UpdateRulesStatus;
-    procedure SortObjectsView(Column: TObjectViewColumn);
+    procedure SortObjectsView(SortKind: TObjectSortKind);
     function CompareObjectsByTags(const Obj1, Obj2: TO2Object): Integer;
     function CompareObjectsByNextEvent(const Obj1, Obj2: TO2Object): Integer;
     procedure UpdateAllActions;
@@ -599,22 +604,10 @@ type
 var
   MainForm: TMainForm;
 
-const
-  ViewStyles: array[0..3] of TIdentMapEntry = (
-    (Value: Integer(vsIcon);      Name: 'Icons'),
-    (Value: Integer(vsSmallIcon); Name: 'SmallIcons'),
-    (Value: Integer(vsList);      Name: 'List'),
-    (Value: Integer(vsReport);    Name: 'Report'));
-
-  SortColumns: array[0..2] of TIdentMapEntry = (
-    (Value: Integer(ocName);      Name: 'Name'),
-    (Value: Integer(ocTags);      Name: 'Tags'),
-    (Value: Integer(ocNextEvent); Name: 'NextEvent'));
-
 implementation
 
 uses
-  StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, System.JSON,
+  StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, JSON, UITypes,
   uStartup, uShellUtils, uStorageUtils, uAbout, uGetPassword, uSetPassword,
   uFilePropsModel, uFilePropsDlg, uObjPropsDlg, uRelationModels,
   uRelationPropsDlg, uRuleModels, uRulePropsDlg, uReplaceOperations,
@@ -804,19 +797,19 @@ end;
 procedure TMainForm.ObjectsViewColumnClick(Sender: TObject;
   Column: TListColumn);
 begin
-  SortObjectsView(TObjectViewColumn(Column.Index));
+  SortObjectsView(TObjectSortKind(Column.Tag));
 end;
 
 procedure TMainForm.ObjectsViewCompare(Sender: TObject; Item1,
   Item2: TListItem; Data: Integer; var Compare: Integer);
 begin
-  case FSortColumn of
-    ocName:
+  case FSortKind of
+    osName:
       Compare := CompareText(TO2Object(Item1.Data).Name,
         TO2Object(Item2.Data).Name) * FSortSign;
-    ocTags:
+    osTags:
       Compare := CompareObjectsByTags(Item1.Data, Item2.Data) * FSortSign;
-    ocNextEvent:
+    osNextEvent:
       Compare := CompareObjectsByNextEvent(Item1.Data, Item2.Data) * FSortSign;
     else
       Compare := 0;
@@ -1261,32 +1254,32 @@ end;
 
 procedure TMainForm.SortByNameExecute(Sender: TObject);
 begin
-  SortObjectsView(ocName);
+  SortObjectsView(osName);
 end;
 
 procedure TMainForm.SortByNameUpdate(Sender: TObject);
 begin
-  TAction(Sender).Checked := FSortColumn = ocName;
+  TAction(Sender).Checked := FSortKind = osName;
 end;
 
 procedure TMainForm.SortByTagsExecute(Sender: TObject);
 begin
-  SortObjectsView(ocTags);
+  SortObjectsView(osTags);
 end;
 
 procedure TMainForm.SortByTagsUpdate(Sender: TObject);
 begin
-  TAction(Sender).Checked := FSortColumn = ocTags;
+  TAction(Sender).Checked := FSortKind = osTags;
 end;
 
 procedure TMainForm.SortByNextEventExecute(Sender: TObject);
 begin
-  SortObjectsView(ocNextEvent);
+  SortObjectsView(osNextEvent);
 end;
 
 procedure TMainForm.SortByNextEventUpdate(Sender: TObject);
 begin
-  TAction(Sender).Checked := FSortColumn = ocNextEvent;
+  TAction(Sender).Checked := FSortKind = osNextEvent;
 end;
 
 procedure TMainForm.TransparencyExecute(Sender: TObject);
@@ -1709,13 +1702,13 @@ begin
   end;
 end;
 
-procedure TMainForm.SortObjectsView(Column: TObjectViewColumn);
+procedure TMainForm.SortObjectsView(SortKind: TObjectSortKind);
 begin
-  if FSortColumn = Column then
+  if FSortKind = SortKind then
     FSortSign := -FSortSign
   else
   begin
-    FSortColumn := Column;
+    FSortKind := SortKind;
     FSortSign := 1;
   end;
   ObjectsView.AlphaSort;
@@ -2206,8 +2199,8 @@ begin
   FLastCheckForUpdates := Storage.ReadFloat(IdLastCheckForUpdates, Yesterday);
   ObjectsView.ViewStyle := TViewStyle(ReadIntIdent(Storage, IdViewStyle,
     ViewStyles, Integer(vsIcon)));
-  FSortColumn := TObjectViewColumn(ReadIntIdent(Storage, IdSortColumn,
-    SortColumns, Integer(ocName)));
+  FSortKind := TObjectSortKind(ReadIntIdent(Storage, IdSortKind,
+    SortKinds, Integer(osName)));
   FSortSign := SortSigns[Storage.ReadBoolean(IdSortAscending, True)];
 end;
 
@@ -2223,8 +2216,7 @@ begin
   Storage.WriteFloat(IdLastCheckForUpdates, FLastCheckForUpdates);
   WriteIntIdent(Storage, IdViewStyle, ViewStyles,
     Integer(ObjectsView.ViewStyle));
-  WriteIntIdent(Storage, IdSortColumn, SortColumns,
-    Integer(FSortColumn));
+  WriteIntIdent(Storage, IdSortKind, SortKinds, Integer(FSortKind));
   Storage.WriteBoolean(IdSortAscending, FSortSign > 0);
 
   SysUtils.ForceDirectories(ExtractFileDir(FileName));

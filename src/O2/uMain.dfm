@@ -82,11 +82,13 @@ object MainForm: TMainForm
         end
         item
           Caption = 'Tags'
+          Tag = 1
           Width = 420
         end
         item
           Alignment = taRightJustify
           Caption = 'Next event'
+          Tag = 2
           Width = 100
         end>
       HideSelection = False
