@@ -49,8 +49,6 @@ function AbortRetryIgnoreBox(const Text: string): Integer; inline;
 procedure DrawHIndicator(const ACanvas: TCanvas; ARect: TRect; AColor: TColor;
   Ratio: Double);
 
-function GetFileSize(const FileName: string): Integer;
-
 function GetLanguageName(LangId: Word): string;
 
 procedure SetLocaleOverride(const FileName, LocaleId: string);
@@ -124,17 +122,6 @@ begin
     ARect.Inflate(-1, -1);
     ACanvas.FillRect(ARect);
   end;
-end;
-
-function GetFileSize(const FileName: string): Integer;
-var
-  F: TSearchRec;
-begin
-  if FindFirst(FileName, faAnyFile, F) = 0 then
-    Result := F.Size
-  else
-    Result := -1;
-  FindClose(F);
 end;
 
 function GetLanguageName(LangId: Word): string;
