@@ -94,8 +94,15 @@ begin
 end;
 
 function TAppFile.GetSize: Int64;
+var
+  SearchResult: TSearchRec;
 begin
-  Result := GetFileSize(FullPath);
+  if FindFirst(FullPath, faAnyFile, SearchResult) = 0 then
+    Result := SearchResult.Size
+  else
+    Result := -1;
+
+  FindClose(SearchResult);
 end;
 
 { TPortableAppFile }
