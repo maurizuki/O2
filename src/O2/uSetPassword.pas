@@ -150,7 +150,7 @@ begin
   edPassword.Enabled := cbEncryption.ItemIndex <> 0;
   lbConfPassword.Enabled := cbEncryption.ItemIndex <> 0;
   edConfPassword.Enabled := cbEncryption.ItemIndex <> 0;
-  btOk.Enabled := (Length(edPassword.Text) >= 5)
+  btOk.Enabled := (Length(edPassword.Text) >= MinPasswordLength)
     and (edPassword.Text = edConfPassword.Text)
     and not (TCipherLookup.SelectedValue(cbEncryption) in DeprecatedCiphers)
     and not (THashLookup.SelectedValue(cbHash) in DeprecatedHashes)

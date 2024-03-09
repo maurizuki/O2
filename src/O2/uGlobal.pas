@@ -24,6 +24,8 @@ uses
 {$I PAFConsts.inc}
 
 const
+  MinPasswordLength = 5;
+
   DefaultFileExt = 'o2';
 
 { Application file names and paths }
