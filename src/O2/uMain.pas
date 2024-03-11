@@ -608,12 +608,13 @@ implementation
 
 uses
   StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, JSON, UITypes,
-  uStartup, uShellUtils, uStorageUtils, uAbout, uGetPassword, uSetPassword,
-  uFilePropsModel, uFilePropsDlg, uObjPropsDlg, uRelationModels,
-  uRelationPropsDlg, uRuleModels, uRulePropsDlg, uReplaceOperations,
-  uReplaceDlg, uPrintModel, uPrintPreview, uHTMLExportModel, uHTMLExport,
-  uO2Defs, uBrowserEmulation, uCtrlHelpers, uFileOperation, uO2ImportExport,
-  uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper, uO2ObjectsUtils;
+  uStartup, uShellUtils, uStorageUtils, uAbout, uGetPassword,
+  uEncryptionPropsModel, uSetPassword, uFilePropsModel, uFilePropsDlg,
+  uObjPropsDlg, uRelationModels, uRelationPropsDlg, uRuleModels, uRulePropsDlg,
+  uReplaceOperations, uReplaceDlg, uPrintModel, uPrintPreview, uHTMLExportModel,
+  uHTMLExport, uO2Defs, uBrowserEmulation, uCtrlHelpers, uFileOperation,
+  uO2ImportExport, uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper,
+  uO2ObjectsUtils;
 
 {$R *.dfm}
 
@@ -2820,28 +2821,9 @@ end;
 
 procedure TMainForm.SaveDialogCanClose(Sender: TObject;
   var CanClose: Boolean);
-var
-  Cipher, Hash: Byte;
-  Encrypted: Boolean;
-  Password: string;
 begin
-  if not FileExists(SaveDialog.FileName)
-    or YesNoBox(SFileOverwriteQuery) then
-  begin
-    Encrypted := O2File.Encrypted;
-    Cipher := O2File.Cipher;
-    Hash := O2File.Hash;
-    Password := O2File.Password;
-    CanClose := TSetPasswordDlg.Execute(Application, Encrypted, Cipher, Hash,
-      Password);
-    if CanClose then
-    begin
-      O2File.Encrypted := Encrypted;
-      O2File.Cipher := Cipher;
-      O2File.Hash := Hash;
-      O2File.Password := Password;
-    end;
-  end
+  if not FileExists(SaveDialog.FileName) or YesNoBox(SFileOverwriteQuery) then
+    CanClose := TSetPasswordDlg.Execute(TEncryptionPropsModel.Create(O2File))
   else
     CanClose := False;
 end;

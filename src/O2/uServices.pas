@@ -72,6 +72,46 @@ type
     procedure ApplyChanges;
   end;
 
+  IPasswordStrengthInfo = interface
+    function GetPasswordScore: Integer;
+    property PasswordScore: Integer read GetPasswordScore;
+
+    function GetPasswordStrengthInfo: string;
+    property PasswordStrengthInfo: string read GetPasswordStrengthInfo;
+  end;
+
+  IEncryptionProps = interface(IPasswordStrengthInfo)
+    function GetCiphers: TStrings;
+    property Ciphers: TStrings read GetCiphers;
+
+    function GetCipherIndex: Integer;
+    procedure SetCipherIndex(const Value: Integer);
+    property CipherIndex: Integer read GetCipherIndex write SetCipherIndex;
+
+    function GetHashes: TStrings;
+    property Hashes: TStrings read GetHashes;
+
+    function GetHashIndex: Integer;
+    procedure SetHashIndex(const Value: Integer);
+    property HashIndex: Integer read GetHashIndex write SetHashIndex;
+
+    function GetPassword: string;
+    procedure SetPassword(const Value: string);
+    property Password: string read GetPassword write SetPassword;
+
+    function GetPasswordConfirmation: string;
+    procedure SetPasswordConfirmation(const Value: string);
+    property PasswordConfirmation: string read GetPasswordConfirmation
+      write SetPasswordConfirmation;
+
+    function IsEncrypted: Boolean;
+
+    function GetValid: Boolean;
+    property Valid: Boolean read GetValid;
+
+    procedure ApplyChanges;
+  end;
+
   IRelationProps = interface
     function GetObjectName1: string;
     property ObjectName1: string read GetObjectName1;

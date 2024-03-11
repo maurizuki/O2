@@ -236,6 +236,41 @@ const
     SRuleRecurrence,
     SRuleHighlight);
 
+  Ciphers: array[ocNone..ocTwofish] of string = (
+    SCipherNone,
+    SCipherBlowfish,
+    SCipherCast128,
+    SCipherCast256,
+    SCipherDES,
+    SCipher3DES,
+    SCipherIce,
+    SCipherThinIce,
+    SCipherIce2,
+    SCipherIDEA,
+    SCipherMARS,
+    SCipherMisty1,
+    SCipherRC2,
+    SCipherRC4,
+    SCipherRC5,
+    SCipherRC6,
+    SCipherRijndael,
+    SCipherSerpent,
+    SCipherTEA,
+    SCipherTwofish);
+
+  Hashes: array[ohNone..ohTiger] of string = (
+    SHashNone,
+    SHashHaval,
+    SHashMD4,
+    SHashMD5,
+    SHashRipeMD128,
+    SHashRipeMD160,
+    SHashSHA1,
+    SHashSHA256,
+    SHashSHA384,
+    SHashSHA512,
+    SHashTiger);
+
 type
   TObjectSortKind = (osName, osTags, osNextEvent);
 
@@ -269,18 +304,6 @@ type
     efNext180days,
     efNext365days);
 
-  TCipherLookup = class(TLookupHelper)
-  protected
-    class procedure GetMapBounds(out LowerBound, UpperBound: Integer); override;
-    class function GetMapEntry(Index: Integer): PLookupMapEntry; override;
-  end;
-
-  THashLookup = class(TLookupHelper)
-  protected
-    class procedure GetMapBounds(out LowerBound, UpperBound: Integer); override;
-    class function GetMapEntry(Index: Integer): PLookupMapEntry; override;
-  end;
-
   TEventFilterLookup = class(TLookupHelper)
   protected
     class procedure GetMapBounds(out LowerBound, UpperBound: Integer); override;
@@ -290,40 +313,6 @@ type
 implementation
 
 const
-  Ciphers: array[0..19] of TLookupMapEntry = (
-    (Value: ocNone;     Item: SCipherNone),
-    (Value: ocBlowfish; Item: SCipherBlowfish),
-    (Value: ocCast128;  Item: SCipherCast128),
-    (Value: ocCast256;  Item: SCipherCast256),
-    (Value: ocDES;      Item: SCipherDES),
-    (Value: oc3DES;     Item: SCipher3DES),
-    (Value: ocIce;      Item: SCipherIce),
-    (Value: ocThinIce;  Item: SCipherThinIce),
-    (Value: ocIce2;     Item: SCipherIce2),
-    (Value: ocIDEA;     Item: SCipherIDEA),
-    (Value: ocMARS;     Item: SCipherMARS),
-    (Value: ocMisty1;   Item: SCipherMisty1),
-    (Value: ocRC2;      Item: SCipherRC2),
-    (Value: ocRC4;      Item: SCipherRC4),
-    (Value: ocRC5;      Item: SCipherRC5),
-    (Value: ocRC6;      Item: SCipherRC6),
-    (Value: ocRijndael; Item: SCipherRijndael),
-    (Value: ocSerpent;  Item: SCipherSerpent),
-    (Value: ocTEA;      Item: SCipherTEA),
-    (Value: ocTwofish;  Item: SCipherTwofish));
-
-  Hashes: array[0..9] of TLookupMapEntry = (
-    (Value: ohHaval;     Item: SHashHaval),
-    (Value: ohMD4;       Item: SHashMD4),
-    (Value: ohMD5;       Item: SHashMD5),
-    (Value: ohRipeMD128; Item: SHashRipeMD128),
-    (Value: ohRipeMD160; Item: SHashRipeMD128),
-    (Value: ohSHA1;      Item: SHashSHA1),
-    (Value: ohSHA256;    Item: SHashSHA256),
-    (Value: ohSHA384;    Item: SHashSHA384),
-    (Value: ohSHA512;    Item: SHashSHA512),
-    (Value: ohTiger;     Item: SHashTiger));
-
   EventFilters: array[0..14] of TLookupMapEntry = (
     (Value: Integer(efAll);         Item: SEventAll),
     (Value: Integer(efAllEvents);   Item: SEventAllEvents),
@@ -340,34 +329,6 @@ const
     (Value: Integer(efNext90days);  Item: SEventNext90days),
     (Value: Integer(efNext180days); Item: SEventNext180days),
     (Value: Integer(efNext365days); Item: SEventNext365days));
-
-{ TCipherLookup }
-
-class procedure TCipherLookup.GetMapBounds(out LowerBound,
-  UpperBound: Integer);
-begin
-  LowerBound := Low(Ciphers);
-  UpperBound := High(Ciphers);
-end;
-
-class function TCipherLookup.GetMapEntry(Index: Integer): PLookupMapEntry;
-begin
-  Result := @Ciphers[Index];
-end;
-
-{ THashLookup }
-
-class procedure THashLookup.GetMapBounds(out LowerBound,
-  UpperBound: Integer);
-begin
-  LowerBound := Low(Hashes);
-  UpperBound := High(Hashes);
-end;
-
-class function THashLookup.GetMapEntry(Index: Integer): PLookupMapEntry;
-begin
-  Result := @Hashes[Index];
-end;
 
 { TEventFilterLookup }
 

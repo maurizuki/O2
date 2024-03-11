@@ -19,7 +19,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Vcl.ExtCtrls, JvExStdCtrls, JvEdit, Zxcvbn;
+  Dialogs, StdCtrls, Vcl.ExtCtrls, JvExStdCtrls, JvEdit, uServices;
 
 type
   TSetPasswordDlg = class(TForm)
@@ -36,21 +36,18 @@ type
     gbPasswordStrength: TGroupBox;
     pbPasswordStrength: TPaintBox;
     PasswordStrengthMemo: TMemo;
-    procedure FormCreate(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
-    procedure FormShow(Sender: TObject);
     procedure cbEncryptionChange(Sender: TObject);
     procedure cbHashChange(Sender: TObject);
     procedure edPasswordChange(Sender: TObject);
+    procedure edConfPasswordChange(Sender: TObject);
     procedure pbPasswordStrengthPaint(Sender: TObject);
+    procedure btOkClick(Sender: TObject);
   private
-    FZxcvbn: TZxcvbn;
-    FPasswordScore: Integer;
-    procedure EnableControls;
-    procedure UpdatePasswordStrengthInfo;
+    FModel: IEncryptionProps;
+    procedure SetModel(const Value: IEncryptionProps);
   public
-    class function Execute(AOwner: TComponent; var Encrypt: Boolean;
-      var Cipher, Hash: Byte; var Password: string): Boolean;
+    class function Execute(Model: IEncryptionProps): Boolean;
+    property Model: IEncryptionProps read FModel write SetModel;
   end;
 
 var
@@ -59,130 +56,109 @@ var
 implementation
 
 uses
-  uO2Defs, uGlobal, uUtils, Zxcvbn.Result, Zxcvbn.Utility;
+  uGlobal, uUtils;
 
 {$R *.dfm}
 
-class function TSetPasswordDlg.Execute(AOwner: TComponent;
-  var Encrypt: Boolean; var Cipher, Hash: Byte; var Password: string): Boolean;
+class function TSetPasswordDlg.Execute(Model: IEncryptionProps): Boolean;
 var
   Form: TSetPasswordDlg;
 begin
-  Form := TSetPasswordDlg.Create(AOwner);
+  Form := TSetPasswordDlg.Create(Application);
   try
-    if Encrypt then
-    begin
-      TCipherLookup.Select(Form.cbEncryption, Cipher);
-      THashLookup.Select(Form.cbHash, Hash);
-    end
-    else
-    begin
-      TCipherLookup.Select(Form.cbEncryption, ocNone);
-      THashLookup.Select(Form.cbHash, ohDefault);
-    end;
-    Form.edPassword.Text := Password;
-    Form.edConfPassword.Text := Password;
-
+    Form.Model := Model;
     Result := Form.ShowModal = mrOk;
-
-    if Result then
-    begin
-      Encrypt := Form.cbEncryption.ItemIndex <> 0;
-      Cipher := TCipherLookup.SelectedValue(Form.cbEncryption);
-      Hash := THashLookup.SelectedValue(Form.cbHash);
-      Password := Form.edPassword.Text;
-    end;
   finally
     Form.Free;
   end;
 end;
 
-procedure TSetPasswordDlg.FormCreate(Sender: TObject);
+procedure TSetPasswordDlg.btOkClick(Sender: TObject);
 begin
-  FZxcvbn := TZxcvbn.Create;
-  FPasswordScore := 0;
-  TCipherLookup.Fill(cbEncryption);
-  THashLookup.Fill(cbHash);
-end;
-
-procedure TSetPasswordDlg.FormDestroy(Sender: TObject);
-begin
-  FZxcvbn.Free;
-end;
-
-procedure TSetPasswordDlg.FormShow(Sender: TObject);
-begin
-  EnableControls;
+  FModel.ApplyChanges;
 end;
 
 procedure TSetPasswordDlg.cbEncryptionChange(Sender: TObject);
+var
+  IsEncrypted: Boolean;
 begin
-  EnableControls;
-  UpdatePasswordStrengthInfo;
+  FModel.CipherIndex := cbEncryption.ItemIndex;
+
+  PasswordStrengthMemo.Text := FModel.PasswordStrengthInfo;
+  pbPasswordStrength.Invalidate;
+
+  IsEncrypted := FModel.IsEncrypted;
+  lbHash.Enabled := IsEncrypted;
+  cbHash.Enabled := IsEncrypted;
+  lbPassword.Enabled := IsEncrypted;
+  edPassword.Enabled := IsEncrypted;
+  lbConfPassword.Enabled := IsEncrypted;
+  edConfPassword.Enabled := IsEncrypted;
+
+  btOk.Enabled := FModel.Valid;
 end;
 
 procedure TSetPasswordDlg.cbHashChange(Sender: TObject);
 begin
-  EnableControls;
+  FModel.HashIndex := cbHash.ItemIndex;
+
+  btOk.Enabled := FModel.Valid;
+end;
+
+procedure TSetPasswordDlg.edConfPasswordChange(Sender: TObject);
+begin
+  FModel.PasswordConfirmation := edConfPassword.Text;
+
+  btOk.Enabled := FModel.Valid;
 end;
 
 procedure TSetPasswordDlg.edPasswordChange(Sender: TObject);
 begin
-  EnableControls;
-  UpdatePasswordStrengthInfo;
+  FModel.Password := edPassword.Text;
+
+  PasswordStrengthMemo.Text := FModel.PasswordStrengthInfo;
+  pbPasswordStrength.Invalidate;
+
+  btOk.Enabled := FModel.Valid;
 end;
 
 procedure TSetPasswordDlg.pbPasswordStrengthPaint(Sender: TObject);
 begin
   if cbEncryption.ItemIndex <> 0 then
     DrawHIndicator(pbPasswordStrength.Canvas, pbPasswordStrength.ClientRect,
-      PasswordScoreColors[FPasswordScore], (FPasswordScore + 1) / 5)
+      PasswordScoreColors[FModel.PasswordScore], (FModel.PasswordScore + 1) / 5)
   else
     DrawHIndicator(pbPasswordStrength.Canvas, pbPasswordStrength.ClientRect,
       0, 0);
 end;
 
-procedure TSetPasswordDlg.EnableControls;
-begin
-  lbHash.Enabled := cbEncryption.ItemIndex <> 0;
-  cbHash.Enabled := cbEncryption.ItemIndex <> 0;
-  lbPassword.Enabled := cbEncryption.ItemIndex <> 0;
-  edPassword.Enabled := cbEncryption.ItemIndex <> 0;
-  lbConfPassword.Enabled := cbEncryption.ItemIndex <> 0;
-  edConfPassword.Enabled := cbEncryption.ItemIndex <> 0;
-  btOk.Enabled := (Length(edPassword.Text) >= MinPasswordLength)
-    and (edPassword.Text = edConfPassword.Text)
-    and not (TCipherLookup.SelectedValue(cbEncryption) in DeprecatedCiphers)
-    and not (THashLookup.SelectedValue(cbHash) in DeprecatedHashes)
-    or (cbEncryption.ItemIndex = 0);
-end;
-
-procedure TSetPasswordDlg.UpdatePasswordStrengthInfo;
+procedure TSetPasswordDlg.SetModel(const Value: IEncryptionProps);
 var
-  ZxcvbnResult: TZxcvbnResult;
-  ASuggestion: TZxcvbnSuggestion;
+  IsEncrypted: Boolean;
 begin
-  PasswordStrengthMemo.Clear;
-
-  if cbEncryption.ItemIndex <> 0 then
+  if FModel <> Value then
   begin
-    ZxcvbnResult := FZxcvbn.EvaluatePassword(edPassword.Text);
-    try
-      FPasswordScore := ZxcvbnResult.Score;
+    FModel := Value;
 
-      if ZxcvbnResult.Warning <> zwDefault then
-      begin
-        PasswordStrengthMemo.Lines.Add(GetWarning(ZxcvbnResult.Warning));
-        PasswordStrengthMemo.Lines.Add('');
-      end;
-      for ASuggestion in ZxcvbnResult.Suggestions do
-        PasswordStrengthMemo.Lines.Add(GetSuggestion(ASuggestion));
-    finally
-      ZxcvbnResult.Free;
-    end;
+    cbEncryption.Items := FModel.Ciphers;
+    cbEncryption.ItemIndex := FModel.CipherIndex;
+    cbHash.Items := FModel.Hashes;
+    cbHash.ItemIndex := FModel.HashIndex;
+    edPassword.Text := FModel.Password;
+    edConfPassword.Text := FModel.PasswordConfirmation;
+    PasswordStrengthMemo.Text := FModel.PasswordStrengthInfo;
+    pbPasswordStrength.Invalidate;
+
+    IsEncrypted := FModel.IsEncrypted;
+    lbHash.Enabled := IsEncrypted;
+    cbHash.Enabled := IsEncrypted;
+    lbPassword.Enabled := IsEncrypted;
+    edPassword.Enabled := IsEncrypted;
+    lbConfPassword.Enabled := IsEncrypted;
+    edConfPassword.Enabled := IsEncrypted;
+
+    btOk.Enabled := FModel.Valid;
   end;
-
-  pbPasswordStrength.Invalidate;
 end;
 
 end.

@@ -77,7 +77,7 @@ end;
 function TFilePropsModel.GetCipher: string;
 begin
   if FO2File.Encrypted then
-    Result := TCipherLookup.Lookup(FO2File.Cipher)
+    Result := Ciphers[FO2File.Cipher]
   else
     Result := SCipherNone;
 end;
@@ -90,7 +90,7 @@ end;
 function TFilePropsModel.GetHash: string;
 begin
   if FO2File.Encrypted then
-    Result := THashLookup.Lookup(FO2File.Hash)
+    Result := Hashes[FO2File.Hash]
   else
     Result := SHashNone;
 end;

@@ -54,7 +54,9 @@ uses
   uStorageUtils in 'uStorageUtils.pas',
   uFilePropsModel in 'uFilePropsModel.pas',
   uRelationModels in 'uRelationModels.pas',
-  uRuleModels in 'uRuleModels.pas';
+  uRuleModels in 'uRuleModels.pas',
+  uPasswordStrengthInfo in 'uPasswordStrengthInfo.pas',
+  uEncryptionPropsModel in 'uEncryptionPropsModel.pas';
 
 {$R *.res}
 
