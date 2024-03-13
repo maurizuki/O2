@@ -559,9 +559,7 @@ type
 
     procedure GetStartDate(out StartDate: TDateTime; out UseParams: Boolean);
     function ObjToListItem(const AObject: TO2Object;
-      const Item: TListItem): TListItem; overload;
-    function ObjToListItem(ObjectIndex: Integer;
-      const Item: TListItem): TListItem; overload;
+      const Item: TListItem): TListItem;
     function FieldToListItem(const AField: TO2Field;
       const Item: TListItem): TListItem;
     function RelationToListItem(const ARelation: TO2Relation;
@@ -610,11 +608,11 @@ uses
   StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, JSON, UITypes,
   uStartup, uShellUtils, uStorageUtils, uAbout, uGetPassword,
   uEncryptionPropsModel, uSetPassword, uFilePropsModel, uFilePropsDlg,
-  uObjPropsDlg, uRelationModels, uRelationPropsDlg, uRuleModels, uRulePropsDlg,
-  uReplaceOperations, uReplaceDlg, uPrintModel, uPrintPreview, uHTMLExportModel,
-  uHTMLExport, uO2Defs, uBrowserEmulation, uCtrlHelpers, uFileOperation,
-  uO2ImportExport, uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper,
-  uO2ObjectsUtils;
+  uObjectModels, uObjPropsDlg, uRelationModels, uRelationPropsDlg, uRuleModels,
+  uRulePropsDlg, uReplaceOperations, uReplaceDlg, uPrintModel, uPrintPreview,
+  uHTMLExportModel, uHTMLExport, uO2Defs, uBrowserEmulation, uCtrlHelpers,
+  uFileOperation, uO2ImportExport, uXmlImportExport, uiCalendarExport,
+  uStuffHTML, uHTMLHelper, uO2ObjectsUtils;
 
 {$R *.dfm}
 
@@ -1605,12 +1603,6 @@ begin
   Result.Data := AObject;
 end;
 
-function TMainForm.ObjToListItem(ObjectIndex: Integer;
-  const Item: TListItem): TListItem;
-begin
-  Result := ObjToListItem(O2File.Objects[ObjectIndex], Item);
-end;
-
 function TMainForm.FieldToListItem(const AField: TO2Field;
   const Item: TListItem): TListItem;
 begin
@@ -2269,15 +2261,14 @@ end;
 
 procedure TMainForm.NewObjectExecute(Sender: TObject);
 var
+  Model: IObjectProps;
   Item: TListItem;
-  Index: Integer;
 begin
-  Index := -1;
-  if TObjPropsDlg.Execute(Application, O2File.Objects, Index, False,
-    pgGeneral) then
+  Model := TNewObjectModel.Create(O2File);
+  if TObjPropsDlg.Execute(Model, pgGeneral) then
   begin
-    PasswordScoreCache.Update(O2File, Index);
-    Item := ObjToListItem(Index, nil);
+    PasswordScoreCache.Update(O2File, Model.O2Object.Index);
+    Item := ObjToListItem(Model.O2Object, nil);
     ObjectsView.ClearSelection;
     Item.Selected := True;
     Item.Focused := True;
@@ -2287,15 +2278,14 @@ end;
 
 procedure TMainForm.DuplicateObjectExecute(Sender: TObject);
 var
+  Model: IObjectProps;
   Item: TListItem;
-  Index: Integer;
 begin
-  Index := SelectedObject.Index;
-  if TObjPropsDlg.Execute(Application, O2File.Objects, Index, True,
-    pgGeneral) then
+  Model := TDuplicateObjectModel.Create(O2File, SelectedObject);
+  if TObjPropsDlg.Execute(Model, pgGeneral) then
   begin
-    PasswordScoreCache.Update(O2File, Index);
-    Item := ObjToListItem(Index, nil);
+    PasswordScoreCache.Update(O2File, Model.O2Object.Index);
+    Item := ObjToListItem(Model.O2Object, nil);
     ObjectsView.ClearSelection;
     Item.Selected := True;
     Item.Focused := True;
@@ -2334,13 +2324,13 @@ end;
 
 procedure TMainForm.ObjectTagsExecute(Sender: TObject);
 var
-  Index: Integer;
+  Model: IObjectProps;
 begin
-  Index := SelectedObject.Index;
-  if TObjPropsDlg.Execute(Application, O2File.Objects, Index, False,
-    pgGeneralTags) then
+  Model := TEditObjectModel.Create(O2File, SelectedObject);
+  if TObjPropsDlg.Execute(Model, pgGeneralTags) then
   begin
-    ObjToListItem(Index, ObjectsView.Selected);
+    PasswordScoreCache.Update(O2File, Model.O2Object.Index);
+    ObjToListItem(Model.O2Object, ObjectsView.Selected);
     NotifyChanges([ncObjProps, ncTagList]);
   end;
 end;
@@ -2395,18 +2385,18 @@ end;
 procedure TMainForm.ObjectPropsExecute(Sender: TObject);
 var
   Page: TObjPropsDlgPage;
-  Index: Integer;
+  Model: IObjectProps;
 begin
   case PageControl.ActivePageIndex of
     0: Page := pgFields;
     1: Page := pgNotes;
     else Page := pgGeneral;
   end;
-  Index := SelectedObject.Index;
-  if TObjPropsDlg.Execute(Application, O2File.Objects, Index, False, Page) then
+  Model := TEditObjectModel.Create(O2File, SelectedObject);
+  if TObjPropsDlg.Execute(Model, Page) then
   begin
-    PasswordScoreCache.Update(O2File, Index);
-    ObjToListItem(Index, ObjectsView.Selected);
+    PasswordScoreCache.Update(O2File, Model.O2Object.Index);
+    ObjToListItem(Model.O2Object, ObjectsView.Selected);
     NotifyChanges([ncObjProps, ncTagList]);
   end;
 end;

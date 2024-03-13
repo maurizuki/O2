@@ -18,7 +18,7 @@ unit uServices;
 interface
 
 uses
-  Classes, Graphics, Windows, uO2File, uO2Relations, uO2Rules;
+  Classes, Graphics, Windows, uO2File, uO2Objects, uO2Relations, uO2Rules;
 
 type
   IAppFiles = interface
@@ -105,6 +105,87 @@ type
       write SetPasswordConfirmation;
 
     function IsEncrypted: Boolean;
+
+    function GetValid: Boolean;
+    property Valid: Boolean read GetValid;
+
+    procedure ApplyChanges;
+  end;
+
+  IObjectProps = interface(IPasswordStrengthInfo)
+    function GetObjectName: string;
+    procedure SetObjectName(const Value: string);
+    property ObjectName: string read GetObjectName write SetObjectName;
+
+    {$REGION 'Object tags'}
+
+    function GetTags: TStrings;
+    property Tags: TStrings read GetTags;
+
+    function GetObjectTags: TStrings;
+    procedure SetObjectTags(const Value: TStrings);
+    property ObjectTags: TStrings read GetObjectTags write SetObjectTags;
+
+    {$ENDREGION}
+
+    {$REGION 'Object fields'}
+
+    function GetFieldNames: TStrings;
+    property FieldNames: TStrings read GetFieldNames;
+
+    function GetFieldValues: TStrings;
+    property FieldValues: TStrings read GetFieldValues;
+
+    function GetObjectFieldNames(Index: Integer): string;
+    property ObjectFieldNames[Index: Integer]: string
+      read GetObjectFieldNames;
+
+    function GetObjectFieldValues(Index: Integer): string;
+    property ObjectFieldValues[Index: Integer]: string
+      read GetObjectFieldValues;
+
+    function GetFieldCount: Integer;
+    property FieldCount: Integer read GetFieldCount;
+
+    function GetFieldIndex: Integer;
+    procedure SetFieldIndex(const Value: Integer);
+    property FieldIndex: Integer read GetFieldIndex write SetFieldIndex;
+
+    function GetFieldName: string;
+    procedure SetFieldName(const Value: string);
+    property FieldName: string read GetFieldName write SetFieldName;
+
+    function GetFieldValue: string;
+    procedure SetFieldValue(const Value: string);
+    property FieldValue: string read GetFieldValue write SetFieldValue;
+
+    function CanAddField: Boolean;
+    procedure AddField;
+
+    function CanReplaceField: Boolean;
+    procedure ReplaceField;
+
+    function CanDeleteField: Boolean;
+    procedure DeleteField;
+
+    procedure SwapFields(OtherIndex: Integer);
+
+    {$ENDREGION}
+
+    {$REGION 'Object notes'}
+
+    function GetObjectNotes: TStrings;
+    procedure SetObjectNotes(const Value: TStrings);
+    property ObjectNotes: TStrings read GetObjectNotes write SetObjectNotes;
+
+    function GetMarkdown: Boolean;
+    procedure SetMarkdown(const Value: Boolean);
+    property Markdown: Boolean read GetMarkdown write SetMarkdown;
+
+    {$ENDREGION}
+
+    function GetO2Object: TO2Object;
+    property O2Object: TO2Object read GetO2Object;
 
     function GetValid: Boolean;
     property Valid: Boolean read GetValid;

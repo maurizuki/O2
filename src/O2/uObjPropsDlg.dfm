@@ -14,9 +14,6 @@ object ObjPropsDlg: TObjPropsDlg
   Font.Name = 'Tahoma'
   Font.Style = []
   Position = poMainFormCenter
-  OnCreate = FormCreate
-  OnDestroy = FormDestroy
-  OnShow = FormShow
   DesignSize = (
     357
     417)
@@ -159,6 +156,7 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 1
+        OnChange = cbFieldNameChange
       end
       object cbFieldValue: TComboBox
         Left = 152
@@ -289,6 +287,7 @@ object ObjPropsDlg: TObjPropsDlg
         Anchors = [akLeft, akRight, akBottom]
         Caption = '&Markdown syntax'
         TabOrder = 1
+        OnClick = ckMarkdownClick
       end
     end
   end
@@ -300,6 +299,7 @@ object ObjPropsDlg: TObjPropsDlg
     Action = OK
     Anchors = [akRight, akBottom]
     Default = True
+    ModalResult = 1
     TabOrder = 1
   end
   object btCancel: TButton

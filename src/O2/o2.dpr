@@ -56,7 +56,8 @@ uses
   uRelationModels in 'uRelationModels.pas',
   uRuleModels in 'uRuleModels.pas',
   uPasswordStrengthInfo in 'uPasswordStrengthInfo.pas',
-  uEncryptionPropsModel in 'uEncryptionPropsModel.pas';
+  uEncryptionPropsModel in 'uEncryptionPropsModel.pas',
+  uObjectModels in 'uObjectModels.pas';
 
 {$R *.res}
 

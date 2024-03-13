@@ -53,7 +53,9 @@ procedure AppendFieldNamesToList(Objects: IEnumerable<TO2Object>;
   const FieldNames: TStrings);
 
 procedure AppendFieldValuesToList(Objects: IEnumerable<TO2Object>;
-  const FieldName: string; const FieldValues: TStrings);
+  const FieldValues: TStrings); overload; inline;
+procedure AppendFieldValuesToList(Objects: IEnumerable<TO2Object>;
+  const FieldName: string; const FieldValues: TStrings); overload;
 
 procedure AppendTagsToList(Objects: IEnumerable<TO2Object>;
   const Tags: TStrings);
@@ -91,6 +93,12 @@ begin
   finally
     TempList.Free;
   end;
+end;
+
+procedure AppendFieldValuesToList(Objects: IEnumerable<TO2Object>;
+  const FieldValues: TStrings);
+begin
+  AppendFieldValuesToList(Objects, '', FieldValues);
 end;
 
 procedure AppendFieldValuesToList(Objects: IEnumerable<TO2Object>;

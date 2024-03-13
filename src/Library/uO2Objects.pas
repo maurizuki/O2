@@ -18,7 +18,7 @@ unit uO2Objects;
 interface
 
 uses
-  Classes, Contnrs, SysUtils, Types, System.Generics.Collections, uO2Classes;
+  Classes, uO2Classes;
 
 type
   TO2TextType = (ttPlainText, ttCommonMark);
@@ -115,7 +115,7 @@ type
 implementation
 
 uses
-  StrUtils, uO2File;
+  SysUtils, StrUtils, uO2File;
 
 resourcestring
   SObjectAlreadyExists = 'Object %s already exists.';
