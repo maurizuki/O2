@@ -140,10 +140,11 @@ end;
 
 procedure ConfigureServices;
 var
-  OpenFileName, AppPath, SettingsPath, LauncherPath, PortablePath, AppInfo,
+  OpenFileName, AppPath, SettingsPath, LauncherPath, PortablePath,
   LanguageModule: string;
   ExeVersionInfo: TJclFileVersionInfo;
   AppInfoBuilder: TStringBuilder;
+  AppInfoBytes: TBytes;
   I: Integer;
 begin
   ExeVersionInfo := TJclFileVersionInfo.Create(Application.ExeName);
@@ -158,7 +159,7 @@ begin
 
     AppInfoBuilder := TStringBuilder.Create;
     try
-      AppInfo := AppInfoBuilder
+      AppInfoBytes := TEncoding.UTF8.GetBytes(AppInfoBuilder
         .AppendLine('[' + PAF_FormatSection + ']')
         .AppendLine(PAF_FormatTypeId + '=' + PAF_FormatType)
         .AppendLine(PAF_FormatVersionId + '=' + PAF_FormatVersion)
@@ -193,7 +194,7 @@ begin
         .AppendLine
         .AppendLine('[' + PAF_FileTypeIconsSection + ']')
         .AppendLine(DefaultFileExt + '=' + PAF_FileTypeIconCustom)
-        .ToString;
+        .ToString);
     finally
       AppInfoBuilder.Free;
     end;
@@ -225,7 +226,7 @@ begin
   AppFiles := TAppFiles.Create
     .Add(IdAppExe, ExtractFileName(Application.ExeName), AppPath,
       PortableAppPath)
-    .AddInMemory(IdAppInfo, AppInfoFile, AppPath, PortableAppInfoPath, AppInfo)
+    .Add(IdAppInfo, AppInfoFile, AppPath, PortableAppInfoPath, AppInfoBytes)
     .Add(IdAppIcon, AppIconFile, AppPath, PortableAppInfoPath)
     .Add(IdAppIcon16, AppIcon16File, AppPath, PortableAppInfoPath)
     .Add(IdAppIcon32, AppIcon32File, AppPath, PortableAppInfoPath)

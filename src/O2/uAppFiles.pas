@@ -18,7 +18,7 @@ unit uAppFiles;
 interface
 
 uses
-  Classes, uServices;
+  Classes, SysUtils, uServices;
 
 type
   TAppFile = class
@@ -44,14 +44,14 @@ type
 
   TAppFileInMemory = class(TAppFile)
   private
-    FContent: string;
+    FBytes: TBytes;
   protected
     function GetFullPath: string; override;
     function GetSize: Int64; override;
 
     procedure CopyTo(NewFileName: string); override;
   public
-    constructor Create(const FileName, PortablePath, Content: string);
+    constructor Create(const FileName, PortablePath: string; Bytes: TBytes);
   end;
 
   TAppFileOnDisk = class(TAppFile)
@@ -81,8 +81,8 @@ type
       overload;
     function Add(const Name, FileName, Path, PortablePath,
       OverwritePrompt: string): TAppFiles; overload;
-    function AddInMemory(const Name, FileName, Path, PortablePath,
-      Content: string): TAppFiles;
+    function Add(const Name, FileName, Path, PortablePath: string;
+      Bytes: TBytes): TAppFiles; overload;
 
     function FileExists(const Name: string): Boolean;
     function GetTotalSize: Int64;
@@ -96,7 +96,7 @@ type
 implementation
 
 uses
-  Windows, Forms, SysUtils, Variants, uUtils;
+  Windows, Forms, Variants, uUtils;
 
 { TAppFile }
 
@@ -122,11 +122,11 @@ end;
 
 { TAppFileInMemory }
 
-constructor TAppFileInMemory.Create(const FileName, PortablePath,
-  Content: string);
+constructor TAppFileInMemory.Create(const FileName, PortablePath: string;
+  Bytes: TBytes);
 begin
   inherited Create(FileName, PortablePath);
-  FContent := Content;
+  FBytes := Bytes;
 end;
 
 function TAppFileInMemory.GetFullPath: string;
@@ -135,38 +135,17 @@ begin
 end;
 
 function TAppFileInMemory.GetSize: Int64;
-var
-  Writer: TTextWriter;
-  F: TMemoryStream;
 begin
-  F := TMemoryStream.Create;
-  try
-    Writer := TStreamWriter.Create(F);
-    try
-      Writer.Write(FContent);
-    finally
-      Writer.Free;
-    end;
-
-    Result := F.Size;
-  finally
-    F.Free;
-  end;
+  Result := SizeOf(FBytes);
 end;
 
 procedure TAppFileInMemory.CopyTo(NewFileName: string);
 var
-  Writer: TTextWriter;
   F: TFileStream;
 begin
   F := TFileStream.Create(NewFileName, fmCreate);
   try
-    Writer := TStreamWriter.Create(F);
-    try
-      Writer.Write(FContent);
-    finally
-      Writer.Free;
-    end;
+    F.Write(FBytes, Length(FBytes));
   finally
     F.Free;
   end;
@@ -194,7 +173,7 @@ begin
   else
     Result := -1;
 
-  FindClose(SearchResult);
+  SysUtils.FindClose(SearchResult);
 end;
 
 procedure TAppFileOnDisk.CopyTo(NewFileName: string);
@@ -255,11 +234,11 @@ begin
   Result := Self;
 end;
 
-function TAppFiles.AddInMemory(const Name, FileName, Path, PortablePath,
-  Content: string): TAppFiles;
+function TAppFiles.Add(const Name, FileName, Path, PortablePath: string;
+  Bytes: TBytes): TAppFiles;
 begin
   FFiles.AddObject(Name,
-    TAppFileInMemory.Create(FileName, PortablePath, Content));
+    TAppFileInMemory.Create(FileName, PortablePath, Bytes));
   Result := Self;
 end;
 
