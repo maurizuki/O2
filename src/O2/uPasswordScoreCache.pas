@@ -26,14 +26,17 @@ type
     FPasswordScores: TDictionary<string, Integer>;
     FHash: TDCP_hash;
     FZxcvbn: TZxcvbn;
-    function GetHash(const S: string): string;
+
+    function CalculateHash(const S: string): string;
+    function EvaluatePasswordScore(const Password: string): Integer;
   public
     constructor Create;
     destructor Destroy; override;
+
     function TryGetPasswordScore(const Password: string;
       var Score: Integer): Boolean;
-    procedure Update(const O2File: TO2File); overload;
-    procedure Update(const O2File: TO2File; ObjectIndex: Integer); overload;
+
+    procedure UpdateCache(const O2File: TO2File);
   end;
 
 implementation
@@ -55,9 +58,10 @@ begin
   FPasswordScores.Free;
   FHash.Free;
   FZxcvbn.Free;
+  inherited;
 end;
 
-function TPasswordScoreCache.GetHash(const S: string): string;
+function TPasswordScoreCache.CalculateHash(const S: string): string;
 var
   Digest: array[0..31] of byte;
 begin
@@ -67,38 +71,46 @@ begin
   SetString(Result, PAnsiChar(@Digest[0]), Length(Digest));
 end;
 
-function TPasswordScoreCache.TryGetPasswordScore(const Password: string;
-  var Score: Integer): Boolean;
-begin
-  Result := FPasswordScores.TryGetValue(GetHash(Password), Score);
-end;
-
-procedure TPasswordScoreCache.Update(const O2File: TO2File);
-var
-  I: Integer;
-begin
-  for I := 0 to O2File.Objects.Count - 1 do Update(O2File, I);
-end;
-
-procedure TPasswordScoreCache.Update(const O2File: TO2File;
-  ObjectIndex: Integer);
+function TPasswordScoreCache.EvaluatePasswordScore(
+  const Password: string): Integer;
 var
   ZxcvbnResult: TZxcvbnResult;
+begin
+  ZxcvbnResult := FZxcvbn.EvaluatePassword(Password);
+  try
+    Result := ZxcvbnResult.Score;
+  finally
+    ZxcvbnResult.Free;
+  end;
+end;
+
+function TPasswordScoreCache.TryGetPasswordScore(const Password: string;
+  var Score: Integer): Boolean;
+var
+  Hash: string;
+begin
+  Result := True;
+  Hash := CalculateHash(Password);
+  if FPasswordScores.TryGetValue(Hash, Score) then Exit;
+  Score := EvaluatePasswordScore(Password);
+  FPasswordScores.Add(Hash, Score);
+end;
+
+procedure TPasswordScoreCache.UpdateCache(const O2File: TO2File);
+var
+  AObject: TO2Object;
   AField: TO2Field;
   ARule: TO2Rule;
+  Score: Integer;
 begin
-  for AField in O2File.Objects[ObjectIndex].Fields do
-    for ARule in O2File.Rules do
-      if (ARule.RuleType = rtPassword) and ARule.Matches(AField) then
-      begin
-          ZxcvbnResult := FZxcvbn.EvaluatePassword(AField.FieldValue);
-          try
-            FPasswordScores.TryAdd(GetHash(AField.FieldValue),
-              ZxcvbnResult.Score);
-          finally
-            ZxcvbnResult.Free;
-          end;
-      end;
+  for ARule in O2File.Rules do
+    if ARule.Active and (ARule.RuleType = rtPassword)
+      and ARule.Params.ReadBoolean(DisplayPasswordStrengthParam,
+        DefaultDisplayPasswordStrength) then
+      for AObject in O2File.Objects do
+        for AField in AObject.Fields do
+          if ARule.Matches(AField) then
+            TryGetPasswordScore(AField.FieldValue, Score);
 end;
 
 end.

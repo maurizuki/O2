@@ -1519,7 +1519,7 @@ begin
     BeginBatchOperation;
     try
       O2File.Load(Self);
-      PasswordScoreCache.Update(O2File);
+      PasswordScoreCache.UpdateCache(O2File);
     finally
       EndBatchOperation;
     end;
@@ -2267,7 +2267,6 @@ begin
   Model := TNewObjectModel.Create(O2File);
   if TObjPropsDlg.Execute(Model, pgGeneral) then
   begin
-    PasswordScoreCache.Update(O2File, Model.O2Object.Index);
     Item := ObjToListItem(Model.O2Object, nil);
     ObjectsView.ClearSelection;
     Item.Selected := True;
@@ -2284,7 +2283,6 @@ begin
   Model := TDuplicateObjectModel.Create(O2File, SelectedObject);
   if TObjPropsDlg.Execute(Model, pgGeneral) then
   begin
-    PasswordScoreCache.Update(O2File, Model.O2Object.Index);
     Item := ObjToListItem(Model.O2Object, nil);
     ObjectsView.ClearSelection;
     Item.Selected := True;
@@ -2329,7 +2327,6 @@ begin
   Model := TEditObjectModel.Create(O2File, SelectedObject);
   if TObjPropsDlg.Execute(Model, pgGeneralTags) then
   begin
-    PasswordScoreCache.Update(O2File, Model.O2Object.Index);
     ObjToListItem(Model.O2Object, ObjectsView.Selected);
     NotifyChanges([ncObjProps, ncTagList]);
   end;
@@ -2395,7 +2392,6 @@ begin
   Model := TEditObjectModel.Create(O2File, SelectedObject);
   if TObjPropsDlg.Execute(Model, Page) then
   begin
-    PasswordScoreCache.Update(O2File, Model.O2Object.Index);
     ObjToListItem(Model.O2Object, ObjectsView.Selected);
     NotifyChanges([ncObjProps, ncTagList]);
   end;

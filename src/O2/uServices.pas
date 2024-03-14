@@ -46,8 +46,7 @@ type
   end;
 
   IPasswordScoreCache = interface(IPasswordScoreProvider)
-    procedure Update(const O2File: TO2File); overload;
-    procedure Update(const O2File: TO2File; ObjectIndex: Integer); overload;
+    procedure UpdateCache(const O2File: TO2File);
   end;
 
   IFileProps = interface
