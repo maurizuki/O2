@@ -22,57 +22,75 @@ uses
 
 type
   TAppFile = class
-  private
-    FFileName: string;
-    FPath: string;
-    function GetFullPath: string;
   protected
-    function GetSize: Int64;
-  public
-    constructor Create(const FileName, Path: string);
-    property FileName: string read FFileName;
-    property Path: string read FPath;
-    property FullPath: string read GetFullPath;
-    property Size: Int64 read GetSize;
-  end;
-
-  TPortableAppFile = class(TAppFile)
-  private
+    FFileName: string;
     FPortablePath: string;
     FOverwritePrompt: string;
-    FContent: string;
-  protected
-    function GetSize: Int64;
+
+    function GetFullPath: string; virtual; abstract;
+    function GetSize: Int64; virtual; abstract;
+
+    procedure CopyTo(NewFileName: string); virtual; abstract;
   public
-    constructor Create(const FileName, Path, PortablePath: string);
+    constructor Create(const FileName, PortablePath: string);
+
     procedure InstallPortable(InstallPath: string);
-    property PortablePath: string read FPortablePath;
+
+    property FullPath: string read GetFullPath;
+    property Size: Int64 read GetSize;
     property OverwritePrompt: string read FOverwritePrompt
       write FOverwritePrompt;
-    property Content: string read FContent write FContent;
+  end;
+
+  TAppFileInMemory = class(TAppFile)
+  private
+    FContent: string;
+  protected
+    function GetFullPath: string; override;
+    function GetSize: Int64; override;
+
+    procedure CopyTo(NewFileName: string); override;
+  public
+    constructor Create(const FileName, PortablePath, Content: string);
+  end;
+
+  TAppFileOnDisk = class(TAppFile)
+  private
+    FPath: string;
+  protected
+    function GetFullPath: string; override;
+    function GetSize: Int64; override;
+
+    procedure CopyTo(NewFileName: string); override;
+  public
+    constructor Create(const FileName, Path, PortablePath: string);
   end;
 
   TAppFiles = class(TInterfacedObject, IAppFiles)
   private
     FFiles: TStrings;
+
     function GetFiles(IndexOrName: Variant): TAppFile;
-    function GetFullPath(IndexOrName: Variant): string;
+    function GetFullPaths(IndexOrName: Variant): string;
     function GetCount: Integer;
   public
     constructor Create;
     destructor Destroy; override;
+
     function Add(const Name, FileName, Path, PortablePath: string): TAppFiles;
       overload;
     function Add(const Name, FileName, Path, PortablePath,
       OverwritePrompt: string): TAppFiles; overload;
     function AddInMemory(const Name, FileName, Path, PortablePath,
       Content: string): TAppFiles;
+
     function FileExists(const Name: string): Boolean;
-    function GetPortableFilesTotalSize: Int64;
+    function GetTotalSize: Int64;
     procedure InstallPortable(const Path: string);
+
     property Count: Integer read GetCount;
     property Files[IndexOrName: Variant]: TAppFile read GetFiles;
-    property FullPath[IndexOrName: Variant]: string read GetFullPath;
+    property FullPaths[IndexOrName: Variant]: string read GetFullPaths;
   end;
 
 implementation
@@ -82,18 +100,92 @@ uses
 
 { TAppFile }
 
-constructor TAppFile.Create(const FileName, Path: string);
+constructor TAppFile.Create(const FileName, PortablePath: string);
 begin
   FFileName := FileName;
+  FPortablePath := PortablePath;
+end;
+
+procedure TAppFile.InstallPortable(InstallPath: string);
+begin
+  InstallPath := IncludeTrailingPathDelimiter(InstallPath)
+    + IncludeTrailingPathDelimiter(FPortablePath);
+
+  if (OverwritePrompt = '')
+    or not FileExists(InstallPath + FFileName)
+    or YesNoBox(OverwritePrompt) then
+  begin
+    ForceDirectories(InstallPath);
+    CopyTo(InstallPath + FFileName);
+  end;
+end;
+
+{ TAppFileInMemory }
+
+constructor TAppFileInMemory.Create(const FileName, PortablePath,
+  Content: string);
+begin
+  inherited Create(FileName, PortablePath);
+  FContent := Content;
+end;
+
+function TAppFileInMemory.GetFullPath: string;
+begin
+  Result := FFileName;
+end;
+
+function TAppFileInMemory.GetSize: Int64;
+var
+  Writer: TTextWriter;
+  F: TMemoryStream;
+begin
+  F := TMemoryStream.Create;
+  try
+    Writer := TStreamWriter.Create(F);
+    try
+      Writer.Write(FContent);
+    finally
+      Writer.Free;
+    end;
+
+    Result := F.Size;
+  finally
+    F.Free;
+  end;
+end;
+
+procedure TAppFileInMemory.CopyTo(NewFileName: string);
+var
+  Writer: TTextWriter;
+  F: TFileStream;
+begin
+  F := TFileStream.Create(NewFileName, fmCreate);
+  try
+    Writer := TStreamWriter.Create(F);
+    try
+      Writer.Write(FContent);
+    finally
+      Writer.Free;
+    end;
+  finally
+    F.Free;
+  end;
+end;
+
+{ TAppFileOnDisk }
+
+constructor TAppFileOnDisk.Create(const FileName, Path, PortablePath: string);
+begin
+  inherited Create(FileName, PortablePath);
   FPath := Path;
 end;
 
-function TAppFile.GetFullPath: string;
+function TAppFileOnDisk.GetFullPath: string;
 begin
-  Result := IncludeTrailingPathDelimiter(Path) + FileName;
+  Result := IncludeTrailingPathDelimiter(FPath) + FFileName;
 end;
 
-function TAppFile.GetSize: Int64;
+function TAppFileOnDisk.GetSize: Int64;
 var
   SearchResult: TSearchRec;
 begin
@@ -105,68 +197,9 @@ begin
   FindClose(SearchResult);
 end;
 
-{ TPortableAppFile }
-
-constructor TPortableAppFile.Create(const FileName, Path, PortablePath: string);
+procedure TAppFileOnDisk.CopyTo(NewFileName: string);
 begin
-  inherited Create(FileName, Path);
-  FPortablePath := PortablePath;
-end;
-
-function TPortableAppFile.GetSize: Int64;
-var
-  Writer: TTextWriter;
-  F: TMemoryStream;
-begin
-  if FContent <> '' then
-  begin
-    F := TMemoryStream.Create;
-    try
-      Writer := TStreamWriter.Create(F);
-      try
-        Writer.Write(FContent);
-      finally
-        Writer.Free;
-      end;
-
-      Result := F.Size;
-    finally
-      F.Free;
-    end;
-  end
-  else
-    Result := inherited GetSize;
-end;
-
-procedure TPortableAppFile.InstallPortable(InstallPath: string);
-var
-  Writer: TTextWriter;
-  F: TFileStream;
-begin
-  InstallPath := IncludeTrailingPathDelimiter(InstallPath)
-    + IncludeTrailingPathDelimiter(PortablePath);
-  if (OverwritePrompt = '')
-    or not FileExists(InstallPath + FileName)
-    or YesNoBox(OverwritePrompt) then
-  begin
-    ForceDirectories(InstallPath);
-    if FContent <> '' then
-    begin
-      F := TFileStream.Create(InstallPath + FileName, fmCreate);
-      try
-        Writer := TStreamWriter.Create(F);
-        try
-          Writer.Write(FContent);
-        finally
-          Writer.Free;
-        end;
-      finally
-        F.Free;
-      end;
-    end
-    else
-      CopyFile(PWideChar(FullPath), PWideChar(InstallPath + FileName), False);
-  end;
+  CopyFile(PWideChar(FullPath), PWideChar(NewFileName), False);
 end;
 
 { TAppFiles }
@@ -199,7 +232,7 @@ begin
     Result := TAppFile(FFiles.Objects[FFiles.IndexOf(IndexOrName)]);
 end;
 
-function TAppFiles.GetFullPath(IndexOrName: Variant): string;
+function TAppFiles.GetFullPaths(IndexOrName: Variant): string;
 begin
   Result := Files[IndexOrName].FullPath;
 end;
@@ -207,16 +240,16 @@ end;
 function TAppFiles.Add(const Name, FileName, Path,
   PortablePath: string): TAppFiles;
 begin
-  FFiles.AddObject(Name, TPortableAppFile.Create(FileName, Path, PortablePath));
+  FFiles.AddObject(Name, TAppFileOnDisk.Create(FileName, Path, PortablePath));
   Result := Self;
 end;
 
 function TAppFiles.Add(const Name, FileName, Path, PortablePath,
   OverwritePrompt: string): TAppFiles;
 var
-  AppFile: TPortableAppFile;
+  AppFile: TAppFile;
 begin
-  AppFile := TPortableAppFile.Create(FileName, Path, PortablePath);
+  AppFile := TAppFileOnDisk.Create(FileName, Path, PortablePath);
   AppFile.OverwritePrompt := OverwritePrompt;
   FFiles.AddObject(Name, AppFile);
   Result := Self;
@@ -224,12 +257,9 @@ end;
 
 function TAppFiles.AddInMemory(const Name, FileName, Path, PortablePath,
   Content: string): TAppFiles;
-var
-  AppFile: TPortableAppFile;
 begin
-  AppFile := TPortableAppFile.Create(FileName, Path, PortablePath);
-  AppFile.Content := Content;
-  FFiles.AddObject(Name, AppFile);
+  FFiles.AddObject(Name,
+    TAppFileInMemory.Create(FileName, PortablePath, Content));
   Result := Self;
 end;
 
@@ -238,29 +268,23 @@ var
   Index: Integer;
 begin
   Index := FFiles.IndexOf(Name);
-  if Index >= 0 then
-    Result := SysUtils.FileExists(FullPath[Index])
-  else
-    Result := False;
+  if Index = -1 then Exit(False);
+  Result := SysUtils.FileExists(FullPaths[Index]);
 end;
 
-function TAppFiles.GetPortableFilesTotalSize: Int64;
+function TAppFiles.GetTotalSize: Int64;
 var
   I: Integer;
 begin
   Result := 0;
-  for I := 0 to Pred(Count) do
-    if Files[I] is TPortableAppFile then
-      Inc(Result, TPortableAppFile(Files[I]).Size);
+  for I := 0 to Count - 1 do Inc(Result, Files[I].Size);
 end;
 
 procedure TAppFiles.InstallPortable(const Path: string);
 var
   I: Integer;
 begin
-  for I := 0 to Pred(Count) do
-    if Files[I] is TPortableAppFile then
-      TPortableAppFile(Files[I]).InstallPortable(Path);
+  for I := 0 to Count - 1 do Files[I].InstallPortable(Path);
 end;
 
 end.

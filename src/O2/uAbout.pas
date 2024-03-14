@@ -90,7 +90,7 @@ begin
     Memo1.Lines.Add('O2 file identifier: ' + GUIDToString(O2FileGUID));
     Memo1.Lines.Add('');
     Memo1.Lines.Add('EXE path: ' + Application.ExeName);
-    Memo1.Lines.Add('Settings path: ' + FAppFiles.FullPath[IdSettings]);
+    Memo1.Lines.Add('Settings path: ' + FAppFiles.FullPaths[IdSettings]);
     Memo1.Lines.EndUpdate;
   end;
 end;
@@ -102,7 +102,7 @@ end;
 
 procedure TAboutForm.btReadMeClick(Sender: TObject);
 begin
-  TRTFViewer.Execute(Application, FAppFiles.FullPath[IdReadMe]);
+  TRTFViewer.Execute(Application, FAppFiles.FullPaths[IdReadMe]);
 end;
 
 end.

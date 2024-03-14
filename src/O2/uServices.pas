@@ -23,11 +23,11 @@ uses
 type
   IAppFiles = interface
     function FileExists(const Name: string): Boolean;
-    function GetPortableFilesTotalSize: Int64;
+    function GetTotalSize: Int64;
     procedure InstallPortable(const Path: string);
 
-    function GetFullPath(IndexOrName: Variant): string;
-    property FullPath[IndexOrName: Variant]: string read GetFullPath;
+    function GetFullPaths(IndexOrName: Variant): string;
+    property FullPaths[IndexOrName: Variant]: string read GetFullPaths;
   end;
 
   IStorage = interface

@@ -243,7 +243,7 @@ begin
 
   for I := Low(Languages) to High(Languages) do
   begin
-    LanguageModule := ChangeFileExt(AppFiles.FullPath[IdAppExe],
+    LanguageModule := ChangeFileExt(AppFiles.FullPaths[IdAppExe],
       '.' + Languages[I].Language);
     if FileExists(LanguageModule) then
       TAppFiles(AppFiles).Add(IdResourceModule + Languages[I].Language,

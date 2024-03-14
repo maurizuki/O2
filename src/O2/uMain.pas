@@ -676,7 +676,7 @@ begin
   ImportSettingsDlg.Filter := SImportSettingsFileFilter;
   ExportSettingsDlg.Filter := SExportSettingsFileFilter;
 
-  LoadSettings(AppFiles.FullPath[IdSettings]);
+  LoadSettings(AppFiles.FullPaths[IdSettings]);
   Initialize;
 
   ActiveControl := ObjectsView;
@@ -686,7 +686,7 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-  SaveSettings(AppFiles.FullPath[IdSettings]);
+  SaveSettings(AppFiles.FullPaths[IdSettings]);
   FMRUList.Free;
   FMRUMenuItems.Free;
 end;
@@ -933,7 +933,7 @@ end;
 
 procedure TMainForm.LanguageClick(Sender: TObject);
 begin
-  SetLocaleOverride(AppFiles.FullPath[IdAppExe],
+  SetLocaleOverride(AppFiles.FullPaths[IdAppExe],
     Languages[TComponent(Sender).Tag].Language);
   InfoBox(SApplyAtNextStartup);
 end;
@@ -1118,7 +1118,7 @@ end;
 
 procedure TMainForm.DefaultLanguageExecute(Sender: TObject);
 begin
-  DeleteLocaleOverride(AppFiles.FullPath[IdAppExe]);
+  DeleteLocaleOverride(AppFiles.FullPaths[IdAppExe]);
   InfoBox(SApplyAtNextStartup);
 end;
 
@@ -1129,8 +1129,8 @@ begin
   Dir := '';
   if SelectDirectory(Format(SInstallOnRemovableMediaPrompt +
     #13#10 + SInstallOnRemovableMediaFolderPrompt,
-    [AppFiles.GetPortableFilesTotalSize / (1024 * 1024)]),
-    '', Dir, [sdNewUI, sdNewFolder]) then
+    [AppFiles.GetTotalSize / (1024 * 1024)]), '', Dir,
+    [sdNewUI, sdNewFolder]) then
   begin
     BeginBatchOperation;
     try
@@ -1502,7 +1502,7 @@ begin
   if FileName <> '' then
     Parameters := Parameters + '"' + FileName + '"';
 
-  AppExe := AppFiles.FullPath[IdAppExe];
+  AppExe := AppFiles.FullPaths[IdAppExe];
   ShellExecute(Application.Handle, 'open', PChar(AppExe), PChar(Parameters),
     PChar(ExtractFileDir(AppExe)), SW_SHOWNORMAL);
 end;
