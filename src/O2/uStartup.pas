@@ -33,7 +33,8 @@ uses
   msxmldom, JclFileUtils, uMain, uGlobal, uShellUtils, uAppFiles, uXmlStorage,
   uStorageUtils, uPasswordScoreCache, uO2File, uO2Objects, uO2Relations,
   uO2Rules, uFilePropsModel, uEncryptionPropsModel, uObjectModels,
-  uRelationModels, uRuleModels;
+  uRelationModels, uRuleModels, uO2ImportExport, uXmlImportExport,
+  uiCalendarExport, uHTMLExportModel, uPrintModel;
 
 function MigrateConfiguration(XmlStorage: IStorage;
   XML: IXMLDocument): IXMLDocument;
@@ -276,6 +277,14 @@ begin
     .AsSingleton;
 
   ServiceContainer
+    .RegisterType<IPasswordProvider>(
+      function: IPasswordProvider
+      begin
+        Result := MainForm;
+      end)
+    .AsSingleton;
+
+  ServiceContainer
     .RegisterType<TO2File>(
       function: TO2File
       begin
@@ -325,6 +334,8 @@ begin
     .Implements<IEncryptionProps>
     .AsTransient;
 
+  {$REGION 'IObjectProps'}
+
   ServiceContainer
     .RegisterType<TNewObjectModel>(NewObjectService)
     .Implements<IObjectProps>
@@ -340,6 +351,10 @@ begin
     .Implements<IObjectProps>
     .AsTransient;
 
+  {$ENDREGION}
+
+  {$REGION 'IRelationProps'}
+
   ServiceContainer
     .RegisterType<TNewRelationModel>(NewRelationService)
     .Implements<IRelationProps>
@@ -349,6 +364,10 @@ begin
     .RegisterType<TEditRelationModel>(EditRelationService)
     .Implements<IRelationProps>
     .AsTransient;
+
+  {$ENDREGION}
+
+  {$REGION 'IRuleProps'}
 
   ServiceContainer
     .RegisterType<TNewRuleModel>(NewRuleService)
@@ -365,11 +384,46 @@ begin
     .Implements<IRuleProps>
     .AsTransient;
 
-  { TODO : Register IFileOperation }
+  {$ENDREGION}
 
-  { TODO : Register IHTMLExport }
+  {$REGION 'IFileOperation'}
 
-  { TODO : Register IPrint }
+  ServiceContainer
+    .RegisterType<TO2Import>(ImportFromO2FileService)
+    .Implements<IFileOperation>
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TXmlImport>(ImportFromXmlFileService)
+    .Implements<IFileOperation>
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TO2Export>(ExportToO2FileService)
+    .Implements<IFileOperation>
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TXmlExport>(ExportToXmlFileService)
+    .Implements<IFileOperation>
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TiCalendarExport>(ExportToIcsFileService)
+    .Implements<IFileOperation>
+    .AsTransient;
+
+  {$ENDREGION}
+
+  ServiceContainer
+    .RegisterType<THTMLExportModel>
+    .Implements<IHTMLExport>
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TPrintModel>
+    .Implements<IPrint>
+    .AsTransient;
 
   { TODO : Register IReplaceOperation }
 

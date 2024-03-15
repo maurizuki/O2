@@ -38,6 +38,11 @@ const
   NewRuleService = 'NewRule';
   DuplicateRuleService = 'DuplicateRule';
   EditRuleService = 'EditRule';
+  ImportFromO2FileService = 'ImportFromO2File';
+  ImportFromXmlFileService = 'ImportFromXmlFile';
+  ExportToO2FileService = 'ExportToO2File';
+  ExportToXmlFileService = 'ExportToXmlFile';
+  ExportToIcsFileService = 'ExportToIcsFile';
 
 { Application file names and paths }
 

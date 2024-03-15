@@ -618,10 +618,8 @@ uses
   StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, JSON, UITypes,
   uStartup, uShellUtils, uStorageUtils, uAbout, uGetPassword,
   uSetPassword, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
-  uReplaceOperations, uReplaceDlg, uPrintModel, uPrintPreview, uHTMLExportModel,
-  uHTMLExport, uO2Defs, uBrowserEmulation, uCtrlHelpers, uFileOperation,
-  uO2ImportExport, uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper,
-  uO2ObjectsUtils;
+  uReplaceOperations, uReplaceDlg, uPrintPreview, uHTMLExport, uO2Defs,
+  uBrowserEmulation, uCtrlHelpers, uStuffHTML, uHTMLHelper, uO2ObjectsUtils;
 
 {$R *.dfm}
 
@@ -1012,26 +1010,17 @@ end;
 
 procedure TMainForm.ImportExecute(Sender: TObject);
 const
-  idxImportFromO2File = 1;
-  idxImportFromXmlFile = 2;
-var
-  ImportFile: IFileOperation;
+  ServiceNames: array [1..2] of string = (
+    ImportFromO2FileService,
+    ImportFromXmlFileService);
 begin
   ImportDialog.FileName := '';
   if ImportDialog.Execute then
   begin
     BeginBatchOperation;
     try
-      case ImportDialog.FilterIndex of
-        idxImportFromO2File:
-          ImportFile := TO2Import.Create(O2File, Self);
-        idxImportFromXmlFile:
-          ImportFile := TXmlImport.Create(O2File);
-        else
-          Exit;
-      end;
-
-      ImportFile.Execute(ImportDialog.FileName);
+      ServiceContainer.Resolve<IFileOperation>(
+        ServiceNames[ImportDialog.FilterIndex]).Execute(ImportDialog.FileName);
     finally
       EndBatchOperation;
     end;
@@ -1065,29 +1054,18 @@ end;
 
 procedure TMainForm.ExportExecute(Sender: TObject);
 const
-  idxExportToO2File = 1;
-  idxExportToXmlFile = 2;
-  idxExportToIcsFile = 3;
-var
-  ExportFile: IFileOperation;
+  ServiceNames: array [1..3] of string = (
+    ExportToO2FileService,
+    ExportToXmlFileService,
+    ExportToIcsFileService);
 begin
   ExportDialog.FileName := '';
   if ExportDialog.Execute then
   begin
     BeginBatchOperation;
     try
-      case ExportDialog.FilterIndex of
-        idxExportToO2File:
-          ExportFile := TO2Export.Create(O2File, FSelectedObjects);
-        idxExportToXmlFile:
-          ExportFile := TXmlExport.Create(O2File);
-        idxExportToIcsFile:
-          ExportFile := TiCalendarExport.Create(O2File, FSelectedObjects);
-        else
-          Exit;
-      end;
-
-      ExportFile.Execute(ExportDialog.FileName);
+      ServiceContainer.Resolve<IFileOperation>(
+        ServiceNames[ExportDialog.FilterIndex]).Execute(ExportDialog.FileName);
     finally
       EndBatchOperation;
     end;
@@ -1096,13 +1074,12 @@ end;
 
 procedure TMainForm.ExportToHTMLExecute(Sender: TObject);
 begin
-  THTMLExport.Execute(THTMLExportModel.Create(O2File, FSelectedObjects,
-    FAppVersionInfo, FStorage));
+  THTMLExport.Execute(ServiceContainer.Resolve<IHTMLExport>);
 end;
 
 procedure TMainForm.PrintFileExecute(Sender: TObject);
 begin
-  TPrintPreview.Execute(TPrintModel.Create(O2File, FSelectedObjects, FStorage));
+  TPrintPreview.Execute(ServiceContainer.Resolve<IPrint>);
 end;
 
 procedure TMainForm.PrintFileUpdate(Sender: TObject);
