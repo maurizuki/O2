@@ -96,6 +96,7 @@
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_MinorVer>4</VerInfo_MinorVer>
         <VerInfo_Release>0</VerInfo_Release>
+        <DCC_UnitSearchPath>..\..\..\spring4d\Library\Delphi11\Win32\Release;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <Version>7.0</Version>

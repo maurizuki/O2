@@ -28,6 +28,17 @@ const
 
   DefaultFileExt = 'o2';
 
+{ Service names }
+
+  NewObjectService = 'NewObject';
+  DuplicateObjectService = 'DuplicateObject';
+  EditObjectService = 'EditObject';
+  NewRelationService = 'NewRelation';
+  EditRelationService = 'EditRelation';
+  NewRuleService = 'NewRule';
+  DuplicateRuleService = 'DuplicateRule';
+  EditRuleService = 'EditRule';
+
 { Application file names and paths }
 
   AppInfoFile = 'appinfo.ini';

@@ -18,13 +18,10 @@ unit uStartup;
 interface
 
 uses
-  uServices, uUtils;
+  Spring.Container, uServices, uUtils;
 
 var
-  AppVersionInfo: TAppVersionInfo;
-  AppFiles: IAppFiles;
-  Storage: IStorage;
-  PasswordScoreCache: IPasswordScoreCache;
+  ServiceContainer: TContainer;
 
 procedure GetCommandLineParams(out OpenFileName, PortablePath: string);
 procedure ConfigureServices;
@@ -33,8 +30,10 @@ implementation
 
 uses
   Forms, ComCtrls, SysUtils, TypInfo, Variants, XMLDoc, XMLIntf, xmldom,
-  msxmldom, JclFileUtils, uGlobal, uShellUtils, uAppFiles, uXmlStorage,
-  uStorageUtils, uPasswordScoreCache;
+  msxmldom, JclFileUtils, uMain, uGlobal, uShellUtils, uAppFiles, uXmlStorage,
+  uStorageUtils, uPasswordScoreCache, uO2File, uO2Objects, uO2Relations,
+  uO2Rules, uFilePropsModel, uEncryptionPropsModel, uObjectModels,
+  uRelationModels, uRuleModels;
 
 function MigrateConfiguration(XmlStorage: IStorage;
   XML: IXMLDocument): IXMLDocument;
@@ -53,65 +52,65 @@ begin
     if not VarIsNull(AValue) then
     begin
       Count := StrToIntDef(AValue, 0);
-      Storage.WriteInteger(IdMRUList, Count);
+      XmlStorage.WriteInteger(IdMRUList, Count);
 
       for I := 0 to Count - 1 do
       begin
         AValue := ANode.ChildValues['Item' + IntToStr(I)];
         if not VarIsNull(AValue) then
-          Storage.WriteString(Format(IdMRUListItemFmt, [I]), AValue);
+          XmlStorage.WriteString(Format(IdMRUListItemFmt, [I]), AValue);
       end;
     end;
   end;
 
   AValue := XML.DocumentElement.ChildValues['StayOnTop'];
   if not VarIsNull(AValue) then
-    Storage.WriteBoolean(IdStayOnTop, StrToBoolDef(AValue, False));
+    XmlStorage.WriteBoolean(IdStayOnTop, StrToBoolDef(AValue, False));
 
   AValue := XML.DocumentElement.ChildValues['Transparency'];
   if not VarIsNull(AValue) then
-    Storage.WriteInteger(IdTransparency, StrToIntDef(AValue, 0));
+    XmlStorage.WriteInteger(IdTransparency, StrToIntDef(AValue, 0));
 
   AValue := XML.DocumentElement.ChildValues['AutoCheckForUpdates'];
   if not VarIsNull(AValue) then
-    Storage.WriteBoolean(IdAutoCheckForUpdates,
+    XmlStorage.WriteBoolean(IdAutoCheckForUpdates,
       StrToBoolDef(AValue, True));
 
   AValue := XML.DocumentElement.ChildValues['ViewStyle'];
   if not VarIsNull(AValue) then
-    WriteIntIdent(Storage, IdViewStyle, ViewStyles,
+    WriteIntIdent(XmlStorage, IdViewStyle, ViewStyles,
       GetEnumValue(TypeInfo(TViewStyle), AValue));
 
   AValue := XML.DocumentElement.ChildValues['SortColumn'];
   if not VarIsNull(AValue) then
-    WriteIntIdent(Storage, IdSortKind, SortKinds,
+    WriteIntIdent(XmlStorage, IdSortKind, SortKinds,
       GetEnumValue(TypeInfo(TObjectSortKind), AValue));
 
   AValue := XML.DocumentElement.ChildValues['SortSign'];
   if not VarIsNull(AValue) then
-    Storage.WriteBoolean(IdSortAscending, StrToIntDef(AValue, 1) > 0);
+    XmlStorage.WriteBoolean(IdSortAscending, StrToIntDef(AValue, 1) > 0);
 
   ANode := XML.DocumentElement.ChildNodes.FindNode('Print');
   if Assigned(ANode) then
   begin
     AValue := ANode.ChildValues['IncludeTags'];
     if not VarIsNull(AValue) then
-      Storage.WriteBoolean(IdPrintIncludeTags,
+      XmlStorage.WriteBoolean(IdPrintIncludeTags,
         StrToBoolDef(AValue, True));
 
     AValue := ANode.ChildValues['IncludeNotes'];
     if not VarIsNull(AValue) then
-      Storage.WriteBoolean(IdPrintIncludeNotes,
+      XmlStorage.WriteBoolean(IdPrintIncludeNotes,
         StrToBoolDef(AValue, True));
 
     AValue := ANode.ChildValues['IncludeRelations'];
     if not VarIsNull(AValue) then
-      Storage.WriteBoolean(IdPrintIncludeRelations,
+      XmlStorage.WriteBoolean(IdPrintIncludeRelations,
         StrToBoolDef(AValue, True));
 
     AValue := ANode.ChildValues['IncludePasswords'];
     if not VarIsNull(AValue) then
-      Storage.WriteBoolean(IdPrintIncludePasswords,
+      XmlStorage.WriteBoolean(IdPrintIncludePasswords,
         StrToBoolDef(AValue, True));
   end;
 
@@ -140,12 +139,10 @@ end;
 
 procedure ConfigureServices;
 var
-  OpenFileName, AppPath, SettingsPath, LauncherPath, PortablePath,
-  LanguageModule: string;
   ExeVersionInfo: TJclFileVersionInfo;
+  AppVersionInfo: TAppVersionInfo;
   AppInfoBuilder: TStringBuilder;
   AppInfoBytes: TBytes;
-  I: Integer;
 begin
   ExeVersionInfo := TJclFileVersionInfo.Create(Application.ExeName);
   try
@@ -202,58 +199,187 @@ begin
     ExeVersionInfo.Free;
   end;
 
-  GetCommandLineParams(OpenFileName, PortablePath);
+  ServiceContainer
+    .RegisterInstance<TAppVersionInfo>(AppVersionInfo)
+    .AsSingleton;
 
-  if PortablePath <> '' then
-  begin
-    AppPath :=
-      IncludeTrailingPathDelimiter(PortablePath) + PortableAppPath;
-    if not GetSettingsOverride(Application.ExeName, SettingsPath) then
-      SettingsPath :=
-        IncludeTrailingPathDelimiter(PortablePath) + PortableSettingsPath;
-    LauncherPath :=
-      IncludeTrailingPathDelimiter(PortablePath) + PortableLauncherPath;
-  end
-  else
-  begin
-    AppPath := ExtractFilePath(Application.ExeName);
-    if not GetSettingsOverride(Application.ExeName, SettingsPath) then
-      SettingsPath :=
-        IncludeTrailingPathDelimiter(TShellFolders.AppData) + LocalSettingsDir;
-    LauncherPath := AppPath;
-  end;
+  ServiceContainer
+    .RegisterType<TAppFiles>(
+      function: TAppFiles
+      var
+        OpenFileName, AppPath, SettingsPath, LauncherPath, PortablePath: string;
+        LanguageModule: string;
+        I: Integer;
+      begin
+        GetCommandLineParams(OpenFileName, PortablePath);
 
-  AppFiles := TAppFiles.Create
-    .Add(IdAppExe, ExtractFileName(Application.ExeName), AppPath,
-      PortableAppPath)
-    .Add(IdAppInfo, AppInfoFile, AppPath, PortableAppInfoPath, AppInfoBytes)
-    .Add(IdAppIcon, AppIconFile, AppPath, PortableAppInfoPath)
-    .Add(IdAppIcon16, AppIcon16File, AppPath, PortableAppInfoPath)
-    .Add(IdAppIcon32, AppIcon32File, AppPath, PortableAppInfoPath)
-    .Add(IdFileTypeIcon, FileTypeIconFile, AppPath, PortableFileTypeIconsPath)
-    .Add(IdFileTypeIcon16, FileTypeIcon16File, AppPath,
-      PortableFileTypeIconsPath)
-    .Add(IdFileTypeIcon32, FileTypeIcon32File, AppPath,
-      PortableFileTypeIconsPath)
-    .Add(IdLauncher, LauncherFile, LauncherPath, PortableLauncherPath)
-    .Add(IdSettings, SettingsFile, SettingsPath, PortableSettingsPath,
-      SSettingsOverwriteQuery)
-    .Add(IdHelp, HTMLHelpFile, AppPath, PortableLauncherPath)
-    .Add(IdLicense, LicenseFile, AppPath, PortableAppPath)
-    .Add(IdReadMe, ReadMeFile, AppPath, PortableAppPath);
+        if PortablePath <> '' then
+        begin
+          AppPath :=
+            IncludeTrailingPathDelimiter(PortablePath) + PortableAppPath;
+          if not GetSettingsOverride(Application.ExeName, SettingsPath) then
+            SettingsPath :=
+              IncludeTrailingPathDelimiter(PortablePath) + PortableSettingsPath;
+          LauncherPath :=
+            IncludeTrailingPathDelimiter(PortablePath) + PortableLauncherPath;
+        end
+        else
+        begin
+          AppPath := ExtractFilePath(Application.ExeName);
+          if not GetSettingsOverride(Application.ExeName, SettingsPath) then
+            SettingsPath := IncludeTrailingPathDelimiter(TShellFolders.AppData)
+              + LocalSettingsDir;
+          LauncherPath := AppPath;
+        end;
 
-  for I := Low(Languages) to High(Languages) do
-  begin
-    LanguageModule := ChangeFileExt(AppFiles.FullPaths[IdAppExe],
-      '.' + Languages[I].Language);
-    if FileExists(LanguageModule) then
-      TAppFiles(AppFiles).Add(IdResourceModule + Languages[I].Language,
-        ExtractFileName(LanguageModule), ExtractFilePath(LanguageModule),
-        PortableAppPath);
-  end;
+        Result := TAppFiles.Create
+          .Add(IdAppExe, ExtractFileName(Application.ExeName), AppPath,
+            PortableAppPath)
+          .Add(IdAppInfo, AppInfoFile, AppPath, PortableAppInfoPath,
+            AppInfoBytes)
+          .Add(IdAppIcon, AppIconFile, AppPath, PortableAppInfoPath)
+          .Add(IdAppIcon16, AppIcon16File, AppPath, PortableAppInfoPath)
+          .Add(IdAppIcon32, AppIcon32File, AppPath, PortableAppInfoPath)
+          .Add(IdFileTypeIcon, FileTypeIconFile, AppPath,
+            PortableFileTypeIconsPath)
+          .Add(IdFileTypeIcon16, FileTypeIcon16File, AppPath,
+            PortableFileTypeIconsPath)
+          .Add(IdFileTypeIcon32, FileTypeIcon32File, AppPath,
+            PortableFileTypeIconsPath)
+          .Add(IdLauncher, LauncherFile, LauncherPath, PortableLauncherPath)
+          .Add(IdSettings, SettingsFile, SettingsPath, PortableSettingsPath,
+            SSettingsOverwriteQuery)
+          .Add(IdHelp, HTMLHelpFile, AppPath, PortableLauncherPath)
+          .Add(IdLicense, LicenseFile, AppPath, PortableAppPath)
+          .Add(IdReadMe, ReadMeFile, AppPath, PortableAppPath);
 
-  Storage := TXmlStorage.Create(MigrateConfiguration);
-  PasswordScoreCache := TPasswordScoreCache.Create;
+        for I := Low(Languages) to High(Languages) do
+        begin
+          LanguageModule := ChangeFileExt(Result.FullPaths[IdAppExe],
+            '.' + Languages[I].Language);
+          if FileExists(LanguageModule) then
+            Result.Add(IdResourceModule + Languages[I].Language,
+              ExtractFileName(LanguageModule), ExtractFilePath(LanguageModule),
+              PortableAppPath);
+        end;
+      end)
+    .Implements<IAppFiles>
+    .AsSingleton;
+
+  ServiceContainer
+    .RegisterInstance<IStorage>(TXmlStorage.Create(MigrateConfiguration))
+    .AsSingleton;
+
+  ServiceContainer
+    .RegisterType<TPasswordScoreCache>
+    .Implements<IPasswordScoreCache>
+    .AsSingleton;
+
+  ServiceContainer
+    .RegisterType<TO2File>(
+      function: TO2File
+      begin
+        Result := MainForm.O2File;
+      end)
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<IEnumerable<TO2Object>>(
+      function: IEnumerable<TO2Object>
+      begin
+        Result := MainForm.SelectedObjects;
+      end)
+    .AsSingleton;
+
+  ServiceContainer
+    .RegisterType<TO2Object>(
+      function: TO2Object
+      begin
+        Result := MainForm.SelectedObject;
+      end)
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TO2Relation>(
+      function: TO2Relation
+      begin
+        Result := MainForm.SelectedRelation;
+      end)
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TO2Rule>(
+      function: TO2Rule
+      begin
+        Result := MainForm.SelectedRule;
+      end)
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TFilePropsModel>
+    .Implements<IFileProps>
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TEncryptionPropsModel>
+    .Implements<IEncryptionProps>
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TNewObjectModel>(NewObjectService)
+    .Implements<IObjectProps>
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TDuplicateObjectModel>(DuplicateObjectService)
+    .Implements<IObjectProps>
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TEditObjectModel>(EditObjectService)
+    .Implements<IObjectProps>
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TNewRelationModel>(NewRelationService)
+    .Implements<IRelationProps>
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TEditRelationModel>(EditRelationService)
+    .Implements<IRelationProps>
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TNewRuleModel>(NewRuleService)
+    .Implements<IRuleProps>
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TDuplicateRuleModel>(DuplicateRuleService)
+    .Implements<IRuleProps>
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TEditRuleModel>(EditRuleService)
+    .Implements<IRuleProps>
+    .AsTransient;
+
+  { TODO : Register IFileOperation }
+
+  { TODO : Register IHTMLExport }
+
+  { TODO : Register IPrint }
+
+  { TODO : Register IReplaceOperation }
+
+  ServiceContainer.Build;
 end;
+
+initialization
+  ServiceContainer := TContainer.Create;
+
+finalization
+  ServiceContainer.Free;
 
 end.

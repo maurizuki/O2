@@ -530,12 +530,18 @@ type
     FCheckForUpdatesSilent: Boolean;
     FSelectedObjects: IEnumerable<TO2Object>;
     FShowPasswords: Boolean;
+    FAppVersionInfo: TAppVersionInfo;
+    FAppFiles: IAppFiles;
+    FStorage: IStorage;
+    FPasswordScoreCache: IPasswordScoreCache;
 
     function GetFile: TO2File;
     function GetHasSelectedObject: Boolean;
     function GetSelectedObject: TO2Object;
     function GetHasSelectedField: Boolean;
     function GetSelectedField: TO2Field;
+    function GetSelectedRelation: TO2Relation;
+    function GetSelectedRule: TO2Rule;
     function GetEventFilter: TEventFilter;
     procedure SetBusy(const Value: Boolean);
     procedure SetFileName(const Value: string);
@@ -588,15 +594,19 @@ type
     procedure UpdateRuleList;
     procedure UpdateMRUList(const FileName: string = '');
 
-    property O2File: TO2File read GetFile;
     property O2FileName: string read FFileName write SetFileName;
     property HasSelectedObject: Boolean read GetHasSelectedObject;
-    property SelectedObject: TO2Object read GetSelectedObject;
     property HasSelectedField: Boolean read GetHasSelectedField;
     property SelectedField: TO2Field read GetSelectedField;
     property EventFilter: TEventFilter read GetEventFilter;
     property StayOnTop: Boolean read FStayOnTop write SetStayOnTop;
     property Transparency: Integer read FTransparency write SetTransparency;
+  public
+    property O2File: TO2File read GetFile;
+    property SelectedObjects: IEnumerable<TO2Object> read FSelectedObjects;
+    property SelectedObject: TO2Object read GetSelectedObject;
+    property SelectedRelation: TO2Relation read GetSelectedRelation;
+    property SelectedRule: TO2Rule read GetSelectedRule;
   end;
 
 var
@@ -607,12 +617,11 @@ implementation
 uses
   StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, JSON, UITypes,
   uStartup, uShellUtils, uStorageUtils, uAbout, uGetPassword,
-  uEncryptionPropsModel, uSetPassword, uFilePropsModel, uFilePropsDlg,
-  uObjectModels, uObjPropsDlg, uRelationModels, uRelationPropsDlg, uRuleModels,
-  uRulePropsDlg, uReplaceOperations, uReplaceDlg, uPrintModel, uPrintPreview,
-  uHTMLExportModel, uHTMLExport, uO2Defs, uBrowserEmulation, uCtrlHelpers,
-  uFileOperation, uO2ImportExport, uXmlImportExport, uiCalendarExport,
-  uStuffHTML, uHTMLHelper, uO2ObjectsUtils;
+  uSetPassword, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
+  uReplaceOperations, uReplaceDlg, uPrintModel, uPrintPreview, uHTMLExportModel,
+  uHTMLExport, uO2Defs, uBrowserEmulation, uCtrlHelpers, uFileOperation,
+  uO2ImportExport, uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper,
+  uO2ObjectsUtils;
 
 {$R *.dfm}
 
@@ -643,6 +652,10 @@ begin
   FStayOnTop := False;
   FTransparency := 0;
   FSelectedObjects := TO2ObjectListViewEnumerable.Create(ObjectsView);
+  FAppVersionInfo := ServiceContainer.Resolve<TAppVersionInfo>;
+  FAppFiles := ServiceContainer.Resolve<IAppFiles>;
+  FStorage := ServiceContainer.Resolve<IStorage>;
+  FPasswordScoreCache := ServiceContainer.Resolve<IPasswordScoreCache>;
 
   Application.HintHidePause := 4500;
 
@@ -662,7 +675,7 @@ begin
 
   LoadLanguageMenu;
 
-  InstallOnRemovableMedia.Visible := AppFiles.FileExists(IdLauncher);
+  InstallOnRemovableMedia.Visible := FAppFiles.FileExists(IdLauncher);
 
   TEventFilterLookup.Fill(FindByEvent);
 
@@ -676,7 +689,7 @@ begin
   ImportSettingsDlg.Filter := SImportSettingsFileFilter;
   ExportSettingsDlg.Filter := SExportSettingsFileFilter;
 
-  LoadSettings(AppFiles.FullPaths[IdSettings]);
+  LoadSettings(FAppFiles.FullPaths[IdSettings]);
   Initialize;
 
   ActiveControl := ObjectsView;
@@ -686,7 +699,7 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-  SaveSettings(AppFiles.FullPaths[IdSettings]);
+  SaveSettings(FAppFiles.FullPaths[IdSettings]);
   FMRUList.Free;
   FMRUMenuItems.Free;
 end;
@@ -849,7 +862,7 @@ begin
   begin
     SetHighlightColors(Sender.Canvas,
       O2File.Rules.GetHighlightColors(TO2Object(Item.Data),
-      PasswordScoreCache));
+      FPasswordScoreCache));
   end;
 end;
 
@@ -933,7 +946,7 @@ end;
 
 procedure TMainForm.LanguageClick(Sender: TObject);
 begin
-  SetLocaleOverride(AppFiles.FullPaths[IdAppExe],
+  SetLocaleOverride(FAppFiles.FullPaths[IdAppExe],
     Languages[TComponent(Sender).Tag].Language);
   InfoBox(SApplyAtNextStartup);
 end;
@@ -1084,12 +1097,12 @@ end;
 procedure TMainForm.ExportToHTMLExecute(Sender: TObject);
 begin
   THTMLExport.Execute(THTMLExportModel.Create(O2File, FSelectedObjects,
-    AppVersionInfo, Storage));
+    FAppVersionInfo, FStorage));
 end;
 
 procedure TMainForm.PrintFileExecute(Sender: TObject);
 begin
-  TPrintPreview.Execute(TPrintModel.Create(O2File, FSelectedObjects, Storage));
+  TPrintPreview.Execute(TPrintModel.Create(O2File, FSelectedObjects, FStorage));
 end;
 
 procedure TMainForm.PrintFileUpdate(Sender: TObject);
@@ -1099,7 +1112,7 @@ end;
 
 procedure TMainForm.FilePropsExecute(Sender: TObject);
 begin
-  TFilePropsDlg.Execute(TFilePropsModel.Create(O2File));
+  TFilePropsDlg.Execute(ServiceContainer.Resolve<IFileProps>);
 end;
 
 procedure TMainForm.ImportSettingsExecute(Sender: TObject);
@@ -1118,7 +1131,7 @@ end;
 
 procedure TMainForm.DefaultLanguageExecute(Sender: TObject);
 begin
-  DeleteLocaleOverride(AppFiles.FullPaths[IdAppExe]);
+  DeleteLocaleOverride(FAppFiles.FullPaths[IdAppExe]);
   InfoBox(SApplyAtNextStartup);
 end;
 
@@ -1129,12 +1142,12 @@ begin
   Dir := '';
   if SelectDirectory(Format(SInstallOnRemovableMediaPrompt +
     #13#10 + SInstallOnRemovableMediaFolderPrompt,
-    [AppFiles.GetTotalSize / (1024 * 1024)]), '', Dir,
+    [FAppFiles.GetTotalSize / (1024 * 1024)]), '', Dir,
     [sdNewUI, sdNewFolder]) then
   begin
     BeginBatchOperation;
     try
-      AppFiles.InstallPortable(Dir);
+      FAppFiles.InstallPortable(Dir);
     finally
       EndBatchOperation;
     end;
@@ -1157,10 +1170,10 @@ begin
           .Create(CheckForUpdatesResponse.JSONValue);
 
         DebugOutput := Format(DebugOutputFmt,
-          [AppVersionInfo.Version.MajorVersion,
-          AppVersionInfo.Version.MinorVersion,
-          AppVersionInfo.Version.Release,
-          AppVersionInfo.Version.Build,
+          [FAppVersionInfo.Version.MajorVersion,
+          FAppVersionInfo.Version.MinorVersion,
+          FAppVersionInfo.Version.Release,
+          FAppVersionInfo.Version.Build,
           AppUpdateInfo.Version.MajorVersion,
           AppUpdateInfo.Version.MinorVersion,
           AppUpdateInfo.Version.Release,
@@ -1169,7 +1182,7 @@ begin
         OutputDebugString(PChar(DebugOutput));
 
         if AppUpdateInfo.Version
-          .Compare(AppVersionInfo.Version) = GreaterThanValue then
+          .Compare(FAppVersionInfo.Version) = GreaterThanValue then
         begin
           if YesNoBox(Format(SDownloadUpdatesQuery,
             [AppUpdateInfo.Version.MajorVersion,
@@ -1342,7 +1355,7 @@ end;
 
 procedure TMainForm.AboutExecute(Sender: TObject);
 begin
-  TAboutForm.Execute(Application, AppVersionInfo, AppFiles);
+  TAboutForm.Execute(Application, FAppVersionInfo, FAppFiles);
 end;
 
 procedure TMainForm.WebExecute(Sender: TObject);
@@ -1367,6 +1380,16 @@ end;
 function TMainForm.GetSelectedObject: TO2Object;
 begin
   Result := TO2Object(ObjectsView.Selected.Data);
+end;
+
+function TMainForm.GetSelectedRelation: TO2Relation;
+begin
+  Result := TO2Relation(RelationsView.Selected.Data);
+end;
+
+function TMainForm.GetSelectedRule: TO2Rule;
+begin
+  Result := TO2Rule(RulesView.Selected.Data);
 end;
 
 function TMainForm.GetHasSelectedField: Boolean;
@@ -1478,7 +1501,7 @@ var
   I: Integer;
 begin
   for I := Low(Languages) to High(Languages) do
-    if AppFiles.FileExists(IdResourceModule + Languages[I].Language) then
+    if FAppFiles.FileExists(IdResourceModule + Languages[I].Language) then
     begin
       Item := TMenuItem.Create(LanguageMenu);
       Item.Caption := GetLanguageName(Languages[I].LangId);
@@ -1502,7 +1525,7 @@ begin
   if FileName <> '' then
     Parameters := Parameters + '"' + FileName + '"';
 
-  AppExe := AppFiles.FullPaths[IdAppExe];
+  AppExe := FAppFiles.FullPaths[IdAppExe];
   ShellExecute(Application.Handle, 'open', PChar(AppExe), PChar(Parameters),
     PChar(ExtractFileDir(AppExe)), SW_SHOWNORMAL);
 end;
@@ -1519,7 +1542,7 @@ begin
     BeginBatchOperation;
     try
       O2File.Load(Self);
-      PasswordScoreCache.UpdateCache(O2File);
+      FPasswordScoreCache.UpdateCache(O2File);
     finally
       EndBatchOperation;
     end;
@@ -2156,22 +2179,22 @@ var
   I, Count: Integer;
 begin
   FMRUList.Clear;
-  Count := Storage.ReadInteger(IdMRUList, 0);
+  Count := FStorage.ReadInteger(IdMRUList, 0);
   for I := 0 to Count - 1 do
     FMRUList.Add(TMRUItem.Create(
-      Storage.ReadString(Format(IdMRUListItemFmt, [I])),
-      Storage.ReadInteger(Format(IdMRUListItemCntFmt, [I]), 1)));
+      FStorage.ReadString(Format(IdMRUListItemFmt, [I])),
+      FStorage.ReadInteger(Format(IdMRUListItemCntFmt, [I]), 1)));
 end;
 
 procedure TMainForm.SaveMRUList;
 var
   I: Integer;
 begin
-  Storage.WriteInteger(IdMRUList, FMRUList.Count);
+  FStorage.WriteInteger(IdMRUList, FMRUList.Count);
   for I := 0 to FMRUList.Count - 1 do
   begin
-    Storage.WriteString(Format(IdMRUListItemFmt, [I]), FMRUList[I].Item);
-    Storage.WriteInteger(Format(IdMRUListItemCntFmt, [I]), FMRUList[I].Count);
+    FStorage.WriteString(Format(IdMRUListItemFmt, [I]), FMRUList[I].Item);
+    FStorage.WriteInteger(Format(IdMRUListItemCntFmt, [I]), FMRUList[I].Count);
   end;
 end;
 
@@ -2179,41 +2202,41 @@ procedure TMainForm.LoadSettings(const FileName: string);
 const
   SortSigns: array[Boolean] of Integer = (-1, 1);
 begin
-  Storage.LoadFromFile(FileName);
+  FStorage.LoadFromFile(FileName);
 
   LoadMRUList;
   UpdateMRUList;
 
-  StayOnTop := Storage.ReadBoolean(IdStayOnTop, False);
+  StayOnTop := FStorage.ReadBoolean(IdStayOnTop, False);
   FTransparencyOnlyIfDeactivated :=
-    Storage.ReadBoolean(IdTransparencyOnlyIfDeactivated, True);
-  Transparency := Storage.ReadInteger(IdTransparency, 0);
-  FAutoCheckForUpdates := Storage.ReadBoolean(IdAutoCheckForUpdates, True);
-  FLastCheckForUpdates := Storage.ReadFloat(IdLastCheckForUpdates, Yesterday);
-  ObjectsView.ViewStyle := TViewStyle(ReadIntIdent(Storage, IdViewStyle,
+    FStorage.ReadBoolean(IdTransparencyOnlyIfDeactivated, True);
+  Transparency := FStorage.ReadInteger(IdTransparency, 0);
+  FAutoCheckForUpdates := FStorage.ReadBoolean(IdAutoCheckForUpdates, True);
+  FLastCheckForUpdates := FStorage.ReadFloat(IdLastCheckForUpdates, Yesterday);
+  ObjectsView.ViewStyle := TViewStyle(ReadIntIdent(FStorage, IdViewStyle,
     ViewStyles, Integer(vsIcon)));
-  FSortKind := TObjectSortKind(ReadIntIdent(Storage, IdSortKind,
+  FSortKind := TObjectSortKind(ReadIntIdent(FStorage, IdSortKind,
     SortKinds, Integer(osName)));
-  FSortSign := SortSigns[Storage.ReadBoolean(IdSortAscending, True)];
+  FSortSign := SortSigns[FStorage.ReadBoolean(IdSortAscending, True)];
 end;
 
 procedure TMainForm.SaveSettings(const FileName: string);
 begin
   SaveMRUList;
 
-  Storage.WriteBoolean(IdStayOnTop, StayOnTop);
-  Storage.WriteInteger(IdTransparency, Transparency);
-  Storage.WriteBoolean(IdAutoCheckForUpdates, FAutoCheckForUpdates);
-  Storage.WriteBoolean(IdTransparencyOnlyIfDeactivated,
+  FStorage.WriteBoolean(IdStayOnTop, StayOnTop);
+  FStorage.WriteInteger(IdTransparency, Transparency);
+  FStorage.WriteBoolean(IdAutoCheckForUpdates, FAutoCheckForUpdates);
+  FStorage.WriteBoolean(IdTransparencyOnlyIfDeactivated,
     FTransparencyOnlyIfDeactivated);
-  Storage.WriteFloat(IdLastCheckForUpdates, FLastCheckForUpdates);
-  WriteIntIdent(Storage, IdViewStyle, ViewStyles,
+  FStorage.WriteFloat(IdLastCheckForUpdates, FLastCheckForUpdates);
+  WriteIntIdent(FStorage, IdViewStyle, ViewStyles,
     Integer(ObjectsView.ViewStyle));
-  WriteIntIdent(Storage, IdSortKind, SortKinds, Integer(FSortKind));
-  Storage.WriteBoolean(IdSortAscending, FSortSign > 0);
+  WriteIntIdent(FStorage, IdSortKind, SortKinds, Integer(FSortKind));
+  FStorage.WriteBoolean(IdSortAscending, FSortSign > 0);
 
   SysUtils.ForceDirectories(ExtractFileDir(FileName));
-  Storage.SaveToFile(FileName);
+  FStorage.SaveToFile(FileName);
 end;
 
 procedure TMainForm.ObjectMenuPopup(Sender: TObject);
@@ -2264,7 +2287,7 @@ var
   Model: IObjectProps;
   Item: TListItem;
 begin
-  Model := TNewObjectModel.Create(O2File);
+  Model := ServiceContainer.Resolve<IObjectProps>(NewObjectService);
   if TObjPropsDlg.Execute(Model, pgGeneral) then
   begin
     Item := ObjToListItem(Model.O2Object, nil);
@@ -2280,7 +2303,7 @@ var
   Model: IObjectProps;
   Item: TListItem;
 begin
-  Model := TDuplicateObjectModel.Create(O2File, SelectedObject);
+  Model := ServiceContainer.Resolve<IObjectProps>(DuplicateObjectService);
   if TObjPropsDlg.Execute(Model, pgGeneral) then
   begin
     Item := ObjToListItem(Model.O2Object, nil);
@@ -2324,7 +2347,7 @@ procedure TMainForm.ObjectTagsExecute(Sender: TObject);
 var
   Model: IObjectProps;
 begin
-  Model := TEditObjectModel.Create(O2File, SelectedObject);
+  Model := ServiceContainer.Resolve<IObjectProps>(EditObjectService);
   if TObjPropsDlg.Execute(Model, pgGeneralTags) then
   begin
     ObjToListItem(Model.O2Object, ObjectsView.Selected);
@@ -2389,7 +2412,7 @@ begin
     1: Page := pgNotes;
     else Page := pgGeneral;
   end;
-  Model := TEditObjectModel.Create(O2File, SelectedObject);
+  Model := ServiceContainer.Resolve<IObjectProps>(EditObjectService);
   if TObjPropsDlg.Execute(Model, Page) then
   begin
     ObjToListItem(Model.O2Object, ObjectsView.Selected);
@@ -2435,7 +2458,7 @@ begin
   begin
     SetHighlightColors(Sender.Canvas,
       O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
-      PasswordScoreCache));
+      FPasswordScoreCache));
   end;
 end;
 
@@ -2449,7 +2472,7 @@ begin
     begin
       SetHighlightColors(Sender.Canvas,
         O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
-        PasswordScoreCache));
+        FPasswordScoreCache));
     end;
     if Assigned(O2File.Rules.FindFirstRule(
       TO2Field(Item.Data), HyperlinkRules)) then
@@ -2618,7 +2641,7 @@ procedure TMainForm.NewRelationExecute(Sender: TObject);
 var
   Model: IRelationProps;
 begin
-  Model := TNewRelationModel.Create(O2File, FSelectedObjects);
+  Model := ServiceContainer.Resolve<IRelationProps>(NewRelationService);
   if TRelationPropsDlg.Execute(Model) then
     RelationToListItem(Model.Relation, SelectedObject, nil);
 end;
@@ -2661,7 +2684,7 @@ procedure TMainForm.RelationPropsExecute(Sender: TObject);
 var
   Model: IRelationProps;
 begin
-  Model := TEditRelationModel.Create(O2File, RelationsView.Selected.Data);
+  Model := ServiceContainer.Resolve<IRelationProps>(EditRelationService);
   if TRelationPropsDlg.Execute(Model) then
     RelationToListItem(Model.Relation, SelectedObject, RelationsView.Selected);
 end;
@@ -2704,7 +2727,7 @@ var
   Model: IRuleProps;
   Item: TListItem;
 begin
-  Model := TNewRuleModel.Create(O2File);
+  Model := ServiceContainer.Resolve<IRuleProps>(NewRuleService);
   if TRulePropsDlg.Execute(Model) then
   begin
     Item := RuleToListItem(Model.Rule, nil);
@@ -2719,7 +2742,7 @@ var
   Model: IRuleProps;
   Item: TListItem;
 begin
-  Model := TDuplicateRuleModel.Create(O2File, RulesView.Selected.Data);
+  Model := ServiceContainer.Resolve<IRuleProps>(DuplicateRuleService);
   if TRulePropsDlg.Execute(Model) then
   begin
     Item := RuleToListItem(Model.Rule, nil);
@@ -2792,7 +2815,7 @@ procedure TMainForm.RulePropsExecute(Sender: TObject);
 var
   Model: IRuleProps;
 begin
-  Model := TEditRuleModel.Create(RulesView.Selected.Data);
+  Model := ServiceContainer.Resolve<IRuleProps>(EditRuleService);
   if TRulePropsDlg.Execute(Model) then
   begin
     RuleToListItem(Model.Rule, RulesView.Selected);
@@ -2809,7 +2832,8 @@ procedure TMainForm.SaveDialogCanClose(Sender: TObject;
   var CanClose: Boolean);
 begin
   if not FileExists(SaveDialog.FileName) or YesNoBox(SFileOverwriteQuery) then
-    CanClose := TSetPasswordDlg.Execute(TEncryptionPropsModel.Create(O2File))
+    CanClose := TSetPasswordDlg.Execute(
+      ServiceContainer.Resolve<IEncryptionProps>)
   else
     CanClose := False;
 end;
