@@ -27,7 +27,7 @@ uses
   Dialogs, ComCtrls, ToolWin, ImgList, ActnList, Menus, XPMan, AppEvnts,
   StdCtrls, ExtCtrls, FileCtrl, Types, System.ImageList, System.Actions,
   REST.Client, Data.Bind.Components, Data.Bind.ObjectScope, OleCtrls, SHDocVw,
-  JvComponentBase, JvDragDrop,
+  JvComponentBase, JvDragDrop, Spring.Container,
   uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist, uServices,
   uUtils;
 
@@ -343,6 +343,7 @@ type
     CheckForUpdatesRequest: TRESTRequest;
     CheckForUpdatesResponse: TRESTResponse;
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure ApplicationEventsActivate(Sender: TObject);
@@ -511,6 +512,10 @@ type
     procedure DragDropDrop(Sender: TObject; Pos: TPoint;
       Value: TStrings);
   private
+    FServiceContainer: TContainer;
+    FAppFiles: IAppFiles;
+    FStorage: IStorage;
+    FPasswordScoreCache: IPasswordScoreCache;
     FBusy: Boolean;
     FBatchOperationCount: Integer;
     FPendingChanges: TNotifyChanges;
@@ -530,10 +535,6 @@ type
     FCheckForUpdatesSilent: Boolean;
     FSelectedObjects: IEnumerable<TO2Object>;
     FShowPasswords: Boolean;
-    FAppVersionInfo: TAppVersionInfo;
-    FAppFiles: IAppFiles;
-    FStorage: IStorage;
-    FPasswordScoreCache: IPasswordScoreCache;
 
     function GetFile: TO2File;
     function GetHasSelectedObject: Boolean;
@@ -543,6 +544,7 @@ type
     function GetSelectedRelation: TO2Relation;
     function GetSelectedRule: TO2Rule;
     function GetEventFilter: TEventFilter;
+    procedure SetServiceContainer(const Value: TContainer);
     procedure SetBusy(const Value: Boolean);
     procedure SetFileName(const Value: string);
     procedure SetStayOnTop(const Value: Boolean);
@@ -602,6 +604,8 @@ type
     property StayOnTop: Boolean read FStayOnTop write SetStayOnTop;
     property Transparency: Integer read FTransparency write SetTransparency;
   public
+    property ServiceContainer: TContainer read FServiceContainer
+      write SetServiceContainer;
     property O2File: TO2File read GetFile;
     property SelectedObjects: IEnumerable<TO2Object> read FSelectedObjects;
     property SelectedObject: TO2Object read GetSelectedObject;
@@ -612,16 +616,38 @@ type
 var
   MainForm: TMainForm;
 
+procedure GetCommandLineParams(out OpenFileName, PortablePath: string);
+
 implementation
 
 uses
   StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, JSON, UITypes,
-  uStartup, uShellUtils, uStorageUtils, uAbout, uGetPassword,
-  uSetPassword, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
-  uReplaceDlg, uPrintPreview, uHTMLExport, uO2Defs, uBrowserEmulation,
-  uCtrlHelpers, uStuffHTML, uHTMLHelper, uO2ObjectsUtils;
+  uShellUtils, uStorageUtils, uAbout, uGetPassword, uSetPassword, uFilePropsDlg,
+  uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg, uReplaceDlg, uPrintPreview,
+  uHTMLExport, uO2Defs, uBrowserEmulation, uCtrlHelpers, uStuffHTML,
+  uHTMLHelper, uO2ObjectsUtils;
 
 {$R *.dfm}
+
+procedure GetCommandLineParams(out OpenFileName, PortablePath: string);
+var
+  I: Integer;
+begin
+  OpenFileName := '';
+  PortablePath := '';
+  I := 1;
+  while I <= ParamCount do
+    if SameText(ParamStr(I), 'portable') and (ParamStr(I + 1) <> '') then
+    begin
+      PortablePath := ParamStr(I + 1);
+      Inc(I, 2);
+    end
+    else
+    begin
+      OpenFileName := ParamStr(I);
+      Inc(I);
+    end;
+end;
 
 procedure SetHighlightColors(const Canvas: TCanvas; Highlight: THighlight);
 begin
@@ -650,10 +676,6 @@ begin
   FStayOnTop := False;
   FTransparency := 0;
   FSelectedObjects := TO2ObjectListViewEnumerable.Create(ObjectsView);
-  FAppVersionInfo := ServiceContainer.Resolve<TAppVersionInfo>;
-  FAppFiles := ServiceContainer.Resolve<IAppFiles>;
-  FStorage := ServiceContainer.Resolve<IStorage>;
-  FPasswordScoreCache := ServiceContainer.Resolve<IPasswordScoreCache>;
 
   Application.HintHidePause := 4500;
 
@@ -671,10 +693,6 @@ begin
   FMRUMenuItems.Add(MRU8);
   FMRUMenuItems.Add(MRU9);
 
-  LoadLanguageMenu;
-
-  InstallOnRemovableMedia.Visible := FAppFiles.FileExists(IdLauncher);
-
   TEventFilterLookup.Fill(FindByEvent);
 
   FieldsView.Hint := SFieldsViewHint + #13#10 + SFieldsViewHint2;
@@ -687,7 +705,6 @@ begin
   ImportSettingsDlg.Filter := SImportSettingsFileFilter;
   ExportSettingsDlg.Filter := SExportSettingsFileFilter;
 
-  LoadSettings(FAppFiles.FullPaths[IdSettings]);
   Initialize;
 
   ActiveControl := ObjectsView;
@@ -700,6 +717,13 @@ begin
   SaveSettings(FAppFiles.FullPaths[IdSettings]);
   FMRUList.Free;
   FMRUMenuItems.Free;
+end;
+
+procedure TMainForm.FormShow(Sender: TObject);
+begin
+  LoadLanguageMenu;
+  InstallOnRemovableMedia.Visible := FAppFiles.FileExists(IdLauncher);
+  LoadSettings(FAppFiles.FullPaths[IdSettings]);
 end;
 
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -1019,7 +1043,7 @@ begin
   begin
     BeginBatchOperation;
     try
-      ServiceContainer.Resolve<IFileOperation>(
+      FServiceContainer.Resolve<IFileOperation>(
         ServiceNames[ImportDialog.FilterIndex]).Execute(ImportDialog.FileName);
     finally
       EndBatchOperation;
@@ -1064,7 +1088,7 @@ begin
   begin
     BeginBatchOperation;
     try
-      ServiceContainer.Resolve<IFileOperation>(
+      FServiceContainer.Resolve<IFileOperation>(
         ServiceNames[ExportDialog.FilterIndex]).Execute(ExportDialog.FileName);
     finally
       EndBatchOperation;
@@ -1074,12 +1098,12 @@ end;
 
 procedure TMainForm.ExportToHTMLExecute(Sender: TObject);
 begin
-  THTMLExport.Execute(ServiceContainer.Resolve<IHTMLExport>);
+  THTMLExport.Execute(FServiceContainer.Resolve<IHTMLExport>);
 end;
 
 procedure TMainForm.PrintFileExecute(Sender: TObject);
 begin
-  TPrintPreview.Execute(ServiceContainer.Resolve<IPrint>);
+  TPrintPreview.Execute(FServiceContainer.Resolve<IPrint>);
 end;
 
 procedure TMainForm.PrintFileUpdate(Sender: TObject);
@@ -1089,7 +1113,7 @@ end;
 
 procedure TMainForm.FilePropsExecute(Sender: TObject);
 begin
-  TFilePropsDlg.Execute(ServiceContainer.Resolve<IFileProps>);
+  TFilePropsDlg.Execute(FServiceContainer.Resolve<IFileProps>);
 end;
 
 procedure TMainForm.ImportSettingsExecute(Sender: TObject);
@@ -1139,18 +1163,20 @@ begin
       DebugOutputFmt =
         'Application Version Check: Current Version: %d.%d.%d.%d. Available Version %d.%d.%d.%d. Download URL: %s.';
     var
+      AppVersionInfo: TAppVersionInfo;
       AppUpdateInfo: TAppUpdateInfo;
       DebugOutput: string;
     begin
+      AppVersionInfo := FServiceContainer.Resolve<TAppVersionInfo>;
       try
         AppUpdateInfo := TAppUpdateInfo
           .Create(CheckForUpdatesResponse.JSONValue);
 
         DebugOutput := Format(DebugOutputFmt,
-          [FAppVersionInfo.Version.MajorVersion,
-          FAppVersionInfo.Version.MinorVersion,
-          FAppVersionInfo.Version.Release,
-          FAppVersionInfo.Version.Build,
+          [AppVersionInfo.Version.MajorVersion,
+          AppVersionInfo.Version.MinorVersion,
+          AppVersionInfo.Version.Release,
+          AppVersionInfo.Version.Build,
           AppUpdateInfo.Version.MajorVersion,
           AppUpdateInfo.Version.MinorVersion,
           AppUpdateInfo.Version.Release,
@@ -1159,7 +1185,7 @@ begin
         OutputDebugString(PChar(DebugOutput));
 
         if AppUpdateInfo.Version
-          .Compare(FAppVersionInfo.Version) = GreaterThanValue then
+          .Compare(AppVersionInfo.Version) = GreaterThanValue then
         begin
           if YesNoBox(Format(SDownloadUpdatesQuery,
             [AppUpdateInfo.Version.MajorVersion,
@@ -1332,7 +1358,7 @@ end;
 
 procedure TMainForm.AboutExecute(Sender: TObject);
 begin
-  TAboutForm.Execute(Application, FAppVersionInfo, FAppFiles);
+  TAboutForm.Execute(FServiceContainer.Resolve<TAppVersionInfo>, FAppFiles);
 end;
 
 procedure TMainForm.WebExecute(Sender: TObject);
@@ -1414,6 +1440,18 @@ begin
     FindByRule.Enabled := not FBusy;
 
     Application.ProcessMessages;
+  end;
+end;
+
+procedure TMainForm.SetServiceContainer(const Value: TContainer);
+begin
+  if FServiceContainer <> Value then
+  begin
+    FServiceContainer := Value;
+
+    FAppFiles := FServiceContainer.Resolve<IAppFiles>;
+    FStorage := FServiceContainer.Resolve<IStorage>;
+    FPasswordScoreCache := FServiceContainer.Resolve<IPasswordScoreCache>;
   end;
 end;
 
@@ -2264,7 +2302,7 @@ var
   Model: IObjectProps;
   Item: TListItem;
 begin
-  Model := ServiceContainer.Resolve<IObjectProps>(NewObjectService);
+  Model := FServiceContainer.Resolve<IObjectProps>(NewObjectService);
   if TObjPropsDlg.Execute(Model, pgGeneral) then
   begin
     Item := ObjToListItem(Model.O2Object, nil);
@@ -2280,7 +2318,7 @@ var
   Model: IObjectProps;
   Item: TListItem;
 begin
-  Model := ServiceContainer.Resolve<IObjectProps>(DuplicateObjectService);
+  Model := FServiceContainer.Resolve<IObjectProps>(DuplicateObjectService);
   if TObjPropsDlg.Execute(Model, pgGeneral) then
   begin
     Item := ObjToListItem(Model.O2Object, nil);
@@ -2324,7 +2362,7 @@ procedure TMainForm.ObjectTagsExecute(Sender: TObject);
 var
   Model: IObjectProps;
 begin
-  Model := ServiceContainer.Resolve<IObjectProps>(EditObjectService);
+  Model := FServiceContainer.Resolve<IObjectProps>(EditObjectService);
   if TObjPropsDlg.Execute(Model, pgGeneralTags) then
   begin
     ObjToListItem(Model.O2Object, ObjectsView.Selected);
@@ -2355,28 +2393,28 @@ end;
 procedure TMainForm.ReplaceTagExecute(Sender: TObject);
 begin
   if TReplaceDlg.Execute(
-    ServiceContainer.Resolve<IReplaceOperation>(ReplaceTagService)) then
+    FServiceContainer.Resolve<IReplaceOperation>(ReplaceTagService)) then
     NotifyChanges([ncObjects, ncTagList]);
 end;
 
 procedure TMainForm.ReplaceFieldNameExecute(Sender: TObject);
 begin
   if TReplaceDlg.Execute(
-    ServiceContainer.Resolve<IReplaceOperation>(ReplaceFieldNameService)) then
+    FServiceContainer.Resolve<IReplaceOperation>(ReplaceFieldNameService)) then
     NotifyChanges([ncObjects]);
 end;
 
 procedure TMainForm.ReplaceFieldValueExecute(Sender: TObject);
 begin
   if TReplaceDlg.Execute(
-    ServiceContainer.Resolve<IReplaceOperation>(ReplaceFieldValueService)) then
+    FServiceContainer.Resolve<IReplaceOperation>(ReplaceFieldValueService)) then
     NotifyChanges([ncObjects]);
 end;
 
 procedure TMainForm.ReplaceRoleExecute(Sender: TObject);
 begin
   if TReplaceDlg.Execute(
-    ServiceContainer.Resolve<IReplaceOperation>(ReplaceRoleService)) then
+    FServiceContainer.Resolve<IReplaceOperation>(ReplaceRoleService)) then
     NotifyChanges([ncRelations]);
 end;
 
@@ -2390,7 +2428,7 @@ begin
     1: Page := pgNotes;
     else Page := pgGeneral;
   end;
-  Model := ServiceContainer.Resolve<IObjectProps>(EditObjectService);
+  Model := FServiceContainer.Resolve<IObjectProps>(EditObjectService);
   if TObjPropsDlg.Execute(Model, Page) then
   begin
     ObjToListItem(Model.O2Object, ObjectsView.Selected);
@@ -2619,7 +2657,7 @@ procedure TMainForm.NewRelationExecute(Sender: TObject);
 var
   Model: IRelationProps;
 begin
-  Model := ServiceContainer.Resolve<IRelationProps>(NewRelationService);
+  Model := FServiceContainer.Resolve<IRelationProps>(NewRelationService);
   if TRelationPropsDlg.Execute(Model) then
     RelationToListItem(Model.Relation, SelectedObject, nil);
 end;
@@ -2662,7 +2700,7 @@ procedure TMainForm.RelationPropsExecute(Sender: TObject);
 var
   Model: IRelationProps;
 begin
-  Model := ServiceContainer.Resolve<IRelationProps>(EditRelationService);
+  Model := FServiceContainer.Resolve<IRelationProps>(EditRelationService);
   if TRelationPropsDlg.Execute(Model) then
     RelationToListItem(Model.Relation, SelectedObject, RelationsView.Selected);
 end;
@@ -2705,7 +2743,7 @@ var
   Model: IRuleProps;
   Item: TListItem;
 begin
-  Model := ServiceContainer.Resolve<IRuleProps>(NewRuleService);
+  Model := FServiceContainer.Resolve<IRuleProps>(NewRuleService);
   if TRulePropsDlg.Execute(Model) then
   begin
     Item := RuleToListItem(Model.Rule, nil);
@@ -2720,7 +2758,7 @@ var
   Model: IRuleProps;
   Item: TListItem;
 begin
-  Model := ServiceContainer.Resolve<IRuleProps>(DuplicateRuleService);
+  Model := FServiceContainer.Resolve<IRuleProps>(DuplicateRuleService);
   if TRulePropsDlg.Execute(Model) then
   begin
     Item := RuleToListItem(Model.Rule, nil);
@@ -2793,7 +2831,7 @@ procedure TMainForm.RulePropsExecute(Sender: TObject);
 var
   Model: IRuleProps;
 begin
-  Model := ServiceContainer.Resolve<IRuleProps>(EditRuleService);
+  Model := FServiceContainer.Resolve<IRuleProps>(EditRuleService);
   if TRulePropsDlg.Execute(Model) then
   begin
     RuleToListItem(Model.Rule, RulesView.Selected);
@@ -2811,7 +2849,7 @@ procedure TMainForm.SaveDialogCanClose(Sender: TObject;
 begin
   if not FileExists(SaveDialog.FileName) or YesNoBox(SFileOverwriteQuery) then
     CanClose := TSetPasswordDlg.Execute(
-      ServiceContainer.Resolve<IEncryptionProps>)
+      FServiceContainer.Resolve<IEncryptionProps>)
   else
     CanClose := False;
 end;

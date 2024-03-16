@@ -39,7 +39,7 @@ type
     procedure btReadMeClick(Sender: TObject);
   public
     FAppFiles: IAppFiles;
-    class procedure Execute(AOwner: TComponent; AppVersionInfo: TAppVersionInfo;
+    class procedure Execute(AppVersionInfo: TAppVersionInfo;
       AppFiles: IAppFiles);
   end;
 
@@ -53,12 +53,12 @@ uses
 
 {$R *.dfm}
 
-class procedure TAboutForm.Execute(AOwner: TComponent;
-  AppVersionInfo: TAppVersionInfo; AppFiles: IAppFiles);
+class procedure TAboutForm.Execute(AppVersionInfo: TAppVersionInfo;
+  AppFiles: IAppFiles);
 var
   Form: TAboutForm;
 begin
-  Form := TAboutForm.Create(AOwner);
+  Form := TAboutForm.Create(Application);
   try
     Form.FAppFiles := AppFiles;
     Form.lbVersion.Caption := AppVersionInfo.DisplayVersion;

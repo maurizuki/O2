@@ -66,5 +66,6 @@ begin
   Application.Title := 'O2';
   ConfigureServices;
   Application.CreateForm(TMainForm, MainForm);
+  MainForm.ServiceContainer := ServiceContainer;
   Application.Run;
 end.

@@ -23,7 +23,6 @@ uses
 var
   ServiceContainer: TContainer;
 
-procedure GetCommandLineParams(out OpenFileName, PortablePath: string);
 procedure ConfigureServices;
 
 implementation
@@ -116,26 +115,6 @@ begin
   end;
 
   Result := nil;
-end;
-
-procedure GetCommandLineParams(out OpenFileName, PortablePath: string);
-var
-  I: Integer;
-begin
-  OpenFileName := '';
-  PortablePath := '';
-  I := 1;
-  while I <= ParamCount do
-    if SameText(ParamStr(I), 'portable') and (ParamStr(I + 1) <> '') then
-    begin
-      PortablePath := ParamStr(I + 1);
-      Inc(I, 2);
-    end
-    else
-    begin
-      OpenFileName := ParamStr(I);
-      Inc(I);
-    end;
 end;
 
 procedure ConfigureServices;
