@@ -34,7 +34,7 @@ uses
   uStorageUtils, uPasswordScoreCache, uO2File, uO2Objects, uO2Relations,
   uO2Rules, uFilePropsModel, uEncryptionPropsModel, uObjectModels,
   uRelationModels, uRuleModels, uO2ImportExport, uXmlImportExport,
-  uiCalendarExport, uHTMLExportModel, uPrintModel;
+  uiCalendarExport, uHTMLExportModel, uPrintModel, uReplaceOperations;
 
 function MigrateConfiguration(XmlStorage: IStorage;
   XML: IXMLDocument): IXMLDocument;
@@ -425,7 +425,29 @@ begin
     .Implements<IPrint>
     .AsTransient;
 
-  { TODO : Register IReplaceOperation }
+  {$REGION 'IReplaceOperation'}
+
+  ServiceContainer
+    .RegisterType<TReplaceTagModel>(ReplaceTagService)
+    .Implements<IReplaceOperation>
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TReplaceFieldNameModel>(ReplaceFieldNameService)
+    .Implements<IReplaceOperation>
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TReplaceFieldValueModel>(ReplaceFieldValueService)
+    .Implements<IReplaceOperation>
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TReplaceRoleModel>(ReplaceRoleService)
+    .Implements<IReplaceOperation>
+    .AsTransient;
+
+  {$ENDREGION}
 
   ServiceContainer.Build;
 end;

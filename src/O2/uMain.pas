@@ -618,8 +618,8 @@ uses
   StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, JSON, UITypes,
   uStartup, uShellUtils, uStorageUtils, uAbout, uGetPassword,
   uSetPassword, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
-  uReplaceOperations, uReplaceDlg, uPrintPreview, uHTMLExport, uO2Defs,
-  uBrowserEmulation, uCtrlHelpers, uStuffHTML, uHTMLHelper, uO2ObjectsUtils;
+  uReplaceDlg, uPrintPreview, uHTMLExport, uO2Defs, uBrowserEmulation,
+  uCtrlHelpers, uStuffHTML, uHTMLHelper, uO2ObjectsUtils;
 
 {$R *.dfm}
 
@@ -2354,28 +2354,29 @@ end;
 
 procedure TMainForm.ReplaceTagExecute(Sender: TObject);
 begin
-  if TReplaceDlg.Execute(TReplaceTagModel.Create(O2File, FSelectedObjects)) then
+  if TReplaceDlg.Execute(
+    ServiceContainer.Resolve<IReplaceOperation>(ReplaceTagService)) then
     NotifyChanges([ncObjects, ncTagList]);
 end;
 
 procedure TMainForm.ReplaceFieldNameExecute(Sender: TObject);
 begin
-  if TReplaceDlg.Execute(TReplaceFieldNameModel.Create(O2File,
-    FSelectedObjects)) then
+  if TReplaceDlg.Execute(
+    ServiceContainer.Resolve<IReplaceOperation>(ReplaceFieldNameService)) then
     NotifyChanges([ncObjects]);
 end;
 
 procedure TMainForm.ReplaceFieldValueExecute(Sender: TObject);
 begin
-  if TReplaceDlg.Execute(TReplaceFieldValueModel.Create(O2File,
-    FSelectedObjects)) then
+  if TReplaceDlg.Execute(
+    ServiceContainer.Resolve<IReplaceOperation>(ReplaceFieldValueService)) then
     NotifyChanges([ncObjects]);
 end;
 
 procedure TMainForm.ReplaceRoleExecute(Sender: TObject);
 begin
-  if TReplaceDlg.Execute(TReplaceRoleModel.Create(O2File,
-    FSelectedObjects)) then
+  if TReplaceDlg.Execute(
+    ServiceContainer.Resolve<IReplaceOperation>(ReplaceRoleService)) then
     NotifyChanges([ncRelations]);
 end;
 

@@ -43,6 +43,10 @@ const
   ExportToO2FileService = 'ExportToO2File';
   ExportToXmlFileService = 'ExportToXmlFile';
   ExportToIcsFileService = 'ExportToIcsFile';
+  ReplaceTagService = 'ReplaceTag';
+  ReplaceFieldNameService = 'ReplaceFieldName';
+  ReplaceFieldValueService = 'ReplaceFieldValue';
+  ReplaceRoleService = 'ReplaceRole';
 
 { Application file names and paths }
 
