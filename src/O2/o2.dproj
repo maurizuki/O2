@@ -1004,6 +1004,7 @@
         <DCCReference Include="uEncryptionPropsModel.pas"/>
         <DCCReference Include="uObjectModels.pas"/>
         <DCCReference Include="uFileManager.pas"/>
+        <DCCReference Include="uEventFilters.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

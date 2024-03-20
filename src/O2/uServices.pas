@@ -54,6 +54,22 @@ type
     procedure SetFile(const Value: TO2File);
     property O2File: TO2File read GetFile write SetFile;
 
+    function GetObjectName: string;
+    procedure SetObjectName(const Value: string);
+    property ObjectName: string read GetObjectName write SetObjectName;
+
+    function GetEventFilters: TStrings;
+    property EventFilters: TStrings read GetEventFilters;
+
+    function GetEventFilterIndex: Integer;
+    procedure SetEventFilterIndex(const Value: Integer);
+    property EventFilterIndex: Integer read GetEventFilterIndex
+      write SetEventFilterIndex;
+
+    function GetObjects: IEnumerable<TO2Object>;
+
+    function GetNextEvent(const AObject: TO2Object;
+      out NextDate: TDateTime): Boolean;
     function GetHighlight(const AObject: TO2Object): THighlight; overload;
     function GetHighlight(const AField: TO2Field): THighlight; overload;
     function IsHyperlink(const AField: TO2Field): Boolean;
