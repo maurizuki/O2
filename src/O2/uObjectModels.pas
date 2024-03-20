@@ -378,19 +378,9 @@ begin
 end;
 
 procedure TObjectPropsModel.SwapFields(OtherIndex: Integer);
-
-procedure Swap(const Strings: TStrings);
-var
-  Other: string;
 begin
-  Other := Strings[OtherIndex];
-  Strings[OtherIndex] := Strings[FFieldIndex];
-  Strings[FFieldIndex] := Other;
-end;
-
-begin
-  Swap(FObjectFieldNames);
-  Swap(FObjectFieldValues);
+  FObjectFieldNames.Exchange(FFieldIndex, OtherIndex);
+  FObjectFieldValues.Exchange(FFieldIndex, OtherIndex);
   FFieldIndex := OtherIndex;
 end;
 
