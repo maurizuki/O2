@@ -49,6 +49,16 @@ type
     procedure UpdateCache(const O2File: TO2File);
   end;
 
+  IFileManager = interface
+    function GetFile: TO2File;
+    procedure SetFile(const Value: TO2File);
+    property O2File: TO2File read GetFile write SetFile;
+
+    function GetHighlight(const AObject: TO2Object): THighlight; overload;
+    function GetHighlight(const AField: TO2Field): THighlight; overload;
+    function IsHyperlink(const AField: TO2Field): Boolean;
+  end;
+
   IFileProps = interface
     function GetTitle: string;
     procedure SetTitle(const Value: string);

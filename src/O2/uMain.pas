@@ -513,6 +513,7 @@ type
       Value: TStrings);
   private
     FServiceContainer: TContainer;
+    FModel: IFileManager;
     FAppFiles: IAppFiles;
     FStorage: IStorage;
     FPasswordScoreCache: IPasswordScoreCache;
@@ -521,7 +522,6 @@ type
     FPendingChanges: TNotifyChanges;
     FApplyingChanges: Boolean;
     FOpenFileName: string;
-    FFile: TO2File;
     FFileName: string;
     FMRUMenuItems: TList;
     FMRUList: TMRUList;
@@ -536,7 +536,6 @@ type
     FSelectedObjects: IEnumerable<TO2Object>;
     FShowPasswords: Boolean;
 
-    function GetFile: TO2File;
     function GetHasSelectedObject: Boolean;
     function GetSelectedObject: TO2Object;
     function GetHasSelectedField: Boolean;
@@ -606,7 +605,7 @@ type
   public
     property ServiceContainer: TContainer read FServiceContainer
       write SetServiceContainer;
-    property O2File: TO2File read GetFile;
+    property Model: IFileManager read FModel;
     property SelectedObjects: IEnumerable<TO2Object> read FSelectedObjects;
     property SelectedObject: TO2Object read GetSelectedObject;
     property SelectedRelation: TO2Relation read GetSelectedRelation;
@@ -881,11 +880,8 @@ procedure TMainForm.ObjectsViewCustomDrawItem(Sender: TCustomListView;
   Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
 begin
   if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data) then
-  begin
     SetHighlightColors(Sender.Canvas,
-      O2File.Rules.GetHighlightColors(TO2Object(Item.Data),
-      FPasswordScoreCache));
-  end;
+      FModel.GetHighlight(TO2Object(Item.Data)));
 end;
 
 procedure TMainForm.FindByNameChange(Sender: TObject);
@@ -983,7 +979,7 @@ begin
   if CanCloseFile then
   begin
     ObjectsView.Clear;
-    FreeAndNil(FFile);
+    FreeAndNil(FModel.O2File);
     Initialize;
     O2FileName := '';
   end;
@@ -1055,8 +1051,8 @@ end;
 procedure TMainForm.SaveFileExecute(Sender: TObject);
 begin
   if (O2FileName = '')
-    or O2File.Encrypted and ((O2File.Cipher in DeprecatedCiphers)
-    or (O2File.Hash in DeprecatedHashes)) then
+    or FModel.O2File.Encrypted and ((FModel.O2File.Cipher in DeprecatedCiphers)
+    or (FModel.O2File.Hash in DeprecatedHashes)) then
     SaveFileAs.Execute
   else
     SaveToFile(O2FileName);
@@ -1366,15 +1362,6 @@ begin
   ShellOpen(TAction(Sender).Hint);
 end;
 
-function TMainForm.GetFile: TO2File;
-begin
-  if FFile = nil then
-  begin
-    FFile := TO2File.Create;
-  end;
-  Result := FFile;
-end;
-
 function TMainForm.GetHasSelectedObject: Boolean;
 begin
   Result := Assigned(ObjectsView.Selected);
@@ -1449,6 +1436,7 @@ begin
   begin
     FServiceContainer := Value;
 
+    FModel := FServiceContainer.Resolve<IFileManager>;
     FAppFiles := FServiceContainer.Resolve<IAppFiles>;
     FStorage := FServiceContainer.Resolve<IStorage>;
     FPasswordScoreCache := FServiceContainer.Resolve<IPasswordScoreCache>;
@@ -1479,12 +1467,12 @@ end;
 function TMainForm.CanCloseFile: Boolean;
 begin
   Result := True;
-  if O2File.Modified then
+  if FModel.O2File.Modified then
     case YesNoCancelBox(SSaveChangesQuery) of
       ID_YES:
       begin
         SaveFile.Execute;
-        Result := not O2File.Modified;
+        Result := not FModel.O2File.Modified;
       end;
       ID_CANCEL:
         Result := False;
@@ -1549,44 +1537,44 @@ procedure TMainForm.LoadFromFile(const FileName: string);
 var
   OldFile: TO2File;
 begin
-  OldFile := O2File;
+  OldFile := FModel.O2File;
   try
-    FFile := nil;
-    O2File.FileName := FileName;
+    FModel.O2File := nil;
+    FModel.O2File.FileName := FileName;
 
     BeginBatchOperation;
     try
-      O2File.Load(Self);
-      FPasswordScoreCache.UpdateCache(O2File);
+      FModel.O2File.Load(Self);
+      FPasswordScoreCache.UpdateCache(FModel.O2File);
     finally
       EndBatchOperation;
     end;
   except
-    if Assigned(O2File) then O2File.Free;
-    FFile := OldFile;
+    if Assigned(FModel.O2File) then FModel.O2File.Free;
+    FModel.O2File := OldFile;
     raise;
   end;
   OldFile.Free;
 
   Initialize;
-  O2FileName := O2File.FileName;
+  O2FileName := FModel.O2File.FileName;
 end;
 
 procedure TMainForm.SaveToFile(const FileName: string; Copy: Boolean);
 begin
-  O2File.FileName := FileName;
+  FModel.O2File.FileName := FileName;
 
   BeginBatchOperation;
   try
-    O2File.Save(Copy);
+    FModel.O2File.Save(Copy);
   finally
     EndBatchOperation;
   end;
 
   if Copy then
-    O2File.FileName := O2FileName
+    FModel.O2File.FileName := O2FileName
   else
-    O2FileName := O2File.FileName;
+    O2FileName := FModel.O2File.FileName;
 end;
 
 procedure TMainForm.GetStartDate(out StartDate: TDateTime;
@@ -1634,7 +1622,8 @@ begin
   Result.ImageIndex := 0;
   Result.SubItems.Add(AObject.Tag);
   GetStartDate(StartDate, UseParams);
-  if O2File.Rules.GetNextEvent(AObject, StartDate, EventDate, UseParams) then
+  if FModel.O2File.Rules.GetNextEvent(
+    AObject, StartDate, EventDate, UseParams) then
     Result.SubItems.Add(DateToStr(EventDate))
   else
     Result.SubItems.Add('');
@@ -1650,7 +1639,8 @@ begin
     Result := FieldsView.Items.Add;
   Result.Caption := AField.FieldName;
   Result.SubItems.Clear;
-  Result.SubItems.Add(O2File.Rules.GetDisplayText(AField, FShowPasswords));
+  Result.SubItems.Add(FModel.O2File.Rules.GetDisplayText(
+    AField, FShowPasswords));
   Result.Data := AField;
 end;
 
@@ -1785,16 +1775,16 @@ var
   UseParams: Boolean;
 begin
   GetStartDate(StartDate, UseParams);
-  if O2File.Rules.GetNextEvent(Obj1, StartDate, Date1, UseParams) then
+  if FModel.O2File.Rules.GetNextEvent(Obj1, StartDate, Date1, UseParams) then
   begin
-    if O2File.Rules.GetNextEvent(Obj2, StartDate, Date2, UseParams) then
+    if FModel.O2File.Rules.GetNextEvent(Obj2, StartDate, Date2, UseParams) then
       Result := CompareDate(Date1, Date2)
     else
       Result := -1;
   end
   else
   begin
-    if O2File.Rules.GetNextEvent(Obj2, StartDate, Date2, UseParams) then
+    if FModel.O2File.Rules.GetNextEvent(Obj2, StartDate, Date2, UseParams) then
       Result := 1
     else
       Result := 0;
@@ -1883,7 +1873,7 @@ end;
 function CheckEvents(const Obj: TO2Object): Boolean;
 begin
   Result := (FindByEvent.ItemIndex = -1) or (EventFilter = efAll)
-    or O2File.Rules.CheckEvents(Obj, Date1, Date2, UseParams);
+    or FModel.O2File.Rules.CheckEvents(Obj, Date1, Date2, UseParams);
 end;
 
 function CheckRules(const Obj: TO2Object): Boolean;
@@ -1982,7 +1972,7 @@ begin
     ObjectsView.Items.BeginUpdate;
     try
       ObjectsView.Clear;
-      for AObject in O2File.Objects do
+      for AObject in FModel.O2File.Objects do
         if CheckName(AObject) and CheckTag(AObject)
           and CheckEvents(AObject) and CheckRules(AObject) then
           ObjToListItem(AObject, nil);
@@ -2056,7 +2046,8 @@ begin
       RelationsView.Clear;
       if HasSelectedObject then
       begin
-        ObjRelations := O2File.Relations.GetObjectRelations(SelectedObject);
+        ObjRelations := FModel.O2File.Relations.GetObjectRelations(
+          SelectedObject);
         try
           for AObjRelation in ObjRelations do
             RelationToListItem(AObjRelation, nil);
@@ -2084,7 +2075,7 @@ begin
     RulesView.Items.BeginUpdate;
     try
       RulesView.Clear;
-      for ARule in O2File.Rules do RuleToListItem(ARule, nil);
+      for ARule in FModel.O2File.Rules do RuleToListItem(ARule, nil);
       ResizeRulesViewColumns;
       RulesView.SelectItemsByData(SelectedItemsData);
       if Assigned(RulesView.Selected) then
@@ -2120,7 +2111,7 @@ begin
     try
       FindByTag.Items.Clear;
       FindByTag.Items.Add(STagsNone);
-      AppendTagsToList(O2File.Objects.ToEnumerable, FindByTag.Items);
+      AppendTagsToList(FModel.O2File.Objects.ToEnumerable, FindByTag.Items);
     finally
       FindByTag.Items.EndUpdate;
     end;
@@ -2148,7 +2139,7 @@ begin
     FindByRule.Items.BeginUpdate;
     try
       FindByRule.Items.Clear;
-      for ARule in O2File.Rules do
+      for ARule in FModel.O2File.Rules do
         if ARule.Active then
           FindByRule.AddItem(ARule.Name, ARule);
     finally
@@ -2266,7 +2257,7 @@ begin
   begin
     Tags := TStringList.Create;
     try
-      AppendTagsToList(O2File.Objects.ToEnumerable, Tags);
+      AppendTagsToList(FModel.O2File.Objects.ToEnumerable, Tags);
       for Tag in Tags do
       begin
         Item := TMenuItem.Create(Self);
@@ -2471,11 +2462,7 @@ procedure TMainForm.FieldsViewCustomDrawItem(Sender: TCustomListView;
   Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
 begin
   if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data) then
-  begin
-    SetHighlightColors(Sender.Canvas,
-      O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
-      FPasswordScoreCache));
-  end;
+    SetHighlightColors(Sender.Canvas, FModel.GetHighlight(TO2Field(Item.Data)));
 end;
 
 procedure TMainForm.FieldsViewCustomDrawSubItem(Sender: TCustomListView;
@@ -2485,13 +2472,10 @@ begin
   if Assigned(Item.Data) then
   begin
     if (State * [cdsFocused, cdsHot] = []) then
-    begin
       SetHighlightColors(Sender.Canvas,
-        O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
-        FPasswordScoreCache));
-    end;
-    if Assigned(O2File.Rules.FindFirstRule(
-      TO2Field(Item.Data), HyperlinkRules)) then
+        FModel.GetHighlight(TO2Field(Item.Data)));
+
+    if FModel.IsHyperlink(Item.Data) then
       Sender.Canvas.Font.Style := Sender.Canvas.Font.Style + [fsUnderline];
   end;
 end;
@@ -2587,7 +2571,7 @@ begin
   URLFile := TStringList.Create;
   try
     URLFile.Add('[InternetShortcut]');
-    URLFile.Add('URL=' + O2File.Rules.GetHyperLink(SelectedField));
+    URLFile.Add('URL=' + FModel.O2File.Rules.GetHyperLink(SelectedField));
     URLFile.SaveToFile(IncludeTrailingPathDelimiter(TShellFolders.Favorites)
       + SelectedObject.Name + '.url');
   finally
@@ -2597,13 +2581,13 @@ end;
 
 procedure TMainForm.OpenLinkExecute(Sender: TObject);
 begin
-  ShellOpen(O2File.Rules.GetHyperLink(SelectedField));
+  ShellOpen(FModel.O2File.Rules.GetHyperLink(SelectedField));
 end;
 
 procedure TMainForm.OpenLinkUpdate(Sender: TObject);
 begin
   TAction(Sender).Visible := not FBusy and HasSelectedField
-    and Assigned(O2File.Rules.FindFirstRule(SelectedField, [rtHyperLink]));
+    and Assigned(FModel.O2File.Rules.FindFirstRule(SelectedField, [rtHyperLink]));
   TAction(Sender).Enabled := TAction(Sender).Visible;
 end;
 
@@ -2615,7 +2599,7 @@ end;
 procedure TMainForm.SendEmailUpdate(Sender: TObject);
 begin
   TAction(Sender).Visible := not FBusy and HasSelectedField
-    and Assigned(O2File.Rules.FindFirstRule(SelectedField, [rtEmail]));
+    and Assigned(FModel.O2File.Rules.FindFirstRule(SelectedField, [rtEmail]));
   TAction(Sender).Enabled := TAction(Sender).Visible;
 end;
 
@@ -2799,7 +2783,8 @@ end;
 procedure TMainForm.MoveDownRuleUpdate(Sender: TObject);
 begin
   TAction(Sender).Enabled := not FBusy and Assigned(RulesView.Selected)
-    and (TO2Rule(RulesView.Selected.Data).Index < Pred(O2File.Rules.Count));
+    and (TO2Rule(RulesView.Selected.Data).Index < Pred(
+      FModel.O2File.Rules.Count));
 end;
 
 procedure TMainForm.EnableRulesExecute(Sender: TObject);

@@ -31,7 +31,7 @@ uses
   Forms, ComCtrls, SysUtils, TypInfo, Variants, XMLDoc, XMLIntf, xmldom,
   msxmldom, JclFileUtils, uMain, uGlobal, uShellUtils, uAppFiles, uXmlStorage,
   uStorageUtils, uPasswordScoreCache, uO2File, uO2Objects, uO2Relations,
-  uO2Rules, uFilePropsModel, uEncryptionPropsModel, uObjectModels,
+  uO2Rules, uFileManager, uFilePropsModel, uEncryptionPropsModel, uObjectModels,
   uRelationModels, uRuleModels, uO2ImportExport, uXmlImportExport,
   uiCalendarExport, uHTMLExportModel, uPrintModel, uReplaceOperations;
 
@@ -267,7 +267,7 @@ begin
     .RegisterType<TO2File>(
       function: TO2File
       begin
-        Result := MainForm.O2File;
+        Result := MainForm.Model.O2File;
       end)
     .AsTransient;
 
@@ -301,6 +301,11 @@ begin
       begin
         Result := MainForm.SelectedRule;
       end)
+    .AsTransient;
+
+  ServiceContainer
+    .RegisterType<TFileManager>
+    .Implements<IFileManager>
     .AsTransient;
 
   ServiceContainer
