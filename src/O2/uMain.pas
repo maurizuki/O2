@@ -1521,6 +1521,14 @@ begin
   FindByEvent.ItemIndex := 0;
   FindByTag.ClearSelection;
   FindByRule.ClearSelection;
+
+  if FModel = nil then Exit;
+
+  FModel.ObjectName := '';
+  FModel.EventFilterIndex := 0;
+  FModel.ObjectTags.Clear;
+  FModel.IncludeUntagged := False;
+  FModel.ObjectRules.Clear;
 end;
 
 procedure TMainForm.LoadLanguageMenu;
