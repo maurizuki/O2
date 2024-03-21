@@ -24,6 +24,9 @@ uses
 type
   TFileManager = class(TInterfacedObject, IFileManager)
   private
+    FPasswordProvider: IPasswordProvider;
+    FPasswordScoreCache: IPasswordScoreCache;
+
     FFile: TO2File;
     FObjectName: string;
     FEventFilters: TStrings;
@@ -34,8 +37,6 @@ type
     FIncludeUntagged: Boolean;
     FObjectRules: TList<TO2Rule>;
 
-    FPasswordScoreCache: IPasswordScoreCache;
-
     function GetFile: TO2File;
     function GetObjectName: string;
     function GetEventFilters: TStrings;
@@ -44,14 +45,16 @@ type
     function GetObjectTags: TStrings;
     function GetIncludeUntagged: Boolean;
     function GetObjectRules: TList<TO2Rule>;
-    procedure SetFile(const Value: TO2File);
     procedure SetObjectName(const Value: string);
     procedure SetEventFilterIndex(const Value: Integer);
     procedure SetObjectTags(const Value: TStrings);
     procedure SetIncludeUntagged(const Value: Boolean);
   public
-    constructor Create(PasswordScoreCache: IPasswordScoreCache);
+    constructor Create(PasswordProvider: IPasswordProvider; 
+      PasswordScoreCache: IPasswordScoreCache);
     destructor Destroy; override;
+
+    procedure LoadFromFile(const FileName: string);
 
     function GetObjects: IEnumerable<TO2Object>;
 
@@ -61,7 +64,7 @@ type
     function GetHighlight(const AField: TO2Field): THighlight; overload;
     function IsHyperlink(const AField: TO2Field): Boolean;
 
-    property O2File: TO2File read GetFile write SetFile;
+    property O2File: TO2File read GetFile;
 
     property ObjectName: string read GetObjectName write SetObjectName;
     property EventFilters: TStrings read GetEventFilters;
@@ -152,8 +155,10 @@ const
 
 { TFileManager }
 
-constructor TFileManager.Create(PasswordScoreCache: IPasswordScoreCache);
+constructor TFileManager.Create(PasswordProvider: IPasswordProvider; 
+  PasswordScoreCache: IPasswordScoreCache);
 begin
+  FPasswordProvider := PasswordProvider;
   FPasswordScoreCache := PasswordScoreCache;
 
   FEventFilters := TStringList.Create;
@@ -248,6 +253,23 @@ begin
   Result := Assigned(O2File.Rules.FindFirstRule(AField, HyperlinkRules));
 end;
 
+procedure TFileManager.LoadFromFile(const FileName: string);
+var
+  NewFile: TO2File;
+begin
+  NewFile := TO2File.Create;
+  try
+    NewFile.FileName := FileName;
+    NewFile.Load(FPasswordProvider);
+    FPasswordScoreCache.UpdateCache(NewFile);
+    FFile.Free;
+    FFile := NewFile;
+  except
+    NewFile.Free;
+    raise;
+  end;
+end;
+
 procedure TFileManager.SetEventFilterIndex(const Value: Integer);
 begin
   if FEventFilterIndex <> Value then
@@ -257,11 +279,6 @@ begin
     FEventFilter.Free;
     FEventFilter := EventFilterClasses[FEventFilterIndex].Create;
   end;
-end;
-
-procedure TFileManager.SetFile(const Value: TO2File);
-begin
-  FFile := Value;
 end;
 
 procedure TFileManager.SetIncludeUntagged(const Value: Boolean);

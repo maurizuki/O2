@@ -517,7 +517,6 @@ type
     FModel: IFileManager;
     FAppFiles: IAppFiles;
     FStorage: IStorage;
-    FPasswordScoreCache: IPasswordScoreCache;
     FBusy: Boolean;
     FBatchOperationCount: Integer;
     FPendingChanges: TNotifyChanges;
@@ -1461,7 +1460,6 @@ begin
     FModel := FServiceContainer.Resolve<IFileManager>;
     FAppFiles := FServiceContainer.Resolve<IAppFiles>;
     FStorage := FServiceContainer.Resolve<IStorage>;
-    FPasswordScoreCache := FServiceContainer.Resolve<IPasswordScoreCache>;
 
     FindByEvent.Items := FModel.EventFilters;
     FindByEvent.ItemIndex := FModel.EventFilterIndex;
@@ -1567,27 +1565,13 @@ begin
 end;
 
 procedure TMainForm.LoadFromFile(const FileName: string);
-var
-  OldFile: TO2File;
 begin
-  OldFile := FModel.O2File;
+  BeginBatchOperation;
   try
-    FModel.O2File := nil;
-    FModel.O2File.FileName := FileName;
-
-    BeginBatchOperation;
-    try
-      FModel.O2File.Load(Self);
-      FPasswordScoreCache.UpdateCache(FModel.O2File);
-    finally
-      EndBatchOperation;
-    end;
-  except
-    if Assigned(FModel.O2File) then FModel.O2File.Free;
-    FModel.O2File := OldFile;
-    raise;
+    FModel.LoadFromFile(FileName);
+  finally
+    EndBatchOperation;
   end;
-  OldFile.Free;
 
   Initialize;
   O2FileName := FModel.O2File.FileName;

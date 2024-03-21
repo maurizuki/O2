@@ -52,8 +52,9 @@ type
 
   IFileManager = interface
     function GetFile: TO2File;
-    procedure SetFile(const Value: TO2File);
-    property O2File: TO2File read GetFile write SetFile;
+    property O2File: TO2File read GetFile;
+
+    procedure LoadFromFile(const FileName: string);
 
     function GetObjectName: string;
     procedure SetObjectName(const Value: string);
