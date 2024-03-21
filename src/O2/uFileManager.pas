@@ -18,7 +18,8 @@ unit uFileManager;
 interface
 
 uses
-  Classes, uServices, uEventFilters, uO2File, uO2Objects, uO2Rules;
+  Classes, Generics.Collections, uServices, uEventFilters, uO2File, uO2Objects, 
+  uO2Rules;
 
 type
   TFileManager = class(TInterfacedObject, IFileManager)
@@ -31,6 +32,7 @@ type
     FTags: TStrings;
     FObjectTags: TStrings;
     FIncludeUntagged: Boolean;
+    FObjectRules: TList<TO2Rule>;
 
     FPasswordScoreCache: IPasswordScoreCache;
 
@@ -41,6 +43,7 @@ type
     function GetTags: TStrings;
     function GetObjectTags: TStrings;
     function GetIncludeUntagged: Boolean;
+    function GetObjectRules: TList<TO2Rule>;
     procedure SetFile(const Value: TO2File);
     procedure SetObjectName(const Value: string);
     procedure SetEventFilterIndex(const Value: Integer);
@@ -69,6 +72,7 @@ type
     property ObjectTags: TStrings read GetObjectTags write SetObjectTags;
     property IncludeUntagged: Boolean read GetIncludeUntagged
       write SetIncludeUntagged;
+    property ObjectRules: TList<TO2Rule> read GetObjectRules;
   end;
 
 implementation
@@ -159,6 +163,7 @@ begin
 
   FTags := TStringList.Create;
   FObjectTags := TStringList.Create;
+  FObjectRules := TList<TO2Rule>.Create;
 end;
 
 destructor TFileManager.Destroy;
@@ -168,6 +173,7 @@ begin
   FEventFilter.Free;
   FTags.Free;
   FObjectTags.Free;
+  FObjectRules.Free;
   inherited;
 end;
 
@@ -207,6 +213,11 @@ end;
 function TFileManager.GetObjectName: string;
 begin
   Result := FObjectName;
+end;
+
+function TFileManager.GetObjectRules: TList<TO2Rule>;
+begin
+  Result := FObjectRules;
 end;
 
 function TFileManager.GetObjects: IEnumerable<TO2Object>;
@@ -325,8 +336,19 @@ begin
 end;
 
 function TO2ObjectFilteredEnumerator.CheckRules: Boolean;
+var
+  AField: TO2Field;
+  ARule: TO2Rule;
 begin
-  Result := True;
+  if FFileManager.ObjectRules.Count = 0 then Exit(True);
+  
+  for ARule in FFileManager.ObjectRules do
+    for AField in FFileManager.O2File.Objects[FIndex].Fields do
+      if not (ARule.RuleType in EventRules) and ARule.Matches(AField)
+        or ARule.CheckEvents(AField, 0, 0, True) then
+        Exit(True);
+
+  Result := False;
 end;
 
 function TO2ObjectFilteredEnumerator.MoveNext: Boolean;

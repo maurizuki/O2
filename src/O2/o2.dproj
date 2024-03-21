@@ -971,7 +971,6 @@
         <DCCReference Include="uPrintPreview.pas">
             <Form>PrintPreview</Form>
         </DCCReference>
-        <DCCReference Include="uLookupHelper.pas"/>
         <DCCReference Include="uXmlStorage.pas"/>
         <DCCReference Include="uHTMLExport.pas">
             <Form>HTMLExport</Form>

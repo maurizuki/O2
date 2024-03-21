@@ -31,7 +31,6 @@ uses
   uFilePropsDlg in 'uFilePropsDlg.pas' {FilePropsDlg},
   uReplaceDlg in 'uReplaceDlg.pas' {ReplaceDlg},
   uPrintPreview in 'uPrintPreview.pas' {PrintPreview},
-  uLookupHelper in 'uLookupHelper.pas',
   uXmlStorage in 'uXmlStorage.pas',
   uHTMLExport in 'uHTMLExport.pas' {HTMLExport},
   uStuffHTML in 'uStuffHTML.pas',

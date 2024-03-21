@@ -18,7 +18,8 @@ unit uServices;
 interface
 
 uses
-  Classes, Graphics, Windows, uO2File, uO2Objects, uO2Relations, uO2Rules;
+  Classes, Generics.Collections, Graphics, Windows, uO2File, uO2Objects,
+  uO2Relations, uO2Rules;
 
 type
   IAppFiles = interface
@@ -77,6 +78,9 @@ type
     procedure SetIncludeUntagged(const Value: Boolean);
     property IncludeUntagged: Boolean read GetIncludeUntagged
       write SetIncludeUntagged;
+
+    function GetObjectRules: TList<TO2Rule>;
+    property ObjectRules: TList<TO2Rule> read GetObjectRules;
 
     function GetObjects: IEnumerable<TO2Object>;
 

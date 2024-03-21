@@ -28,8 +28,7 @@ uses
   StdCtrls, ExtCtrls, FileCtrl, Types, System.ImageList, System.Actions,
   REST.Client, Data.Bind.Components, Data.Bind.ObjectScope, OleCtrls, SHDocVw,
   JvComponentBase, JvDragDrop, Spring.Container,
-  uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist, uServices,
-  uUtils;
+  uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist, uServices;
 
 type
   TNotifyChange = (
@@ -364,14 +363,16 @@ type
       Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
     procedure ObjectsViewResize(Sender: TObject);
     procedure FindByNameChange(Sender: TObject);
+    procedure TimerTimer(Sender: TObject);
+    procedure FindByEventChange(Sender: TObject);
+    procedure FindByTagClick(Sender: TObject);
     procedure FindByTagSelectAllExecute(Sender: TObject);
     procedure FindByTagDeselectExecute(Sender: TObject);
     procedure FindByTagInvertSelectionExecute(Sender: TObject);
+    procedure FindByRuleClick(Sender: TObject);
     procedure FindByRuleSelectAllExecute(Sender: TObject);
     procedure FindByRuleDeselectExecute(Sender: TObject);
     procedure FindByRuleInvertSelectionExecute(Sender: TObject);
-    procedure FilterChange(Sender: TObject);
-    procedure TimerTimer(Sender: TObject);
     procedure MRUItemClick(Sender: TObject);
     procedure LanguageClick(Sender: TObject);
     procedure ActionUpdate(Sender: TObject);
@@ -542,7 +543,6 @@ type
     function GetSelectedField: TO2Field;
     function GetSelectedRelation: TO2Relation;
     function GetSelectedRule: TO2Rule;
-    function GetEventFilter: TEventFilter;
     procedure SetServiceContainer(const Value: TContainer);
     procedure SetBusy(const Value: Boolean);
     procedure SetFileName(const Value: string);
@@ -564,7 +564,6 @@ type
     procedure LoadSettings(const FileName: string);
     procedure SaveSettings(const FileName: string);
 
-    procedure GetStartDate(out StartDate: TDateTime; out UseParams: Boolean);
     function ObjToListItem(const AObject: TO2Object;
       const Item: TListItem): TListItem;
     function FieldToListItem(const AField: TO2Field;
@@ -599,7 +598,6 @@ type
     property HasSelectedObject: Boolean read GetHasSelectedObject;
     property HasSelectedField: Boolean read GetHasSelectedField;
     property SelectedField: TO2Field read GetSelectedField;
-    property EventFilter: TEventFilter read GetEventFilter;
     property StayOnTop: Boolean read FStayOnTop write SetStayOnTop;
     property Transparency: Integer read FTransparency write SetTransparency;
   public
@@ -624,7 +622,7 @@ uses
   uShellUtils, uStorageUtils, uAbout, uGetPassword, uSetPassword, uFilePropsDlg,
   uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg, uReplaceDlg, uPrintPreview,
   uHTMLExport, uO2Defs, uBrowserEmulation, uCtrlHelpers, uStuffHTML,
-  uHTMLHelper, uO2ObjectsUtils;
+  uHTMLHelper, uO2ObjectsUtils, uUtils;
 
 {$R *.dfm}
 
@@ -691,8 +689,6 @@ begin
   FMRUMenuItems.Add(MRU7);
   FMRUMenuItems.Add(MRU8);
   FMRUMenuItems.Add(MRU9);
-
-  TEventFilterLookup.Fill(FindByEvent);
 
   FieldsView.Hint := SFieldsViewHint + #13#10 + SFieldsViewHint2;
   RelationsView.Hint := SRelationsViewHint + #13#10 + SRelationsViewHint2;
@@ -884,10 +880,20 @@ begin
       FModel.GetHighlight(TO2Object(Item.Data)));
 end;
 
+procedure TMainForm.FindByEventChange(Sender: TObject);
+begin
+  FModel.EventFilterIndex := FindByEvent.ItemIndex;
+  NotifyChanges([ncObjects]);
+end;
+
 procedure TMainForm.FindByNameChange(Sender: TObject);
 begin
+  if FModel = nil then Exit;
+
+  FModel.ObjectName := FindByName.Text;
+
   Timer.Enabled := False;
-  if FindByName.Text = '' then
+  if FModel.ObjectName = '' then
     NotifyChanges([ncObjects])
   else
     Timer.Enabled := True;
@@ -896,6 +902,20 @@ end;
 procedure TMainForm.FindByTagSelectAllExecute(Sender: TObject);
 begin
   FindByTag.SelectAll;
+  NotifyChanges([ncObjects]);
+end;
+
+procedure TMainForm.FindByTagClick(Sender: TObject);
+var
+  I: Integer;
+begin
+  FModel.IncludeUntagged := FindByTag.Selected[0];
+
+  FModel.ObjectTags.Clear;
+  for I := 1 to FindByTag.Count - 1 do
+    if FindByTag.Selected[I] then
+      FModel.ObjectTags.Add(FindByTag.Items[I]);
+
   NotifyChanges([ncObjects]);
 end;
 
@@ -920,6 +940,18 @@ begin
   NotifyChanges([ncObjects]);
 end;
 
+procedure TMainForm.FindByRuleClick(Sender: TObject);
+var
+  I: Integer;
+begin
+  FModel.ObjectRules.Clear;
+  for I := 0 to FindByRule.Count - 1 do
+    if FindByRule.Selected[I] then
+      FModel.ObjectRules.Add(TO2Rule(FindByRule.Items.Objects[I]));
+
+  NotifyChanges([ncObjects]);
+end;
+
 procedure TMainForm.FindByRuleDeselectExecute(Sender: TObject);
 begin
   FindByRule.ClearSelection;
@@ -932,11 +964,6 @@ var
 begin
   for I := 0 to FindByRule.Count - 1 do
     FindByRule.Selected[I] := not FindByRule.Selected[I];
-  NotifyChanges([ncObjects]);
-end;
-
-procedure TMainForm.FilterChange(Sender: TObject);
-begin
   NotifyChanges([ncObjects]);
 end;
 
@@ -1392,11 +1419,6 @@ begin
   Result := TO2Field(FieldsView.Selected.Data);
 end;
 
-function TMainForm.GetEventFilter: TEventFilter;
-begin
-  Result := TEventFilter(TEventFilterLookup.SelectedValue(FindByEvent));
-end;
-
 procedure TMainForm.SetFileName(const Value: string);
 begin
   FFileName := Value;
@@ -1440,6 +1462,9 @@ begin
     FAppFiles := FServiceContainer.Resolve<IAppFiles>;
     FStorage := FServiceContainer.Resolve<IStorage>;
     FPasswordScoreCache := FServiceContainer.Resolve<IPasswordScoreCache>;
+
+    FindByEvent.Items := FModel.EventFilters;
+    FindByEvent.ItemIndex := FModel.EventFilterIndex;
   end;
 end;
 
@@ -1577,42 +1602,10 @@ begin
     O2FileName := FModel.O2File.FileName;
 end;
 
-procedure TMainForm.GetStartDate(out StartDate: TDateTime;
-  out UseParams: Boolean);
-begin
-  UseParams := False;
-  if FindByEvent.ItemIndex <> -1 then
-    case EventFilter of
-      efAll,
-      efAllEvents,
-      efCustom:
-        UseParams := True;
-      efToday:
-        StartDate := Date;
-      efTomorrow:
-        StartDate := Date + 1;
-      efThisWeek:
-        StartDate := StartOfTheWeek(Date);
-      efThisMonth:
-        StartDate := StartOfTheMonth(Date);
-      efThisYear:
-        StartDate := StartOfTheYear(Date);
-      efNext7days,
-      efNext15days,
-      efNext30days,
-      efNext60days,
-      efNext90days,
-      efNext180days,
-      efNext365days:
-        StartDate := Date;
-    end;
-end;
-
 function TMainForm.ObjToListItem(const AObject: TO2Object;
   const Item: TListItem): TListItem;
 var
-  StartDate, EventDate: TDateTime;
-  UseParams: Boolean;
+  EventDate: TDateTime;
 begin
   if Assigned(Item) then
     Result := Item
@@ -1621,9 +1614,7 @@ begin
   Result.Caption := AObject.Name;
   Result.ImageIndex := 0;
   Result.SubItems.Add(AObject.Tag);
-  GetStartDate(StartDate, UseParams);
-  if FModel.O2File.Rules.GetNextEvent(
-    AObject, StartDate, EventDate, UseParams) then
+  if FModel.GetNextEvent(AObject, EventDate) then
     Result.SubItems.Add(DateToStr(EventDate))
   else
     Result.SubItems.Add('');
@@ -1771,20 +1762,18 @@ end;
 function TMainForm.CompareObjectsByNextEvent(const Obj1,
   Obj2: TO2Object): Integer;
 var
-  StartDate, Date1, Date2: TDateTime;
-  UseParams: Boolean;
+  Date1, Date2: TDateTime;
 begin
-  GetStartDate(StartDate, UseParams);
-  if FModel.O2File.Rules.GetNextEvent(Obj1, StartDate, Date1, UseParams) then
+  if FModel.GetNextEvent(Obj1, Date1) then
   begin
-    if FModel.O2File.Rules.GetNextEvent(Obj2, StartDate, Date2, UseParams) then
+    if FModel.GetNextEvent(Obj2, Date2) then
       Result := CompareDate(Date1, Date2)
     else
       Result := -1;
   end
   else
   begin
-    if FModel.O2File.Rules.GetNextEvent(Obj2, StartDate, Date2, UseParams) then
+    if FModel.GetNextEvent(Obj2, Date2) then
       Result := 1
     else
       Result := 0;
@@ -1840,142 +1829,14 @@ end;
 procedure TMainForm.UpdateObjectsView;
 var
   SelectedItemsData: TList;
-  Date1, Date2: TDateTime;
-  UseParams: Boolean;
   AObject: TO2Object;
-
-function CheckName(const Obj: TO2Object): Boolean;
 begin
-  Result := (FindByName.Text = '') or ContainsText(Obj.Name, FindByName.Text);
-end;
-
-function CheckTag(const Obj: TO2Object): Boolean;
-var
-  Tags: TStringList;
-  I: Integer;
-begin
-  Result := False;
-
-  if (FindByTag.SelCount = 0) or FindByTag.Selected[0] and (Obj.Tag = '') then
-    Exit(True);
-
-  Tags := TStringList.Create;
-  try
-    Obj.GetTags(Tags);
-    for I := 1 to FindByTag.Items.Count - 1 do
-      if FindByTag.Selected[I] and (Tags.IndexOf(FindByTag.Items[I]) > -1) then
-        Exit(True);
-  finally
-    Tags.Free;
-  end;
-end;
-
-function CheckEvents(const Obj: TO2Object): Boolean;
-begin
-  Result := (FindByEvent.ItemIndex = -1) or (EventFilter = efAll)
-    or FModel.O2File.Rules.CheckEvents(Obj, Date1, Date2, UseParams);
-end;
-
-function CheckRules(const Obj: TO2Object): Boolean;
-var
-  AField: TO2Field;
-  I: Integer;
-begin
-  Result := False;
-
-  if FindByRule.SelCount = 0 then Exit(True);
-
-  for AField in Obj.Fields do
-    for I := 0 to FindByRule.Items.Count - 1 do
-      if FindByRule.Selected[I] then
-        with TO2Rule(FindByRule.Items.Objects[I]) do
-          if not (RuleType in EventRules) and Matches(AField)
-            or CheckEvents(AField, 0, 0, True) then
-            Exit(True);
-end;
-
-begin
-  UseParams := False;
-  if FindByEvent.ItemIndex <> -1 then
-    case EventFilter of
-      efAllEvents:
-      begin
-        Date1 := EncodeDate(1, 1, 1);
-        Date2 := EncodeDate(9999, 12, 31);
-      end;
-      efCustom:
-        UseParams := True;
-      efToday:
-      begin
-        Date1 := Date;
-        Date2 := Date;
-      end;
-      efTomorrow:
-      begin
-        Date1 := Date + 1;
-        Date2 := Date + 1;
-      end;
-      efThisWeek:
-      begin
-        Date1 := StartOfTheWeek(Date);
-        Date2 := StartOfTheDay(EndOfTheWeek(Date));
-      end;
-      efThisMonth:
-      begin
-        Date1 := StartOfTheMonth(Date);
-        Date2 := StartOfTheDay(EndOfTheMonth(Date));
-      end;
-      efThisYear:
-      begin
-        Date1 := StartOfTheYear(Date);
-        Date2 := StartOfTheDay(EndOfTheYear(Date));
-      end;
-      efNext7days:
-      begin
-        Date1 := Date;
-        Date2 := Date + 7;
-      end;
-      efNext15days:
-      begin
-        Date1 := Date;
-        Date2 := Date + 15;
-      end;
-      efNext30days:
-      begin
-        Date1 := Date;
-        Date2 := Date + 30;
-      end;
-      efNext60days:
-      begin
-        Date1 := Date;
-        Date2 := Date + 60;
-      end;
-      efNext90days:
-      begin
-        Date1 := Date;
-        Date2 := Date + 90;
-      end;
-      efNext180days:
-      begin
-        Date1 := Date;
-        Date2 := Date + 180;
-      end;
-      efNext365days:
-      begin
-        Date1 := Date;
-        Date2 := Date + 365;
-      end;
-    end;
-
   SelectedItemsData := ObjectsView.ListSelectedItemsData;
   try
     ObjectsView.Items.BeginUpdate;
     try
       ObjectsView.Clear;
-      for AObject in FModel.O2File.Objects do
-        if CheckName(AObject) and CheckTag(AObject)
-          and CheckEvents(AObject) and CheckRules(AObject) then
-          ObjToListItem(AObject, nil);
+      for AObject in FModel.GetObjects do ObjToListItem(AObject, nil);
 
       ObjectsView.AlphaSort;
 
@@ -1991,8 +1852,8 @@ end;
 
 procedure TMainForm.UpdateFieldsView;
 var
-  AField: TO2Field;
   SelectedItemsData: TList;
+  AField: TO2Field;
 begin
   SelectedItemsData := FieldsView.ListSelectedItemsData;
   try
@@ -2093,65 +1954,36 @@ end;
 
 procedure TMainForm.UpdateTagList;
 var
-  NoneSelected: Boolean;
-  Selection: TStrings;
   I: Integer;
 begin
-  Selection := TStringList.Create;
-  try
-    if FindByTag.Items.Count > 0 then
-      NoneSelected := FindByTag.Selected[0]
-    else
-      NoneSelected := False;
-    for I := 1 to FindByTag.Items.Count - 1 do
-      if FindByTag.Selected[I] then
-        Selection.Add(FindByTag.Items[I]);
+  FindByTag.Items := FModel.Tags;
 
-    FindByTag.Items.BeginUpdate;
-    try
-      FindByTag.Items.Clear;
-      FindByTag.Items.Add(STagsNone);
-      AppendTagsToList(FModel.O2File.Objects.ToEnumerable, FindByTag.Items);
-    finally
-      FindByTag.Items.EndUpdate;
-    end;
+  for I := 1 to FindByTag.Count - 1 do
+    if FModel.ObjectTags.IndexOf(FindByTag.Items[I]) <> -1 then
+      FindByTag.Selected[I] := True;
 
-    FindByTag.Selected[0] := NoneSelected;
-    for I := 1 to FindByTag.Items.Count - 1 do
-      FindByTag.Selected[I] := Selection.IndexOf(FindByTag.Items[I]) > -1;
-  finally
-    Selection.Free;
-  end;
+  FindByTag.Selected[0] := FModel.IncludeUntagged;
 end;
 
 procedure TMainForm.UpdateRuleList;
 var
-  Selection: TObjectList;
   ARule: TO2Rule;
   I: Integer;
 begin
-  Selection := TObjectList.Create(False);
+  FindByRule.Items.BeginUpdate;
   try
-    for I := 0 to FindByRule.Items.Count - 1 do
-      if FindByRule.Selected[I] then
-        Selection.Add(FindByRule.Items.Objects[I]);
-
-    FindByRule.Items.BeginUpdate;
-    try
-      FindByRule.Items.Clear;
-      for ARule in FModel.O2File.Rules do
-        if ARule.Active then
-          FindByRule.AddItem(ARule.Name, ARule);
-    finally
-      FindByRule.Items.EndUpdate;
-    end;
-
-    for I := 0 to FindByRule.Items.Count - 1 do
-      FindByRule.Selected[I] :=
-        Selection.IndexOf(FindByRule.Items.Objects[I]) > -1;
+    FindByRule.Items.Clear;
+    for ARule in FModel.O2File.Rules do
+      if ARule.Active then
+        FindByRule.AddItem(ARule.Name, ARule);
   finally
-    Selection.Free;
+    FindByRule.Items.EndUpdate;
   end;
+
+  for I := 0 to FindByRule.Count - 1 do
+    if FModel.ObjectRules.IndexOf(
+      TO2Rule(FindByRule.Items.Objects[I])) <> -1 then
+      FindByRule.Selected[I] := True;
 end;
 
 procedure TMainForm.UpdateMRUList(const FileName: string);
@@ -2587,7 +2419,8 @@ end;
 procedure TMainForm.OpenLinkUpdate(Sender: TObject);
 begin
   TAction(Sender).Visible := not FBusy and HasSelectedField
-    and Assigned(FModel.O2File.Rules.FindFirstRule(SelectedField, [rtHyperLink]));
+    and Assigned(FModel.O2File.Rules.FindFirstRule(SelectedField,
+      [rtHyperLink]));
   TAction(Sender).Enabled := TAction(Sender).Visible;
 end;
 

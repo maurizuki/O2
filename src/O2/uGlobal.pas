@@ -18,8 +18,7 @@ unit uGlobal;
 interface
 
 uses
-  Windows, Classes, Graphics, ComCtrls, StdCtrls, uO2Defs, uO2Rules,
-  uLookupHelper;
+  Windows, Classes, Graphics, ComCtrls, uO2Defs, uO2Rules;
 
 {$I PAFConsts.inc}
 
@@ -306,62 +305,6 @@ const
     (Value: Integer(vsList);      Name: 'List'),
     (Value: Integer(vsReport);    Name: 'Report'));
 
-type
-  TEventFilter = (
-    efAll,
-    efAllEvents,
-    efCustom,
-    efToday,
-    efTomorrow,
-    efThisWeek,
-    efThisMonth,
-    efThisYear,
-    efNext7days,
-    efNext15days,
-    efNext30days,
-    efNext60days,
-    efNext90days,
-    efNext180days,
-    efNext365days);
-
-  TEventFilterLookup = class(TLookupHelper)
-  protected
-    class procedure GetMapBounds(out LowerBound, UpperBound: Integer); override;
-    class function GetMapEntry(Index: Integer): PLookupMapEntry; override;
-  end;
-
 implementation
-
-const
-  EventFilters: array[0..14] of TLookupMapEntry = (
-    (Value: Integer(efAll);         Item: SEventAll),
-    (Value: Integer(efAllEvents);   Item: SEventAllEvents),
-    (Value: Integer(efCustom);      Item: SEventCustom),
-    (Value: Integer(efToday);       Item: SEventToday),
-    (Value: Integer(efTomorrow);    Item: SEventTomorrow),
-    (Value: Integer(efThisWeek);    Item: SEventThisWeek),
-    (Value: Integer(efThisMonth);   Item: SEventThisMonth),
-    (Value: Integer(efThisYear);    Item: SEventThisYear),
-    (Value: Integer(efNext7days);   Item: SEventNext7days),
-    (Value: Integer(efNext15days);  Item: SEventNext15days),
-    (Value: Integer(efNext30days);  Item: SEventNext30days),
-    (Value: Integer(efNext60days);  Item: SEventNext60days),
-    (Value: Integer(efNext90days);  Item: SEventNext90days),
-    (Value: Integer(efNext180days); Item: SEventNext180days),
-    (Value: Integer(efNext365days); Item: SEventNext365days));
-
-{ TEventFilterLookup }
-
-class procedure TEventFilterLookup.GetMapBounds(out LowerBound,
-  UpperBound: Integer);
-begin
-  LowerBound := Low(EventFilters);
-  UpperBound := High(EventFilters);
-end;
-
-class function TEventFilterLookup.GetMapEntry(Index: Integer): PLookupMapEntry;
-begin
-  Result := @EventFilters[Index];
-end;
 
 end.

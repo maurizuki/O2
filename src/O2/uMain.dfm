@@ -323,7 +323,7 @@ object MainForm: TMainForm
       Anchors = [akLeft, akTop, akRight]
       DropDownCount = 20
       TabOrder = 1
-      OnChange = FilterChange
+      OnChange = FindByEventChange
     end
     object FindByTag: TListBox
       Left = 11
@@ -336,7 +336,7 @@ object MainForm: TMainForm
       MultiSelect = True
       PopupMenu = FindByTagMenu
       TabOrder = 2
-      OnClick = FilterChange
+      OnClick = FindByTagClick
     end
     object FindByRule: TListBox
       Left = 11
@@ -350,7 +350,7 @@ object MainForm: TMainForm
       PopupMenu = FindByRuleMenu
       Sorted = True
       TabOrder = 3
-      OnClick = FilterChange
+      OnClick = FindByRuleClick
     end
   end
   object ToolBar: TToolBar
