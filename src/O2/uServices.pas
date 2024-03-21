@@ -66,6 +66,18 @@ type
     property EventFilterIndex: Integer read GetEventFilterIndex
       write SetEventFilterIndex;
 
+    function GetTags: TStrings;
+    property Tags: TStrings read GetTags;
+
+    function GetObjectTags: TStrings;
+    procedure SetObjectTags(const Value: TStrings);
+    property ObjectTags: TStrings read GetObjectTags write SetObjectTags;
+
+    function GetIncludeUntagged: Boolean;
+    procedure SetIncludeUntagged(const Value: Boolean);
+    property IncludeUntagged: Boolean read GetIncludeUntagged
+      write SetIncludeUntagged;
+
     function GetObjects: IEnumerable<TO2Object>;
 
     function GetNextEvent(const AObject: TO2Object;

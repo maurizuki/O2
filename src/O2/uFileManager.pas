@@ -28,6 +28,9 @@ type
     FEventFilters: TStrings;
     FEventFilterIndex: Integer;
     FEventFilter: TEventFilter;
+    FTags: TStrings;
+    FObjectTags: TStrings;
+    FIncludeUntagged: Boolean;
 
     FPasswordScoreCache: IPasswordScoreCache;
 
@@ -35,9 +38,14 @@ type
     function GetObjectName: string;
     function GetEventFilters: TStrings;
     function GetEventFilterIndex: Integer;
+    function GetTags: TStrings;
+    function GetObjectTags: TStrings;
+    function GetIncludeUntagged: Boolean;
     procedure SetFile(const Value: TO2File);
     procedure SetObjectName(const Value: string);
     procedure SetEventFilterIndex(const Value: Integer);
+    procedure SetObjectTags(const Value: TStrings);
+    procedure SetIncludeUntagged(const Value: Boolean);
   public
     constructor Create(PasswordScoreCache: IPasswordScoreCache);
     destructor Destroy; override;
@@ -57,12 +65,16 @@ type
     property EventFilterIndex: Integer read GetEventFilterIndex
       write SetEventFilterIndex;
     property EventFilter: TEventFilter read FEventFilter;
+    property Tags: TStrings read GetTags;
+    property ObjectTags: TStrings read GetObjectTags write SetObjectTags;
+    property IncludeUntagged: Boolean read GetIncludeUntagged
+      write SetIncludeUntagged;
   end;
 
 implementation
 
 uses
-  SysUtils, StrUtils, uGlobal;
+  SysUtils, StrUtils, uGlobal, uO2ObjectsUtils;
 
 type
   TO2ObjectFilteredEnumerator = class(TInterfacedObject,
@@ -139,9 +151,14 @@ const
 constructor TFileManager.Create(PasswordScoreCache: IPasswordScoreCache);
 begin
   FPasswordScoreCache := PasswordScoreCache;
+
   FEventFilters := TStringList.Create;
   FEventFilters.AddStrings(EventFilterDescriptions);
+
   FEventFilter := EventFilterClasses[FEventFilterIndex].Create;
+
+  FTags := TStringList.Create;
+  FObjectTags := TStringList.Create;
 end;
 
 destructor TFileManager.Destroy;
@@ -149,6 +166,8 @@ begin
   if Assigned(FFile) then FFile.Free;
   FEventFilters.Free;
   FEventFilter.Free;
+  FTags.Free;
+  FObjectTags.Free;
   inherited;
 end;
 
@@ -173,6 +192,11 @@ begin
   Result := O2File.Rules.GetHighlightColors(AField, FPasswordScoreCache);
 end;
 
+function TFileManager.GetIncludeUntagged: Boolean;
+begin
+  Result := FIncludeUntagged;
+end;
+
 function TFileManager.GetNextEvent(const AObject: TO2Object;
   out NextDate: TDateTime): Boolean;
 begin
@@ -188,6 +212,19 @@ end;
 function TFileManager.GetObjects: IEnumerable<TO2Object>;
 begin
   Result := TO2ObjectFilteredEnumerable.Create(Self);
+end;
+
+function TFileManager.GetObjectTags: TStrings;
+begin
+  Result := FObjectTags;
+end;
+
+function TFileManager.GetTags: TStrings;
+begin
+  FTags.Text := STagsNone;
+  AppendTagsToList(O2File.Objects.ToEnumerable, FTags);
+
+  Result := FTags;
 end;
 
 function TFileManager.GetHighlight(const AObject: TO2Object): THighlight;
@@ -216,9 +253,19 @@ begin
   FFile := Value;
 end;
 
+procedure TFileManager.SetIncludeUntagged(const Value: Boolean);
+begin
+  FIncludeUntagged := Value;
+end;
+
 procedure TFileManager.SetObjectName(const Value: string);
 begin
   FObjectName := Value;
+end;
+
+procedure TFileManager.SetObjectTags(const Value: TStrings);
+begin
+  FObjectTags.Assign(Value);
 end;
 
 { TO2ObjectFilteredEnumerator }
@@ -247,8 +294,25 @@ begin
 end;
 
 function TO2ObjectFilteredEnumerator.CheckTags: Boolean;
+var
+  Tags: TStringList;
+  ATag: string;
 begin
-  Result := True;
+  if not FFileManager.IncludeUntagged and (FFileManager.ObjectTags.Count = 0)
+    or FFileManager.IncludeUntagged
+    and (FFileManager.O2File.Objects[FIndex].Tag = '') then Exit(True);
+
+  Tags := TStringList.Create;
+  try
+    FFileManager.O2File.Objects[FIndex].GetTags(Tags);
+    
+    for ATag in FFileManager.ObjectTags do
+      if Tags.IndexOf(Atag) <> -1 then Exit(True);
+  finally
+    Tags.Free;
+  end;
+  
+  Result := False;
 end;
 
 function TO2ObjectFilteredEnumerator.CheckEvents: Boolean;
