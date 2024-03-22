@@ -699,8 +699,6 @@ begin
   ImportSettingsDlg.Filter := SImportSettingsFileFilter;
   ExportSettingsDlg.Filter := SExportSettingsFileFilter;
 
-  Initialize;
-
   ActiveControl := ObjectsView;
 
   SetBrowserEmulation(ExtractFileName(Application.ExeName), IE11Default);
@@ -1462,7 +1460,8 @@ begin
     FStorage := FServiceContainer.Resolve<IStorage>;
 
     FindByEvent.Items := FModel.EventFilters;
-    FindByEvent.ItemIndex := FModel.EventFilterIndex;
+
+    Initialize;
   end;
 end;
 
@@ -1515,18 +1514,16 @@ end;
 
 procedure TMainForm.InitializeSearch;
 begin
+  FModel.ObjectName := '';
+  FModel.EventFilterIndex := 0;
+  FModel.IncludeUntagged := False;
+  FModel.ObjectTags.Clear;
+  FModel.ObjectRules.Clear;
+
   FindByName.Clear;
   FindByEvent.ItemIndex := 0;
   FindByTag.ClearSelection;
   FindByRule.ClearSelection;
-
-  if FModel = nil then Exit;
-
-  FModel.ObjectName := '';
-  FModel.EventFilterIndex := 0;
-  FModel.ObjectTags.Clear;
-  FModel.IncludeUntagged := False;
-  FModel.ObjectRules.Clear;
 end;
 
 procedure TMainForm.LoadLanguageMenu;
