@@ -155,8 +155,6 @@ type
     N11: TMenuItem;
     Properties1: TMenuItem;
     DragDrop: TJvDragDrop;
-    AddToIEFavorites: TAction;
-    AddtoIEfavorites1: TMenuItem;
     SaveFileAsCopy: TAction;
     Saveascopy1: TMenuItem;
     ReopenFile: TAction;
@@ -465,7 +463,6 @@ type
     procedure CopyAsRowsExecute(Sender: TObject);
     procedure CopyAsColumnsExecute(Sender: TObject);
     procedure CopyUpdate(Sender: TObject);
-    procedure AddToIEFavoritesExecute(Sender: TObject);
     procedure OpenLinkExecute(Sender: TObject);
     procedure OpenLinkUpdate(Sender: TObject);
     procedure SendEmailExecute(Sender: TObject);
@@ -2385,21 +2382,6 @@ begin
   TAction(Sender).Enabled := not FBusy and (FieldsView.Items.Count > 0);
 end;
 
-procedure TMainForm.AddToIEFavoritesExecute(Sender: TObject);
-var
-  URLFile: TStrings;
-begin
-  URLFile := TStringList.Create;
-  try
-    URLFile.Add('[InternetShortcut]');
-    URLFile.Add('URL=' + FModel.O2File.Rules.GetHyperLink(SelectedField));
-    URLFile.SaveToFile(IncludeTrailingPathDelimiter(TShellFolders.Favorites)
-      + SelectedObject.Name + '.url');
-  finally
-    URLFile.Free;
-  end;
-end;
-
 procedure TMainForm.OpenLinkExecute(Sender: TObject);
 begin
   ShellOpen(FModel.O2File.Rules.GetHyperLink(SelectedField));
@@ -2408,8 +2390,8 @@ end;
 procedure TMainForm.OpenLinkUpdate(Sender: TObject);
 begin
   TAction(Sender).Visible := not FBusy and HasSelectedField
-    and Assigned(FModel.O2File.Rules.FindFirstRule(SelectedField,
-      [rtHyperLink]));
+    and Assigned(
+      FModel.O2File.Rules.FindFirstRule(SelectedField, [rtHyperLink]));
   TAction(Sender).Enabled := TAction(Sender).Visible;
 end;
 

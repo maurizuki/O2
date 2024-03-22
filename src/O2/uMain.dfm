@@ -769,13 +769,6 @@ object MainForm: TMainForm
       OnExecute = SortByNextEventExecute
       OnUpdate = SortByNextEventUpdate
     end
-    object AddToIEFavorites: TAction
-      Category = 'Field'
-      Caption = 'Add to IE favorites'
-      Hint = 'Add to IE favorites'
-      OnExecute = AddToIEFavoritesExecute
-      OnUpdate = OpenLinkUpdate
-    end
     object OpenLink: TAction
       Category = 'Field'
       Caption = 'Open link...'
@@ -4898,9 +4891,6 @@ object MainForm: TMainForm
     end
     object Browse1: TMenuItem
       Action = OpenLink
-    end
-    object AddtoIEfavorites1: TMenuItem
-      Action = AddToIEFavorites
     end
     object Sendemail1: TMenuItem
       Action = SendEmail
