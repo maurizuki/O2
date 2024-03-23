@@ -90,13 +90,13 @@ type
 implementation
 
 uses
-  Windows, SysUtils, Types, TypInfo,
+  Windows, SysUtils, Types, TypInfo, SZCRC32,
   DCPblowfish, DCPcast128, DCPcast256, DCPdes, DCPice,
   DCPidea, DCPmars, DCPmisty1, DCPrc2, DCPrc4, DCPrc5,
   DCPrc6, DCPrijndael, DCPserpent, DCPtea, DCPtwofish,
   DCPhaval, DCPmd4, DCPmd5, DCPripemd128, DCPripemd160,
   DCPsha1, DCPsha256, DCPsha512, DCPtiger,
-  uO2CRC32, uO2Xml;
+  uO2Xml;
 
 resourcestring
   SUnsupportedFileType = 'File type not supported.';

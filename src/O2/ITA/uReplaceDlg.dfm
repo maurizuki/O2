@@ -40,9 +40,9 @@ object ReplaceDlg: TReplaceDlg
     Anchors = [akRight, akBottom]
     Caption = 'OK'
     Default = True
-    Enabled = False
     ModalResult = 1
     TabOrder = 2
+    OnClick = btOkClick
   end
   object btCancel: TButton
     Left = 170

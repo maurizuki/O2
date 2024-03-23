@@ -12,6 +12,7 @@ object PrintPreview: TPrintPreview
   Font.Name = 'Tahoma'
   Font.Style = []
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   TextHeight = 13
   object PreviewControl: TJvPreviewControl
     Left = 0
@@ -39,8 +40,8 @@ object PrintPreview: TPrintPreview
     Align = alClient
     ParentColor = False
     TabOrder = 0
-    ExplicitWidth = 472
-    ExplicitHeight = 549
+    ExplicitWidth = 464
+    ExplicitHeight = 547
   end
   object StatusBar: TStatusBar
     Left = 0
@@ -49,8 +50,8 @@ object PrintPreview: TPrintPreview
     Height = 19
     Panels = <>
     SimplePanel = True
-    ExplicitTop = 587
-    ExplicitWidth = 472
+    ExplicitTop = 585
+    ExplicitWidth = 464
   end
   object ToolBar: TToolBar
     Left = 0
@@ -73,7 +74,7 @@ object PrintPreview: TPrintPreview
     TabOrder = 2
     Transparent = True
     Wrapable = False
-    ExplicitWidth = 472
+    ExplicitWidth = 464
     object ToolButton1: TToolButton
       Left = 0
       Top = 0
@@ -192,29 +193,29 @@ object PrintPreview: TPrintPreview
       Category = 'Options'
       Caption = 'Include tags'
       Hint = 'Include tags'
-      OnExecute = OptionExecute
-      OnUpdate = ActionUpdate
+      OnExecute = IncludeTagsExecute
+      OnUpdate = IncludeTagsUpdate
     end
     object IncludeNotes: TAction
       Category = 'Options'
       Caption = 'Include notes'
       Hint = 'Include notes'
-      OnExecute = OptionExecute
-      OnUpdate = ActionUpdate
+      OnExecute = IncludeNotesExecute
+      OnUpdate = IncludeNotesUpdate
     end
     object IncludeRelations: TAction
       Category = 'Options'
       Caption = 'Include relations'
       Hint = 'Include relations'
-      OnExecute = OptionExecute
-      OnUpdate = ActionUpdate
+      OnExecute = IncludeRelationsExecute
+      OnUpdate = IncludeRelationsUpdate
     end
     object IncludePasswords: TAction
       Category = 'Options'
       Caption = 'Include passwords'
       Hint = 'Include passwords'
-      OnExecute = OptionExecute
-      OnUpdate = ActionUpdate
+      OnExecute = IncludePasswordsExecute
+      OnUpdate = IncludePasswordsUpdate
     end
   end
   object ToolBarImages: TImageList

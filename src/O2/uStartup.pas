@@ -18,7 +18,7 @@ unit uStartup;
 interface
 
 uses
-  Spring.Container, uServices, uUtils;
+  Spring.Container;
 
 var
   ServiceContainer: TContainer;
@@ -29,11 +29,12 @@ implementation
 
 uses
   Forms, ComCtrls, SysUtils, TypInfo, Variants, XMLDoc, XMLIntf, xmldom,
-  msxmldom, JclFileUtils, uMain, uGlobal, uShellUtils, uAppFiles, uXmlStorage,
-  uStorageUtils, uPasswordScoreCache, uO2File, uO2Objects, uO2Relations,
-  uO2Rules, uFileManager, uFilePropsModel, uEncryptionPropsModel, uObjectModels,
-  uRelationModels, uRuleModels, uO2ImportExport, uXmlImportExport,
-  uiCalendarExport, uHTMLExportModel, uPrintModel, uReplaceOperations;
+  msxmldom, JclFileUtils, uMain, uGlobal, uUtils, uShellUtils, uServices,
+  uAppFiles, uXmlStorage, uStorageUtils, uPasswordScoreCache, uO2File,
+  uO2Objects, uO2Relations, uO2Rules, uFileManager, uFilePropsModel,
+  uEncryptionPropsModel, uObjectModels, uRelationModels, uRuleModels,
+  uO2ImportExport, uXmlImportExport, uiCalendarExport, uHTMLExportModel,
+  uPrintModel, uReplaceOperations;
 
 function MigrateConfiguration(XmlStorage: IStorage;
   XML: IXMLDocument): IXMLDocument;

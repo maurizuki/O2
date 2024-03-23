@@ -1,6 +1,6 @@
 {$O+} // Optimization must be ON
 
-unit uO2CRC32;
+unit SZCRC32;
 
 { Version 1.0.0
 

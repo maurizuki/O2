@@ -5,10 +5,10 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">45304.6186574074</prop>
-        <prop prop-type="OrigDateTime">45304.618587963</prop>
+        <prop prop-type="SelfDateTime">45374.6011111111</prop>
+        <prop prop-type="OrigDateTime">0</prop>
         <prop prop-type="XlatDateTime">45296.7040277778</prop>
-        <prop prop-type="Translated">1174</prop>
+        <prop prop-type="Translated">1223</prop>
         <prop prop-type="UnTranslated">0</prop>
       </prop-group>
     </header>
@@ -6426,7 +6426,7 @@
         <source>"Unable to create directory"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">41751.6296144329</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
         <target>"Impossibile creare la cartella"</target>
       </trans-unit>
@@ -12594,6 +12594,356 @@
         <source>"Failed to Save Stream"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45232.7150453704</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SActivatorDelegateExpected" resname="Spring_Container_ResourceStrings_SActivatorDelegateExpected">
+        <source>"Activator delegate was expected."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981851157</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SPoolingNotSupported" resname="Spring_Container_ResourceStrings_SPoolingNotSupported">
+        <source>"Pooling not supported for type: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981851157</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Interception_ResourceStrings_SProceedCalledMoreTimesThanExpected" resname="Spring_Interception_ResourceStrings_SProceedCalledMoreTimesThanExpected">
+        <source>"Proceed has been called more times than expected."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981851157</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SCannotResolveType" resname="Spring_Container_ResourceStrings_SCannotResolveType">
+        <source>"Cannot resolve type: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SCannotResolveTypeNamed" resname="Spring_Container_ResourceStrings_SCannotResolveTypeNamed">
+        <source>"Cannot resolve type: %s with name: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SResolutionStackUnbalanced" resname="Spring_Container_ResourceStrings_SResolutionStackUnbalanced">
+        <source>"Resolution stack is unbalanced"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SNoDefaultFound" resname="Spring_Container_ResourceStrings_SNoDefaultFound">
+        <source>"No default found for type: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SUnsatisfiedConstructorParameters" resname="Spring_Container_ResourceStrings_SUnsatisfiedConstructorParameters">
+        <source>"Unsatisfied parameters for constructor of type: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SUnsatisfiedMethodParameterTypes" resname="Spring_Container_ResourceStrings_SUnsatisfiedMethodParameterTypes">
+        <source>"Unsatisfied parameter types for the method: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SUnsatisfiedResolutionArgumentCount" resname="Spring_Container_ResourceStrings_SUnsatisfiedResolutionArgumentCount">
+        <source>"Unsatisfied resolution argument count."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SUnresovableInjection" resname="Spring_Container_ResourceStrings_SUnresovableInjection">
+        <source>"Unresovable injection on type: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SUnsatisfiedConstructor" resname="Spring_Container_ResourceStrings_SUnsatisfiedConstructor">
+        <source>"Unsatisfied constructor on type: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SRegistrationIncomplete" resname="Spring_Container_ResourceStrings_SRegistrationIncomplete">
+        <source>"Incomplete registration for type: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SMethodNotFound" resname="Spring_Container_ResourceStrings_SMethodNotFound">
+        <source>"Method not found: %s.%s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SPropertyNotFound" resname="Spring_Container_ResourceStrings_SPropertyNotFound">
+        <source>"Property not found: %s.%s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SFieldNotFound" resname="Spring_Container_ResourceStrings_SFieldNotFound">
+        <source>"Field not found: %s.%s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SInjectionTargetNeeded" resname="Spring_Container_ResourceStrings_SInjectionTargetNeeded">
+        <source>"Injection target needed."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SUnsatisfiedTarget" resname="Spring_Container_ResourceStrings_SUnsatisfiedTarget">
+        <source>"Unsatisfied target: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SUnexpectedLifetimeType" resname="Spring_Container_ResourceStrings_SUnexpectedLifetimeType">
+        <source>"Unexpected lifetimeType."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SArgument_KeyNotFound" resname="Spring_ResourceStrings_SArgument_KeyNotFound">
+        <source>"The given key was not present in the dictionary."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SArgument_InvalidIndexCount" resname="Spring_ResourceStrings_SArgument_InvalidIndexCount">
+        <source>"Index and count were out of bounds for the array or count is greater than the number of elements from index to the end of the source collection."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SArgumentOutOfRange_NeedNonNegNum" resname="Spring_ResourceStrings_SArgumentOutOfRange_NeedNonNegNum">
+        <source>"Non-negative number required. Parameter name: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SArgumentOutOfRange_Index" resname="Spring_ResourceStrings_SArgumentOutOfRange_Index">
+        <source>"Index must be non-negative and less than the size of the collection."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SArgumentOutOfRange_Count" resname="Spring_ResourceStrings_SArgumentOutOfRange_Count">
+        <source>"Count must be non-negative and refer to a location within the collection."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SArgumentOutOfRange_Capacity" resname="Spring_ResourceStrings_SArgumentOutOfRange_Capacity">
+        <source>"Capacity must be greater than the current size of the collection."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SInvalidOperation_EnumFailedVersion" resname="Spring_ResourceStrings_SInvalidOperation_EnumFailedVersion">
+        <source>"Collection was modified; enumeration operation may not execute."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SNotGenericType" resname="Spring_ResourceStrings_SNotGenericType">
+        <source>"Type \"%s\" is not a generic type."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SContainerRequiresBuild" resname="Spring_Container_ResourceStrings_SContainerRequiresBuild">
+        <source>"Container has changed registration information - Build required"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SMissingInterface" resname="Spring_Container_ResourceStrings_SMissingInterface">
+        <source>"Type does not support IInterface: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SIncompatibleTypes" resname="Spring_Container_ResourceStrings_SIncompatibleTypes">
+        <source>"Component type \"%s\" incompatible with service type \"%s\"."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SUnsupportedFactoryType" resname="Spring_Container_ResourceStrings_SUnsupportedFactoryType">
+        <source>"Type does not contain RTTI: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SUnsupportedFactoryMethod" resname="Spring_Container_ResourceStrings_SUnsupportedFactoryMethod">
+        <source>"Type contains incompatible method: %s, %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SDuplicateServiceName" resname="Spring_Container_ResourceStrings_SDuplicateServiceName">
+        <source>"Duplicate service name found: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SServiceNotFound" resname="Spring_Container_ResourceStrings_SServiceNotFound">
+        <source>"Service not found: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_Container_ResourceStrings_SCircularDependencyDetected" resname="Spring_Container_ResourceStrings_SCircularDependencyDetected">
+        <source>"Circular dependency detected on type: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SNotClassType" resname="Spring_ResourceStrings_SNotClassType">
+        <source>"\"%s\" is not a class type."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_STypeInfoNotFound" resname="Spring_ResourceStrings_STypeInfoNotFound">
+        <source>"TypeInfo not found for type: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SArgumentOutOfRangeException" resname="Spring_ResourceStrings_SArgumentOutOfRangeException">
+        <source>"Specified argument was out of the range of valid values: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SArgumentNilException" resname="Spring_ResourceStrings_SArgumentNilException">
+        <source>"Specified argument cannot be nil: %s"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SUnexpectedTypeKindArgument" resname="Spring_ResourceStrings_SUnexpectedTypeKindArgument">
+        <source>"Unexpected type kind %s for the argument %s."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SInvalidTypeCast" resname="Spring_ResourceStrings_SInvalidTypeCast">
+        <source>"Invalid cast: %s to %s."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SNullableHasNoValue" resname="Spring_ResourceStrings_SNullableHasNoValue">
+        <source>"Nullable must have a value."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SServiceLocatorNotInitialized" resname="Spring_ResourceStrings_SServiceLocatorNotInitialized">
+        <source>"The global ServiceLocator has not been initialized."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_STypeParameterContainsNoRtti" resname="Spring_ResourceStrings_STypeParameterContainsNoRtti">
+        <source>"The type parameter \"%s\" contains no RTTI. Please check for {$M+}."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SSequenceContainsNoElements" resname="Spring_ResourceStrings_SSequenceContainsNoElements">
+        <source>"Sequence contains no elements."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SSequenceContainsNoMatchingElement" resname="Spring_ResourceStrings_SSequenceContainsNoMatchingElement">
+        <source>"Sequence contains no matching element."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SSequenceContainsMoreThanOneMatchingElement" resname="Spring_ResourceStrings_SSequenceContainsMoreThanOneMatchingElement">
+        <source>"Sequence contains more than one matching element."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SSequenceContainsMoreThanOneElement" resname="Spring_ResourceStrings_SSequenceContainsMoreThanOneElement">
+        <source>"Sequence contains more than one element."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="Spring_ResourceStrings_SArgument_DuplicateKey" resname="Spring_ResourceStrings_SArgument_DuplicateKey">
+        <source>"An item with the same key has already been added."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981853009</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="uGlobal_SHashRipeMD160" resname="uGlobal_SHashRipeMD160">
+        <source>"RipeMD-160"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45374.5981858449</prop>
           <prop prop-type="Status">1</prop>
         </prop-group>
       </trans-unit>

@@ -16,6 +16,7 @@ object MainForm: TMainForm
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  OnShow = FormShow
   TextHeight = 13
   object VSplitter: TSplitter
     Left = 596
@@ -82,11 +83,13 @@ object MainForm: TMainForm
         end
         item
           Caption = 'Tags'
+          Tag = 1
           Width = 420
         end
         item
           Alignment = taRightJustify
           Caption = 'Next event'
+          Tag = 2
           Width = 100
         end>
       HideSelection = False
@@ -320,7 +323,7 @@ object MainForm: TMainForm
       Anchors = [akLeft, akTop, akRight]
       DropDownCount = 20
       TabOrder = 1
-      OnChange = FilterChange
+      OnChange = FindByEventChange
     end
     object FindByTag: TListBox
       Left = 11
@@ -333,7 +336,7 @@ object MainForm: TMainForm
       MultiSelect = True
       PopupMenu = FindByTagMenu
       TabOrder = 2
-      OnClick = FilterChange
+      OnClick = FindByTagClick
     end
     object FindByRule: TListBox
       Left = 11
@@ -347,7 +350,7 @@ object MainForm: TMainForm
       PopupMenu = FindByRuleMenu
       Sorted = True
       TabOrder = 3
-      OnClick = FilterChange
+      OnClick = FindByRuleClick
     end
   end
   object ToolBar: TToolBar
@@ -765,13 +768,6 @@ object MainForm: TMainForm
       Hint = 'Sort by next event'
       OnExecute = SortByNextEventExecute
       OnUpdate = SortByNextEventUpdate
-    end
-    object AddToIEFavorites: TAction
-      Category = 'Field'
-      Caption = 'Add to IE favorites'
-      Hint = 'Add to IE favorites'
-      OnExecute = AddToIEFavoritesExecute
-      OnUpdate = OpenLinkUpdate
     end
     object OpenLink: TAction
       Category = 'Field'
@@ -4895,9 +4891,6 @@ object MainForm: TMainForm
     end
     object Browse1: TMenuItem
       Action = OpenLink
-    end
-    object AddtoIEfavorites1: TMenuItem
-      Action = AddToIEFavorites
     end
     object Sendemail1: TMenuItem
       Action = SendEmail

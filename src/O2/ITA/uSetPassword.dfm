@@ -14,9 +14,6 @@ object SetPasswordDlg: TSetPasswordDlg
   Font.Name = 'Tahoma'
   Font.Style = []
   Position = poMainFormCenter
-  OnCreate = FormCreate
-  OnDestroy = FormDestroy
-  OnShow = FormShow
   DesignSize = (
     430
     274)
@@ -73,7 +70,7 @@ object SetPasswordDlg: TSetPasswordDlg
     ThemedPassword = True
     TabOrder = 3
     Text = ''
-    OnChange = edPasswordChange
+    OnChange = edConfPasswordChange
   end
   object btOk: TButton
     Left = 266
@@ -83,9 +80,9 @@ object SetPasswordDlg: TSetPasswordDlg
     Anchors = [akRight, akBottom]
     Caption = 'OK'
     Default = True
-    Enabled = False
     ModalResult = 1
     TabOrder = 4
+    OnClick = btOkClick
   end
   object btCancel: TButton
     Left = 347

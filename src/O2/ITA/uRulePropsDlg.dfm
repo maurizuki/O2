@@ -25,6 +25,7 @@ object RulePropsDlg: TRulePropsDlg
     Action = OK
     Anchors = [akRight, akBottom]
     Default = True
+    ModalResult = 1
     TabOrder = 1
   end
   object btCancel: TButton
@@ -113,6 +114,7 @@ object RulePropsDlg: TRulePropsDlg
         Height = 21
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 2
+        OnChange = edFieldNameChange
         ExplicitWidth = 152
       end
       object edFieldValue: TEdit
@@ -122,6 +124,7 @@ object RulePropsDlg: TRulePropsDlg
         Height = 21
         Anchors = [akTop, akRight]
         TabOrder = 3
+        OnChange = edFieldValueChange
         ExplicitLeft = 161
       end
       object MaskHelpMemo: TMemo
@@ -161,6 +164,8 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akLeft, akTop, akRight]
         HideSelection = False
         TabOrder = 0
+        OnChange = edDisplayMaskChange
+        ExplicitWidth = 323
       end
       object btDisplayMacros: TButton
         Left = 255
@@ -171,6 +176,7 @@ object RulePropsDlg: TRulePropsDlg
         Caption = 'Macros'
         TabOrder = 1
         OnClick = btDisplayMacrosClick
+        ExplicitLeft = 251
       end
     end
     object tsHyperLink: TTabSheet
@@ -195,6 +201,8 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akLeft, akTop, akRight]
         HideSelection = False
         TabOrder = 0
+        OnChange = edMaskChange
+        ExplicitWidth = 323
       end
       object btHyperLinkMacros: TButton
         Left = 255
@@ -205,6 +213,7 @@ object RulePropsDlg: TRulePropsDlg
         Caption = 'Macros'
         TabOrder = 1
         OnClick = btHyperLinkMacrosClick
+        ExplicitLeft = 251
       end
     end
     object tsDateFormat: TTabSheet
@@ -238,6 +247,7 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akTop, akRight]
         MaxLength = 1
         TabOrder = 1
+        OnChange = edDateSeparatorChange
         ExplicitLeft = 165
       end
       object cbDateFormat: TComboBox
@@ -248,6 +258,7 @@ object RulePropsDlg: TRulePropsDlg
         Style = csDropDownList
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
+        OnChange = cbDateFormatChange
         ExplicitWidth = 156
       end
     end
@@ -283,6 +294,8 @@ object RulePropsDlg: TRulePropsDlg
         MaxValue = 365
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
+        OnChange = edDaysBeforeChange
+        ExplicitWidth = 156
       end
       object edDaysAfter: TJvSpinEdit
         Left = 169
@@ -293,6 +306,8 @@ object RulePropsDlg: TRulePropsDlg
         MaxValue = 365
         Anchors = [akTop, akRight]
         TabOrder = 1
+        OnChange = edDaysAfterChange
+        ExplicitLeft = 165
       end
     end
     object tsHighlight: TTabSheet
@@ -326,6 +341,8 @@ object RulePropsDlg: TRulePropsDlg
         Style = [cbStandardColors, cbCustomColor, cbPrettyNames]
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
+        OnChange = cbHighlightColorChange
+        ExplicitWidth = 156
       end
       object cbHighlightTextColor: TColorBox
         Left = 169
@@ -335,6 +352,8 @@ object RulePropsDlg: TRulePropsDlg
         Style = [cbStandardColors, cbCustomColor, cbPrettyNames]
         Anchors = [akTop, akRight]
         TabOrder = 1
+        OnChange = cbHighlightTextColorChange
+        ExplicitLeft = 165
       end
     end
     object tsPassword: TTabSheet
@@ -351,6 +370,8 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akLeft, akTop, akRight]
         Caption = 'Mostra sicurezza delle password'
         TabOrder = 0
+        OnClick = ckDisplayPasswordStrengthClick
+        ExplicitWidth = 323
       end
     end
   end

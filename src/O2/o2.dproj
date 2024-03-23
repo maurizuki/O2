@@ -60,7 +60,6 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
         <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.2.1.445;InternalName=O2;LegalCopyright=(C) 2004-2021 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.2.1;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
-        <DCC_UnitSearchPath>..\Library;..\DCPcrypt2;..\DCPcrypt2\Ciphers;..\DCPcrypt2\Hashes;..\Markdown;..\Zxcvbn\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_DependencyCheckOutputName>o2.exe</DCC_DependencyCheckOutputName>
@@ -91,8 +90,8 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_DependencyCheckOutputName>o2.exe</DCC_DependencyCheckOutputName>
         <SanitizedProjectName>o2</SanitizedProjectName>
-        <VerInfo_Build>538</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.4.0.538;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.4;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
+        <VerInfo_Build>540</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.4.0.540;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.4;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_MinorVer>4</VerInfo_MinorVer>
         <VerInfo_Release>0</VerInfo_Release>
@@ -937,13 +936,93 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
+        <DCCReference Include="..\DCPcrypt2\DCPbase64.pas"/>
+        <DCCReference Include="..\DCPcrypt2\DCPblockciphers.pas"/>
+        <DCCReference Include="..\DCPcrypt2\DCPconst.pas"/>
+        <DCCReference Include="..\DCPcrypt2\DCPcrypt2.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPblowfish.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPcast128.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPcast256.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPdes.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPice.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPidea.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPmars.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPmisty1.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPrc2.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPrc4.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPrc5.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPrc6.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPrijndael.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPserpent.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPtea.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPtwofish.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Hashes\DCPhaval.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Hashes\DCPmd4.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Hashes\DCPmd5.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Hashes\DCPripemd128.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Hashes\DCPripemd160.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Hashes\DCPsha1.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Hashes\DCPsha256.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Hashes\DCPsha512.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Hashes\DCPtiger.pas"/>
+        <DCCReference Include="..\Markdown\MarkdownCommonMark.pas"/>
+        <DCCReference Include="..\Markdown\MarkdownHTMLEntities.pas"/>
+        <DCCReference Include="..\Markdown\MarkdownProcessor.pas"/>
+        <DCCReference Include="..\Markdown\MarkdownUnicodeUtils.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.DateMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.DefaultMatcherFactory.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.DictionaryMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.L33tMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.Matcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.MatcherFactory.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.PasswordScoring.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.RegexMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.RepeatMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.Result.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.SequenceMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.SpatialMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.Utility.pas"/>
+        <DCCReference Include="Utils\SZCRC32.pas"/>
+        <DCCReference Include="DataModel\uO2Classes.pas"/>
+        <DCCReference Include="DataModel\uO2Defs.pas"/>
+        <DCCReference Include="DataModel\uO2File.pas"/>
+        <DCCReference Include="DataModel\uO2Objects.pas"/>
+        <DCCReference Include="DataModel\uO2Relations.pas"/>
+        <DCCReference Include="DataModel\uO2Rules.pas"/>
+        <DCCReference Include="DataModel\uO2Utils.pas"/>
+        <DCCReference Include="DataModel\uO2Xml.pas"/>
+        <DCCReference Include="Utils\uAppFiles.pas"/>
+        <DCCReference Include="Utils\uBrowserEmulation.pas"/>
+        <DCCReference Include="Utils\uCtrlHelpers.pas"/>
+        <DCCReference Include="Utils\uHTMLHelper.pas"/>
+        <DCCReference Include="Utils\uMRUList.pas"/>
+        <DCCReference Include="Utils\uPasswordScoreCache.pas"/>
+        <DCCReference Include="Utils\uShellUtils.pas"/>
+        <DCCReference Include="Utils\uStorageUtils.pas"/>
+        <DCCReference Include="Utils\uStuffHTML.pas"/>
+        <DCCReference Include="Utils\uUtils.pas"/>
+        <DCCReference Include="Utils\uXmlStorage.pas"/>
+        <DCCReference Include="FileOps\uFileOperation.pas"/>
+        <DCCReference Include="FileOps\uiCalendarExport.pas"/>
+        <DCCReference Include="FileOps\uO2ImportExport.pas"/>
+        <DCCReference Include="FileOps\uXmlImportExport.pas"/>
+        <DCCReference Include="Utils\uO2ObjectsUtils.pas"/>
+        <DCCReference Include="ViewModels\uEncryptionPropsModel.pas"/>
+        <DCCReference Include="ViewModels\uEventFilters.pas"/>
+        <DCCReference Include="ViewModels\uFileManager.pas"/>
+        <DCCReference Include="ViewModels\uFilePropsModel.pas"/>
+        <DCCReference Include="ViewModels\uHTMLExportModel.pas"/>
+        <DCCReference Include="ViewModels\uObjectModels.pas"/>
+        <DCCReference Include="ViewModels\uPasswordStrengthInfo.pas"/>
+        <DCCReference Include="ViewModels\uPrintModel.pas"/>
+        <DCCReference Include="ViewModels\uRelationModels.pas"/>
+        <DCCReference Include="ViewModels\uReplaceOperations.pas"/>
+        <DCCReference Include="ViewModels\uRuleModels.pas"/>
         <DCCReference Include="uMain.pas">
             <Form>MainForm</Form>
         </DCCReference>
-        <DCCReference Include="uUtils.pas"/>
-        <DCCReference Include="uShellUtils.pas"/>
         <DCCReference Include="uGlobal.pas"/>
-        <DCCReference Include="uAppFiles.pas"/>
         <DCCReference Include="uObjPropsDlg.pas">
             <Form>ObjPropsDlg</Form>
         </DCCReference>
@@ -971,39 +1050,15 @@
         <DCCReference Include="uPrintPreview.pas">
             <Form>PrintPreview</Form>
         </DCCReference>
-        <DCCReference Include="uXmlStorage.pas"/>
         <DCCReference Include="uHTMLExport.pas">
             <Form>HTMLExport</Form>
         </DCCReference>
-        <DCCReference Include="uStuffHTML.pas"/>
-        <DCCReference Include="uMRUList.pas"/>
-        <DCCReference Include="uBrowserEmulation.pas"/>
-        <DCCReference Include="uCtrlHelpers.pas"/>
-        <DCCReference Include="uFileOperation.pas"/>
-        <DCCReference Include="uXmlImportExport.pas"/>
-        <DCCReference Include="uO2ImportExport.pas"/>
-        <DCCReference Include="uiCalendarExport.pas"/>
-        <DCCReference Include="uPasswordScoreCache.pas"/>
         <DCCReference Include="uRTFViewer.pas">
             <Form>RTFViewer</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="uHTMLHelper.pas"/>
-        <DCCReference Include="uO2ObjectsUtils.pas"/>
-        <DCCReference Include="uPrintModel.pas"/>
         <DCCReference Include="uServices.pas"/>
-        <DCCReference Include="uHTMLExportModel.pas"/>
         <DCCReference Include="uStartup.pas"/>
-        <DCCReference Include="uReplaceOperations.pas"/>
-        <DCCReference Include="uStorageUtils.pas"/>
-        <DCCReference Include="uFilePropsModel.pas"/>
-        <DCCReference Include="uRelationModels.pas"/>
-        <DCCReference Include="uRuleModels.pas"/>
-        <DCCReference Include="uPasswordStrengthInfo.pas"/>
-        <DCCReference Include="uEncryptionPropsModel.pas"/>
-        <DCCReference Include="uObjectModels.pas"/>
-        <DCCReference Include="uFileManager.pas"/>
-        <DCCReference Include="uEventFilters.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
