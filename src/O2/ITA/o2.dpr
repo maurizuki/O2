@@ -8,6 +8,7 @@ library o2;
 {ITE} {DFMFileType} {uHTMLExport.dfm}
 {ITE} {DFMFileType} {uMain.dfm}
 {ITE} {DFMFileType} {uObjPropsDlg.dfm}
+{ITE} {DFMFileType} {uPasswordStrengthIndicator.dfm}
 {ITE} {DFMFileType} {uPrintPreview.dfm}
 {ITE} {DFMFileType} {uRelationPropsDlg.dfm}
 {ITE} {DFMFileType} {uReplaceDlg.dfm}
@@ -22,6 +23,7 @@ library o2;
 {$R 'uHTMLExport.dfm' 'HTMLExport:TForm'}
 {$R 'uMain.dfm' 'MainForm:TForm'}
 {$R 'uObjPropsDlg.dfm' 'ObjPropsDlg:TForm'}
+{$R 'uPasswordStrengthIndicator.dfm' 'PasswordStrengthIndicator:TFrame'}
 {$R 'uPrintPreview.dfm' 'PrintPreview:TForm'}
 {$R 'uRelationPropsDlg.dfm' 'RelationPropsDlg:TForm'}
 {$R 'uReplaceDlg.dfm' 'ReplaceDlg:TForm'}

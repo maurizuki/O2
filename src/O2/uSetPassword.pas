@@ -19,7 +19,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Vcl.ExtCtrls, JvExStdCtrls, JvEdit, uServices;
+  Dialogs, StdCtrls, Vcl.ExtCtrls, JvExStdCtrls, JvEdit, uServices,
+  uPasswordStrengthIndicator;
 
 type
   TSetPasswordDlg = class(TForm)
@@ -34,13 +35,12 @@ type
     lbHash: TLabel;
     cbHash: TComboBox;
     gbPasswordStrength: TGroupBox;
-    pbPasswordStrength: TPaintBox;
     PasswordStrengthMemo: TMemo;
+    PasswordStrengthIndicator: TPasswordStrengthIndicator;
     procedure cbEncryptionChange(Sender: TObject);
     procedure cbHashChange(Sender: TObject);
     procedure edPasswordChange(Sender: TObject);
     procedure edConfPasswordChange(Sender: TObject);
-    procedure pbPasswordStrengthPaint(Sender: TObject);
     procedure btOkClick(Sender: TObject);
   private
     FModel: IEncryptionProps;
@@ -54,9 +54,6 @@ var
   SetPasswordDlg: TSetPasswordDlg;
 
 implementation
-
-uses
-  uGlobal, uUtils;
 
 {$R *.dfm}
 
@@ -84,8 +81,8 @@ var
 begin
   FModel.CipherIndex := cbEncryption.ItemIndex;
 
+  PasswordStrengthIndicator.PasswordScore := FModel.PasswordScore;
   PasswordStrengthMemo.Text := FModel.PasswordStrengthInfo;
-  pbPasswordStrength.Invalidate;
 
   IsEncrypted := FModel.IsEncrypted;
   lbHash.Enabled := IsEncrypted;
@@ -116,20 +113,10 @@ procedure TSetPasswordDlg.edPasswordChange(Sender: TObject);
 begin
   FModel.Password := edPassword.Text;
 
+  PasswordStrengthIndicator.PasswordScore := FModel.PasswordScore;
   PasswordStrengthMemo.Text := FModel.PasswordStrengthInfo;
-  pbPasswordStrength.Invalidate;
 
   btOk.Enabled := FModel.Valid;
-end;
-
-procedure TSetPasswordDlg.pbPasswordStrengthPaint(Sender: TObject);
-begin
-  if cbEncryption.ItemIndex <> 0 then
-    DrawHIndicator(pbPasswordStrength.Canvas, pbPasswordStrength.ClientRect,
-      PasswordScoreColors[FModel.PasswordScore], (FModel.PasswordScore + 1) / 5)
-  else
-    DrawHIndicator(pbPasswordStrength.Canvas, pbPasswordStrength.ClientRect,
-      0, 0);
 end;
 
 procedure TSetPasswordDlg.SetModel(const Value: IEncryptionProps);
@@ -146,8 +133,8 @@ begin
     cbHash.ItemIndex := FModel.HashIndex;
     edPassword.Text := FModel.Password;
     edConfPassword.Text := FModel.PasswordConfirmation;
+    PasswordStrengthIndicator.PasswordScore := FModel.PasswordScore;
     PasswordStrengthMemo.Text := FModel.PasswordStrengthInfo;
-    pbPasswordStrength.Invalidate;
 
     IsEncrypted := FModel.IsEncrypted;
     lbHash.Enabled := IsEncrypted;

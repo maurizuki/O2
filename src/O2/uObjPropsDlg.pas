@@ -20,7 +20,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, StdCtrls, Grids, ValEdit, ExtCtrls, ActnList, Menus,
-  Actions, uServices;
+  Actions, uServices, uPasswordStrengthIndicator;
 
 type
   TObjPropsDlgPage = (pgGeneral, pgGeneralTags, pgFields, pgNotes);
@@ -58,9 +58,9 @@ type
     Button6: TButton;
     Button7: TButton;
     ckDisplayPasswordStrength: TCheckBox;
-    pbPasswordStrength: TPaintBox;
     ckMarkdown: TCheckBox;
     Label3: TLabel;
+    PasswordStrengthIndicator: TPasswordStrengthIndicator;
     procedure edNameChange(Sender: TObject);
     procedure FieldsViewResize(Sender: TObject);
     procedure FieldsViewSelectItem(Sender: TObject; Item: TListItem;
@@ -83,7 +83,6 @@ type
     procedure cbFieldValueEnter(Sender: TObject);
     procedure cbFieldValueChange(Sender: TObject);
     procedure ckDisplayPasswordStrengthClick(Sender: TObject);
-    procedure pbPasswordStrengthPaint(Sender: TObject);
     procedure ckMarkdownClick(Sender: TObject);
     procedure LinkClick(Sender: TObject);
     procedure OKExecute(Sender: TObject);
@@ -108,7 +107,7 @@ var
 implementation
 
 uses
-  uGlobal, uCtrlHelpers, uUtils, uShellUtils;
+  uGlobal, uCtrlHelpers, uShellUtils;
 
 {$R *.dfm}
 
@@ -308,19 +307,13 @@ end;
 
 procedure TObjPropsDlg.ckDisplayPasswordStrengthClick(Sender: TObject);
 begin
-  pbPasswordStrength.Visible := ckDisplayPasswordStrength.Checked;
+  PasswordStrengthIndicator.Visible := ckDisplayPasswordStrength.Checked;
   UpdatePasswordStrengthInfo;
 end;
 
 procedure TObjPropsDlg.ckMarkdownClick(Sender: TObject);
 begin
   FModel.Markdown := ckMarkdown.Checked;
-end;
-
-procedure TObjPropsDlg.pbPasswordStrengthPaint(Sender: TObject);
-begin
-  DrawHIndicator(pbPasswordStrength.Canvas, pbPasswordStrength.ClientRect,
-    PasswordScoreColors[FModel.PasswordScore], (FModel.PasswordScore + 1) / 5);
 end;
 
 procedure TObjPropsDlg.LinkClick(Sender: TObject);
@@ -412,8 +405,8 @@ end;
 procedure TObjPropsDlg.UpdatePasswordStrengthInfo;
 begin
   if not ckDisplayPasswordStrength.Checked then Exit;
-  pbPasswordStrength.Hint := FModel.PasswordStrengthInfo;
-  pbPasswordStrength.Invalidate;
+  PasswordStrengthIndicator.PasswordScore := FModel.PasswordScore;
+  PasswordStrengthIndicator.PasswordStrengthInfo := FModel.PasswordStrengthInfo;
 end;
 
 end.

@@ -113,6 +113,7 @@ uses
   uPrintPreview in 'uPrintPreview.pas' {PrintPreview},
   uHTMLExport in 'uHTMLExport.pas' {HTMLExport},
   uRTFViewer in 'uRTFViewer.pas' {RTFViewer},
+  uPasswordStrengthIndicator in 'uPasswordStrengthIndicator.pas' {PasswordStrengthIndicator: TFrame},
   uServices in 'uServices.pas',
   uStartup in 'uStartup.pas';
 

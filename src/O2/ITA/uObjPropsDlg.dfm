@@ -109,19 +109,6 @@ object ObjPropsDlg: TObjPropsDlg
       DesignSize = (
         333
         342)
-      object pbPasswordStrength: TPaintBox
-        Left = 152
-        Top = 290
-        Width = 178
-        Height = 17
-        Cursor = crHelp
-        Anchors = [akLeft, akRight, akBottom]
-        ParentShowHint = False
-        ShowHint = True
-        Visible = False
-        OnPaint = pbPasswordStrengthPaint
-        ExplicitTop = 292
-      end
       object FieldsView: TListView
         Left = 3
         Top = 3
@@ -235,6 +222,25 @@ object ObjPropsDlg: TObjPropsDlg
         Caption = 'Sicurezza della &password'
         TabOrder = 8
         OnClick = ckDisplayPasswordStrengthClick
+      end
+      inline PasswordStrengthIndicator: TPasswordStrengthIndicator
+        Left = 152
+        Top = 290
+        Width = 178
+        Height = 17
+        Anchors = [akLeft, akRight, akBottom]
+        TabOrder = 9
+        Visible = False
+        ExplicitLeft = 152
+        ExplicitTop = 290
+        ExplicitWidth = 178
+        ExplicitHeight = 17
+        inherited PaintBox: TPaintBox
+          Width = 178
+          Height = 17
+          ExplicitWidth = 300
+          ExplicitHeight = 12
+        end
       end
     end
     object TabSheet3: TTabSheet
