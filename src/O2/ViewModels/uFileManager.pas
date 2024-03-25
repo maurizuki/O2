@@ -54,6 +54,7 @@ type
       PasswordScoreCache: IPasswordScoreCache);
     destructor Destroy; override;
 
+    procedure NewFile;
     procedure LoadFromFile(const FileName: string);
 
     function GetObjects: IEnumerable<TO2Object>;
@@ -268,6 +269,11 @@ begin
     NewFile.Free;
     raise;
   end;
+end;
+
+procedure TFileManager.NewFile;
+begin
+  FreeAndNil(FFile);
 end;
 
 procedure TFileManager.SetEventFilterIndex(const Value: Integer);

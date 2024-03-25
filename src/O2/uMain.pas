@@ -1000,7 +1000,7 @@ begin
   if CanCloseFile then
   begin
     ObjectsView.Clear;
-    FreeAndNil(FModel.O2File);
+    FModel.NewFile;
     Initialize;
     O2FileName := '';
   end;

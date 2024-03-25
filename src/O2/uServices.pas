@@ -54,6 +54,7 @@ type
     function GetFile: TO2File;
     property O2File: TO2File read GetFile;
 
+    procedure NewFile;
     procedure LoadFromFile(const FileName: string);
 
     function GetObjectName: string;
