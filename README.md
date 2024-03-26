@@ -90,7 +90,7 @@ __JEDI Visual Component Library__
 Copyright (C) 1999-2023 the Project JEDI community.  
 
 __Spring4D__  
-Copyright (C) 2009-2023 Spring4D Team  
+Copyright (C) 2009-2023 Spring4D Team.  
 
 __SZCRC32 unit__  
 Copyright (C) 2004 Sasa Zeman.  
