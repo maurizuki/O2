@@ -56,6 +56,7 @@ type
 
     procedure NewFile;
     procedure LoadFromFile(const FileName: string);
+    procedure SaveToFile(const FileName: string; KeepModified: Boolean);
 
     function GetObjects: IEnumerable<TO2Object>;
 
@@ -63,7 +64,9 @@ type
       out NextDate: TDateTime): Boolean;
     function GetHighlight(const AObject: TO2Object): THighlight; overload;
     function GetHighlight(const AField: TO2Field): THighlight; overload;
+    function IsHyperlinkOrEmail(const AField: TO2Field): Boolean;
     function IsHyperlink(const AField: TO2Field): Boolean;
+    function IsEmail(const AField: TO2Field): Boolean;
 
     property O2File: TO2File read GetFile;
 
@@ -199,6 +202,11 @@ begin
   Result := FFile;
 end;
 
+function TFileManager.GetHighlight(const AObject: TO2Object): THighlight;
+begin
+  Result := O2File.Rules.GetHighlightColors(AObject, FPasswordScoreCache);
+end;
+
 function TFileManager.GetHighlight(const AField: TO2Field): THighlight;
 begin
   Result := O2File.Rules.GetHighlightColors(AField, FPasswordScoreCache);
@@ -244,12 +252,17 @@ begin
   Result := FTags;
 end;
 
-function TFileManager.GetHighlight(const AObject: TO2Object): THighlight;
+function TFileManager.IsEmail(const AField: TO2Field): Boolean;
 begin
-  Result := O2File.Rules.GetHighlightColors(AObject, FPasswordScoreCache);
+  Result := Assigned(O2File.Rules.FindFirstRule(AField, [rtEmail]));
 end;
 
 function TFileManager.IsHyperlink(const AField: TO2Field): Boolean;
+begin
+  Result := Assigned(O2File.Rules.FindFirstRule(AField, [rtHyperLink]));
+end;
+
+function TFileManager.IsHyperlinkOrEmail(const AField: TO2Field): Boolean;
 begin
   Result := Assigned(O2File.Rules.FindFirstRule(AField, HyperlinkRules));
 end;
@@ -263,7 +276,7 @@ begin
     NewFile.FileName := FileName;
     NewFile.Load(FPasswordProvider);
     FPasswordScoreCache.UpdateCache(NewFile);
-    FFile.Free;
+    O2File.Free;
     FFile := NewFile;
   except
     NewFile.Free;
@@ -274,6 +287,14 @@ end;
 procedure TFileManager.NewFile;
 begin
   FreeAndNil(FFile);
+end;
+
+procedure TFileManager.SaveToFile(const FileName: string;
+  KeepModified: Boolean);
+begin
+  O2File.FileName := FileName;
+  FFile.Save;
+  if not KeepModified then FFile.Modified := False;
 end;
 
 procedure TFileManager.SetEventFilterIndex(const Value: Integer);

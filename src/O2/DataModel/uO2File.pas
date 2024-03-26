@@ -70,7 +70,7 @@ type
     destructor Destroy; override;
     class procedure TestAlgorithms;
     procedure Load(PasswordProvider: IPasswordProvider); virtual;
-    procedure Save(KeepModified: Boolean = False); virtual;
+    procedure Save; virtual;
     property FileName: string read FFileName write FFileName;
     property Encrypted: Boolean read FEncrypted write FEncrypted;
     property Cipher: TO2Cipher read FCipher write FCipher;
@@ -250,7 +250,7 @@ begin
   Modified := False;
 end;
 
-procedure TO2File.Save(KeepModified: Boolean = False);
+procedure TO2File.Save;
 var
   XmlWriter: TO2XmlWriter;
   XmlStream, RawStream: TMemoryStream;
@@ -292,7 +292,6 @@ begin
   finally
     OutputStream.Free;
   end;
-  if not KeepModified then Modified := False;
 end;
 
 procedure TO2File.OutputDebugNotifyChanges(Item: TO2CollectionItem;

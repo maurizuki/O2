@@ -552,13 +552,13 @@ type
     procedure Initialize;
     procedure InitializeSearch;
     procedure LoadLanguageMenu;
-    procedure OpenNewInstance(const FileName: string = '');
-    procedure LoadFromFile(const FileName: string);
-    procedure SaveToFile(const FileName: string; Copy: Boolean = False);
+    procedure OpenNewInstance(const AFileName: string = '');
+    procedure LoadFromFile(const AFileName: string);
+    procedure SaveToFile(const AFileName: string; Copy: Boolean = False);
     procedure LoadMRUList;
     procedure SaveMRUList;
-    procedure LoadSettings(const FileName: string);
-    procedure SaveSettings(const FileName: string);
+    procedure LoadSettings(const AFileName: string);
+    procedure SaveSettings(const AFileName: string);
 
     function ObjToListItem(const AObject: TO2Object;
       const Item: TListItem): TListItem;
@@ -588,9 +588,9 @@ type
     procedure UpdateRulesView;
     procedure UpdateTagList;
     procedure UpdateRuleList;
-    procedure UpdateMRUList(const FileName: string = '');
+    procedure UpdateMRUList(const AFileName: string = '');
 
-    property O2FileName: string read FFileName write SetFileName;
+    property FileName: string read FFileName write SetFileName;
     property HasSelectedObject: Boolean read GetHasSelectedObject;
     property HasSelectedField: Boolean read GetHasSelectedField;
     property SelectedField: TO2Field read GetSelectedField;
@@ -781,7 +781,7 @@ begin
   begin
     StatusBar.Panels[0].Text :=
       Format(SStatusItemsCount, [ObjectsView.Items.Count]);
-    StatusBar.Panels[1].Text := O2FileName;
+    StatusBar.Panels[1].Text := FFileName;
   end
   else
   begin
@@ -999,10 +999,9 @@ procedure TMainForm.NewFileExecute(Sender: TObject);
 begin
   if CanCloseFile then
   begin
-    ObjectsView.Clear;
     FModel.NewFile;
     Initialize;
-    O2FileName := '';
+    FileName := '';
   end;
 end;
 
@@ -1020,22 +1019,22 @@ end;
 
 procedure TMainForm.ReopenFileExecute(Sender: TObject);
 begin
-  if CanCloseFile then LoadFromFile(O2FileName);
+  if CanCloseFile then LoadFromFile(FFileName);
 end;
 
 procedure TMainForm.ReopenFileUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not FBusy and (O2FileName <> '');
+  TAction(Sender).Enabled := not FBusy and (FFileName <> '');
 end;
 
 procedure TMainForm.OpenFolderExecute(Sender: TObject);
 begin
-  ShellOpen(ExtractFileDir(O2FileName));
+  ShellOpen(ExtractFileDir(FFileName));
 end;
 
 procedure TMainForm.OpenFolderUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not FBusy and (O2FileName <> '');
+  TAction(Sender).Enabled := not FBusy and (FFileName <> '');
 end;
 
 procedure TMainForm.ClearMRUListExecute(Sender: TObject);
@@ -1071,12 +1070,12 @@ end;
 
 procedure TMainForm.SaveFileExecute(Sender: TObject);
 begin
-  if (O2FileName = '')
+  if (FFileName = '')
     or FModel.O2File.Encrypted and ((FModel.O2File.Cipher in DeprecatedCiphers)
     or (FModel.O2File.Hash in DeprecatedHashes)) then
     SaveFileAs.Execute
   else
-    SaveToFile(O2FileName);
+    SaveToFile(FFileName);
 end;
 
 procedure TMainForm.SaveFileAsExecute(Sender: TObject);
@@ -1539,7 +1538,7 @@ begin
     end;
 end;
 
-procedure TMainForm.OpenNewInstance(const FileName: string);
+procedure TMainForm.OpenNewInstance(const AFileName: string);
 var
   ACmdLineFileName, APortablePath, AppExe, Parameters: string;
 begin
@@ -1550,42 +1549,40 @@ begin
   else
     Parameters := '';
 
-  if FileName <> '' then
-    Parameters := Parameters + '"' + FileName + '"';
+  if AFileName <> '' then
+    Parameters := Parameters + '"' + AFileName + '"';
 
   AppExe := FAppFiles.FullPaths[IdAppExe];
   ShellExecute(Application.Handle, 'open', PChar(AppExe), PChar(Parameters),
     PChar(ExtractFileDir(AppExe)), SW_SHOWNORMAL);
 end;
 
-procedure TMainForm.LoadFromFile(const FileName: string);
+procedure TMainForm.LoadFromFile(const AFileName: string);
 begin
   BeginBatchOperation;
   try
-    FModel.LoadFromFile(FileName);
+    FModel.LoadFromFile(AFileName);
   finally
     EndBatchOperation;
   end;
 
   Initialize;
-  O2FileName := FModel.O2File.FileName;
+  FileName := FModel.O2File.FileName;
 end;
 
-procedure TMainForm.SaveToFile(const FileName: string; Copy: Boolean);
+procedure TMainForm.SaveToFile(const AFileName: string; Copy: Boolean);
 begin
-  FModel.O2File.FileName := FileName;
-
   BeginBatchOperation;
   try
-    FModel.O2File.Save(Copy);
+    FModel.SaveToFile(AFileName, Copy);
   finally
     EndBatchOperation;
   end;
 
   if Copy then
-    FModel.O2File.FileName := O2FileName
+    FModel.O2File.FileName := FFileName
   else
-    O2FileName := FModel.O2File.FileName;
+    FileName := FModel.O2File.FileName;
 end;
 
 function TMainForm.ObjToListItem(const AObject: TO2Object;
@@ -1782,7 +1779,7 @@ procedure TMainForm.UpdateAllActions;
 var
   I: Integer;
 begin
-  for I := 0 to Pred(ActionList.ActionCount) do
+  for I := 0 to ActionList.ActionCount - 1 do
     ActionList.Actions[I].Update;
 end;
 
@@ -1972,16 +1969,16 @@ begin
       FindByRule.Selected[I] := True;
 end;
 
-procedure TMainForm.UpdateMRUList(const FileName: string);
+procedure TMainForm.UpdateMRUList(const AFileName: string);
 var
   I, J: Integer;
 begin
-  if FileName <> '' then FMRUList.AddItem(FileName);
+  if AFileName <> '' then FMRUList.AddItem(AFileName);
 
   J := 0;
   for I := 0 to FMRUMenuItems.Count - 1 do
   begin
-    while (J < FMRUList.Count) and SameText(FMRUList[J].Item, FileName) do
+    while (J < FMRUList.Count) and SameText(FMRUList[J].Item, AFileName) do
       Inc(J);
 
     with TMenuItem(FMRUMenuItems[I]) do
@@ -2022,11 +2019,11 @@ begin
   end;
 end;
 
-procedure TMainForm.LoadSettings(const FileName: string);
+procedure TMainForm.LoadSettings(const AFileName: string);
 const
   SortSigns: array[Boolean] of Integer = (-1, 1);
 begin
-  FStorage.LoadFromFile(FileName);
+  FStorage.LoadFromFile(AFileName);
 
   LoadMRUList;
   UpdateMRUList;
@@ -2044,7 +2041,7 @@ begin
   FSortSign := SortSigns[FStorage.ReadBoolean(IdSortAscending, True)];
 end;
 
-procedure TMainForm.SaveSettings(const FileName: string);
+procedure TMainForm.SaveSettings(const AFileName: string);
 begin
   SaveMRUList;
 
@@ -2059,8 +2056,8 @@ begin
   WriteIntIdent(FStorage, IdSortKind, SortKinds, Integer(FSortKind));
   FStorage.WriteBoolean(IdSortAscending, FSortSign > 0);
 
-  SysUtils.ForceDirectories(ExtractFileDir(FileName));
-  FStorage.SaveToFile(FileName);
+  SysUtils.ForceDirectories(ExtractFileDir(AFileName));
+  FStorage.SaveToFile(AFileName);
 end;
 
 procedure TMainForm.ObjectMenuPopup(Sender: TObject);
@@ -2293,7 +2290,7 @@ begin
       SetHighlightColors(Sender.Canvas,
         FModel.GetHighlight(TO2Field(Item.Data)));
 
-    if FModel.IsHyperlink(Item.Data) then
+    if FModel.IsHyperlinkOrEmail(Item.Data) then
       Sender.Canvas.Font.Style := Sender.Canvas.Font.Style + [fsUnderline];
   end;
 end;
@@ -2389,9 +2386,8 @@ end;
 
 procedure TMainForm.OpenLinkUpdate(Sender: TObject);
 begin
-  TAction(Sender).Visible := not FBusy and HasSelectedField
-    and Assigned(
-      FModel.O2File.Rules.FindFirstRule(SelectedField, [rtHyperLink]));
+  TAction(Sender).Visible := not FBusy
+    and HasSelectedField and FModel.IsHyperlink(SelectedField);
   TAction(Sender).Enabled := TAction(Sender).Visible;
 end;
 
@@ -2402,8 +2398,8 @@ end;
 
 procedure TMainForm.SendEmailUpdate(Sender: TObject);
 begin
-  TAction(Sender).Visible := not FBusy and HasSelectedField
-    and Assigned(FModel.O2File.Rules.FindFirstRule(SelectedField, [rtEmail]));
+  TAction(Sender).Visible := not FBusy
+    and HasSelectedField and FModel.IsEmail(SelectedField);
   TAction(Sender).Enabled := TAction(Sender).Visible;
 end;
 
@@ -2587,8 +2583,7 @@ end;
 procedure TMainForm.MoveDownRuleUpdate(Sender: TObject);
 begin
   TAction(Sender).Enabled := not FBusy and Assigned(RulesView.Selected)
-    and (TO2Rule(RulesView.Selected.Data).Index < Pred(
-      FModel.O2File.Rules.Count));
+    and (TO2Rule(RulesView.Selected.Data).Index < FModel.O2File.Rules.Count - 1)
 end;
 
 procedure TMainForm.EnableRulesExecute(Sender: TObject);

@@ -56,6 +56,9 @@ type
 
     procedure NewFile;
     procedure LoadFromFile(const FileName: string);
+    procedure SaveToFile(const FileName: string; KeepModified: Boolean);
+
+    {$REGION 'Object enumeration'}
 
     function GetObjectName: string;
     procedure SetObjectName(const Value: string);
@@ -86,11 +89,15 @@ type
 
     function GetObjects: IEnumerable<TO2Object>;
 
+    {$ENDREGION}
+
     function GetNextEvent(const AObject: TO2Object;
       out NextDate: TDateTime): Boolean;
     function GetHighlight(const AObject: TO2Object): THighlight; overload;
     function GetHighlight(const AField: TO2Field): THighlight; overload;
+    function IsHyperlinkOrEmail(const AField: TO2Field): Boolean;
     function IsHyperlink(const AField: TO2Field): Boolean;
+    function IsEmail(const AField: TO2Field): Boolean;
   end;
 
   IFileProps = interface
