@@ -307,7 +307,6 @@ end;
 
 procedure TObjPropsDlg.ckDisplayPasswordStrengthClick(Sender: TObject);
 begin
-  PasswordStrengthIndicator.Visible := ckDisplayPasswordStrength.Checked;
   UpdatePasswordStrengthInfo;
 end;
 
@@ -364,6 +363,8 @@ begin
     cbFieldName.Items := FModel.FieldNames;
     cbFieldValue.Items := FModel.FieldValues;
 
+    UpdatePasswordStrengthInfo;
+
     Memo.Lines := FModel.ObjectNotes;
     Memo.SelStart := 0;
 
@@ -404,7 +405,12 @@ end;
 
 procedure TObjPropsDlg.UpdatePasswordStrengthInfo;
 begin
-  if not ckDisplayPasswordStrength.Checked then Exit;
+  if not ckDisplayPasswordStrength.Checked then
+  begin
+    PasswordStrengthIndicator.PasswordScore := -1;
+    Exit;
+  end;
+
   PasswordStrengthIndicator.PasswordScore := FModel.PasswordScore;
   PasswordStrengthIndicator.PasswordStrengthInfo := FModel.PasswordStrengthInfo;
 end;

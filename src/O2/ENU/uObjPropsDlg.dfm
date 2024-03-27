@@ -230,7 +230,6 @@ object ObjPropsDlg: TObjPropsDlg
         Height = 17
         Anchors = [akLeft, akRight, akBottom]
         TabOrder = 9
-        Visible = False
         ExplicitLeft = 152
         ExplicitTop = 290
         ExplicitWidth = 178

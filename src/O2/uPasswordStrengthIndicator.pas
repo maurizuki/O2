@@ -57,6 +57,7 @@ begin
   begin
     FPasswordScore := Value;
     PaintBox.Invalidate;
+    PaintBox.ShowHint := FPasswordScore in [0..5];
   end;
 end;
 
@@ -70,7 +71,18 @@ procedure TPasswordStrengthIndicator.PaintBoxPaint(Sender: TObject);
 var
   ARect: TRect;
 begin
+  if not (FPasswordScore in [0..5]) then
+  begin
+    PaintBox.Canvas.Brush.Color := clWhite;
+    PaintBox.Canvas.Brush.Style := bsDiagCross;
+    PaintBox.Canvas.FillRect(PaintBox.ClientRect);
+    PaintBox.Canvas.Rectangle(PaintBox.ClientRect);
+
+    Exit;
+  end;
+
   PaintBox.Canvas.Brush.Color := clWhite;
+  PaintBox.Canvas.Brush.Style := bsSolid;
   PaintBox.Canvas.FillRect(PaintBox.ClientRect);
   PaintBox.Canvas.Rectangle(PaintBox.ClientRect);
 

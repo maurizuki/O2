@@ -45,6 +45,8 @@ type
   private
     FModel: IEncryptionProps;
     procedure SetModel(const Value: IEncryptionProps);
+
+    procedure UpdatePasswordStrengthInfo;
   public
     class function Execute(Model: IEncryptionProps): Boolean;
     property Model: IEncryptionProps read FModel write SetModel;
@@ -81,9 +83,6 @@ var
 begin
   FModel.CipherIndex := cbEncryption.ItemIndex;
 
-  PasswordStrengthIndicator.PasswordScore := FModel.PasswordScore;
-  PasswordStrengthMemo.Text := FModel.PasswordStrengthInfo;
-
   IsEncrypted := FModel.IsEncrypted;
   lbHash.Enabled := IsEncrypted;
   cbHash.Enabled := IsEncrypted;
@@ -91,6 +90,8 @@ begin
   edPassword.Enabled := IsEncrypted;
   lbConfPassword.Enabled := IsEncrypted;
   edConfPassword.Enabled := IsEncrypted;
+
+  UpdatePasswordStrengthInfo;
 
   btOk.Enabled := FModel.Valid;
 end;
@@ -133,8 +134,6 @@ begin
     cbHash.ItemIndex := FModel.HashIndex;
     edPassword.Text := FModel.Password;
     edConfPassword.Text := FModel.PasswordConfirmation;
-    PasswordStrengthIndicator.PasswordScore := FModel.PasswordScore;
-    PasswordStrengthMemo.Text := FModel.PasswordStrengthInfo;
 
     IsEncrypted := FModel.IsEncrypted;
     lbHash.Enabled := IsEncrypted;
@@ -144,7 +143,23 @@ begin
     lbConfPassword.Enabled := IsEncrypted;
     edConfPassword.Enabled := IsEncrypted;
 
+    UpdatePasswordStrengthInfo;
+
     btOk.Enabled := FModel.Valid;
+  end;
+end;
+
+procedure TSetPasswordDlg.UpdatePasswordStrengthInfo;
+begin
+  if FModel.IsEncrypted then
+  begin
+    PasswordStrengthIndicator.PasswordScore := FModel.PasswordScore;
+    PasswordStrengthMemo.Text := FModel.PasswordStrengthInfo;
+  end
+  else
+  begin
+    PasswordStrengthIndicator.PasswordScore := -1;
+    PasswordStrengthMemo.Clear;
   end;
 end;
 
