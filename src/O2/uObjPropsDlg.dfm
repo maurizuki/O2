@@ -3,11 +3,11 @@ object ObjPropsDlg: TObjPropsDlg
   Top = 111
   BorderIcons = [biSystemMenu]
   Caption = 'Object properties'
-  ClientHeight = 417
-  ClientWidth = 357
+  ClientHeight = 442
+  ClientWidth = 388
   Color = clBtnFace
-  Constraints.MinHeight = 452
-  Constraints.MinWidth = 354
+  Constraints.MinHeight = 480
+  Constraints.MinWidth = 400
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -15,22 +15,24 @@ object ObjPropsDlg: TObjPropsDlg
   Font.Style = []
   Position = poMainFormCenter
   DesignSize = (
-    357
-    417)
+    388
+    442)
   TextHeight = 13
   object PageControl: TPageControl
     Left = 8
     Top = 8
-    Width = 341
-    Height = 370
+    Width = 372
+    Height = 395
     ActivePage = TabSheet1
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 0
+    ExplicitWidth = 368
+    ExplicitHeight = 394
     object TabSheet1: TTabSheet
       Caption = 'General'
       DesignSize = (
-        333
-        342)
+        364
+        367)
       object Label1: TLabel
         Left = 3
         Top = 12
@@ -50,36 +52,36 @@ object ObjPropsDlg: TObjPropsDlg
       object edName: TEdit
         Left = 3
         Top = 31
-        Width = 327
+        Width = 358
         Height = 21
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         OnChange = edNameChange
-        ExplicitWidth = 319
+        ExplicitWidth = 354
       end
       object cbTag: TComboBox
         Left = 3
         Top = 132
-        Width = 241
+        Width = 272
         Height = 21
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 1
-        ExplicitWidth = 233
+        ExplicitWidth = 268
       end
       object lbxTags: TListBox
         Left = 3
         Top = 159
-        Width = 241
-        Height = 180
+        Width = 272
+        Height = 205
         Anchors = [akLeft, akTop, akRight, akBottom]
         ItemHeight = 13
         Sorted = True
         TabOrder = 3
-        ExplicitWidth = 233
-        ExplicitHeight = 179
+        ExplicitWidth = 268
+        ExplicitHeight = 204
       end
       object Button4: TButton
-        Left = 250
+        Left = 281
         Top = 132
         Width = 80
         Height = 25
@@ -88,10 +90,10 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 2
-        ExplicitLeft = 242
+        ExplicitLeft = 277
       end
       object Button5: TButton
-        Left = 250
+        Left = 281
         Top = 159
         Width = 80
         Height = 25
@@ -100,29 +102,29 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         TabOrder = 4
-        ExplicitLeft = 242
+        ExplicitLeft = 277
       end
     end
     object TabSheet2: TTabSheet
       Caption = 'Fields'
       ImageIndex = 1
       DesignSize = (
-        333
-        342)
+        364
+        367)
       object FieldsView: TListView
         Left = 3
         Top = 3
-        Width = 327
-        Height = 255
+        Width = 358
+        Height = 280
         Anchors = [akLeft, akTop, akRight, akBottom]
         Columns = <
           item
             Caption = 'Field'
-            Width = 140
+            Width = 155
           end
           item
             Caption = 'Value'
-            Width = 160
+            Width = 155
           end>
         ColumnClick = False
         HideSelection = False
@@ -135,8 +137,8 @@ object ObjPropsDlg: TObjPropsDlg
       end
       object cbFieldName: TComboBox
         Left = 3
-        Top = 264
-        Width = 143
+        Top = 289
+        Width = 156
         Height = 21
         Hint = 'Field name'
         Anchors = [akLeft, akBottom]
@@ -146,9 +148,9 @@ object ObjPropsDlg: TObjPropsDlg
         OnChange = cbFieldNameChange
       end
       object cbFieldValue: TComboBox
-        Left = 152
-        Top = 264
-        Width = 178
+        Left = 165
+        Top = 289
+        Width = 196
         Height = 21
         Hint = 'Field value'
         Anchors = [akLeft, akRight, akBottom]
@@ -160,7 +162,7 @@ object ObjPropsDlg: TObjPropsDlg
       end
       object Button1: TButton
         Left = 3
-        Top = 314
+        Top = 339
         Width = 75
         Height = 25
         Action = AddField
@@ -171,7 +173,7 @@ object ObjPropsDlg: TObjPropsDlg
       end
       object Button2: TButton
         Left = 84
-        Top = 314
+        Top = 339
         Width = 75
         Height = 25
         Action = ReplaceField
@@ -182,7 +184,7 @@ object ObjPropsDlg: TObjPropsDlg
       end
       object Button3: TButton
         Left = 165
-        Top = 314
+        Top = 339
         Width = 75
         Height = 25
         Action = DeleteField
@@ -192,8 +194,8 @@ object ObjPropsDlg: TObjPropsDlg
         TabOrder = 5
       end
       object Button6: TButton
-        Left = 258
-        Top = 314
+        Left = 289
+        Top = 339
         Width = 33
         Height = 25
         Action = MoveUp
@@ -203,8 +205,8 @@ object ObjPropsDlg: TObjPropsDlg
         TabOrder = 6
       end
       object Button7: TButton
-        Left = 297
-        Top = 314
+        Left = 328
+        Top = 339
         Width = 33
         Height = 25
         Action = MoveDown
@@ -213,32 +215,22 @@ object ObjPropsDlg: TObjPropsDlg
         ShowHint = True
         TabOrder = 7
       end
-      object ckDisplayPasswordStrength: TCheckBox
-        Left = 3
-        Top = 290
-        Width = 143
-        Height = 17
-        Anchors = [akLeft, akRight, akBottom]
-        Caption = '&Password strength'
-        TabOrder = 8
-        OnClick = ckDisplayPasswordStrengthClick
-      end
       inline PasswordStrengthIndicator: TPasswordStrengthIndicator
-        Left = 152
-        Top = 290
-        Width = 178
-        Height = 17
+        Left = 165
+        Top = 315
+        Width = 196
+        Height = 9
         Anchors = [akLeft, akRight, akBottom]
-        TabOrder = 9
-        ExplicitLeft = 152
-        ExplicitTop = 290
-        ExplicitWidth = 178
-        ExplicitHeight = 17
+        TabOrder = 8
+        ExplicitLeft = 165
+        ExplicitTop = 315
+        ExplicitWidth = 196
+        ExplicitHeight = 9
         inherited PaintBox: TPaintBox
-          Width = 178
-          Height = 17
-          ExplicitWidth = 300
-          ExplicitHeight = 12
+          Width = 196
+          Height = 9
+          ExplicitWidth = 196
+          ExplicitHeight = 10
         end
       end
     end
@@ -246,11 +238,11 @@ object ObjPropsDlg: TObjPropsDlg
       Caption = 'Notes'
       ImageIndex = 2
       DesignSize = (
-        333
-        342)
+        364
+        367)
       object Label3: TLabel
-        Left = 222
-        Top = 323
+        Left = 253
+        Top = 348
         Width = 108
         Height = 13
         Cursor = crHandPoint
@@ -267,12 +259,14 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         OnClick = LinkClick
+        ExplicitLeft = 222
+        ExplicitTop = 323
       end
       object Memo: TMemo
         Left = 3
         Top = 3
-        Width = 327
-        Height = 313
+        Width = 358
+        Height = 338
         Anchors = [akLeft, akTop, akRight, akBottom]
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
@@ -286,8 +280,8 @@ object ObjPropsDlg: TObjPropsDlg
       end
       object ckMarkdown: TCheckBox
         Left = 3
-        Top = 322
-        Width = 213
+        Top = 347
+        Width = 244
         Height = 17
         Anchors = [akLeft, akRight, akBottom]
         Caption = '&Markdown syntax'
@@ -297,8 +291,8 @@ object ObjPropsDlg: TObjPropsDlg
     end
   end
   object btOk: TButton
-    Left = 193
-    Top = 384
+    Left = 224
+    Top = 409
     Width = 75
     Height = 25
     Action = OK
@@ -306,10 +300,12 @@ object ObjPropsDlg: TObjPropsDlg
     Default = True
     ModalResult = 1
     TabOrder = 1
+    ExplicitLeft = 220
+    ExplicitTop = 408
   end
   object btCancel: TButton
-    Left = 274
-    Top = 384
+    Left = 305
+    Top = 409
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -317,6 +313,8 @@ object ObjPropsDlg: TObjPropsDlg
     Caption = 'Cancel'
     ModalResult = 2
     TabOrder = 2
+    ExplicitLeft = 301
+    ExplicitTop = 408
   end
   object ActionList: TActionList
     Left = 8

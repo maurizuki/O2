@@ -174,7 +174,8 @@ type
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
     procedure Assign(Source: TPersistent); override;
-    function Matches(const AField: TO2Field): Boolean;
+    function Matches(const AFieldName, AFieldValue: string): Boolean; overload;
+    function Matches(const AField: TO2Field): Boolean; overload; inline;
     function GetDisplayText(const AField: TO2Field;
       ShowPasswords: Boolean): string;
     function GetHyperLink(const AField: TO2Field): string;
@@ -431,15 +432,20 @@ begin
     inherited Assign(Source);
 end;
 
-function TO2Rule.Matches(const AField: TO2Field): Boolean;
+function TO2Rule.Matches(const AFieldName, AFieldValue: string): Boolean;
 begin
   try
     Result := Active
-      and GetFieldNameMask.Matches(AField.FieldName)
-      and GetFieldValueMask.Matches(AField.FieldValue);
+      and GetFieldNameMask.Matches(AFieldName)
+      and GetFieldValueMask.Matches(AFieldValue);
   except
     Result := False;
   end;
+end;
+
+function TO2Rule.Matches(const AField: TO2Field): Boolean;
+begin
+  Result := Matches(AField.FieldName, AField.FieldValue);
 end;
 
 function TO2Rule.GetEventDisplayText(const AField: TO2Field): string;

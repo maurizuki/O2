@@ -24,14 +24,15 @@ type
   TPasswordStrengthInfo = class(TInterfacedObject, IPasswordStrengthInfo)
   private
     FZxcvbn: TZxcvbn;
-    FPasswordScore: Integer;
-    FPasswordStrengthInfo: string;
     function GetPasswordScore: Integer;
     function GetPasswordStrengthInfo: string;
   protected
+    FPasswordScore: Integer;
+    FPasswordStrengthInfo: string;
+
     constructor Create;
 
-    procedure EvaluatePasswordStrength(const APassword: string);
+    procedure EvaluatePasswordStrength(const APassword: string); virtual;
 
     property PasswordScore: Integer read GetPasswordScore;
     property PasswordStrengthInfo: string read GetPasswordStrengthInfo;

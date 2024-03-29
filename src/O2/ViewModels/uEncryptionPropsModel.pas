@@ -45,6 +45,8 @@ type
     constructor Create(const O2File: TO2File);
     destructor Destroy; override;
 
+    procedure EvaluatePasswordStrength(const APassword: string); override;
+
     function IsEncrypted: Boolean;
 
     procedure ApplyChanges;
@@ -153,13 +155,13 @@ begin
 
   if FO2File.Encrypted then
   begin
-    EvaluatePasswordStrength(FO2File.Password);
-
     FCipherIndex := High(CipherValues);
     while (FCipherIndex > Low(CipherValues))
       and (CipherValues[FCipherIndex] <> FO2File.Cipher) do
       Dec(FCipherIndex);
   end;
+
+  EvaluatePasswordStrength(FO2File.Password);
 
   FHashIndex := High(HashValues);
   while (FHashIndex > Low(HashValues))
@@ -180,6 +182,20 @@ destructor TEncryptionPropsModel.Destroy;
 begin
   FCiphers.Free;
   FHashes.Free;
+  inherited;
+end;
+
+procedure TEncryptionPropsModel.EvaluatePasswordStrength(
+  const APassword: string);
+begin
+  if not IsEncrypted then
+  begin
+    FPasswordScore := -1;
+    FPasswordStrengthInfo := '';
+
+    Exit;
+  end;
+
   inherited;
 end;
 
@@ -236,9 +252,12 @@ end;
 
 procedure TEncryptionPropsModel.SetCipherIndex(const Value: Integer);
 begin
-  FCipherIndex := Value;
+  if FCipherIndex <> Value then
+  begin
+    FCipherIndex := Value;
 
-  if IsEncrypted then EvaluatePasswordStrength(FPassword);
+    EvaluatePasswordStrength(FPassword);
+  end;
 end;
 
 procedure TEncryptionPropsModel.SetHashIndex(const Value: Integer);

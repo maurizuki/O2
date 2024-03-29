@@ -66,6 +66,8 @@ type
     constructor Create(const O2File: TO2File);
     destructor Destroy; override;
 
+    procedure EvaluatePasswordStrength(const APassword: string); override;
+
     function CanAddField: Boolean;
     procedure AddField;
 
@@ -120,7 +122,7 @@ type
 implementation
 
 uses
-  uO2ObjectsUtils;
+  uO2Rules, uO2ObjectsUtils;
 
 { TObjectPropsModel }
 
@@ -146,6 +148,7 @@ begin
   FObjectFieldValues := TStringList.Create;
 
   FFieldIndex := -1;
+  FPasswordScore := -1;
 
   FObjectNotes := TStringList.Create;
 end;
@@ -243,6 +246,23 @@ begin
   FO2Object := FO2File.Objects.AddObject(FObjectName);
 end;
 
+procedure TObjectPropsModel.EvaluatePasswordStrength(const APassword: string);
+var
+  ARule: TO2Rule;
+begin
+  for ARule in FO2File.Rules do
+    if (ARule.RuleType = rtPassword) and ARule.Matches(FFieldName, FFieldValue)
+      and ARule.Params.ReadBoolean(DisplayPasswordStrengthParam,
+        DefaultDisplayPasswordStrength) then
+    begin
+      inherited;
+      Exit;
+    end;
+
+  FPasswordScore := -1;
+  FPasswordStrengthInfo := '';
+end;
+
 function TObjectPropsModel.GetFieldCount: Integer;
 begin
   Result := FObjectFieldNames.Count;
@@ -330,8 +350,14 @@ begin
   begin
     FFieldIndex := Value;
     
-    SetFieldName(FObjectFieldNames[FFieldIndex]);
-    SetFieldValue(FObjectFieldValues[FFieldIndex]);
+    FFieldName := FObjectFieldNames[FFieldIndex];
+    FFieldValue := FObjectFieldValues[FFieldIndex];
+
+    EvaluatePasswordStrength(FFieldValue);
+
+    FFieldValues.Clear;
+    AppendFieldValuesToList(
+      FO2File.Objects.ToEnumerable, FFieldName, FFieldValues);
   end;
 end;
 
@@ -340,6 +366,8 @@ begin
   if FFieldName <> Value then
   begin
     FFieldName := Value;
+
+    EvaluatePasswordStrength(FFieldValue);
 
     FFieldValues.Clear;
     AppendFieldValuesToList(

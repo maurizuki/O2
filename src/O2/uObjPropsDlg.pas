@@ -57,7 +57,6 @@ type
     DeleteTag: TAction;
     Button6: TButton;
     Button7: TButton;
-    ckDisplayPasswordStrength: TCheckBox;
     ckMarkdown: TCheckBox;
     Label3: TLabel;
     PasswordStrengthIndicator: TPasswordStrengthIndicator;
@@ -82,7 +81,6 @@ type
     procedure cbFieldNameChange(Sender: TObject);
     procedure cbFieldValueEnter(Sender: TObject);
     procedure cbFieldValueChange(Sender: TObject);
-    procedure ckDisplayPasswordStrengthClick(Sender: TObject);
     procedure ckMarkdownClick(Sender: TObject);
     procedure LinkClick(Sender: TObject);
     procedure OKExecute(Sender: TObject);
@@ -297,16 +295,12 @@ end;
 procedure TObjPropsDlg.cbFieldNameChange(Sender: TObject);
 begin
   FModel.FieldName := cbFieldName.Text;
+  UpdatePasswordStrengthInfo;
 end;
 
 procedure TObjPropsDlg.cbFieldValueChange(Sender: TObject);
 begin
   FModel.FieldValue := cbFieldValue.Text;
-  UpdatePasswordStrengthInfo;
-end;
-
-procedure TObjPropsDlg.ckDisplayPasswordStrengthClick(Sender: TObject);
-begin
   UpdatePasswordStrengthInfo;
 end;
 
@@ -405,12 +399,6 @@ end;
 
 procedure TObjPropsDlg.UpdatePasswordStrengthInfo;
 begin
-  if not ckDisplayPasswordStrength.Checked then
-  begin
-    PasswordStrengthIndicator.PasswordScore := -1;
-    Exit;
-  end;
-
   PasswordStrengthIndicator.PasswordScore := FModel.PasswordScore;
   PasswordStrengthIndicator.PasswordStrengthInfo := FModel.PasswordStrengthInfo;
 end;
