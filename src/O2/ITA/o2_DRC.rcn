@@ -5,9 +5,9 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">45378.4716898148</prop>
-        <prop prop-type="OrigDateTime">45378.4705787037</prop>
-        <prop prop-type="XlatDateTime">45296.7040277778</prop>
+        <prop prop-type="SelfDateTime">45383.6839351852</prop>
+        <prop prop-type="OrigDateTime">45383.683912037</prop>
+        <prop prop-type="XlatDateTime">45296.7456944444</prop>
         <prop prop-type="Translated">1223</prop>
         <prop prop-type="UnTranslated">0</prop>
       </prop-group>
@@ -6428,7 +6428,6 @@
           <prop prop-type="Created">41751.6296144329</prop>
           <prop prop-type="Status">3</prop>
         </prop-group>
-        <target>"Impossibile creare la cartella"</target>
       </trans-unit>
       <trans-unit id="uRulePropsDlg_SMaskHelp07" resname="uRulePropsDlg_SMaskHelp07">
         <source>"Ranges are specified by an initial value, a dash (-), and a final value."</source>

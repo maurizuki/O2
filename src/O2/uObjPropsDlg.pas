@@ -35,8 +35,6 @@ type
     TabSheet3: TTabSheet;
     Memo: TMemo;
     Label1: TLabel;
-    Label2: TLabel;
-    cbTag: TComboBox;
     ActionList: TActionList;
     OK: TAction;
     MoveUp: TAction;
@@ -50,9 +48,6 @@ type
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
-    lbxTags: TListBox;
-    Button4: TButton;
-    Button5: TButton;
     AddTag: TAction;
     DeleteTag: TAction;
     Button6: TButton;
@@ -60,14 +55,23 @@ type
     ckMarkdown: TCheckBox;
     Label3: TLabel;
     PasswordStrengthIndicator: TPasswordStrengthIndicator;
+    GroupBox1: TGroupBox;
+    edTag: TEdit;
+    lbxTags: TListBox;
+    Button4: TButton;
+    Button5: TButton;
+    lbxObjectTags: TListBox;
     procedure edNameChange(Sender: TObject);
-    procedure FieldsViewResize(Sender: TObject);
-    procedure FieldsViewSelectItem(Sender: TObject; Item: TListItem;
-      Selected: Boolean);
+    procedure lbxTagsClick(Sender: TObject);
+    procedure lbxTagsDblClick(Sender: TObject);
     procedure AddTagExecute(Sender: TObject);
     procedure AddTagUpdate(Sender: TObject);
     procedure DeleteTagExecute(Sender: TObject);
     procedure DeleteTagUpdate(Sender: TObject);
+    procedure lbxObjectTagsDblClick(Sender: TObject);
+    procedure FieldsViewResize(Sender: TObject);
+    procedure FieldsViewSelectItem(Sender: TObject; Item: TListItem;
+      Selected: Boolean);
     procedure AddFieldExecute(Sender: TObject);
     procedure AddFieldUpdate(Sender: TObject);
     procedure ReplaceFieldExecute(Sender: TObject);
@@ -127,7 +131,7 @@ begin
       pgGeneralTags:
       begin
         Form.PageControl.ActivePage := Form.TabSheet1;
-        Form.ActiveControl := Form.cbTag;
+        Form.ActiveControl := Form.edTag;
       end;
       pgFields:
       begin
@@ -172,29 +176,45 @@ begin
   UpdatePasswordStrengthInfo;
 end;
 
+procedure TObjPropsDlg.lbxObjectTagsDblClick(Sender: TObject);
+begin
+  DeleteTag.Execute;
+end;
+
+procedure TObjPropsDlg.lbxTagsClick(Sender: TObject);
+begin
+  if lbxTags.ItemIndex = -1 then Exit;
+  edTag.Text := lbxTags.Items[lbxTags.ItemIndex];
+end;
+
+procedure TObjPropsDlg.lbxTagsDblClick(Sender: TObject);
+begin
+  if lbxTags.ItemIndex = -1 then Exit;
+  edTag.Text := lbxTags.Items[lbxTags.ItemIndex];
+  AddTag.Execute;
+end;
+
 procedure TObjPropsDlg.AddTagExecute(Sender: TObject);
 begin
-  lbxTags.Items.Add(cbTag.Text);
-  FModel.ObjectTags := lbxTags.Items;
-  cbTag.Text := '';
-  cbTag.SetFocus;
+  lbxObjectTags.Items.Add(edTag.Text);
+  FModel.ObjectTags := lbxObjectTags.Items;
 end;
 
 procedure TObjPropsDlg.AddTagUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := (cbTag.Text <> '')
-    and (lbxTags.Items.IndexOf(cbTag.Text) = -1);
+  TAction(Sender).Enabled := (edTag.Text <> '')
+    and (lbxObjectTags.Items.IndexOf(edTag.Text) = -1);
 end;
 
 procedure TObjPropsDlg.DeleteTagExecute(Sender: TObject);
 begin
-  lbxTags.DeleteSelected;
-  FModel.ObjectTags := lbxTags.Items;
+  lbxObjectTags.DeleteSelected;
+  FModel.ObjectTags := lbxObjectTags.Items;
 end;
 
 procedure TObjPropsDlg.DeleteTagUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := lbxTags.ItemIndex <> -1;
+  TAction(Sender).Enabled := lbxObjectTags.ItemIndex <> -1;
 end;
 
 procedure TObjPropsDlg.AddFieldExecute(Sender: TObject);
@@ -337,8 +357,8 @@ begin
 
     edName.Text := FModel.ObjectName;
 
-    cbTag.Items := FModel.Tags;
-    lbxTags.Items := FModel.ObjectTags;
+    lbxTags.Items := FModel.Tags;
+    lbxObjectTags.Items := FModel.ObjectTags;
 
     FieldsView.Items.BeginUpdate;
     try
