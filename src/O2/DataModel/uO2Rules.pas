@@ -172,6 +172,8 @@ type
 
     function GetFormatSettings: TFormatSettings;
     function GetEventDisplayText(const AField: TO2Field): string;
+    function HasEventInWindow(const AField: TO2Field; StartDate,
+      EndDate: TDateTime; UseParams: Boolean): Boolean; overload;
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
@@ -182,8 +184,8 @@ type
     function GetDisplayText(const AField: TO2Field;
       ShowPasswords: Boolean): string;
     function GetHyperLink(const AField: TO2Field): string;
-    function CheckEvents(const AField: TO2Field; Date1,
-      Date2: TDateTime; UseParams: Boolean = False): Boolean;
+    function HasEventInWindow(const AField: TO2Field): Boolean; overload;
+      inline;
     function GetFirstEvent(const AField: TO2Field;
       out FirstDate: TDateTime): Boolean;
     function GetNextEvent(const AField: TO2Field; StartDate: TDateTime;
@@ -223,10 +225,10 @@ type
     function GetDisplayText(const AField: TO2Field;
       ShowPasswords: Boolean): string;
     function GetHyperLink(const AField: TO2Field): string;
-    function CheckEvents(const AObject: TO2Object; Date1,
-      Date2: TDateTime; UseParams: Boolean = False): Boolean; overload;
+    function HasEventInWindow(const AObject: TO2Object; StartDate,
+      EndDate: TDateTime; UseParams: Boolean): Boolean;
     function GetNextEvent(const AObject: TO2Object; StartDate: TDateTime;
-      out NextDate: TDateTime; UseParams: Boolean = False): Boolean; overload;
+      out NextDate: TDateTime; UseParams: Boolean = False): Boolean;
     function GetHighlightColors(const AField: TO2Field;
       PasswordScoreProvider: IPasswordScoreProvider): THighlight; overload;
     function GetHighlightColors(const AObject: TO2Object;
@@ -554,34 +556,42 @@ begin
   end;
 end;
 
-function TO2Rule.CheckEvents(const AField: TO2Field; Date1,
-  Date2: TDateTime; UseParams: Boolean): Boolean;
+function TO2Rule.HasEventInWindow(const AField: TO2Field; StartDate,
+  EndDate: TDateTime; UseParams: Boolean): Boolean;
 var
-  DateValue, DateMin, DateMax: TDateTime;
+  DateValue, MinDate, MaxDate: TDateTime;
 begin
-  Result := False;
-  if Active and (RuleType in EventRules) and Matches(AField)
-    and TryStrToDate(AField.FieldValue, DateValue, GetFormatSettings) then
+  if not Active or not (RuleType in EventRules) or not Matches(AField)
+    or not TryStrToDate(AField.FieldValue, DateValue, GetFormatSettings) then
+    Exit(False);
+
+  if UseParams then
   begin
-    if UseParams then
-    begin
-      Date1 := Date - Params.ReadInteger(DaysBeforeParam, DefaultDaysBefore);
-      Date2 := Date + Params.ReadInteger(DaysAfterParam, DefaultDaysAfter);
-    end;
-
-    case RuleType of
-      rtExpirationDate:
-        Result := (DateValue >= Date1) and (DateValue <= Date2);
-
-      rtRecurrence:
-      begin
-        DateMin := SafeRecodeYear(DateValue, YearOf(Date1));
-        DateMax := SafeRecodeYear(DateValue, YearOf(Date2));
-        Result := (DateMin >= Date1) and (DateMin <= Date2)
-          or (DateMax >= Date1) and (DateMax <= Date2);
-      end;
-    end;
+    StartDate := Date - Params.ReadInteger(DaysBeforeParam, DefaultDaysBefore);
+    EndDate := Date + Params.ReadInteger(DaysAfterParam, DefaultDaysAfter);
   end;
+
+  case RuleType of
+    rtExpirationDate:
+      Result := (DateValue >= StartDate) and (DateValue <= EndDate);
+
+    rtRecurrence:
+    begin
+      MinDate := SafeRecodeYear(DateValue, YearOf(StartDate));
+      MaxDate := SafeRecodeYear(DateValue, YearOf(EndDate));
+
+      Result := (MinDate >= StartDate) and (MinDate <= EndDate)
+        or (MaxDate >= StartDate) and (MaxDate <= EndDate);
+    end;
+
+    else
+      Result := False;
+  end;
+end;
+
+function TO2Rule.HasEventInWindow(const AField: TO2Field): Boolean;
+begin
+  Result := HasEventInWindow(AField, 0, 0, True);
 end;
 
 function TO2Rule.GetFirstEvent(const AField: TO2Field;
@@ -596,28 +606,26 @@ function TO2Rule.GetNextEvent(const AField: TO2Field; StartDate: TDateTime;
 var
   FirstDate: TDateTime;
 begin
-  Result := False;
-  if GetFirstEvent(AField, FirstDate) then
-  begin
-    case RuleType of
-      rtExpirationDate:
-        NextDate := FirstDate;
+  if not GetFirstEvent(AField, FirstDate) then Exit(False);
 
-      rtRecurrence:
-      begin
-        if UseParams then
-          StartDate := Date - Params.ReadInteger(DaysBeforeParam,
-            DefaultDaysBefore);
+  case RuleType of
+    rtExpirationDate:
+      NextDate := FirstDate;
 
-        NextDate := SafeRecodeYear(FirstDate, YearOf(StartDate));
+    rtRecurrence:
+    begin
+      if UseParams then
+        StartDate := Date - Params.ReadInteger(DaysBeforeParam,
+          DefaultDaysBefore);
 
-        if NextDate < StartDate then
-          NextDate := SafeRecodeYear(FirstDate, YearOf(IncYear(StartDate)));
-      end;
+      NextDate := SafeRecodeYear(FirstDate, YearOf(StartDate));
+
+      if NextDate < StartDate then
+        NextDate := SafeRecodeYear(FirstDate, YearOf(IncYear(StartDate)));
     end;
-
-    Result := True;
   end;
+
+  Result := True;
 end;
 
 function TO2Rule.GetHighlightColors(const AField: TO2Field;
@@ -634,7 +642,7 @@ begin
   end
   else
     if Active and (RuleType = rtHighlight) and Matches(AField)
-      or CheckEvents(AField, 0, 0, True) then
+      or HasEventInWindow(AField, 0, 0, True) then
     begin
       Result.Highlight := htCustom;
       Result.Color := Params.ReadInteger(HighlightColorParam,
@@ -826,8 +834,8 @@ begin
     Result := ARule.GetHyperLink(AField);
 end;
 
-function TO2Rules.CheckEvents(const AObject: TO2Object; Date1,
-  Date2: TDateTime; UseParams: Boolean): Boolean;
+function TO2Rules.HasEventInWindow(const AObject: TO2Object; StartDate,
+  EndDate: TDateTime; UseParams: Boolean): Boolean;
 var
   AField: TO2Field;
   ARule: TO2Rule;
@@ -835,7 +843,8 @@ begin
   Result := False;
   for AField in AObject.Fields do
     for ARule in Self do
-      if ARule.CheckEvents(AField, Date1, Date2, UseParams) then Exit(True);
+      if ARule.HasEventInWindow(AField, StartDate, EndDate, UseParams) then
+        Exit(True);
 end;
 
 function TO2Rules.GetNextEvent(const AObject: TO2Object; StartDate: TDateTime;

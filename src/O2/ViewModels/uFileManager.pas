@@ -221,7 +221,7 @@ function TFileManager.GetNextEvent(const AObject: TO2Object;
   out NextDate: TDateTime): Boolean;
 begin
   Result := O2File.Rules.GetNextEvent(
-    AObject, FEventFilter.Date1, NextDate, FEventFilter.UseParamsForNextEvent);
+    AObject, FEventFilter.StartDate, NextDate, FEventFilter.UseParamsForNextEvent);
 end;
 
 function TFileManager.GetObjectName: string;
@@ -373,9 +373,9 @@ end;
 function TO2ObjectFilteredEnumerator.CheckEvents: Boolean;
 begin
   Result := FFileManager.EventFilter.All
-    or FFileManager.O2File.Rules.CheckEvents(
+    or FFileManager.O2File.Rules.HasEventInWindow(
       FFileManager.O2File.Objects[FIndex],
-      FFileManager.EventFilter.Date1, FFileManager.EventFilter.Date2,
+      FFileManager.EventFilter.StartDate, FFileManager.EventFilter.EndDate,
       FFileManager.EventFilter.UseParams);
 end;
 
@@ -389,7 +389,7 @@ begin
   for ARule in FFileManager.ObjectRules do
     for AField in FFileManager.O2File.Objects[FIndex].Fields do
       if ARule.Active and not (ARule.RuleType in EventRules)
-        and ARule.Matches(AField) or ARule.CheckEvents(AField, 0, 0, True) then
+        and ARule.Matches(AField) or ARule.HasEventInWindow(AField) then
         Exit(True);
 
   Result := False;

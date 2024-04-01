@@ -23,15 +23,15 @@ type
     FAll: Boolean;
     FUseParams: Boolean;
     FUseParamsForNextEvent: Boolean;
-    FDate1: TDateTime;
-    FDate2: TDateTime;
+    FStartDate: TDateTime;
+    FEndDate: TDateTime;
   public
     constructor Create; virtual;
     property All: Boolean read FAll;
     property UseParams: Boolean read FUseParams;
     property UseParamsForNextEvent: Boolean read FUseParamsForNextEvent;
-    property Date1: TDateTime read FDate1;
-    property Date2: TDateTime read FDate2;
+    property StartDate: TDateTime read FStartDate;
+    property EndDate: TDateTime read FEndDate;
   end;
 
   TEventFilterClass = class of TEventFilter;
@@ -110,8 +110,8 @@ end;
 constructor TEventFilterAllEvents.Create;
 begin
   FUseParamsForNextEvent := True;
-  FDate1 := EncodeDate(1, 1, 1);
-  FDate2 := EncodeDate(9999, 12, 31);
+  FStartDate := EncodeDate(1, 1, 1);
+  FEndDate := EncodeDate(9999, 12, 31);
 end;
 
 { TEventFilterCustom }
@@ -126,96 +126,96 @@ end;
 
 constructor TEventFilterToday.Create;
 begin
-  FDate1 := Date;
-  FDate2 := FDate1;
+  FStartDate := Date;
+  FEndDate := FStartDate;
 end;
 
 { TEventFilterTomorrow }
 
 constructor TEventFilterTomorrow.Create;
 begin
-  FDate1 := Date + 1;
-  FDate2 := FDate1;
+  FStartDate := Date + 1;
+  FEndDate := FStartDate;
 end;
 
 { TEventFilterThisWeek }
 
 constructor TEventFilterThisWeek.Create;
 begin
-  FDate1 := StartOfTheWeek(Date);
-  FDate2 := StartOfTheDay(EndOfTheWeek(Date));
+  FStartDate := StartOfTheWeek(Date);
+  FEndDate := StartOfTheDay(EndOfTheWeek(Date));
 end;
 
 { TEventFilterThisMonth }
 
 constructor TEventFilterThisMonth.Create;
 begin
-  FDate1 := StartOfTheMonth(Date);
-  FDate2 := StartOfTheDay(EndOfTheMonth(Date));
+  FStartDate := StartOfTheMonth(Date);
+  FEndDate := StartOfTheDay(EndOfTheMonth(Date));
 end;
 
 { TEventFilterThisYear }
 
 constructor TEventFilterThisYear.Create;
 begin
-  FDate1 := StartOfTheYear(Date);
-  FDate2 := StartOfTheDay(EndOfTheYear(Date));
+  FStartDate := StartOfTheYear(Date);
+  FEndDate := StartOfTheDay(EndOfTheYear(Date));
 end;
 
 { TEventFilterNext7days }
 
 constructor TEventFilterNext7days.Create;
 begin
-  FDate1 := Date;
-  FDate2 := FDate1 + 7;
+  FStartDate := Date;
+  FEndDate := FStartDate + 7;
 end;
 
 { TEventFilterNext15days }
 
 constructor TEventFilterNext15days.Create;
 begin
-  FDate1 := Date;
-  FDate2 := FDate1 + 15;
+  FStartDate := Date;
+  FEndDate := FStartDate + 15;
 end;
 
 { TEventFilterNext30days }
 
 constructor TEventFilterNext30days.Create;
 begin
-  FDate1 := Date;
-  FDate2 := FDate1 + 30;
+  FStartDate := Date;
+  FEndDate := FStartDate + 30;
 end;
 
 { TEventFilterNext60days }
 
 constructor TEventFilterNext60days.Create;
 begin
-  FDate1 := Date;
-  FDate2 := FDate1 + 60;
+  FStartDate := Date;
+  FEndDate := FStartDate + 60;
 end;
 
 { TEventFilterNext90days }
 
 constructor TEventFilterNext90days.Create;
 begin
-  FDate1 := Date;
-  FDate2 := FDate1 + 90;
+  FStartDate := Date;
+  FEndDate := FStartDate + 90;
 end;
 
 { TEventFilterNext180days }
 
 constructor TEventFilterNext180days.Create;
 begin
-  FDate1 := Date;
-  FDate2 := FDate1 + 180;
+  FStartDate := Date;
+  FEndDate := FStartDate + 180;
 end;
 
 { TEventFilterNext365days }
 
 constructor TEventFilterNext365days.Create;
 begin
-  FDate1 := Date;
-  FDate2 := FDate1 + 365;
+  FStartDate := Date;
+  FEndDate := FStartDate + 365;
 end;
 
 end.
