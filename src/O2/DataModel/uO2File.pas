@@ -18,8 +18,7 @@ unit uO2File;
 interface
 
 uses
-  Classes, ZLib, DCPcrypt2,
-  uO2Defs, uO2Classes, uO2Objects, uO2Relations, uO2Rules;
+  Classes, DCPcrypt2, uO2Defs, uO2Classes, uO2Objects, uO2Relations, uO2Rules;
 
 type
   IPasswordProvider = interface
@@ -41,36 +40,41 @@ type
     FObjects: TO2Objects;
     FRelations: TO2Relations;
     FRules: TO2Rules;
+
     procedure SetTitle(const Value: string);
     procedure SetDescription(const Value: string);
     procedure SetAuthor(const Value: string);
     procedure SetObjects(const Value: TO2Objects);
     procedure SetRelations(const Value: TO2Relations);
     procedure SetRules(const Value: TO2Rules);
-  protected
+
     procedure OutputDebugNotifyChanges(Item: TO2CollectionItem;
-      Action: TO2Notification); virtual;
+      Action: TO2Notification);
+    procedure CheckContentType(ContentType: TGUID);
+    procedure CheckVersion(Version: Word);
+    procedure OutputDebugHeader(Header: TO2FileHeader);
+    function ReadHeader(const Stream: TStream): Word;
+    function GetContentType: TGUID;
+    function GetVersion: Word;
+    procedure WriteHeader(const Stream: TStream);
+    function GetCipherClass: TDCP_cipherclass;
+    function GetHashClass: TDCP_hashclass;
+    procedure Compress(InputStream, OutputStream: TStream);
+    procedure Decompress(InputStream, OutputStream: TStream);
+    procedure Encrypt(InputStream, OutputStream: TStream);
+    procedure Decrypt(InputStream, OutputStream: TStream);
+  protected
     procedure NotifyChanges(Item: TO2CollectionItem;
       Action: TO2Notification); override;
-    procedure CheckContentType(ContentType: TGUID); virtual;
-    procedure CheckVersion(Version: Word); virtual;
-    procedure OutputDebugHeader(Header: TO2FileHeader); virtual;
-    function ReadHeader(const Stream: TStream): Word; virtual;
-    function GetContentType: TGUID; virtual;
-    function GetVersion: Word; virtual;
-    procedure WriteHeader(const Stream: TStream); virtual;
-    function GetCipherClass: TDCP_cipherclass; virtual;
-    function GetHashClass: TDCP_hashclass; virtual;
-    procedure Compress(InputStream, OutputStream: TStream); virtual;
-    procedure Decompress(InputStream, OutputStream: TStream); virtual;
-    procedure Encrypt(InputStream, OutputStream: TStream); virtual;
-    procedure Decrypt(InputStream, OutputStream: TStream); virtual;
   public
     constructor Create;
     destructor Destroy; override;
+
     class procedure TestAlgorithms;
-    procedure Load(PasswordProvider: IPasswordProvider); virtual;
-    procedure Save; virtual;
+
+    procedure Load(PasswordProvider: IPasswordProvider);
+    procedure Save;
+
     property FileName: string read FFileName write FFileName;
     property Encrypted: Boolean read FEncrypted write FEncrypted;
     property Cipher: TO2Cipher read FCipher write FCipher;
@@ -90,7 +94,7 @@ type
 implementation
 
 uses
-  Windows, SysUtils, Types, TypInfo, SZCRC32,
+  Windows, SysUtils, Types, TypInfo, ZLib, SZCRC32,
   DCPblowfish, DCPcast128, DCPcast256, DCPdes, DCPice,
   DCPidea, DCPmars, DCPmisty1, DCPrc2, DCPrc4, DCPrc5,
   DCPrc6, DCPrijndael, DCPserpent, DCPtea, DCPtwofish,
@@ -371,7 +375,7 @@ begin
   OutputDebugString(PChar(DebugOutput));
 end;
 
-function  TO2File.ReadHeader(const Stream: TStream): Word;
+function TO2File.ReadHeader(const Stream: TStream): Word;
 var
   Header: TO2FileHeader;
 begin
