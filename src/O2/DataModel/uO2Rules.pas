@@ -159,8 +159,10 @@ type
     FFieldValueMask: TMask;
     FParams: TO2Params;
     FActive: Boolean;
+
     function GetFieldNameMask: TMask;
     function GetFieldValueMask: TMask;
+    function GetDisplayPasswordStrength: Boolean;
     procedure SetName(const Value: string);
     procedure SetRuleType(const Value: TO2RuleType);
     procedure SetFieldName(const Value: string);
@@ -173,6 +175,7 @@ type
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
+
     procedure Assign(Source: TPersistent); override;
     function Matches(const AFieldName, AFieldValue: string): Boolean; overload;
     function Matches(const AField: TO2Field): Boolean; overload; inline;
@@ -187,6 +190,8 @@ type
       out NextDate: TDateTime; UseParams: Boolean = False): Boolean;
     function GetHighlightColors(const AField: TO2Field;
       PasswordScoreProvider: IPasswordScoreProvider): THighlight;
+
+    property DisplayPasswordStrength: Boolean read GetDisplayPasswordStrength;
   published
     property Name: string read FName write SetName;
     property RuleType: TO2RuleType read FRuleType write SetRuleType;
@@ -435,8 +440,7 @@ end;
 function TO2Rule.Matches(const AFieldName, AFieldValue: string): Boolean;
 begin
   try
-    Result := Active
-      and GetFieldNameMask.Matches(AFieldName)
+    Result := GetFieldNameMask.Matches(AFieldName)
       and GetFieldValueMask.Matches(AFieldValue);
   except
     Result := False;
@@ -492,6 +496,12 @@ begin
   end
   else
     Result := AField.FieldValue;
+end;
+
+function TO2Rule.GetDisplayPasswordStrength: Boolean;
+begin
+  Result := Params.ReadBoolean(
+    DisplayPasswordStrengthParam, DefaultDisplayPasswordStrength);
 end;
 
 function TO2Rule.GetDisplayText(const AField: TO2Field;
@@ -550,7 +560,7 @@ var
   DateValue, DateMin, DateMax: TDateTime;
 begin
   Result := False;
-  if (RuleType in EventRules) and Matches(AField)
+  if Active and (RuleType in EventRules) and Matches(AField)
     and TryStrToDate(AField.FieldValue, DateValue, GetFormatSettings) then
   begin
     if UseParams then
@@ -577,7 +587,7 @@ end;
 function TO2Rule.GetFirstEvent(const AField: TO2Field;
   out FirstDate: TDateTime): Boolean;
 begin
-  Result := (RuleType in EventRules) and Matches(AField)
+  Result := Active and (RuleType in EventRules) and Matches(AField)
     and TryStrToDate(AField.FieldValue, FirstDate, GetFormatSettings);
 end;
 
@@ -615,17 +625,15 @@ function TO2Rule.GetHighlightColors(const AField: TO2Field;
 var
   PasswordScore: Integer;
 begin
-  if (RuleType = rtPassword) and Params.ReadBoolean(
-      DisplayPasswordStrengthParam, DefaultDisplayPasswordStrength)
-    and Matches(AField)
-    and PasswordScoreProvider.TryGetPasswordScore(
+  if Active and (RuleType = rtPassword) and DisplayPasswordStrength
+    and Matches(AField) and PasswordScoreProvider.TryGetPasswordScore(
       AField.FieldValue, PasswordScore) then
   begin
     Result.Highlight := htPasswordScore;
     Result.PasswordScore := PasswordScore;
   end
   else
-    if (RuleType = rtHighlight) and Matches(AField)
+    if Active and (RuleType = rtHighlight) and Matches(AField)
       or CheckEvents(AField, 0, 0, True) then
     begin
       Result.Highlight := htCustom;
@@ -758,7 +766,8 @@ var
 begin
   Result := nil;
   for ARule in Self do
-    if (ARule.RuleType in RuleTypes) and ARule.Matches(AField) then Exit(ARule);
+    if ARule.Active and (ARule.RuleType in RuleTypes)
+      and ARule.Matches(AField) then Exit(ARule);
 end;
 
 function TO2Rules.RuleExists(const Name: string): Boolean;
@@ -800,7 +809,7 @@ var
 begin
   Result := AField.FieldValue;
   for ARule in Self do
-    if ARule.Matches(AField) then
+    if ARule.Active and ARule.Matches(AField) then
     begin
       Result := ARule.GetDisplayText(AField, ShowPasswords);
       if Result <> AField.FieldValue then Break;

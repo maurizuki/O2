@@ -388,8 +388,8 @@ begin
   
   for ARule in FFileManager.ObjectRules do
     for AField in FFileManager.O2File.Objects[FIndex].Fields do
-      if not (ARule.RuleType in EventRules) and ARule.Matches(AField)
-        or ARule.CheckEvents(AField, 0, 0, True) then
+      if ARule.Active and not (ARule.RuleType in EventRules)
+        and ARule.Matches(AField) or ARule.CheckEvents(AField, 0, 0, True) then
         Exit(True);
 
   Result := False;

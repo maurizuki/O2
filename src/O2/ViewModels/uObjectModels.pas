@@ -251,9 +251,8 @@ var
   ARule: TO2Rule;
 begin
   for ARule in FO2File.Rules do
-    if (ARule.RuleType = rtPassword) and ARule.Matches(FFieldName, FFieldValue)
-      and ARule.Params.ReadBoolean(DisplayPasswordStrengthParam,
-        DefaultDisplayPasswordStrength) then
+    if (ARule.RuleType = rtPassword) and ARule.DisplayPasswordStrength
+      and ARule.Matches(FFieldName, FFieldValue) then
     begin
       inherited;
       Exit;
