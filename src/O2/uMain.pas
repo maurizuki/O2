@@ -741,6 +741,12 @@ begin
   begin
     FApplyingChanges := True;
     try
+      if ncTagList in FPendingChanges then
+        UpdateTagList;
+
+      if ncRuleList in FPendingChanges then
+        UpdateRuleList;
+
       if ncObjects in FPendingChanges then
       begin
         UpdateObjectsView;
@@ -758,12 +764,6 @@ begin
 
       if ncRules in FPendingChanges then
         UpdateRulesView;
-
-      if ncTagList in FPendingChanges then
-        UpdateTagList;
-
-      if ncRuleList in FPendingChanges then
-        UpdateRuleList;
     finally
       FPendingChanges := [];
       FApplyingChanges := False;
@@ -1941,6 +1941,13 @@ var
 begin
   FindByTag.Items := FModel.Tags;
 
+  I := 0;
+  while I < FModel.ObjectTags.Count do
+    if FModel.Tags.IndexOf(FModel.ObjectTags[I]) = -1 then
+      FModel.ObjectTags.Delete(I)
+    else
+      Inc(I);
+
   for I := 1 to FindByTag.Count - 1 do
     if FModel.ObjectTags.IndexOf(FindByTag.Items[I]) <> -1 then
       FindByTag.Selected[I] := True;
@@ -2194,6 +2201,7 @@ begin
   Tag := StringReplace(TMenuItem(Sender).Caption, '&&', '&', [rfReplaceAll]);
   for AObject in FSelectedObjects do
     AObject.DeleteTag(Tag);
+  NotifyChanges([ncObjects, ncTagList]);
 end;
 
 procedure TMainForm.ReplaceTagExecute(Sender: TObject);
