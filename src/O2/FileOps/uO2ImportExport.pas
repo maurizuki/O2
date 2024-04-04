@@ -18,12 +18,16 @@ unit uO2ImportExport;
 interface
 
 uses
-  uFileOperation, uO2File, uO2Objects;
+  uFileOperation, uO2File, uO2Objects, uO2Relations, uO2Rules;
 
 type
   TO2Import = class(TFileOperation)
   private
     FPasswordProvider: IPasswordProvider;
+
+    function ImportObject(const AObject: TO2Object): TO2Object;
+    function ImportRelation(const ARelation: TO2Relation): TO2Relation;
+    function ImportRule(const ARule: TO2Rule): TO2Rule;
   public
     constructor Create(const O2File: TO2File;
       PasswordProvider: IPasswordProvider); overload;
@@ -42,7 +46,7 @@ type
 implementation
 
 uses
-  Classes, uO2Rules, uO2Relations;
+  Classes;
 
 { TO2Import }
 
@@ -64,15 +68,33 @@ begin
   try
     InputFile.FileName := FileName;
     InputFile.Load(FPasswordProvider);
-    for AObject in InputFile.Objects do
-      O2File.Objects.ImportObject(AObject);
-    for ARelation in InputFile.Relations do
-      O2File.Relations.ImportRelation(ARelation);
-    for ARule in InputFile.Rules do
-      O2File.Rules.ImportRule(ARule);
+    for AObject in InputFile.Objects do ImportObject(AObject);
+    for ARelation in InputFile.Relations do ImportRelation(ARelation);
+    for ARule in InputFile.Rules do ImportRule(ARule);
   finally
     InputFile.Free;
   end;
+end;
+
+function TO2Import.ImportObject(const AObject: TO2Object): TO2Object;
+begin
+  Result := O2File.Objects.FindObjectByID(AObject.ObjectID);
+  if Result = nil then Result := O2File.Objects.AddObject(AObject.Name);
+  Result.Assign(AObject);
+end;
+
+function TO2Import.ImportRelation(const ARelation: TO2Relation): TO2Relation;
+begin
+  Result := O2File.Relations.FindRelationByID(ARelation.RelationID);
+  if Result = nil then Result := O2File.Relations.AddRelation;
+  Result.Assign(ARelation);
+end;
+
+function TO2Import.ImportRule(const ARule: TO2Rule): TO2Rule;
+begin
+  Result := O2File.Rules.FindRule(ARule.Name);
+  if Result = nil then Result := O2File.Rules.AddRule(ARule.Name);
+  Result.Assign(ARule);
 end;
 
 { TO2Export }

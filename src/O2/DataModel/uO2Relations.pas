@@ -71,7 +71,6 @@ type
     function GetObjectRelations(const AObject: TO2Object): TO2ObjRelations;
     procedure DeleteObjectRelations(const AObject: TO2Object);
     function AddRelation: TO2Relation;
-    function ImportRelation(const ARelation: TO2Relation): TO2Relation;
     procedure GetRoles(const List: TStrings); overload;
     procedure GetRoles(const Objects: IEnumerable<TO2Object>;
       const List: TStrings); overload;
@@ -276,14 +275,6 @@ end;
 function TO2Relations.AddRelation: TO2Relation;
 begin
   Result := TO2Relation(Add);
-end;
-
-function TO2Relations.ImportRelation(
-  const ARelation: TO2Relation): TO2Relation;
-begin
-  Result := FindRelationByID(ARelation.RelationID);
-  if Result = nil then Result := AddRelation;
-  Result.Assign(ARelation);
 end;
 
 procedure TO2Relations.GetRoles(const List: TStrings);

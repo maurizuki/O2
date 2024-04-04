@@ -225,7 +225,6 @@ type
     function FindFirstRule(const AField: TO2Field;
       RuleTypes: TO2RuleTypes): TO2Rule;
     function AddRule(const Name: string): TO2Rule;
-    function ImportRule(const ARule: TO2Rule): TO2Rule;
 
     function GetDisplayText(const AField: TO2Field;
       ShowPasswords: Boolean): string;
@@ -781,13 +780,6 @@ begin
     Delete(Result.Index);
     raise;
   end;
-end;
-
-function TO2Rules.ImportRule(const ARule: TO2Rule): TO2Rule;
-begin
-  Result := FindRule(ARule.Name);
-  if Result = nil then Result := AddRule(ARule.Name);
-  Result.Assign(ARule);
 end;
 
 function TO2Rules.GetDisplayText(const AField: TO2Field;

@@ -112,7 +112,6 @@ type
     function FindObjectByID(const ObjectID: string): TO2Object;
     function FindObject(const Name: string): TO2Object;
     function AddObject(const Name: string = ''): TO2Object;
-    function ImportObject(const AObject: TO2Object): TO2Object;
 
     function ToEnumerable: IEnumerable<TO2Object>;
 
@@ -457,13 +456,6 @@ begin
     Delete(Result.Index);
     raise;
   end;
-end;
-
-function TO2Objects.ImportObject(const AObject: TO2Object): TO2Object;
-begin
-  Result := FindObjectByID(AObject.ObjectID);
-  if Result = nil then Result := AddObject(AObject.Name);
-  Result.Assign(AObject);
 end;
 
 function TO2Objects.ToEnumerable: IEnumerable<TO2Object>;
