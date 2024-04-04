@@ -1970,6 +1970,14 @@ begin
     FindByRule.Items.EndUpdate;
   end;
 
+  I := 0;
+  while I < FModel.ObjectRules.Count do
+    if not FModel.ObjectRules[I].Active
+      or (FModel.O2File.Rules.IndexOf(FModel.ObjectRules[I]) = -1) then
+      FModel.ObjectRules.Delete(I)
+    else
+      Inc(I);
+
   for I := 0 to FindByRule.Count - 1 do
     if FModel.ObjectRules.IndexOf(
       TO2Rule(FindByRule.Items.Objects[I])) <> -1 then
