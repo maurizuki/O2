@@ -46,6 +46,7 @@ type
       Action: TO2Notification); virtual;
   public
     destructor Destroy; override;
+    function IndexOf(const Value: TO2CollectionItem): Integer;
   end;
 
   TO2Persistent = class(TPersistent)
@@ -81,6 +82,15 @@ destructor TO2Collection.Destroy;
 begin
   Destroying := True;
   inherited Destroy;
+end;
+
+function TO2Collection.IndexOf(const Value: TO2CollectionItem): Integer;
+var
+  I: Integer;
+begin
+  Result := -1;
+  for I := 0 to Count - 1 do
+    if Items[I] = Value then Exit(I);
 end;
 
 procedure TO2Collection.Notify(Item: TCollectionItem;
