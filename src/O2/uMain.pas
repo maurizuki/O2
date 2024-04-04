@@ -32,10 +32,10 @@ uses
 
 type
   TNotifyChange = (
-    ncObjects,
-    ncObjProps,
-    ncRelations,
-    ncRules,
+    ncObjectsView,
+    ncObjPropsViews,
+    ncRelationsView,
+    ncRulesView,
     ncTagList,
     ncRuleList
     );
@@ -747,22 +747,22 @@ begin
       if ncRuleList in FPendingChanges then
         UpdateRuleList;
 
-      if ncObjects in FPendingChanges then
+      if ncObjectsView in FPendingChanges then
       begin
         UpdateObjectsView;
-        FPendingChanges := FPendingChanges + [ncObjProps, ncRelations];
+        FPendingChanges := FPendingChanges + [ncObjPropsViews, ncRelationsView];
       end;
 
-      if ncObjProps in FPendingChanges then
+      if ncObjPropsViews in FPendingChanges then
       begin
         UpdateFieldsView;
         UpdateNotesView;
       end;
 
-      if ncRelations in FPendingChanges then
+      if ncRelationsView in FPendingChanges then
         UpdateRelationsView;
 
-      if ncRules in FPendingChanges then
+      if ncRulesView in FPendingChanges then
         UpdateRulesView;
     finally
       FPendingChanges := [];
@@ -814,7 +814,7 @@ end;
 procedure TMainForm.ObjectsViewChange(Sender: TObject; Item: TListItem;
   Change: TItemChange);
 begin
-  NotifyChanges([ncObjProps, ncRelations]);
+  NotifyChanges([ncObjPropsViews, ncRelationsView]);
 end;
 
 procedure TMainForm.ObjectsViewColumnClick(Sender: TObject;
@@ -877,7 +877,7 @@ end;
 procedure TMainForm.FindByEventChange(Sender: TObject);
 begin
   FModel.EventFilterIndex := FindByEvent.ItemIndex;
-  NotifyChanges([ncObjects]);
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.FindByNameChange(Sender: TObject);
@@ -888,7 +888,7 @@ begin
 
   Timer.Enabled := False;
   if FModel.ObjectName = '' then
-    NotifyChanges([ncObjects])
+    NotifyChanges([ncObjectsView])
   else
     Timer.Enabled := True;
 end;
@@ -896,7 +896,7 @@ end;
 procedure TMainForm.FindByTagSelectAllExecute(Sender: TObject);
 begin
   FindByTag.SelectAll;
-  NotifyChanges([ncObjects]);
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.FindByTagClick(Sender: TObject);
@@ -910,13 +910,13 @@ begin
     if FindByTag.Selected[I] then
       FModel.ObjectTags.Add(FindByTag.Items[I]);
 
-  NotifyChanges([ncObjects]);
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.FindByTagDeselectExecute(Sender: TObject);
 begin
   FindByTag.ClearSelection;
-  NotifyChanges([ncObjects]);
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.FindByTagInvertSelectionExecute(Sender: TObject);
@@ -925,13 +925,13 @@ var
 begin
   for I := 0 to FindByTag.Count - 1 do
     FindByTag.Selected[I] := not FindByTag.Selected[I];
-  NotifyChanges([ncObjects]);
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.FindByRuleSelectAllExecute(Sender: TObject);
 begin
   FindByRule.SelectAll;
-  NotifyChanges([ncObjects]);
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.FindByRuleClick(Sender: TObject);
@@ -943,13 +943,13 @@ begin
     if FindByRule.Selected[I] then
       FModel.ObjectRules.Add(TO2Rule(FindByRule.Items.Objects[I]));
 
-  NotifyChanges([ncObjects]);
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.FindByRuleDeselectExecute(Sender: TObject);
 begin
   FindByRule.ClearSelection;
-  NotifyChanges([ncObjects]);
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.FindByRuleInvertSelectionExecute(Sender: TObject);
@@ -958,13 +958,13 @@ var
 begin
   for I := 0 to FindByRule.Count - 1 do
     FindByRule.Selected[I] := not FindByRule.Selected[I];
-  NotifyChanges([ncObjects]);
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.TimerTimer(Sender: TObject);
 begin
   Timer.Enabled := False;
-  NotifyChanges([ncObjects]);
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.MRUItemClick(Sender: TObject);
@@ -1240,7 +1240,7 @@ end;
 
 procedure TMainForm.RefreshViewsExecute(Sender: TObject);
 begin
-  NotifyChanges([ncObjects, ncRules, ncTagList, ncRuleList]);
+  NotifyChanges([ncObjectsView, ncRulesView, ncTagList, ncRuleList]);
 end;
 
 procedure TMainForm.ViewLargeIconsExecute(Sender: TObject);
@@ -1369,7 +1369,7 @@ end;
 procedure TMainForm.ClearSearchExecute(Sender: TObject);
 begin
   InitializeSearch;
-  NotifyChanges([ncObjects]);
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.AboutExecute(Sender: TObject);
@@ -1505,7 +1505,7 @@ end;
 procedure TMainForm.Initialize;
 begin
   InitializeSearch;
-  NotifyChanges([ncObjects, ncRules, ncTagList, ncRuleList]);
+  NotifyChanges([ncObjectsView, ncRulesView, ncTagList, ncRuleList]);
 end;
 
 procedure TMainForm.InitializeSearch;
@@ -1678,7 +1678,7 @@ begin
   finally
     RulesView.Items.EndUpdate;
   end;
-  NotifyChanges([ncObjects, ncRuleList]);
+  NotifyChanges([ncObjectsView, ncRuleList]);
 end;
 
 procedure TMainForm.UpdateRulesStatus;
@@ -1692,7 +1692,7 @@ begin
     if AItem.Checked <> ARule.Active then
     begin
       ARule.Active := AItem.Checked;
-      NotifyChanges([ncObjects, ncRuleList]);
+      NotifyChanges([ncObjectsView, ncRuleList]);
     end;
   end;
 end;
@@ -2130,7 +2130,7 @@ begin
     ObjectsView.ClearSelection;
     Item.Selected := True;
     Item.Focused := True;
-    NotifyChanges([ncObjProps, ncRelations, ncTagList]);
+    NotifyChanges([ncObjPropsViews, ncRelationsView, ncTagList]);
   end;
 end;
 
@@ -2146,7 +2146,7 @@ begin
     ObjectsView.ClearSelection;
     Item.Selected := True;
     Item.Focused := True;
-    NotifyChanges([ncObjProps, ncRelations, ncTagList]);
+    NotifyChanges([ncObjPropsViews, ncRelationsView, ncTagList]);
   end;
 end;
 
@@ -2187,7 +2187,7 @@ begin
   if TObjPropsDlg.Execute(Model, pgGeneralTags) then
   begin
     ObjToListItem(Model.O2Object, ObjectsView.Selected);
-    NotifyChanges([ncObjProps, ncTagList]);
+    NotifyChanges([ncObjPropsViews, ncTagList]);
   end;
 end;
 
@@ -2209,35 +2209,35 @@ begin
   Tag := StringReplace(TMenuItem(Sender).Caption, '&&', '&', [rfReplaceAll]);
   for AObject in FSelectedObjects do
     AObject.DeleteTag(Tag);
-  NotifyChanges([ncObjects, ncTagList]);
+  NotifyChanges([ncObjectsView, ncTagList]);
 end;
 
 procedure TMainForm.ReplaceTagExecute(Sender: TObject);
 begin
   if TReplaceDlg.Execute(
     FServiceContainer.Resolve<IReplaceOperation>(ReplaceTagService)) then
-    NotifyChanges([ncObjects, ncTagList]);
+    NotifyChanges([ncObjectsView, ncTagList]);
 end;
 
 procedure TMainForm.ReplaceFieldNameExecute(Sender: TObject);
 begin
   if TReplaceDlg.Execute(
     FServiceContainer.Resolve<IReplaceOperation>(ReplaceFieldNameService)) then
-    NotifyChanges([ncObjects]);
+    NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.ReplaceFieldValueExecute(Sender: TObject);
 begin
   if TReplaceDlg.Execute(
     FServiceContainer.Resolve<IReplaceOperation>(ReplaceFieldValueService)) then
-    NotifyChanges([ncObjects]);
+    NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.ReplaceRoleExecute(Sender: TObject);
 begin
   if TReplaceDlg.Execute(
     FServiceContainer.Resolve<IReplaceOperation>(ReplaceRoleService)) then
-    NotifyChanges([ncRelations]);
+    NotifyChanges([ncRelationsView]);
 end;
 
 procedure TMainForm.ObjectPropsExecute(Sender: TObject);
@@ -2254,7 +2254,7 @@ begin
   if TObjPropsDlg.Execute(Model, Page) then
   begin
     ObjToListItem(Model.O2Object, ObjectsView.Selected);
-    NotifyChanges([ncObjProps, ncTagList]);
+    NotifyChanges([ncObjPropsViews, ncTagList]);
   end;
 end;
 
@@ -2422,7 +2422,7 @@ end;
 procedure TMainForm.ShowPasswordsExecute(Sender: TObject);
 begin
   FShowPasswords := not FShowPasswords;
-  NotifyChanges([ncObjProps]);
+  NotifyChanges([ncObjPropsViews]);
 end;
 
 procedure TMainForm.ShowPasswordsUpdate(Sender: TObject);
@@ -2549,7 +2549,7 @@ begin
     Item := RuleToListItem(Model.Rule, nil);
     Item.Selected := True;
     Item.Focused := True;
-    NotifyChanges([ncObjects, ncRuleList]);
+    NotifyChanges([ncObjectsView, ncRuleList]);
   end;
 end;
 
@@ -2564,7 +2564,7 @@ begin
     Item := RuleToListItem(Model.Rule, nil);
     Item.Selected := True;
     Item.Focused := True;
-    NotifyChanges([ncObjects, ncRuleList]);
+    NotifyChanges([ncObjectsView, ncRuleList]);
   end;
 end;
 
@@ -2574,14 +2574,14 @@ begin
   begin
     RulesView.FreeSelectedItemsData;
     RulesView.DeleteSelected;
-    NotifyChanges([ncObjects, ncRuleList]);
+    NotifyChanges([ncObjectsView, ncRuleList]);
   end;
 end;
 
 procedure TMainForm.MoveUpRuleExecute(Sender: TObject);
 begin
   with TO2Rule(RulesView.Selected.Data) do Index := Index - 1;
-  NotifyChanges([ncObjects, ncRules]);
+  NotifyChanges([ncObjectsView, ncRulesView]);
 end;
 
 procedure TMainForm.MoveUpRuleUpdate(Sender: TObject);
@@ -2593,7 +2593,7 @@ end;
 procedure TMainForm.MoveDownRuleExecute(Sender: TObject);
 begin
   with TO2Rule(RulesView.Selected.Data) do Index := Index + 1;
-  NotifyChanges([ncObjects, ncRules]);
+  NotifyChanges([ncObjectsView, ncRulesView]);
 end;
 
 procedure TMainForm.MoveDownRuleUpdate(Sender: TObject);
@@ -2635,7 +2635,7 @@ begin
   if TRulePropsDlg.Execute(Model) then
   begin
     RuleToListItem(Model.Rule, RulesView.Selected);
-    NotifyChanges([ncObjects, ncRuleList]);
+    NotifyChanges([ncObjectsView, ncRuleList]);
   end;
 end;
 
