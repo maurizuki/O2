@@ -22,18 +22,18 @@ uses
 
 type
   TO2XmlFiler = class
-  private
-    FInstance: TPersistent;
   protected
+    FInstance: TPersistent;
+
     const SchemaLocationFmt =
       'https://maurizuki.github.io/O2/xml/O2File/%d%d.xsd';
     const ItemIdent = 'item';
+
     function GetPropCount(AInstance: TPersistent): Integer;
     function GetPropName(AInstance: TPersistent; Index: Integer): string;
     function CreateXMLDocument: IXMLDocument;
   public
-    constructor Create(AInstance: TPersistent); virtual;
-    property Instance: TPersistent read FInstance;
+    constructor Create(AInstance: TPersistent);
   end;
 
   TO2XmlReader = class(TO2XmlFiler)
@@ -227,7 +227,7 @@ var
 begin
   XML := CreateXMLDocument;
   XML.LoadFromStream(Stream);
-  ReadPersistent(XML.DocumentElement, Instance);
+  ReadPersistent(XML.DocumentElement, FInstance);
 end;
 
 procedure TO2XmlReader.LoadFromFile(const FileName: string);
@@ -236,7 +236,7 @@ var
 begin
   XML := CreateXMLDocument;
   XML.LoadFromFile(FileName);
-  ReadPersistent(XML.DocumentElement, Instance);
+  ReadPersistent(XML.DocumentElement, FInstance);
 end;
 
 procedure TO2XmlReader.LoadFromString(const S: string);
@@ -245,7 +245,7 @@ var
 begin
   XML := CreateXMLDocument;
   XML.LoadFromXML(S);
-  ReadPersistent(XML.DocumentElement, Instance);
+  ReadPersistent(XML.DocumentElement, FInstance);
 end;
 
 { TO2XmlWriter }
@@ -312,7 +312,7 @@ var
   XML: IXMLDocument;
 begin
   XML := CreateXMLDocument;
-  WritePersistent(XML.DocumentElement, Instance);
+  WritePersistent(XML.DocumentElement, FInstance);
   XML.SaveToStream(Stream);
 end;
 
@@ -321,7 +321,7 @@ var
   XML: IXMLDocument;
 begin
   XML := CreateXMLDocument;
-  WritePersistent(XML.DocumentElement, Instance);
+  WritePersistent(XML.DocumentElement, FInstance);
   XML.SaveToFile(FileName);
 end;
 
@@ -330,7 +330,7 @@ var
   XML: IXMLDocument;
 begin
   XML := CreateXMLDocument;
-  WritePersistent(XML.DocumentElement, Instance);
+  WritePersistent(XML.DocumentElement, FInstance);
   XML.SaveToXML(Result);
 end;
 

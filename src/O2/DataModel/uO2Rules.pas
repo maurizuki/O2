@@ -18,7 +18,7 @@ unit uO2Rules;
 interface
 
 uses
-  Classes, Windows, SysUtils, Graphics, Masks, uO2Classes, uO2Objects;
+  Classes, SysUtils, Graphics, Masks, uO2Classes, uO2Objects;
 
 const
   PasswordChar = '●';
@@ -97,10 +97,12 @@ type
   private
     FParamName: string;
     FParamValue: string;
+
     procedure SetParamName(const Value: string);
     procedure SetParamValue(const Value: string);
   public
     constructor Create(Collection: TCollection); override;
+
     procedure Assign(Source: TPersistent); override;
   published
     property ParamName: string read FParamName write SetParamName;
@@ -120,17 +122,20 @@ type
     procedure SetValues(Name: string; const Value: string);
   public
     constructor Create(AOwner: TPersistent);
+
     function GetEnumerator: TO2ParamsEnumerator;
+
     function FindParam(const ParamName: string): TO2Param;
-    function ParamExists(const ParamName: string): Boolean;
     function AddParam(const ParamName: string): TO2Param;
     procedure DeleteParam(const ParamName: string);
+
     function ReadBoolean(const ParamName: string;
       DefaultValue: Boolean = False): Boolean;
     function ReadInteger(const ParamName: string;
       DefaultValue: Integer = 0): Integer;
     function ReadString(const ParamName: string;
       const DefaultValue: string = ''): string;
+
     property Params[Index: Integer]: TO2Param read GetParams; default;
     property Values[Name: string]: string read GetValues write SetValues;
   end;
@@ -179,6 +184,7 @@ type
     destructor Destroy; override;
 
     procedure Assign(Source: TPersistent); override;
+
     function Matches(const AFieldName, AFieldValue: string): Boolean; overload;
     function Matches(const AField: TO2Field): Boolean; overload; inline;
     function GetDisplayText(const AField: TO2Field;
@@ -210,18 +216,17 @@ type
   end;
 
   TO2Rules = class(TO2Collection)
-  private
-    function GetRules(Index: Integer): TO2Rule;
   public
     constructor Create(AOwner: TPersistent);
+
     function GetEnumerator: TO2RulesEnumerator;
+
     function FindRule(const Name: string): TO2Rule;
     function FindFirstRule(const AField: TO2Field;
       RuleTypes: TO2RuleTypes): TO2Rule;
-    function RuleExists(const Name: string): Boolean;
     function AddRule(const Name: string): TO2Rule;
-    procedure DeleteRule(const Name: string);
     function ImportRule(const ARule: TO2Rule): TO2Rule;
+
     function GetDisplayText(const AField: TO2Field;
       ShowPasswords: Boolean): string;
     function GetHyperLink(const AField: TO2Field): string;
@@ -233,13 +238,12 @@ type
       PasswordScoreProvider: IPasswordScoreProvider): THighlight; overload;
     function GetHighlightColors(const AObject: TO2Object;
       PasswordScoreProvider: IPasswordScoreProvider): THighlight; overload;
-    property Rules[Index: Integer]: TO2Rule read GetRules; default;
   end;
 
 implementation
 
 uses
-  DateUtils, uO2File, uO2Utils;
+  DateUtils, uO2Utils;
 
 resourcestring
   SRuleAlreadyExists = 'A rule named "%s" already exists.';
@@ -314,11 +318,6 @@ begin
   Result := nil;
   for AParam in Self do
     if SameText(AParam.ParamName, ParamName) then Exit(AParam);
-end;
-
-function TO2Params.ParamExists(const ParamName: string): Boolean;
-begin
-  Result := Assigned(FindParam(ParamName));
 end;
 
 function TO2Params.AddParam(const ParamName: string): TO2Param;
@@ -753,11 +752,6 @@ begin
   Result := TO2RulesEnumerator.Create(Self);
 end;
 
-function TO2Rules.GetRules(Index: Integer): TO2Rule;
-begin
-  Result := TO2Rule(Items[Index]);
-end;
-
 function TO2Rules.FindRule(const Name: string): TO2Rule;
 var
   ARule: TO2Rule;
@@ -778,11 +772,6 @@ begin
       and ARule.Matches(AField) then Exit(ARule);
 end;
 
-function TO2Rules.RuleExists(const Name: string): Boolean;
-begin
-  Result := Assigned(FindRule(Name));
-end;
-
 function TO2Rules.AddRule(const Name: string): TO2Rule;
 begin
   Result := TO2Rule(Add);
@@ -792,15 +781,6 @@ begin
     Delete(Result.Index);
     raise;
   end;
-end;
-
-procedure TO2Rules.DeleteRule(const Name: string);
-var
-  ARule: TO2Rule;
-begin
-  ARule := FindRule(Name);
-  if Assigned(ARule) then
-    Delete(ARule.Index);
 end;
 
 function TO2Rules.ImportRule(const ARule: TO2Rule): TO2Rule;

@@ -27,10 +27,12 @@ type
   private
     FFieldName: string;
     FFieldValue: string;
+
     procedure SetFieldName(const Value: string);
     procedure SetFieldValue(const Value: string);
   public
     constructor Create(Collection: TCollection); override;
+
     procedure Assign(Source: TPersistent); override;
   published
     property FieldName: string read FFieldName write SetFieldName;
@@ -48,13 +50,12 @@ type
     function GetFields(Index: Integer): TO2Field;
   public
     constructor Create(AOwner: TPersistent);
+
     function GetEnumerator: TO2FieldsEnumerator;
+
     function FindField(const FieldName: string): TO2Field;
-    function FieldExists(const FieldName: string): Boolean;
     function AddField(const FieldName: string): TO2Field;
-    procedure DeleteField(const FieldName: string);
-    procedure ReadFieldValues(const StringList: TStrings);
-    procedure WriteFieldValues(const StringList: TStrings);
+
     property Fields[Index: Integer]: TO2Field read GetFields; default;
   end;
 
@@ -66,17 +67,21 @@ type
     FFields: TO2Fields;
     FText: TStrings;
     FTextType: TO2TextType;
+
     procedure SetObjectID(const Value: string);
     procedure SetName(const Value: string);
     procedure SetTag(const Value: string);
     procedure SetFields(const Value: TO2Fields);
     procedure SetText(const Value: TStrings);
     procedure SetTextType(const Value: TO2TextType);
+
     procedure TextChange(Sender: TObject);
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
+
     procedure Assign(Source: TPersistent); override;
+
     procedure GetTags(const List: TStrings);
     procedure SetTags(const List: TStrings);
     procedure AddTag(const Tag: string);
@@ -101,21 +106,23 @@ type
     function GetObjects(Index: Integer): TO2Object;
   public
     constructor Create(AOwner: TPersistent);
+
     function GetEnumerator: TO2ObjectsEnumerator;
+
     function FindObjectByID(const ObjectID: string): TO2Object;
     function FindObject(const Name: string): TO2Object;
-    function ObjectExists(const Name: string): Boolean;
     function AddObject(const Name: string = ''): TO2Object;
-    procedure DeleteObject(const Name: string);
     function ImportObject(const AObject: TO2Object): TO2Object;
+
     function ToEnumerable: IEnumerable<TO2Object>;
+
     property Objects[Index: Integer]: TO2Object read GetObjects; default;
   end;
 
 implementation
 
 uses
-  SysUtils, StrUtils, uO2File;
+  SysUtils;
 
 resourcestring
   SObjectAlreadyExists = 'Object %s already exists.';
@@ -130,6 +137,7 @@ type
     FIndex: Integer;
   public
     constructor Create(const Collection: TO2Objects);
+
     function GetCurrent: TObject;
     function GetCurrentT: TO2Object;
     function IEnumerator<TO2Object>.GetCurrent = GetCurrentT;
@@ -143,6 +151,7 @@ type
     FCollection: TO2Objects;
   public
     constructor Create(const Collection: TO2Objects);
+
     function GetEnumerator: IEnumerator;
     function GetEnumeratorT: IEnumerator<TO2Object>;
     function IEnumerable<TO2Object>.GetEnumerator = GetEnumeratorT;
@@ -219,11 +228,6 @@ begin
     if SameText(AField.FieldName, FieldName) then Exit(AField);
 end;
 
-function TO2Fields.FieldExists(const FieldName: string): Boolean;
-begin
-  Result := Assigned(FindField(FieldName));
-end;
-
 function TO2Fields.AddField(const FieldName: string): TO2Field;
 begin
   Result := TO2Field(Add);
@@ -235,47 +239,9 @@ begin
   end;
 end;
 
-procedure TO2Fields.DeleteField(const FieldName: string);
-var
-  AField: TO2Field;
-begin
-  AField := FindField(FieldName);
-  if Assigned(AField) then
-    Delete(AField.Index);
-end;
-
 function TO2Fields.GetFields(Index: Integer): TO2Field;
 begin
   Result := TO2Field(Items[Index]);
-end;
-
-procedure TO2Fields.ReadFieldValues(const StringList: TStrings);
-var
-  AField: TO2Field;
-begin
-  StringList.BeginUpdate;
-  try
-    StringList.Clear;
-    for AField in Self do
-      StringList.Values[AField.FieldName] := AField.FieldValue;
-  finally
-    StringList.EndUpdate;
-  end;
-end;
-
-procedure TO2Fields.WriteFieldValues(const StringList: TStrings);
-var
-  I: Integer;
-begin
-  BeginUpdate;
-  try
-    Clear;
-    for I := 0 to Pred(StringList.Count) do
-      with AddField(StringList.Names[I]) do
-        FieldValue := StringList.Values[FieldName];
-  finally
-    EndUpdate;
-  end;
 end;
 
 { TO2Object }
@@ -482,11 +448,6 @@ begin
     if SameText(AObject.ObjectID, ObjectID) then Exit(AObject);
 end;
 
-function TO2Objects.ObjectExists(const Name: string): Boolean;
-begin
-  Result := Assigned(FindObject(Name));
-end;
-
 function TO2Objects.AddObject(const Name: string): TO2Object;
 begin
   Result := TO2Object(Add);
@@ -496,15 +457,6 @@ begin
     Delete(Result.Index);
     raise;
   end;
-end;
-
-procedure TO2Objects.DeleteObject(const Name: string);
-var
-  AObject: TO2Object;
-begin
-  AObject := FindObject(Name);
-  if Assigned(AObject) then
-    Delete(AObject.Index);
 end;
 
 function TO2Objects.ImportObject(const AObject: TO2Object): TO2Object;

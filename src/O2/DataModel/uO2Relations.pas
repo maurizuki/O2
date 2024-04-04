@@ -18,8 +18,8 @@ unit uO2Relations;
 interface
 
 uses
-  Classes, Contnrs, SysUtils, Types, System.Generics.Collections,
-  System.Generics.Defaults, uO2Classes, uO2Objects;
+  Classes, SysUtils, Generics.Collections, Generics.Defaults, uO2Classes,
+  uO2Objects;
 
 type
   TO2ObjRelation = class;
@@ -31,6 +31,7 @@ type
     FObjectID2: string;
     FRole1: string;
     FRole2: string;
+
     procedure SetRelationID(const Value: string);
     procedure SetObjectID1(const Value: string);
     procedure SetObjectID2(const Value: string);
@@ -38,7 +39,9 @@ type
     procedure SetRole2(const Value: string);
   public
     constructor Create(Collection: TCollection); override;
+
     procedure Assign(Source: TPersistent); override;
+
     function GetObjectRelation(const AObject: TO2Object): TO2ObjRelation;
   published
     property RelationID: string read FRelationID write SetRelationID;
@@ -61,7 +64,9 @@ type
     function GetRelations(Index: Integer): TO2Relation;
   public
     constructor Create(AOwner: TPersistent);
+
     function GetEnumerator: TO2RelationsEnumerator;
+
     function FindRelationByID(const RelationID: string): TO2Relation;
     function GetObjectRelations(const AObject: TO2Object): TO2ObjRelations;
     procedure DeleteObjectRelations(const AObject: TO2Object);
@@ -70,6 +75,7 @@ type
     procedure GetRoles(const List: TStrings); overload;
     procedure GetRoles(const Objects: IEnumerable<TO2Object>;
       const List: TStrings); overload;
+
     property Relations[Index: Integer]: TO2Relation read GetRelations; default;
   end;
 
@@ -80,6 +86,7 @@ type
     FRole: string;
   public
     constructor Create;
+
     property Relation: TO2Relation read FRelation write FRelation;
     property Obj: TO2Object read FObject write FObject;
     property Role: string read FRole write FRole;

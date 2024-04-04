@@ -94,13 +94,8 @@ const
     ohSHA1
   ];
 
-procedure GetCipherValues(Proc: TGetStrProc);
 function CipherToIdent(Cipher: Longint; var Ident: string): Boolean;
-function IdentToCipher(const Ident: string; var Cipher: Longint): Boolean;
-
-procedure GetHashValues(Proc: TGetStrProc);
 function HashToIdent(Hash: Longint; var Ident: string): Boolean;
-function IdentToHash(const Ident: string; var Hash: Longint): Boolean;
 
 implementation
 
@@ -140,38 +135,14 @@ const
     (Value: ohSHA512;    Name: 'ohSHA512'),
     (Value: ohTiger;     Name: 'ohTiger'));
 
-procedure GetCipherValues(Proc: TGetStrProc);
-var
-  I: Integer;
-begin
-  for I := Low(Ciphers) to High(Ciphers) do Proc(Ciphers[I].Name);
-end;
-
 function CipherToIdent(Cipher: Longint; var Ident: string): Boolean;
 begin
   Result := IntToIdent(Cipher, Ident, Ciphers);
 end;
 
-function IdentToCipher(const Ident: string; var Cipher: Longint): Boolean;
-begin
-  Result := IdentToInt(Ident, Cipher, Ciphers);
-end;
-
-procedure GetHashValues(Proc: TGetStrProc);
-var
-  I: Integer;
-begin
-  for I := Low(Hashes) to High(Hashes) do Proc(Hashes[I].Name);
-end;
-
 function HashToIdent(Hash: Longint; var Ident: string): Boolean;
 begin
   Result := IntToIdent(Hash, Ident, Hashes);
-end;
-
-function IdentToHash(const Ident: string; var Hash: Longint): Boolean;
-begin
-  Result := IdentToInt(Ident, Hash, Hashes);
 end;
 
 end.
