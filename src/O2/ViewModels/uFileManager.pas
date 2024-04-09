@@ -220,8 +220,8 @@ end;
 function TFileManager.GetNextEvent(const AObject: TO2Object;
   out NextDate: TDateTime): Boolean;
 begin
-  Result := O2File.Rules.GetNextEvent(
-    AObject, FEventFilter.StartDate, NextDate, FEventFilter.UseParamsForNextEvent);
+  Result := O2File.Rules.GetNextEvent(AObject, FEventFilter.StartDate, NextDate,
+    FEventFilter.UseParamsForNextEvent);
 end;
 
 function TFileManager.GetObjectName: string;
