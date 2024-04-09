@@ -1623,7 +1623,7 @@ function TMainForm.RelationToListItem(const ARelation: TO2Relation;
 var
   AObjRelation: TO2ObjRelation;
 begin
-  AObjRelation := ARelation.GetObjectRelation(AObject);
+  AObjRelation := FModel.O2File.GetObjectRelation(AObject, ARelation);
   try
     Result := RelationToListItem(AObjRelation, Item);
   finally
@@ -1890,8 +1890,7 @@ begin
       RelationsView.Clear;
       if HasSelectedObject then
       begin
-        ObjRelations := FModel.O2File.Relations.GetObjectRelations(
-          SelectedObject);
+        ObjRelations := FModel.O2File.GetObjectRelations(SelectedObject);
         try
           for AObjRelation in ObjRelations do
             RelationToListItem(AObjRelation, nil);
@@ -2481,8 +2480,8 @@ var
   AObjRelation: TO2ObjRelation;
   Item: TListItem;
 begin
-  AObjRelation := TO2Relation(RelationsView.Selected.Data).GetObjectRelation(
-    SelectedObject);
+  AObjRelation := FModel.O2File.GetObjectRelation(SelectedObject,
+    SelectedRelation);
   try
     Item := ObjectsView.FindData(0, AObjRelation.Obj, True, False);
     if Assigned(Item) then

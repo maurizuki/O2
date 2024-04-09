@@ -296,7 +296,7 @@ begin
     begin
       if FObjRelations = nil then
       begin
-        FObjRelations := FO2File.Relations.GetObjectRelations(AObject);
+        FObjRelations := FO2File.GetObjectRelations(AObject);
         FObjRelations.SortByObjName;
       end;
 

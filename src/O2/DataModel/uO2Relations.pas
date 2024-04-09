@@ -41,8 +41,6 @@ type
     constructor Create(Collection: TCollection); override;
 
     procedure Assign(Source: TPersistent); override;
-
-    function GetObjectRelation(const AObject: TO2Object): TO2ObjRelation;
   published
     property RelationID: string read FRelationID write SetRelationID;
     property ObjectID1: string read FObjectID1 write SetObjectID1;
@@ -57,8 +55,6 @@ type
     property Current: TO2Relation read GetCurrent;
   end;
 
-  TO2ObjRelations = class;
-
   TO2Relations = class(TO2Collection)
   private
     function GetRelations(Index: Integer): TO2Relation;
@@ -68,7 +64,6 @@ type
     function GetEnumerator: TO2RelationsEnumerator;
 
     function FindRelationByID(const RelationID: string): TO2Relation;
-    function GetObjectRelations(const AObject: TO2Object): TO2ObjRelations;
     procedure DeleteObjectRelations(const AObject: TO2Object);
     function AddRelation: TO2Relation;
     procedure GetRoles(const List: TStrings); overload;
@@ -84,11 +79,12 @@ type
     FObject: TO2Object;
     FRole: string;
   public
-    constructor Create;
+    constructor Create(const ARelation: TO2Relation; const AObject: TO2Object;
+      const ARole: string);
 
-    property Relation: TO2Relation read FRelation write FRelation;
-    property Obj: TO2Object read FObject write FObject;
-    property Role: string read FRole write FRole;
+    property Relation: TO2Relation read FRelation;
+    property Obj: TO2Object read FObject;
+    property Role: string read FRole;
   end;
 
   TO2ObjRelations = class(TObjectList<TO2ObjRelation>)
@@ -97,6 +93,12 @@ type
     procedure SortByRole;
   end;
 
+implementation
+
+resourcestring
+  SRelationAlreadyExists = 'Relation %s already exists.';
+
+type
   TCompareObjRelationByObjName = class(TComparer<TO2ObjRelation>)
   public
     function Compare(const Left, Right: TO2ObjRelation): Integer; override;
@@ -106,11 +108,6 @@ type
   public
     function Compare(const Left, Right: TO2ObjRelation): Integer; override;
   end;
-
-implementation
-
-resourcestring
-  SRelationAlreadyExists = 'Relation %s already exists.';
 
 { TO2Relation }
 
@@ -139,28 +136,6 @@ begin
   end
   else
     inherited Assign(Source);
-end;
-
-function TO2Relation.GetObjectRelation(
-  const AObject: TO2Object): TO2ObjRelation;
-begin
-  Result := TO2ObjRelation.Create;
-  try
-    Result.Relation := Self;
-    if SameText(ObjectID1, AObject.ObjectID) then
-    begin
-      Result.Obj := TO2Objects(AObject.Collection).FindObjectByID(ObjectID2);
-      Result.Role := Role2;
-    end
-    else if SameText(ObjectID2, AObject.ObjectID) then
-    begin
-      Result.Obj := TO2Objects(AObject.Collection).FindObjectByID(ObjectID1);
-      Result.Role := Role1;
-    end;
-  except
-    FreeAndNil(Result);
-    raise;
-  end;
 end;
 
 procedure TO2Relation.SetRelationID(const Value: string);
@@ -242,23 +217,6 @@ begin
     if SameText(ARelation.RelationID, RelationID) then Exit(ARelation);
 end;
 
-function TO2Relations.GetObjectRelations(
-  const AObject: TO2Object): TO2ObjRelations;
-var
-  ARelation: TO2Relation;
-begin
-  Result := TO2ObjRelations.Create;
-  try
-    for ARelation in Self do
-      if SameText(ARelation.ObjectID1, AObject.ObjectID)
-        or SameText(ARelation.ObjectID2, AObject.ObjectID) then
-        Result.Add(ARelation.GetObjectRelation(AObject));
-  except
-    FreeAndNil(Result);
-    raise;
-  end;
-end;
-
 procedure TO2Relations.DeleteObjectRelations(const AObject: TO2Object);
 var
   I: Integer;
@@ -331,12 +289,12 @@ end;
 
 { TO2ObjRelation }
 
-constructor TO2ObjRelation.Create;
+constructor TO2ObjRelation.Create(const ARelation: TO2Relation;
+  const AObject: TO2Object; const ARole: string);
 begin
-  inherited Create;
-  FRelation := nil;
-  FObject := nil;
-  FRole := '';
+  FRelation := ARelation;
+  FObject := AObject;
+  FRole := ARole;
 end;
 
 { TO2ObjRelations }

@@ -72,6 +72,10 @@ type
 
     class procedure TestAlgorithms;
 
+    function GetObjectRelation(const AObject: TO2Object;
+      const ARelation: TO2Relation): TO2ObjRelation;
+    function GetObjectRelations(const AObject: TO2Object): TO2ObjRelations;
+
     procedure Load(PasswordProvider: IPasswordProvider);
     procedure Save;
 
@@ -195,6 +199,34 @@ begin
   TestHash(TDCP_sha384);
   TestHash(TDCP_sha512);
   TestHash(TDCP_tiger);
+end;
+
+function TO2File.GetObjectRelation(const AObject: TO2Object;
+  const ARelation: TO2Relation): TO2ObjRelation;
+begin
+  if SameText(ARelation.ObjectID1, AObject.ObjectID) then
+    Exit(TO2ObjRelation.Create(ARelation,
+      Objects.FindObjectByID(ARelation.ObjectID2), ARelation.Role2));
+
+  if SameText(ARelation.ObjectID2, AObject.ObjectID) then
+    Exit(TO2ObjRelation.Create(ARelation,
+      Objects.FindObjectByID(ARelation.ObjectID1), ARelation.Role1));
+
+  Result := nil;
+end;
+
+function TO2File.GetObjectRelations(const AObject: TO2Object): TO2ObjRelations;
+var
+  ARelation: TO2Relation;
+  AObjRelation: TO2ObjRelation;
+begin
+  Result := TO2ObjRelations.Create;
+
+  for ARelation in Relations do
+  begin
+    AObjRelation := GetObjectRelation(AObject, ARelation);
+    if Assigned(AObjRelation) then Result.Add(AObjRelation);
+  end;
 end;
 
 procedure TO2File.Load(PasswordProvider: IPasswordProvider);

@@ -346,7 +346,7 @@ var
   AObjRelations: TO2ObjRelations;
   AObjRelation: TO2ObjRelation;
 begin
-  AObjRelations := FO2File.Relations.GetObjectRelations(Obj);
+  AObjRelations := FO2File.GetObjectRelations(Obj);
   try
     if AObjRelations.Count > 0 then
     begin
