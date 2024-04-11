@@ -75,3 +75,6 @@ modules/
 # Compiled resources
 src/O2/Dictionaries.res
 src/O2/Icons.res
+
+# DUnitX output
+dunitx-results.xml

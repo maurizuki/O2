@@ -15,6 +15,9 @@
         <Projects Include="O2\ITA\o2_ITA.bdsproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="Tests\O2TestProject.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -59,14 +62,23 @@
     <Target Name="o2_ITA:Make">
         <MSBuild Projects="O2\ITA\o2_ITA.bdsproj" Targets="Make"/>
     </Target>
+    <Target Name="O2TestProject">
+        <MSBuild Projects="Tests\O2TestProject.dproj"/>
+    </Target>
+    <Target Name="O2TestProject:Clean">
+        <MSBuild Projects="Tests\O2TestProject.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="O2TestProject:Make">
+        <MSBuild Projects="Tests\O2TestProject.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="o2;O2Portable;o2_ENU;o2_ITA"/>
+        <CallTarget Targets="o2;O2Portable;o2_ENU;o2_ITA;O2TestProject"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="o2:Clean;O2Portable:Clean;o2_ENU:Clean;o2_ITA:Clean"/>
+        <CallTarget Targets="o2:Clean;O2Portable:Clean;o2_ENU:Clean;o2_ITA:Clean;O2TestProject:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="o2:Make;O2Portable:Make;o2_ENU:Make;o2_ITA:Make"/>
+        <CallTarget Targets="o2:Make;O2Portable:Make;o2_ENU:Make;o2_ITA:Make;O2TestProject:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
