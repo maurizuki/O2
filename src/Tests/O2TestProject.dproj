@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ProjectGuid>{AF2A1BC1-D2E6-4C37-9A0A-7A1CBF60B8A4}</ProjectGuid>
         <ProjectVersion>19.5</ProjectVersion>
-        <FrameworkType>None</FrameworkType>
+        <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
@@ -47,7 +47,7 @@
         <DCC_S>false</DCC_S>
         <DCC_F>false</DCC_F>
         <DCC_K>false</DCC_K>
-        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
+        <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
         <UsingDelphiRTL>true</UsingDelphiRTL>
         <Icon_MainIcon>$(BDS)\bin\delphi_PROJECTICON.ico</Icon_MainIcon>
         <Icns_MainIcns>$(BDS)\bin\delphi_PROJECTICNS.icns</Icns_MainIcns>
@@ -116,7 +116,51 @@
         <DCCReference Include="..\DCPcrypt2\Hashes\DCPsha256.pas"/>
         <DCCReference Include="..\DCPcrypt2\Hashes\DCPsha512.pas"/>
         <DCCReference Include="..\DCPcrypt2\Hashes\DCPtiger.pas"/>
-        <DCCReference Include="Cryptography.pas"/>
+        <DCCReference Include="..\O2\Utils\SZCRC32.pas"/>
+        <DCCReference Include="..\Markdown\MarkdownCommonMark.pas"/>
+        <DCCReference Include="..\Markdown\MarkdownHTMLEntities.pas"/>
+        <DCCReference Include="..\Markdown\MarkdownProcessor.pas"/>
+        <DCCReference Include="..\Markdown\MarkdownUnicodeUtils.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.DateMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.DefaultMatcherFactory.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.DictionaryMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.L33tMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.Matcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.MatcherFactory.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.PasswordScoring.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.RegexMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.RepeatMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.Result.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.SequenceMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.SpatialMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.Utility.pas"/>
+        <DCCReference Include="..\O2\DataModel\uO2Classes.pas"/>
+        <DCCReference Include="..\O2\DataModel\uO2Defs.pas"/>
+        <DCCReference Include="..\O2\DataModel\uO2File.pas"/>
+        <DCCReference Include="..\O2\DataModel\uO2Objects.pas"/>
+        <DCCReference Include="..\O2\DataModel\uO2Relations.pas"/>
+        <DCCReference Include="..\O2\DataModel\uO2Rules.pas"/>
+        <DCCReference Include="..\O2\DataModel\uO2Utils.pas"/>
+        <DCCReference Include="..\O2\DataModel\uO2Xml.pas"/>
+        <DCCReference Include="..\O2\uServices.pas"/>
+        <DCCReference Include="..\O2\uGlobal.pas"/>
+        <DCCReference Include="..\O2\Utils\uO2ObjectsUtils.pas"/>
+        <DCCReference Include="..\O2\Utils\uUtils.pas"/>
+        <DCCReference Include="..\O2\Utils\uHTMLHelper.pas"/>
+        <DCCReference Include="..\O2\ViewModels\uEncryptionPropsModel.pas"/>
+        <DCCReference Include="..\O2\ViewModels\uEventFilters.pas"/>
+        <DCCReference Include="..\O2\ViewModels\uFileManager.pas"/>
+        <DCCReference Include="..\O2\ViewModels\uFilePropsModel.pas"/>
+        <DCCReference Include="..\O2\ViewModels\uHTMLExportModel.pas"/>
+        <DCCReference Include="..\O2\ViewModels\uObjectModels.pas"/>
+        <DCCReference Include="..\O2\ViewModels\uPasswordStrengthInfo.pas"/>
+        <DCCReference Include="..\O2\ViewModels\uPrintModel.pas"/>
+        <DCCReference Include="..\O2\ViewModels\uRelationModels.pas"/>
+        <DCCReference Include="..\O2\ViewModels\uReplaceOperations.pas"/>
+        <DCCReference Include="..\O2\ViewModels\uRuleModels.pas"/>
+        <DCCReference Include="Testing.Cryptography.pas"/>
+        <DCCReference Include="Testing.FilePropsModel.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
