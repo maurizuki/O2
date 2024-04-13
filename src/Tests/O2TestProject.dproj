@@ -116,8 +116,7 @@
         <DCCReference Include="..\DCPcrypt2\Hashes\DCPsha256.pas"/>
         <DCCReference Include="..\DCPcrypt2\Hashes\DCPsha512.pas"/>
         <DCCReference Include="..\DCPcrypt2\Hashes\DCPtiger.pas"/>
-        <DCCReference Include="TestCiphers.pas"/>
-        <DCCReference Include="TestHashes.pas"/>
+        <DCCReference Include="Cryptography.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

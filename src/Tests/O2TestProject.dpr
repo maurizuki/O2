@@ -42,8 +42,7 @@ uses
   DCPsha256 in '..\DCPcrypt2\Hashes\DCPsha256.pas',
   DCPsha512 in '..\DCPcrypt2\Hashes\DCPsha512.pas',
   DCPtiger in '..\DCPcrypt2\Hashes\DCPtiger.pas',
-  TestCiphers in 'TestCiphers.pas',
-  TestHashes in 'TestHashes.pas';
+  Cryptography in 'Cryptography.pas';
 
 {$IFNDEF TESTINSIGHT}
 var
