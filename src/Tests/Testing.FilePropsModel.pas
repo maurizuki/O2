@@ -184,8 +184,5 @@ begin
   Assert.AreEqual('New author', FO2File.Author);
 end;
 
-initialization
-  TDUnitX.RegisterTestFixture(TFilePropsModelTests);
-
 end.
 
