@@ -94,33 +94,33 @@ procedure TFilePropsModelTests.LoadTitle;
 var
   Model: IFileProps;
 begin
-  FO2File.Title := 'A brilliant title';
+  FO2File.Title := 'Original title';
 
   Model := TFilePropsModel.Create(FO2File);
 
-  Assert.AreEqual('A brilliant title', Model.Title);
+  Assert.AreEqual('Original title', Model.Title);
 end;
 
 procedure TFilePropsModelTests.LoadDescription;
 var
   Model: IFileProps;
 begin
-  FO2File.Description := 'A brilliant description';
+  FO2File.Description := 'Original description';
 
   Model := TFilePropsModel.Create(FO2File);
 
-  Assert.AreEqual('A brilliant description', Model.Description);
+  Assert.AreEqual('Original description', Model.Description);
 end;
 
 procedure TFilePropsModelTests.LoadAuthor;
 var
   Model: IFileProps;
 begin
-  FO2File.Author := 'maurizuki';
+  FO2File.Author := 'Original author';
 
   Model := TFilePropsModel.Create(FO2File);
 
-  Assert.AreEqual('maurizuki', Model.Author);
+  Assert.AreEqual('Original author', Model.Author);
 end;
 
 procedure TFilePropsModelTests.LoadCipher(Cipher: TO2Cipher;
@@ -154,10 +154,10 @@ var
 begin
   Model := TFilePropsModel.Create(FO2File);
 
-  Model.Title := 'A brilliant title';
+  Model.Title := 'New title';
   Model.ApplyChanges;
 
-  Assert.AreEqual('A brilliant title', FO2File.Title);
+  Assert.AreEqual('New title', FO2File.Title);
 end;
 
 procedure TFilePropsModelTests.SaveDescription;
@@ -166,10 +166,10 @@ var
 begin
   Model := TFilePropsModel.Create(FO2File);
 
-  Model.Description := 'A brilliant description';
+  Model.Description := 'New description';
   Model.ApplyChanges;
 
-  Assert.AreEqual('A brilliant description', FO2File.Description);
+  Assert.AreEqual('New description', FO2File.Description);
 end;
 
 procedure TFilePropsModelTests.SaveAuthor;
@@ -178,10 +178,10 @@ var
 begin
   Model := TFilePropsModel.Create(FO2File);
 
-  Model.Author := 'maurizuki';
+  Model.Author := 'New author';
   Model.ApplyChanges;
 
-  Assert.AreEqual('maurizuki', FO2File.Author);
+  Assert.AreEqual('New author', FO2File.Author);
 end;
 
 initialization
