@@ -1,5 +1,7 @@
 program O2TestProject;
 
+{$R ..\O2\Dictionaries.res}
+
 {$IFNDEF TESTINSIGHT}
 {$APPTYPE CONSOLE}
 {$ENDIF}
@@ -86,7 +88,8 @@ uses
   uReplaceOperations in '..\O2\ViewModels\uReplaceOperations.pas',
   uRuleModels in '..\O2\ViewModels\uRuleModels.pas',
   Testing.Cryptography in 'Testing.Cryptography.pas',
-  Testing.FilePropsModel in 'Testing.FilePropsModel.pas';
+  Testing.FilePropsModel in 'Testing.FilePropsModel.pas',
+  Testing.ObjectModels in 'Testing.ObjectModels.pas';
 
 {$IFNDEF TESTINSIGHT}
 var
