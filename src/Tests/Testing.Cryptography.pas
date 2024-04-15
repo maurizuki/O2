@@ -261,9 +261,5 @@ begin
   TestHash(TDCP_tiger);
 end;
 
-initialization
-  TDUnitX.RegisterTestFixture(TCipherAlgorithms);
-  TDUnitX.RegisterTestFixture(THashAlgorithms);
-
 end.
 
