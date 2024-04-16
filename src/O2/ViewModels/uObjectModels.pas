@@ -60,13 +60,13 @@ type
     FFieldValue: string;
     FObjectNotes: TStrings;
     FMarkdown: Boolean;
+
     procedure Build;
     procedure EnsureAssigned;
+    procedure EvaluatePasswordStrength(const APassword: string); override;
   public
     constructor Create(const O2File: TO2File);
     destructor Destroy; override;
-
-    procedure EvaluatePasswordStrength(const APassword: string); override;
 
     function CanAddField: Boolean;
     procedure AddField;
