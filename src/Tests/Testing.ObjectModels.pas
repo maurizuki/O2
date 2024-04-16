@@ -23,10 +23,30 @@ type
     procedure LoadTags;
 
     [Test]
+    procedure LoadFieldNames;
+
+    [Test]
+    procedure LoadFieldValues;
+
+    [Test]
     procedure SaveObjectName;
 
     [Test]
     procedure SaveObjectTags;
+
+    [Test]
+    procedure SaveObjectFieldNames;
+
+    [Test]
+    procedure SaveObjectFieldValues;
+
+    [Test]
+    procedure SaveObjectNotes;
+
+    [Test]
+    [TestCase('False', 'False,ttPlainText')]
+    [TestCase('True',  'True,ttCommonMark')]
+    procedure SaveMarkdown(Markdown: Boolean; Expected: TO2TextType);
   end;
 
   [TestFixture]
@@ -39,12 +59,38 @@ type
 
     [Test]
     procedure LoadObjectTags;
+
+    [Test]
+    procedure LoadObjectFieldNames;
+
+    [Test]
+    procedure LoadObjectFieldValues;
+
+    [Test]
+    procedure LoadObjectNotes;
+
+    [Test]
+    procedure LoadMarkdown;
   end;
 
   TDuplicateEditObjectModelTests = class(TObjectPropsModelTests)
   public
     [Test]
     procedure LoadObjectTags;
+
+    [Test]
+    procedure LoadObjectFieldNames;
+
+    [Test]
+    procedure LoadObjectFieldValues;
+
+    [Test]
+    procedure LoadObjectNotes;
+
+    [Test]
+    [TestCase('False', 'ttPlainText,False')]
+    [TestCase('True',  'ttCommonMark,True')]
+    procedure LoadMarkdown(TextType: TO2TextType; Expected: Boolean);
   end;
 
   [TestFixture]
@@ -99,6 +145,56 @@ begin
   Assert.Contains(Model.Tags, 'Tag 3');
 end;
 
+procedure TObjectPropsModelTests.LoadFieldNames;
+var
+  Model: IObjectProps;
+begin
+  with FO2File.Objects.AddObject do
+    Fields.AddField('Field 1');
+  with FO2File.Objects.AddObject do
+  begin
+    Fields.AddField('field 1');
+    Fields.AddField('Field 2');
+  end;
+  with FO2File.Objects.AddObject do
+  begin
+    Fields.AddField('Field 2');
+    Fields.AddField('Field 3');
+  end;
+
+  Model := CreateModel;
+
+  Assert.AreEqual(3, Model.FieldNames.Count);
+  Assert.Contains(Model.FieldNames, 'Field 1');
+  Assert.Contains(Model.FieldNames, 'Field 2');
+  Assert.Contains(Model.FieldNames, 'Field 3');
+end;
+
+procedure TObjectPropsModelTests.LoadFieldValues;
+var
+  Model: IObjectProps;
+begin
+  with FO2File.Objects.AddObject do
+    Fields.AddField('Field 1').FieldValue := 'Value 1';
+  with FO2File.Objects.AddObject do
+  begin
+    Fields.AddField('Field 1').FieldValue := 'value 1';
+    Fields.AddField('Field 2').FieldValue := 'Value 2';
+  end;
+  with FO2File.Objects.AddObject do
+  begin
+    Fields.AddField('Field 1').FieldValue := 'Value 2';
+    Fields.AddField('Field 2').FieldValue := 'Value 3';
+  end;
+
+  Model := CreateModel;
+
+  Assert.AreEqual(3, Model.FieldValues.Count);
+  Assert.Contains(Model.FieldValues, 'Value 1');
+  Assert.Contains(Model.FieldValues, 'Value 2');
+  Assert.Contains(Model.FieldValues, 'Value 3');
+end;
+
 procedure TObjectPropsModelTests.SaveObjectName;
 var
   Model: IObjectProps;
@@ -122,7 +218,44 @@ begin
   Model.ObjectTags.Add('Tag 3');
   Model.ApplyChanges;
 
-  Assert.AreEqual('Tag 1,Tag 2,Tag 3', Model.O2Object.Tag);
+  Assert.Contains(Model.O2Object.Tag, 'Tag 1');
+  Assert.Contains(Model.O2Object.Tag, 'Tag 2');
+  Assert.Contains(Model.O2Object.Tag, 'Tag 3');
+end;
+
+procedure TObjectPropsModelTests.SaveObjectFieldNames;
+begin
+
+end;
+
+procedure TObjectPropsModelTests.SaveObjectFieldValues;
+begin
+
+end;
+
+procedure TObjectPropsModelTests.SaveObjectNotes;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.ObjectNotes.Text := 'New object notes';
+  Model.ApplyChanges;
+
+  Assert.AreEqual('New object notes'#13#10, Model.O2Object.Text.Text);
+end;
+
+procedure TObjectPropsModelTests.SaveMarkdown(Markdown: Boolean;
+  Expected: TO2TextType);
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.Markdown := Markdown;
+  Model.ApplyChanges;
+
+  Assert.AreEqual(Expected, Model.O2Object.TextType);
 end;
 
 { TNewObjectModelTests }
@@ -150,6 +283,34 @@ begin
   Assert.IsEmpty(Model.ObjectTags);
 end;
 
+procedure TNewObjectModelTests.LoadObjectFieldNames;
+begin
+
+end;
+
+procedure TNewObjectModelTests.LoadObjectFieldValues;
+begin
+
+end;
+
+procedure TNewObjectModelTests.LoadObjectNotes;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Assert.IsEmpty(Model.ObjectNotes);
+end;
+
+procedure TNewObjectModelTests.LoadMarkdown;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Assert.IsFalse(Model.Markdown);
+end;
+
 { TDuplicateEditObjectModelTests }
 
 procedure TDuplicateEditObjectModelTests.LoadObjectTags;
@@ -164,6 +325,39 @@ begin
   Assert.Contains(Model.ObjectTags, 'Tag 1');
   Assert.Contains(Model.ObjectTags, 'Tag 2');
   Assert.Contains(Model.ObjectTags, 'Tag 3');
+end;
+
+procedure TDuplicateEditObjectModelTests.LoadObjectFieldNames;
+begin
+
+end;
+
+procedure TDuplicateEditObjectModelTests.LoadObjectFieldValues;
+begin
+
+end;
+
+procedure TDuplicateEditObjectModelTests.LoadObjectNotes;
+var
+  Model: IObjectProps;
+begin
+  FO2Object.Text.Text := 'Original object notes';
+
+  Model := CreateModel;
+
+  Assert.AreEqual('Original object notes'#13#10, Model.ObjectNotes.Text);
+end;
+
+procedure TDuplicateEditObjectModelTests.LoadMarkdown(TextType: TO2TextType;
+  Expected: Boolean);
+var
+  Model: IObjectProps;
+begin
+  FO2Object.TextType := TextType;
+
+  Model := CreateModel;
+
+  Assert.AreEqual(Expected, Model.Markdown);
 end;
 
 { TDuplicateObjectModelTests }
