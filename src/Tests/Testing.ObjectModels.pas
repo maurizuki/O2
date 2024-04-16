@@ -5,6 +5,14 @@ interface
 uses
   DUnitX.TestFramework, uO2File, uO2Objects, uServices;
 
+{ TODO -omaurizuki -cTest : Test CanAddField method }
+{ TODO -omaurizuki -cTest : Test AddField method }
+{ TODO -omaurizuki -cTest : Test CanReplaceField method }
+{ TODO -omaurizuki -cTest : Test ReplaceField method }
+{ TODO -omaurizuki -cTest : Test CanDeleteField method }
+{ TODO -omaurizuki -cTest : Test DeleteField method }
+{ TODO -omaurizuki -cTest : Test SwapFields method }
+
 type
   TObjectPropsModelTests = class
   protected
@@ -45,7 +53,7 @@ type
 
     [Test]
     [TestCase('False', 'False,ttPlainText')]
-    [TestCase('True',  'True,ttCommonMark')]
+    [TestCase('True' , 'True,ttCommonMark')]
     procedure SaveMarkdown(Markdown: Boolean; Expected: TO2TextType);
 
     [Test]
@@ -95,7 +103,7 @@ type
 
     [Test]
     [TestCase('False', 'ttPlainText,False')]
-    [TestCase('True',  'ttCommonMark,True')]
+    [TestCase('True' , 'ttCommonMark,True')]
     procedure LoadMarkdown(TextType: TO2TextType; Expected: Boolean);
   end;
 
