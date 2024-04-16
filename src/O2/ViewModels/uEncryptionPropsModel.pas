@@ -30,6 +30,7 @@ type
     FHashIndex: Integer;
     FPassword: string;
     FPasswordConfirmation: string;
+
     function GetCiphers: TStrings;
     function GetCipherIndex: Integer;
     function GetHashes: TStrings;
@@ -41,11 +42,11 @@ type
     procedure SetHashIndex(const Value: Integer);
     procedure SetPassword(const Value: string);
     procedure SetPasswordConfirmation(const Value: string);
+  protected
+    procedure EvaluatePasswordStrength(const APassword: string); override;
   public
     constructor Create(const O2File: TO2File);
     destructor Destroy; override;
-
-    procedure EvaluatePasswordStrength(const APassword: string); override;
 
     function IsEncrypted: Boolean;
 
