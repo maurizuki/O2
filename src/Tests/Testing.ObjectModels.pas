@@ -47,6 +47,12 @@ type
     [TestCase('False', 'False,ttPlainText')]
     [TestCase('True',  'True,ttCommonMark')]
     procedure SaveMarkdown(Markdown: Boolean; Expected: TO2TextType);
+
+    [Test]
+    procedure Valid;
+
+    [Test]
+    procedure NotValidEmptyObjectName;
   end;
 
   [TestFixture]
@@ -114,7 +120,7 @@ type
 implementation
 
 uses
-  uObjectModels;
+  Classes, uObjectModels;
 
 { TObjectPropsModelTests }
 
@@ -224,13 +230,43 @@ begin
 end;
 
 procedure TObjectPropsModelTests.SaveObjectFieldNames;
+var
+  Model: IObjectProps;
 begin
+  Model := CreateModel;
 
+  Model.FieldName := 'Field 1';
+  Model.AddField;
+  Model.FieldName := 'Field 2';
+  Model.AddField;
+  Model.FieldName := 'Field 3';
+  Model.AddField;
+  Model.ApplyChanges;
+
+  Assert.AreEqual(3, Model.O2Object.Fields.Count);
+  Assert.AreEqual('Field 1', Model.O2Object.Fields[0].FieldName);
+  Assert.AreEqual('Field 2', Model.O2Object.Fields[1].FieldName);
+  Assert.AreEqual('Field 3', Model.O2Object.Fields[2].FieldName);
 end;
 
 procedure TObjectPropsModelTests.SaveObjectFieldValues;
+var
+  Model: IObjectProps;
 begin
+  Model := CreateModel;
 
+  Model.FieldValue := 'Value 1';
+  Model.AddField;
+  Model.FieldValue := 'Value 2';
+  Model.AddField;
+  Model.FieldValue := 'Value 3';
+  Model.AddField;
+  Model.ApplyChanges;
+
+  Assert.AreEqual(3, Model.O2Object.Fields.Count);
+  Assert.AreEqual('Value 1', Model.O2Object.Fields[0].FieldValue);
+  Assert.AreEqual('Value 2', Model.O2Object.Fields[1].FieldValue);
+  Assert.AreEqual('Value 3', Model.O2Object.Fields[2].FieldValue);
 end;
 
 procedure TObjectPropsModelTests.SaveObjectNotes;
@@ -256,6 +292,30 @@ begin
   Model.ApplyChanges;
 
   Assert.AreEqual(Expected, Model.O2Object.TextType);
+end;
+
+procedure TObjectPropsModelTests.Valid;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.ObjectName := 'Valid object name';
+  Model.ApplyChanges;
+
+  Assert.IsTrue(Model.Valid);
+end;
+
+procedure TObjectPropsModelTests.NotValidEmptyObjectName;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.ObjectName := '';
+  Model.ApplyChanges;
+
+  Assert.IsFalse(Model.Valid);
 end;
 
 { TNewObjectModelTests }
@@ -284,13 +344,21 @@ begin
 end;
 
 procedure TNewObjectModelTests.LoadObjectFieldNames;
+var
+  Model: IObjectProps;
 begin
+  Model := CreateModel;
 
+  Assert.AreEqual(0, Model.FieldCount);
 end;
 
 procedure TNewObjectModelTests.LoadObjectFieldValues;
+var
+  Model: IObjectProps;
 begin
+  Model := CreateModel;
 
+  Assert.AreEqual(0, Model.FieldCount);
 end;
 
 procedure TNewObjectModelTests.LoadObjectNotes;
@@ -328,13 +396,35 @@ begin
 end;
 
 procedure TDuplicateEditObjectModelTests.LoadObjectFieldNames;
+var
+  Model: IObjectProps;
 begin
+  FO2Object.Fields.AddField('Field 1');
+  FO2Object.Fields.AddField('Field 2');
+  FO2Object.Fields.AddField('Field 3');
 
+  Model := CreateModel;
+
+  Assert.AreEqual(3, Model.FieldCount);
+  Assert.AreEqual('Field 1', Model.ObjectFieldNames[0]);
+  Assert.AreEqual('Field 2', Model.ObjectFieldNames[1]);
+  Assert.AreEqual('Field 3', Model.ObjectFieldNames[2]);
 end;
 
 procedure TDuplicateEditObjectModelTests.LoadObjectFieldValues;
+var
+  Model: IObjectProps;
 begin
+  FO2Object.Fields.AddField('Field 1').FieldValue := 'Value 1';
+  FO2Object.Fields.AddField('Field 2').FieldValue := 'Value 2';
+  FO2Object.Fields.AddField('Field 3').FieldValue := 'Value 3';
 
+  Model := CreateModel;
+
+  Assert.AreEqual(3, Model.FieldCount);
+  Assert.AreEqual('Value 1', Model.ObjectFieldValues[0]);
+  Assert.AreEqual('Value 2', Model.ObjectFieldValues[1]);
+  Assert.AreEqual('Value 3', Model.ObjectFieldValues[2]);
 end;
 
 procedure TDuplicateEditObjectModelTests.LoadObjectNotes;
