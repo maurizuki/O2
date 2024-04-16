@@ -83,9 +83,9 @@ type
 
     property ObjectName: string read GetObjectName write SetObjectName;
     property Tags: TStrings read GetTags;
+    property ObjectTags: TStrings read GetObjectTags write SetObjectTags;
     property FieldNames: TStrings read GetFieldNames;
     property FieldValues: TStrings read GetFieldValues;
-    property ObjectTags: TStrings read GetObjectTags write SetObjectTags;
     property ObjectFieldNames[Index: Integer]: string
       read GetObjectFieldNames;
     property ObjectFieldValues[Index: Integer]: string
