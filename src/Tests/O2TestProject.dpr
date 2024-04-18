@@ -88,7 +88,8 @@ uses
   Testing.Cryptography in 'Testing.Cryptography.pas',
   Testing.FilePropsModel in 'Testing.FilePropsModel.pas',
   Testing.ObjectModels in 'Testing.ObjectModels.pas',
-  Testing.RelationModels in 'Testing.RelationModels.pas';
+  Testing.RelationModels in 'Testing.RelationModels.pas',
+  Testing.RuleModels in 'Testing.RuleModels.pas';
 
 {$IFNDEF TESTINSIGHT}
 var
