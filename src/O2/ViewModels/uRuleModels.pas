@@ -25,6 +25,7 @@ type
   private
     FRuleTypes: TStrings;
     FDateFormats: TStrings;
+
     function GetRuleName: string;
     function GetRuleTypes: TStrings;
     function GetRuleTypeIndex: Integer;
@@ -71,6 +72,7 @@ type
     FDaysAfter: Integer;
     FHighlightColor: TColor;
     FHighlightTextColor: TColor;
+
     procedure Build;
     procedure EnsureAssigned;
   public
