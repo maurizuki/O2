@@ -17,6 +17,27 @@ type
 
     [TearDown]
     procedure TearDown;
+
+    [Test]
+    procedure LoadRuleTypes;
+
+    [Test]
+    procedure SaveRuleName;
+
+    [Test]
+    [TestCase('HyperLink'     , '0,rtHyperLink')]
+    [TestCase('Email'         , '1,rtEmail')]
+    [TestCase('Password'      , '2,rtPassword')]
+    [TestCase('ExpirationDate', '3,rtExpirationDate')]
+    [TestCase('Recurrence'    , '4,rtRecurrence')]
+    [TestCase('Highlight'     , '5,rtHighlight')]
+    procedure SaveRuleTypeIndex(Index: Integer; Expected: TO2RuleType);
+
+    [Test]
+    procedure SaveFieldNameMask;
+
+    [Test]
+    procedure SaveFieldValueMask;
   end;
 
   [TestFixture]
@@ -26,6 +47,12 @@ type
   public
     [Test]
     procedure LoadRuleName;
+
+    [Test]
+    procedure LoadFieldNameMask;
+
+    [Test]
+    procedure LoadFieldValueMask;
   end;
 
   TDuplicateEditRuleModelTests = class(TRulePropsModelTests)
@@ -34,6 +61,12 @@ type
   public
     [Setup]
     procedure Setup; override;
+
+    [Test]
+    procedure LoadFieldNameMask;
+
+    [Test]
+    procedure LoadFieldValueMask;
   end;
 
   [TestFixture]
@@ -71,6 +104,70 @@ begin
   FO2File.Free;
 end;
 
+procedure TRulePropsModelTests.LoadRuleTypes;
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Assert.AreEqual(6, Model.RuleTypes.Count);
+  Assert.Contains(Model.RuleTypes, 'Internet link');
+  Assert.Contains(Model.RuleTypes, 'E-mail address');
+  Assert.Contains(Model.RuleTypes, 'Password');
+  Assert.Contains(Model.RuleTypes, 'Expiration date');
+  Assert.Contains(Model.RuleTypes, 'Recurrence');
+  Assert.Contains(Model.RuleTypes, 'Highlight');
+end;
+
+procedure TRulePropsModelTests.SaveRuleName;
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Model.RuleName := 'New rule name';
+  Model.ApplyChanges;
+
+  Assert.AreEqual('New rule name', Model.Rule.Name);
+end;
+
+procedure TRulePropsModelTests.SaveRuleTypeIndex(Index: Integer;
+  Expected: TO2RuleType);
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Model.RuleTypeIndex := Index;
+  Model.ApplyChanges;
+
+  Assert.AreEqual(Expected, Model.Rule.RuleType);
+end;
+
+procedure TRulePropsModelTests.SaveFieldNameMask;
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldNameMask := 'New field name mask';
+  Model.ApplyChanges;
+
+  Assert.AreEqual('New field name mask', Model.Rule.FieldName);
+end;
+
+procedure TRulePropsModelTests.SaveFieldValueMask;
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldValueMask := 'New field value mask';
+  Model.ApplyChanges;
+
+  Assert.AreEqual('New field value mask', Model.Rule.FieldValue);
+end;
+
 { TNewRuleModelTests }
 
 function TNewRuleModelTests.CreateModel: IRuleProps;
@@ -87,12 +184,52 @@ begin
   Assert.IsEmpty(Model.RuleName);
 end;
 
+procedure TNewRuleModelTests.LoadFieldNameMask;
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Assert.IsEmpty(Model.FieldNameMask);
+end;
+
+procedure TNewRuleModelTests.LoadFieldValueMask;
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Assert.IsEmpty(Model.FieldValueMask);
+end;
+
 { TDuplicateEditRuleModelTests }
 
 procedure TDuplicateEditRuleModelTests.Setup;
 begin
   inherited;
   FO2Rule := FO2File.Rules.AddRule('');
+end;
+
+procedure TDuplicateEditRuleModelTests.LoadFieldNameMask;
+var
+  Model: IRuleProps;
+begin
+  FO2Rule.FieldName := 'Original field name mask';
+
+  Model := CreateModel;
+
+  Assert.AreEqual('Original field name mask', Model.FieldNameMask);
+end;
+
+procedure TDuplicateEditRuleModelTests.LoadFieldValueMask;
+var
+  Model: IRuleProps;
+begin
+  FO2Rule.FieldValue := 'Original field value mask';
+
+  Model := CreateModel;
+
+  Assert.AreEqual('Original field value mask', Model.FieldValueMask);
 end;
 
 { TDuplicateRuleModelTests }
