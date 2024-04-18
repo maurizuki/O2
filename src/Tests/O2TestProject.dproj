@@ -162,6 +162,7 @@
         <DCCReference Include="Testing.Cryptography.pas"/>
         <DCCReference Include="Testing.FilePropsModel.pas"/>
         <DCCReference Include="Testing.ObjectModels.pas"/>
+        <DCCReference Include="Testing.RelationModels.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

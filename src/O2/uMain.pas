@@ -19,7 +19,6 @@ interface
 
 {$WARN UNIT_PLATFORM OFF}
 
-{$R Dictionaries.res}
 {$R Icons.res}
 
 uses

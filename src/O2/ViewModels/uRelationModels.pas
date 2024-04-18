@@ -24,6 +24,7 @@ type
   TRelationPropsModel = class(TInterfacedObject, IRelationProps)
   private
     FRoles: TStrings;
+
     function GetObjectName1: string;
     function GetObjectName2: string;
     function GetRoles: TStrings;

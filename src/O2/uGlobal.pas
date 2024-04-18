@@ -17,6 +17,8 @@ unit uGlobal;
 
 interface
 
+{$R Dictionaries.res}
+
 uses
   Windows, Classes, Graphics, ComCtrls, uO2Defs, uO2Rules;
 
