@@ -17,12 +17,11 @@ type
   TObjectPropsModelTests = class
   protected
     FO2File: TO2File;
-    FO2Object: TO2Object;
 
     function CreateModel: IObjectProps; virtual; abstract;
   public
     [Setup]
-    procedure Setup;
+    procedure Setup; virtual;
 
     [TearDown]
     procedure TearDown;
@@ -88,7 +87,12 @@ type
   end;
 
   TDuplicateEditObjectModelTests = class(TObjectPropsModelTests)
+  protected
+    FO2Object: TO2Object;
   public
+    [Setup]
+    procedure Setup; override;
+
     [Test]
     procedure LoadObjectTags;
 
@@ -135,7 +139,6 @@ uses
 procedure TObjectPropsModelTests.Setup;
 begin
   FO2File := TO2File.Create;
-  FO2Object := FO2File.Objects.AddObject();
 end;
 
 procedure TObjectPropsModelTests.TearDown;
@@ -388,6 +391,12 @@ begin
 end;
 
 { TDuplicateEditObjectModelTests }
+
+procedure TDuplicateEditObjectModelTests.Setup;
+begin
+  inherited;
+  FO2Object := FO2File.Objects.AddObject();
+end;
 
 procedure TDuplicateEditObjectModelTests.LoadObjectTags;
 var
