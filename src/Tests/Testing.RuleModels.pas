@@ -38,6 +38,15 @@ type
 
     [Test]
     procedure SaveFieldValueMask;
+
+    [Test]
+    procedure SaveHyperLinkMask;
+
+    [Test]
+    [TestCase('False', 'False,False')]
+    [TestCase('True' , 'True,True')]
+    procedure SaveDisplayPasswordStrength(Display: Boolean;
+      const Expected: string);
   end;
 
   [TestFixture]
@@ -53,6 +62,12 @@ type
 
     [Test]
     procedure LoadFieldValueMask;
+
+    [Test]
+    procedure LoadHyperLinkMask;
+
+    [Test]
+    procedure LoadDisplayPasswordStrength;
   end;
 
   TDuplicateEditRuleModelTests = class(TRulePropsModelTests)
@@ -67,6 +82,15 @@ type
 
     [Test]
     procedure LoadFieldValueMask;
+
+    [Test]
+    procedure LoadHyperLinkMask;
+
+    [Test]
+    [TestCase('False', 'False,False')]
+    [TestCase('True' , 'True,True')]
+    procedure LoadDisplayPasswordStrength(const Value: string;
+      Expected: Boolean);
   end;
 
   [TestFixture]
@@ -168,6 +192,34 @@ begin
   Assert.AreEqual('New field value mask', Model.Rule.FieldValue);
 end;
 
+procedure TRulePropsModelTests.SaveHyperLinkMask;
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Model.RuleTypeIndex := 0;
+  Model.HyperLinkMask := 'New hyperlink mask';
+  Model.ApplyChanges;
+
+  Assert.AreEqual('New hyperlink mask', Model.Rule.Params.Values['Mask']);
+end;
+
+procedure TRulePropsModelTests.SaveDisplayPasswordStrength(Display: Boolean;
+  const Expected: string);
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Model.RuleTypeIndex := 2;
+  Model.DisplayPasswordStrength := Display;
+  Model.ApplyChanges;
+
+  Assert.AreEqual(Expected,
+    Model.Rule.Params.Values['DisplayPasswordStrength']);
+end;
+
 { TNewRuleModelTests }
 
 function TNewRuleModelTests.CreateModel: IRuleProps;
@@ -202,6 +254,24 @@ begin
   Assert.IsEmpty(Model.FieldValueMask);
 end;
 
+procedure TNewRuleModelTests.LoadHyperLinkMask;
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Assert.IsEmpty(Model.FieldValueMask);
+end;
+
+procedure TNewRuleModelTests.LoadDisplayPasswordStrength;
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Assert.IsFalse(Model.DisplayPasswordStrength);
+end;
+
 { TDuplicateEditRuleModelTests }
 
 procedure TDuplicateEditRuleModelTests.Setup;
@@ -230,6 +300,29 @@ begin
   Model := CreateModel;
 
   Assert.AreEqual('Original field value mask', Model.FieldValueMask);
+end;
+
+procedure TDuplicateEditRuleModelTests.LoadHyperLinkMask;
+var
+  Model: IRuleProps;
+begin
+  FO2Rule.Params.Values['Mask'] := 'Original hyperlink mask';
+
+  Model := CreateModel;
+
+  Assert.AreEqual('Original hyperlink mask', Model.HyperLinkMask);
+end;
+
+procedure TDuplicateEditRuleModelTests.LoadDisplayPasswordStrength(
+  const Value: string; Expected: Boolean);
+var
+  Model: IRuleProps;
+begin
+  FO2Rule.Params.Values['DisplayPasswordStrength'] := Value;
+
+  Model := CreateModel;
+
+  Assert.AreEqual(Expected, Model.DisplayPasswordStrength);
 end;
 
 { TDuplicateRuleModelTests }
