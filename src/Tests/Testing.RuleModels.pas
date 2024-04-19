@@ -59,6 +59,16 @@ type
     [TestCase('Highlight'     , '5,False,')]
     procedure SaveDisplayPasswordStrength(RuleTypeIndex: Integer;
       DisplayPasswordStrength: Boolean; const Expected: string);
+
+    [Test]
+    [TestCase('HyperLink'     , '0,New display mask,')]
+    [TestCase('Email'         , '1,New display mask,')]
+    [TestCase('Password'      , '2,New display mask,')]
+    [TestCase('ExpirationDate', '3,New display mask,New display mask')]
+    [TestCase('Recurrence'    , '4,New display mask,New display mask')]
+    [TestCase('Highlight'     , '5,New display mask,')]
+    procedure SaveDisplayMask(RuleTypeIndex: Integer; const Mask,
+      Expected: string);
   end;
 
   [TestFixture]
@@ -80,6 +90,9 @@ type
 
     [Test]
     procedure LoadDisplayPasswordStrength;
+
+    [Test]
+    procedure LoadDisplayMask;
   end;
 
   TDuplicateEditRuleModelTests = class(TRulePropsModelTests)
@@ -103,6 +116,9 @@ type
     [TestCase('True' , 'True,True')]
     procedure LoadDisplayPasswordStrength(const Value: string;
       Expected: Boolean);
+
+    [Test]
+    procedure LoadDisplayMask;
   end;
 
   [TestFixture]
@@ -234,6 +250,20 @@ begin
     Model.Rule.Params.Values['DisplayPasswordStrength']);
 end;
 
+procedure TRulePropsModelTests.SaveDisplayMask(RuleTypeIndex: Integer;
+  const Mask, Expected: string);
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Model.RuleTypeIndex := RuleTypeIndex;
+  Model.DisplayMask := Mask;
+  Model.ApplyChanges;
+
+  Assert.AreEqual(Expected, Model.Rule.Params.Values['DisplayMask']);
+end;
+
 { TNewRuleModelTests }
 
 function TNewRuleModelTests.CreateModel: IRuleProps;
@@ -274,7 +304,7 @@ var
 begin
   Model := CreateModel;
 
-  Assert.IsEmpty(Model.FieldValueMask);
+  Assert.IsEmpty(Model.HyperLinkMask);
 end;
 
 procedure TNewRuleModelTests.LoadDisplayPasswordStrength;
@@ -284,6 +314,15 @@ begin
   Model := CreateModel;
 
   Assert.IsFalse(Model.DisplayPasswordStrength);
+end;
+
+procedure TNewRuleModelTests.LoadDisplayMask;
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Assert.IsEmpty(Model.DisplayMask);
 end;
 
 { TDuplicateEditRuleModelTests }
@@ -337,6 +376,17 @@ begin
   Model := CreateModel;
 
   Assert.AreEqual(Expected, Model.DisplayPasswordStrength);
+end;
+
+procedure TDuplicateEditRuleModelTests.LoadDisplayMask;
+var
+  Model: IRuleProps;
+begin
+  FO2Rule.Params.Values['DisplayMask'] := 'Original display mask';
+
+  Model := CreateModel;
+
+  Assert.AreEqual('Original display mask', Model.DisplayMask);
 end;
 
 { TDuplicateRuleModelTests }
