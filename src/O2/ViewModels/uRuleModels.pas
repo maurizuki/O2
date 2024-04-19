@@ -260,7 +260,7 @@ begin
 
   if FRule.RuleType = rtPassword then
     FRule.Params.Values[DisplayPasswordStrengthParam] :=
-      BoolToStr(FDisplayPasswordStrength)
+      BoolToStr(FDisplayPasswordStrength, True)
   else
     FRule.Params.DeleteParam(DisplayPasswordStrengthParam);
 
