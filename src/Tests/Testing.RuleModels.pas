@@ -40,13 +40,25 @@ type
     procedure SaveFieldValueMask;
 
     [Test]
-    procedure SaveHyperLinkMask;
+    [TestCase('HyperLink'     , '0,New hyperlink mask,New hyperlink mask')]
+    [TestCase('Email'         , '1,New hyperlink mask,')]
+    [TestCase('Password'      , '2,New hyperlink mask,')]
+    [TestCase('ExpirationDate', '3,New hyperlink mask,')]
+    [TestCase('Recurrence'    , '4,New hyperlink mask,')]
+    [TestCase('Highlight'     , '5,New hyperlink mask,')]
+    procedure SaveHyperLinkMask(RuleTypeIndex: Integer; const Mask,
+      Expected: string);
 
     [Test]
-    [TestCase('False', 'False,False')]
-    [TestCase('True' , 'True,True')]
-    procedure SaveDisplayPasswordStrength(Display: Boolean;
-      const Expected: string);
+    [TestCase('HyperLink'     , '0,False,')]
+    [TestCase('Email'         , '1,False,')]
+    [TestCase('Password.False', '2,False,False')]
+    [TestCase('Password.True' , '2,True,True')]
+    [TestCase('ExpirationDate', '3,False,')]
+    [TestCase('Recurrence'    , '4,False,')]
+    [TestCase('Highlight'     , '5,False,')]
+    procedure SaveDisplayPasswordStrength(RuleTypeIndex: Integer;
+      DisplayPasswordStrength: Boolean; const Expected: string);
   end;
 
   [TestFixture]
@@ -192,28 +204,30 @@ begin
   Assert.AreEqual('New field value mask', Model.Rule.FieldValue);
 end;
 
-procedure TRulePropsModelTests.SaveHyperLinkMask;
+procedure TRulePropsModelTests.SaveHyperLinkMask(RuleTypeIndex: Integer;
+  const Mask, Expected: string);
 var
   Model: IRuleProps;
 begin
   Model := CreateModel;
 
-  Model.RuleTypeIndex := 0;
-  Model.HyperLinkMask := 'New hyperlink mask';
+  Model.RuleTypeIndex := RuleTypeIndex;
+  Model.HyperLinkMask := Mask;
   Model.ApplyChanges;
 
-  Assert.AreEqual('New hyperlink mask', Model.Rule.Params.Values['Mask']);
+  Assert.AreEqual(Expected, Model.Rule.Params.Values['Mask']);
 end;
 
-procedure TRulePropsModelTests.SaveDisplayPasswordStrength(Display: Boolean;
+procedure TRulePropsModelTests.SaveDisplayPasswordStrength(
+  RuleTypeIndex: Integer; DisplayPasswordStrength: Boolean;
   const Expected: string);
 var
   Model: IRuleProps;
 begin
   Model := CreateModel;
 
-  Model.RuleTypeIndex := 2;
-  Model.DisplayPasswordStrength := Display;
+  Model.RuleTypeIndex := RuleTypeIndex;
+  Model.DisplayPasswordStrength := DisplayPasswordStrength;
   Model.ApplyChanges;
 
   Assert.AreEqual(Expected,
