@@ -72,6 +72,20 @@ type
     [TestCase('Highlight'     , '5,New display mask,')]
     procedure SaveDisplayMask(RuleTypeIndex: Integer; const Mask,
       Expected: string);
+
+    [Test]
+    [TestCase('HyperLink'         , '0,0,')]
+    [TestCase('Email'             , '1,0,')]
+    [TestCase('Password'          , '2,0,')]
+    [TestCase('ExpirationDate.YMD', '3,0,yyyy/mm/dd')]
+    [TestCase('ExpirationDate.MDY', '3,1,mm/dd/yyyy')]
+    [TestCase('ExpirationDate.DMY', '3,2,dd/mm/yyyy')]
+    [TestCase('Recurrence.YMD'    , '4,0,yyyy/mm/dd')]
+    [TestCase('Recurrence.MDY'    , '4,1,mm/dd/yyyy')]
+    [TestCase('Recurrence.DMY'    , '4,2,dd/mm/yyyy')]
+    [TestCase('Highlight'         , '5,0,')]
+    procedure SaveDateFormatIndex(RuleTypeIndex, DateFormatIndex: Integer;
+      const Expected: string);
   end;
 
   [TestFixture]
@@ -99,6 +113,9 @@ type
 
     [Test]
     procedure LoadDisplayMask;
+
+    [Test]
+    procedure LoadDateFormatIndex;
   end;
 
   TDuplicateEditRuleModelTests = class(TRulePropsModelTests)
@@ -134,6 +151,12 @@ type
 
     [Test]
     procedure LoadDisplayMask;
+
+    [Test]
+    [TestCase('YMD', 'yyyy/mm/dd,0')]
+    [TestCase('MDY', 'mm/dd/yyyy,1')]
+    [TestCase('DMY', 'dd/mm/yyyy,2')]
+    procedure LoadDateFormatIndex(const DateFormat: string; Expected: Integer);
   end;
 
   [TestFixture]
@@ -157,7 +180,7 @@ type
 implementation
 
 uses
-  uRuleModels;
+  Classes, uRuleModels;
 
 { TRulePropsModelTests }
 
@@ -173,29 +196,43 @@ end;
 
 procedure TRulePropsModelTests.LoadRuleTypes;
 var
+  Expected: TStrings;
   Model: IRuleProps;
 begin
   Model := CreateModel;
 
-  Assert.AreEqual(6, Model.RuleTypes.Count);
-  Assert.Contains(Model.RuleTypes, 'Internet link');
-  Assert.Contains(Model.RuleTypes, 'E-mail address');
-  Assert.Contains(Model.RuleTypes, 'Password');
-  Assert.Contains(Model.RuleTypes, 'Expiration date');
-  Assert.Contains(Model.RuleTypes, 'Recurrence');
-  Assert.Contains(Model.RuleTypes, 'Highlight');
+  Expected := TStringList.Create;
+  try
+    Expected.Add('Internet link');
+    Expected.Add('E-mail address');
+    Expected.Add('Password');
+    Expected.Add('Expiration date');
+    Expected.Add('Recurrence');
+    Expected.Add('Highlight');
+
+    Assert.AreEqual(Expected, Model.RuleTypes);
+  finally
+    Expected.Free;
+  end;
 end;
 
 procedure TRulePropsModelTests.LoadDateFormats;
 var
+  Expected: TStrings;
   Model: IRuleProps;
 begin
   Model := CreateModel;
 
-  Assert.AreEqual(3, Model.DateFormats.Count);
-  Assert.Contains(Model.DateFormats, 'Year, month, day');
-  Assert.Contains(Model.DateFormats, 'Month, day, year');
-  Assert.Contains(Model.DateFormats, 'Day, month, year');
+  Expected := TStringList.Create;
+  try
+    Expected.Add('Year, month, day');
+    Expected.Add('Month, day, year');
+    Expected.Add('Day, month, year');
+
+    Assert.AreEqual(Expected, Model.DateFormats);
+  finally
+    Expected.Free;
+  end;
 end;
 
 procedure TRulePropsModelTests.SaveRuleName;
@@ -291,6 +328,20 @@ begin
   Assert.AreEqual(Expected, Model.Rule.Params.Values['DisplayMask']);
 end;
 
+procedure TRulePropsModelTests.SaveDateFormatIndex(RuleTypeIndex,
+  DateFormatIndex: Integer; const Expected: string);
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Model.RuleTypeIndex := RuleTypeIndex;
+  Model.DateFormatIndex := DateFormatIndex;
+  Model.ApplyChanges;
+
+  Assert.AreEqual(Expected, Model.Rule.Params.Values['ShortDateFormat']);
+end;
+
 { TNewRuleModelTests }
 
 function TNewRuleModelTests.CreateModel: IRuleProps;
@@ -359,6 +410,15 @@ begin
   Model := CreateModel;
 
   Assert.IsEmpty(Model.DisplayMask);
+end;
+
+procedure TNewRuleModelTests.LoadDateFormatIndex;
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Assert.AreEqual(0, Model.DateFormatIndex);
 end;
 
 { TDuplicateEditRuleModelTests }
@@ -435,6 +495,18 @@ begin
   Model := CreateModel;
 
   Assert.AreEqual('Original display mask', Model.DisplayMask);
+end;
+
+procedure TDuplicateEditRuleModelTests.LoadDateFormatIndex(
+  const DateFormat: string; Expected: Integer);
+var
+  Model: IRuleProps;
+begin
+  FO2Rule.Params.Values['ShortDateFormat'] := DateFormat;
+
+  Model := CreateModel;
+
+  Assert.AreEqual(Expected, Model.DateFormatIndex);
 end;
 
 { TDuplicateRuleModelTests }
