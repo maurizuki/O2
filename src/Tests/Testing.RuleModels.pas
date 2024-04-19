@@ -22,6 +22,9 @@ type
     procedure LoadRuleTypes;
 
     [Test]
+    procedure LoadDateFormats;
+
+    [Test]
     procedure SaveRuleName;
 
     [Test]
@@ -80,6 +83,9 @@ type
     procedure LoadRuleName;
 
     [Test]
+    procedure LoadRuleTypeIndex;
+
+    [Test]
     procedure LoadFieldNameMask;
 
     [Test]
@@ -101,6 +107,15 @@ type
   public
     [Setup]
     procedure Setup; override;
+
+    [Test]
+    [TestCase('HyperLink'     , 'rtHyperLink,0')]
+    [TestCase('Email'         , 'rtEmail,1')]
+    [TestCase('Password'      , 'rtPassword,2')]
+    [TestCase('ExpirationDate', 'rtExpirationDate,3')]
+    [TestCase('Recurrence'    , 'rtRecurrence,4')]
+    [TestCase('Highlight'     , 'rtHighlight,5')]
+    procedure LoadRuleTypeIndex(RuleType: TO2RuleType; Expected: Integer);
 
     [Test]
     procedure LoadFieldNameMask;
@@ -169,6 +184,18 @@ begin
   Assert.Contains(Model.RuleTypes, 'Expiration date');
   Assert.Contains(Model.RuleTypes, 'Recurrence');
   Assert.Contains(Model.RuleTypes, 'Highlight');
+end;
+
+procedure TRulePropsModelTests.LoadDateFormats;
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Assert.AreEqual(3, Model.DateFormats.Count);
+  Assert.Contains(Model.DateFormats, 'Year, month, day');
+  Assert.Contains(Model.DateFormats, 'Month, day, year');
+  Assert.Contains(Model.DateFormats, 'Day, month, year');
 end;
 
 procedure TRulePropsModelTests.SaveRuleName;
@@ -280,6 +307,15 @@ begin
   Assert.IsEmpty(Model.RuleName);
 end;
 
+procedure TNewRuleModelTests.LoadRuleTypeIndex;
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Assert.AreEqual(0, Model.RuleTypeIndex);
+end;
+
 procedure TNewRuleModelTests.LoadFieldNameMask;
 var
   Model: IRuleProps;
@@ -331,6 +367,18 @@ procedure TDuplicateEditRuleModelTests.Setup;
 begin
   inherited;
   FO2Rule := FO2File.Rules.AddRule('');
+end;
+
+procedure TDuplicateEditRuleModelTests.LoadRuleTypeIndex(RuleType: TO2RuleType;
+  Expected: Integer);
+var
+  Model: IRuleProps;
+begin
+  FO2Rule.RuleType := RuleType;
+
+  Model := CreateModel;
+
+  Assert.AreEqual(Expected, Model.RuleTypeIndex);
 end;
 
 procedure TDuplicateEditRuleModelTests.LoadFieldNameMask;
