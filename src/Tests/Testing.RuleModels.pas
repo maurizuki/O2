@@ -86,6 +86,16 @@ type
     [TestCase('Highlight'         , '5,0,')]
     procedure SaveDateFormatIndex(RuleTypeIndex, DateFormatIndex: Integer;
       const Expected: string);
+
+    [Test]
+    [TestCase('HyperLink'     , '0,New date separator,')]
+    [TestCase('Email'         , '1,New date separator,')]
+    [TestCase('Password'      , '2,New date separator,')]
+    [TestCase('ExpirationDate', '3,New date separator,New date separator')]
+    [TestCase('Recurrence'    , '4,New date separator,New date separator')]
+    [TestCase('Highlight'     , '5,New date separator,')]
+    procedure SaveDateSeparator(RuleTypeIndex: Integer; const DateSeparator,
+      Expected: string);
   end;
 
   [TestFixture]
@@ -116,6 +126,9 @@ type
 
     [Test]
     procedure LoadDateFormatIndex;
+
+    [Test]
+    procedure LoadDateSeparator;
   end;
 
   TDuplicateEditRuleModelTests = class(TRulePropsModelTests)
@@ -157,6 +170,9 @@ type
     [TestCase('MDY', 'mm/dd/yyyy,1')]
     [TestCase('DMY', 'dd/mm/yyyy,2')]
     procedure LoadDateFormatIndex(const DateFormat: string; Expected: Integer);
+
+    [Test]
+    procedure LoadDateSeparator;
   end;
 
   [TestFixture]
@@ -180,7 +196,7 @@ type
 implementation
 
 uses
-  Classes, uRuleModels;
+  Classes, SysUtils, uRuleModels;
 
 { TRulePropsModelTests }
 
@@ -342,6 +358,20 @@ begin
   Assert.AreEqual(Expected, Model.Rule.Params.Values['ShortDateFormat']);
 end;
 
+procedure TRulePropsModelTests.SaveDateSeparator(RuleTypeIndex: Integer;
+  const DateSeparator, Expected: string);
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Model.RuleTypeIndex := RuleTypeIndex;
+  Model.DateSeparator := DateSeparator;
+  Model.ApplyChanges;
+
+  Assert.AreEqual(Expected, Model.Rule.Params.Values['DateSeparator']);
+end;
+
 { TNewRuleModelTests }
 
 function TNewRuleModelTests.CreateModel: IRuleProps;
@@ -419,6 +449,17 @@ begin
   Model := CreateModel;
 
   Assert.AreEqual(0, Model.DateFormatIndex);
+end;
+
+procedure TNewRuleModelTests.LoadDateSeparator;
+var
+  FormatSettings: TFormatSettings;
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  FormatSettings := TFormatSettings.Create;
+  Assert.AreEqual(FormatSettings.DateSeparator, Model.DateSeparator);
 end;
 
 { TDuplicateEditRuleModelTests }
@@ -507,6 +548,17 @@ begin
   Model := CreateModel;
 
   Assert.AreEqual(Expected, Model.DateFormatIndex);
+end;
+
+procedure TDuplicateEditRuleModelTests.LoadDateSeparator;
+var
+  Model: IRuleProps;
+begin
+  FO2Rule.Params.Values['DateSeparator'] := 'Original date separator';
+
+  Model := CreateModel;
+
+  Assert.AreEqual('Original date separator', Model.DateSeparator);
 end;
 
 { TDuplicateRuleModelTests }
