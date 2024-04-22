@@ -96,6 +96,26 @@ type
     [TestCase('Highlight'     , '5,New date separator,')]
     procedure SaveDateSeparator(RuleTypeIndex: Integer; const DateSeparator,
       Expected: string);
+
+    [Test]
+    [TestCase('HyperLink'     , '0,42,')]
+    [TestCase('Email'         , '1,42,')]
+    [TestCase('Password'      , '2,42,')]
+    [TestCase('ExpirationDate', '3,42,42')]
+    [TestCase('Recurrence'    , '4,42,42')]
+    [TestCase('Highlight'     , '5,42,')]
+    procedure SaveDaysBefore(RuleTypeIndex, Days: Integer;
+      const Expected: string);
+
+    [Test]
+    [TestCase('HyperLink'     , '0,42,')]
+    [TestCase('Email'         , '1,42,')]
+    [TestCase('Password'      , '2,42,')]
+    [TestCase('ExpirationDate', '3,42,42')]
+    [TestCase('Recurrence'    , '4,42,42')]
+    [TestCase('Highlight'     , '5,42,')]
+    procedure SaveDaysAfter(RuleTypeIndex, Days: Integer;
+      const Expected: string);
   end;
 
   [TestFixture]
@@ -129,6 +149,12 @@ type
 
     [Test]
     procedure LoadDateSeparator;
+
+    [Test]
+    procedure LoadDaysBefore;
+
+    [Test]
+    procedure LoadDaysAfter;
   end;
 
   TDuplicateEditRuleModelTests = class(TRulePropsModelTests)
@@ -173,6 +199,12 @@ type
 
     [Test]
     procedure LoadDateSeparator;
+
+    [Test]
+    procedure LoadDaysBefore;
+
+    [Test]
+    procedure LoadDaysAfter;
   end;
 
   [TestFixture]
@@ -372,6 +404,34 @@ begin
   Assert.AreEqual(Expected, Model.Rule.Params.Values['DateSeparator']);
 end;
 
+procedure TRulePropsModelTests.SaveDaysBefore(RuleTypeIndex, Days: Integer;
+  const Expected: string);
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Model.RuleTypeIndex := RuleTypeIndex;
+  Model.DaysBefore := Days;
+  Model.ApplyChanges;
+
+  Assert.AreEqual(Expected, Model.Rule.Params.Values['DaysBefore']);
+end;
+
+procedure TRulePropsModelTests.SaveDaysAfter(RuleTypeIndex, Days: Integer;
+  const Expected: string);
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Model.RuleTypeIndex := RuleTypeIndex;
+  Model.DaysAfter := Days;
+  Model.ApplyChanges;
+
+  Assert.AreEqual(Expected, Model.Rule.Params.Values['DaysAfter']);
+end;
+
 { TNewRuleModelTests }
 
 function TNewRuleModelTests.CreateModel: IRuleProps;
@@ -460,6 +520,24 @@ begin
 
   FormatSettings := TFormatSettings.Create;
   Assert.AreEqual(FormatSettings.DateSeparator, Model.DateSeparator);
+end;
+
+procedure TNewRuleModelTests.LoadDaysBefore;
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Assert.AreEqual(15, Model.DaysBefore);
+end;
+
+procedure TNewRuleModelTests.LoadDaysAfter;
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Assert.AreEqual(60, Model.DaysAfter);
 end;
 
 { TDuplicateEditRuleModelTests }
@@ -559,6 +637,28 @@ begin
   Model := CreateModel;
 
   Assert.AreEqual('Original date separator', Model.DateSeparator);
+end;
+
+procedure TDuplicateEditRuleModelTests.LoadDaysBefore;
+var
+  Model: IRuleProps;
+begin
+  FO2Rule.Params.Values['DaysBefore'] := '42';
+
+  Model := CreateModel;
+
+  Assert.AreEqual(42, Model.DaysBefore);
+end;
+
+procedure TDuplicateEditRuleModelTests.LoadDaysAfter;
+var
+  Model: IRuleProps;
+begin
+  FO2Rule.Params.Values['DaysAfter'] := '42';
+
+  Model := CreateModel;
+
+  Assert.AreEqual(42, Model.DaysAfter);
 end;
 
 { TDuplicateRuleModelTests }
