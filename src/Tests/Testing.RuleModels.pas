@@ -3,7 +3,7 @@ unit Testing.RuleModels;
 interface
 
 uses
-  DUnitX.TestFramework, uO2File, uO2Rules, uServices;
+  Graphics, DUnitX.TestFramework, uO2File, uO2Rules, uServices;
 
 type
   TRulePropsModelTests = class
@@ -116,6 +116,26 @@ type
     [TestCase('Highlight'     , '5,42,')]
     procedure SaveDaysAfter(RuleTypeIndex, Days: Integer;
       const Expected: string);
+
+    [Test]
+    [TestCase('HyperLink'     , '0,8388736,')]
+    [TestCase('Email'         , '1,8388736,')]
+    [TestCase('Password'      , '2,8388736,')]
+    [TestCase('ExpirationDate', '3,8388736,8388736')]
+    [TestCase('Recurrence'    , '4,8388736,8388736')]
+    [TestCase('Highlight'     , '5,8388736,8388736')]
+    procedure SaveHighlightColor(RuleTypeIndex: Integer; Color: TColor;
+      const Expected: string);
+
+    [Test]
+    [TestCase('HyperLink'     , '0,8388736,')]
+    [TestCase('Email'         , '1,8388736,')]
+    [TestCase('Password'      , '2,8388736,')]
+    [TestCase('ExpirationDate', '3,8388736,8388736')]
+    [TestCase('Recurrence'    , '4,8388736,8388736')]
+    [TestCase('Highlight'     , '5,8388736,8388736')]
+    procedure SaveHighlightTextColor(RuleTypeIndex: Integer; Color: TColor;
+      const Expected: string);
   end;
 
   [TestFixture]
@@ -155,6 +175,12 @@ type
 
     [Test]
     procedure LoadDaysAfter;
+
+    [Test]
+    procedure LoadHighlightColor;
+
+    [Test]
+    procedure LoadHighlightTextColor;
   end;
 
   TDuplicateEditRuleModelTests = class(TRulePropsModelTests)
@@ -205,6 +231,12 @@ type
 
     [Test]
     procedure LoadDaysAfter;
+
+    [Test]
+    procedure LoadHighlightColor;
+
+    [Test]
+    procedure LoadHighlightTextColor;
   end;
 
   [TestFixture]
@@ -432,6 +464,34 @@ begin
   Assert.AreEqual(Expected, Model.Rule.Params.Values['DaysAfter']);
 end;
 
+procedure TRulePropsModelTests.SaveHighlightColor(RuleTypeIndex: Integer;
+  Color: TColor; const Expected: string);
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Model.RuleTypeIndex := RuleTypeIndex;
+  Model.HighlightColor := Color;
+  Model.ApplyChanges;
+
+  Assert.AreEqual(Expected, Model.Rule.Params.Values['Color']);
+end;
+
+procedure TRulePropsModelTests.SaveHighlightTextColor(RuleTypeIndex: Integer;
+  Color: TColor; const Expected: string);
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Model.RuleTypeIndex := RuleTypeIndex;
+  Model.HighlightTextColor := Color;
+  Model.ApplyChanges;
+
+  Assert.AreEqual(Expected, Model.Rule.Params.Values['TextColor']);
+end;
+
 { TNewRuleModelTests }
 
 function TNewRuleModelTests.CreateModel: IRuleProps;
@@ -538,6 +598,24 @@ begin
   Model := CreateModel;
 
   Assert.AreEqual(60, Model.DaysAfter);
+end;
+
+procedure TNewRuleModelTests.LoadHighlightColor;
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Assert.AreEqual(clYellow, Model.HighlightColor);
+end;
+
+procedure TNewRuleModelTests.LoadHighlightTextColor;
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Assert.AreEqual(clBlack, Model.HighlightTextColor);
 end;
 
 { TDuplicateEditRuleModelTests }
@@ -659,6 +737,28 @@ begin
   Model := CreateModel;
 
   Assert.AreEqual(42, Model.DaysAfter);
+end;
+
+procedure TDuplicateEditRuleModelTests.LoadHighlightColor;
+var
+  Model: IRuleProps;
+begin
+  FO2Rule.Params.Values['Color'] := '8388736';
+
+  Model := CreateModel;
+
+  Assert.AreEqual(clPurple, Model.HighlightColor);
+end;
+
+procedure TDuplicateEditRuleModelTests.LoadHighlightTextColor;
+var
+  Model: IRuleProps;
+begin
+  FO2Rule.Params.Values['TextColor'] := '8388736';
+
+  Model := CreateModel;
+
+  Assert.AreEqual(clPurple, Model.HighlightTextColor);
 end;
 
 { TDuplicateRuleModelTests }
