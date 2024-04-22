@@ -49,7 +49,7 @@ var
 implementation
 
 uses
-  JclBase, JVCLVer, uGlobal, uShellUtils, uRTFViewer, uO2Defs;
+  DateUtils, JclBase, JVCLVer, uGlobal, uShellUtils, uRTFViewer, uO2Defs;
 
 {$R *.dfm}
 
@@ -77,6 +77,10 @@ begin
 
     Memo1.Lines.BeginUpdate;
     Memo1.Clear;
+    Memo1.Lines.Add('Build timestamp: '
+      + DateToISO8601(PImageNtHeaders(HInstance
+      + Cardinal(PImageDosHeader(HInstance)^._lfanew))^.FileHeader.TimeDateStamp
+      / SecsPerDay + UnixDateDelta));
     Memo1.Lines.Add(Format('Compiler version: %d.%d', [Trunc(CompilerVersion),
       Trunc(Frac(CompilerVersion) * 10)]));
     Memo1.Lines.Add('');
