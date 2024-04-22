@@ -19,6 +19,42 @@ type
     procedure TearDown;
 
     [Test]
+    [TestCase('HyperLink'     , '0,True')]
+    [TestCase('Email'         , '1,False')]
+    [TestCase('Password'      , '2,False')]
+    [TestCase('ExpirationDate', '3,False')]
+    [TestCase('Recurrence'    , '4,False')]
+    [TestCase('Highlight'     , '5,False')]
+    procedure IsHyperLink(Index: Integer; Expected: Boolean);
+
+    [Test]
+    [TestCase('HyperLink'     , '0,False')]
+    [TestCase('Email'         , '1,False')]
+    [TestCase('Password'      , '2,True')]
+    [TestCase('ExpirationDate', '3,False')]
+    [TestCase('Recurrence'    , '4,False')]
+    [TestCase('Highlight'     , '5,False')]
+    procedure IsPassword(Index: Integer; Expected: Boolean);
+
+    [Test]
+    [TestCase('HyperLink'     , '0,False')]
+    [TestCase('Email'         , '1,False')]
+    [TestCase('Password'      , '2,False')]
+    [TestCase('ExpirationDate', '3,True')]
+    [TestCase('Recurrence'    , '4,True')]
+    [TestCase('Highlight'     , '5,False')]
+    procedure IsEvent(Index: Integer; Expected: Boolean);
+
+    [Test]
+    [TestCase('HyperLink'     , '0,False')]
+    [TestCase('Email'         , '1,False')]
+    [TestCase('Password'      , '2,False')]
+    [TestCase('ExpirationDate', '3,True')]
+    [TestCase('Recurrence'    , '4,True')]
+    [TestCase('Highlight'     , '5,True')]
+    procedure IsHighlight(Index: Integer; Expected: Boolean);
+
+    [Test]
     procedure LoadRuleTypes;
 
     [Test]
@@ -136,6 +172,12 @@ type
     [TestCase('Highlight'     , '5,8388736,8388736')]
     procedure SaveHighlightTextColor(RuleTypeIndex: Integer; Color: TColor;
       const Expected: string);
+
+    [Test]
+    procedure Valid;
+
+    [Test]
+    procedure NotValidEmptyRuleName;
   end;
 
   [TestFixture]
@@ -272,6 +314,50 @@ end;
 procedure TRulePropsModelTests.TearDown;
 begin
   FO2File.Free;
+end;
+
+procedure TRulePropsModelTests.IsHyperLink(Index: Integer; Expected: Boolean);
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Model.RuleTypeIndex := Index;
+
+  Assert.AreEqual(Expected, Model.IsHyperLink);
+end;
+
+procedure TRulePropsModelTests.IsPassword(Index: Integer; Expected: Boolean);
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Model.RuleTypeIndex := Index;
+
+  Assert.AreEqual(Expected, Model.IsPassword);
+end;
+
+procedure TRulePropsModelTests.IsEvent(Index: Integer; Expected: Boolean);
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Model.RuleTypeIndex := Index;
+
+  Assert.AreEqual(Expected, Model.IsEvent);
+end;
+
+procedure TRulePropsModelTests.IsHighlight(Index: Integer; Expected: Boolean);
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Model.RuleTypeIndex := Index;
+
+  Assert.AreEqual(Expected, Model.IsHighlight);
 end;
 
 procedure TRulePropsModelTests.LoadRuleTypes;
@@ -490,6 +576,30 @@ begin
   Model.ApplyChanges;
 
   Assert.AreEqual(Expected, Model.Rule.Params.Values['TextColor']);
+end;
+
+procedure TRulePropsModelTests.Valid;
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Model.RuleName := 'Valid rule name';
+  Model.ApplyChanges;
+
+  Assert.IsTrue(Model.Valid);
+end;
+
+procedure TRulePropsModelTests.NotValidEmptyRuleName;
+var
+  Model: IRuleProps;
+begin
+  Model := CreateModel;
+
+  Model.RuleName := '';
+  Model.ApplyChanges;
+
+  Assert.IsFalse(Model.Valid);
 end;
 
 { TNewRuleModelTests }
