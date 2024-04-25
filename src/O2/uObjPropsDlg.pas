@@ -49,7 +49,6 @@ type
     Button2: TButton;
     Button3: TButton;
     AddTag: TAction;
-    DeleteTag: TAction;
     Button6: TButton;
     Button7: TButton;
     ckMarkdown: TCheckBox;
@@ -59,16 +58,10 @@ type
     edTag: TEdit;
     lbxTags: TListBox;
     Button4: TButton;
-    Button5: TButton;
-    lbxObjectTags: TListBox;
     procedure edNameChange(Sender: TObject);
     procedure lbxTagsClick(Sender: TObject);
-    procedure lbxTagsDblClick(Sender: TObject);
     procedure AddTagExecute(Sender: TObject);
     procedure AddTagUpdate(Sender: TObject);
-    procedure DeleteTagExecute(Sender: TObject);
-    procedure DeleteTagUpdate(Sender: TObject);
-    procedure lbxObjectTagsDblClick(Sender: TObject);
     procedure FieldsViewResize(Sender: TObject);
     procedure FieldsViewSelectItem(Sender: TObject; Item: TListItem;
       Selected: Boolean);
@@ -176,45 +169,26 @@ begin
   UpdatePasswordStrengthInfo;
 end;
 
-procedure TObjPropsDlg.lbxObjectTagsDblClick(Sender: TObject);
-begin
-  DeleteTag.Execute;
-end;
-
 procedure TObjPropsDlg.lbxTagsClick(Sender: TObject);
+var
+  I: Integer;
 begin
-  if lbxTags.ItemIndex = -1 then Exit;
-  edTag.Text := lbxTags.Items[lbxTags.ItemIndex];
-end;
-
-procedure TObjPropsDlg.lbxTagsDblClick(Sender: TObject);
-begin
-  if lbxTags.ItemIndex = -1 then Exit;
-  edTag.Text := lbxTags.Items[lbxTags.ItemIndex];
-  AddTag.Execute;
+  FModel.ObjectTags.Clear;
+  for I := 0 to lbxTags.Count - 1 do
+    if lbxTags.Selected[I] then
+      FModel.ObjectTags.Add(lbxTags.Items[i]);
 end;
 
 procedure TObjPropsDlg.AddTagExecute(Sender: TObject);
 begin
-  lbxObjectTags.Items.Add(edTag.Text);
-  FModel.ObjectTags := lbxObjectTags.Items;
+  lbxTags.Selected[lbxTags.Items.Add(edTag.Text)] := True;
+  FModel.ObjectTags.Add(edTag.Text);
 end;
 
 procedure TObjPropsDlg.AddTagUpdate(Sender: TObject);
 begin
   TAction(Sender).Enabled := (edTag.Text <> '')
-    and (lbxObjectTags.Items.IndexOf(edTag.Text) = -1);
-end;
-
-procedure TObjPropsDlg.DeleteTagExecute(Sender: TObject);
-begin
-  lbxObjectTags.DeleteSelected;
-  FModel.ObjectTags := lbxObjectTags.Items;
-end;
-
-procedure TObjPropsDlg.DeleteTagUpdate(Sender: TObject);
-begin
-  TAction(Sender).Enabled := lbxObjectTags.ItemIndex <> -1;
+    and (lbxTags.Items.IndexOf(edTag.Text) = -1);
 end;
 
 procedure TObjPropsDlg.AddFieldExecute(Sender: TObject);
@@ -358,7 +332,9 @@ begin
     edName.Text := FModel.ObjectName;
 
     lbxTags.Items := FModel.Tags;
-    lbxObjectTags.Items := FModel.ObjectTags;
+    for I := 0 to lbxTags.Count - 1 do
+      lbxTags.Selected[I] := FModel.ObjectTags.IndexOf(lbxTags.Items[I]) <> -1;
+    lbxTags.ItemIndex := 0;
 
     FieldsView.Items.BeginUpdate;
     try

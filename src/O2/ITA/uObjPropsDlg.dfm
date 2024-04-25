@@ -59,61 +59,48 @@ object ObjPropsDlg: TObjPropsDlg
         Anchors = [akLeft, akTop, akRight, akBottom]
         Caption = 'E&tichette'
         TabOrder = 1
+        ExplicitWidth = 354
+        ExplicitHeight = 251
         DesignSize = (
           358
           252)
         object edTag: TEdit
           Left = 3
           Top = 16
-          Width = 130
+          Width = 266
           Height = 21
+          Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
+          TextHint = 'Nuova etichetta'
+          ExplicitWidth = 262
         end
         object lbxTags: TListBox
           Left = 3
-          Top = 43
-          Width = 130
-          Height = 206
-          Anchors = [akLeft, akTop, akBottom]
+          Top = 45
+          Width = 352
+          Height = 204
+          Anchors = [akLeft, akTop, akRight, akBottom]
+          Columns = 3
+          ExtendedSelect = False
           ItemHeight = 13
+          MultiSelect = True
           Sorted = True
-          TabOrder = 1
+          TabOrder = 2
           OnClick = lbxTagsClick
-          OnDblClick = lbxTagsDblClick
-          ExplicitHeight = 205
+          ExplicitWidth = 348
+          ExplicitHeight = 203
         end
         object Button4: TButton
-          Left = 139
-          Top = 98
+          Left = 275
+          Top = 14
           Width = 80
           Height = 25
           Action = AddTag
+          Anchors = [akTop, akRight]
           ParentShowHint = False
           ShowHint = True
-          TabOrder = 2
-        end
-        object Button5: TButton
-          Left = 139
-          Top = 129
-          Width = 80
-          Height = 25
-          Action = DeleteTag
-          ParentShowHint = False
-          ShowHint = True
-          TabOrder = 3
-        end
-        object lbxObjectTags: TListBox
-          Left = 225
-          Top = 16
-          Width = 130
-          Height = 233
-          Anchors = [akLeft, akTop, akRight, akBottom]
-          ItemHeight = 13
-          Sorted = True
-          TabOrder = 4
-          OnDblClick = lbxObjectTagsDblClick
-          ExplicitWidth = 122
-          ExplicitHeight = 232
+          TabOrder = 1
+          ExplicitLeft = 271
         end
       end
     end
@@ -383,14 +370,6 @@ object ObjPropsDlg: TObjPropsDlg
       ShortCut = 8237
       OnExecute = AddTagExecute
       OnUpdate = AddTagUpdate
-    end
-    object DeleteTag: TAction
-      Category = 'Tags'
-      Caption = '&Elimina'
-      Hint = 'Elimina etichetta'
-      ShortCut = 8238
-      OnExecute = DeleteTagExecute
-      OnUpdate = DeleteTagUpdate
     end
   end
 end
