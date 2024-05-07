@@ -24,8 +24,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, ToolWin, ImgList, ActnList, Menus, XPMan, AppEvnts,
-  StdCtrls, ExtCtrls, FileCtrl, Types, System.ImageList, System.Actions,
-  REST.Client, Data.Bind.Components, Data.Bind.ObjectScope, OleCtrls, SHDocVw,
+  StdCtrls, ExtCtrls, FileCtrl, Types, ImageList, Actions, REST.Client,
+  Data.Bind.Components, Data.Bind.ObjectScope, WebView2, ActiveX, Edge,
   JvComponentBase, JvDragDrop, Spring.Container,
   uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist, uServices;
 
@@ -307,7 +307,7 @@ type
     tsRelations: TTabSheet;
     tsRules: TTabSheet;
     FieldsView: TListView;
-    NotesView: TWebBrowser;
+    NotesView: TEdgeBrowser;
     RelationsView: TListView;
     RulesView: TListView;
     HSplitter: TSplitter;
@@ -345,7 +345,6 @@ type
     procedure ApplicationEventsActivate(Sender: TObject);
     procedure ApplicationEventsDeactivate(Sender: TObject);
     procedure ApplicationEventsIdle(Sender: TObject; var Done: Boolean);
-    procedure ApplicationEventsMessage(var Msg: tagMSG; var Handled: Boolean);
     procedure ObjectsViewChange(Sender: TObject; Item: TListItem;
       Change: TItemChange);
     procedure ObjectsViewColumnClick(Sender: TObject; Column: TListColumn);
@@ -616,8 +615,7 @@ uses
   StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, JSON, UITypes,
   uShellUtils, uStorageUtils, uAbout, uGetPassword, uSetPassword, uFilePropsDlg,
   uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg, uReplaceDlg, uPrintPreview,
-  uHTMLExport, uO2Defs, uBrowserEmulation, uCtrlHelpers, uStuffHTML,
-  uHTMLHelper, uO2ObjectsUtils, uUtils;
+  uHTMLExport, uO2Defs, uCtrlHelpers, uHTMLHelper, uO2ObjectsUtils, uUtils;
 
 {$R *.dfm}
 
@@ -697,7 +695,7 @@ begin
 
   ActiveControl := ObjectsView;
 
-  SetBrowserEmulation(ExtractFileName(Application.ExeName), IE11Default);
+  NotesView.CreateWebView;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
@@ -800,14 +798,6 @@ begin
     FCheckForUpdatesSilent := True;
     CheckForUpdatesNow.Execute;
   end;
-end;
-
-procedure TMainForm.ApplicationEventsMessage(var Msg: tagMSG;
-  var Handled: Boolean);
-begin
-  if ((Msg.Message = WM_RBUTTONDOWN) or (Msg.Message = WM_RBUTTONDBLCLK))
-    and IsChild(NotesView.Handle, Msg.hwnd) then
-    Handled := True;
 end;
 
 procedure TMainForm.ObjectsViewChange(Sender: TObject; Item: TListItem;
@@ -1870,7 +1860,7 @@ begin
 
     SB.AppendLine('</body>').Append('</html>');
 
-    StuffHTML(NotesView.DefaultInterface, SB.ToString);
+    NotesView.NavigateToString(SB.ToString);
   finally
     SB.Free;
   end;
