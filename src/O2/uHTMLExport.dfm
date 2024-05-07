@@ -26,7 +26,6 @@ object HTMLExport: THTMLExport
     Margins.Bottom = 4
     Align = alClient
     TabOrder = 0
-    UserDataFolder = '%LOCALAPPDATA%\bds.exe.WebView2'
     OnCreateWebViewCompleted = WebBrowserCreateWebViewCompleted
     ExplicitWidth = 410
     ExplicitHeight = 242

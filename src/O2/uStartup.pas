@@ -188,28 +188,22 @@ begin
     .RegisterType<TAppFiles>(
       function: TAppFiles
       var
-        OpenFileName, AppPath, SettingsPath, LauncherPath, PortablePath: string;
-        LanguageModule: string;
+        AppPath, SettingsPath, LauncherPath, LanguageModule: string;
         I: Integer;
       begin
-        GetCommandLineParams(OpenFileName, PortablePath);
-
         if PortablePath <> '' then
         begin
-          AppPath :=
-            IncludeTrailingPathDelimiter(PortablePath) + PortableAppPath;
+          AppPath := CombinePath(PortablePath, PortableAppPath);
           if not GetSettingsOverride(Application.ExeName, SettingsPath) then
-            SettingsPath :=
-              IncludeTrailingPathDelimiter(PortablePath) + PortableSettingsPath;
-          LauncherPath :=
-            IncludeTrailingPathDelimiter(PortablePath) + PortableLauncherPath;
+            SettingsPath := CombinePath(PortablePath, PortableSettingsPath);
+          LauncherPath := CombinePath(PortablePath, PortableLauncherPath);
         end
         else
         begin
           AppPath := ExtractFilePath(Application.ExeName);
           if not GetSettingsOverride(Application.ExeName, SettingsPath) then
-            SettingsPath := IncludeTrailingPathDelimiter(TShellFolders.AppData)
-              + LocalSettingsDir;
+            SettingsPath := CombinePath(TShellFolders.AppData,
+              LocalSettingsPath);
           LauncherPath := AppPath;
         end;
 

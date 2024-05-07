@@ -155,6 +155,7 @@ begin
   SetBounds(WorkArea.Left, WorkArea.Top,
     WorkArea.Right - WorkArea.Left, WorkArea.Bottom - WorkArea.Top);
 
+  WebBrowser.UserDataFolder := WebDataPath;
   WebBrowser.CreateWebView;
 end;
 

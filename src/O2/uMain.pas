@@ -607,8 +607,6 @@ type
 var
   MainForm: TMainForm;
 
-procedure GetCommandLineParams(out OpenFileName, PortablePath: string);
-
 implementation
 
 uses
@@ -618,26 +616,6 @@ uses
   uHTMLExport, uO2Defs, uCtrlHelpers, uHTMLHelper, uO2ObjectsUtils, uUtils;
 
 {$R *.dfm}
-
-procedure GetCommandLineParams(out OpenFileName, PortablePath: string);
-var
-  I: Integer;
-begin
-  OpenFileName := '';
-  PortablePath := '';
-  I := 1;
-  while I <= ParamCount do
-    if SameText(ParamStr(I), 'portable') and (ParamStr(I + 1) <> '') then
-    begin
-      PortablePath := ParamStr(I + 1);
-      Inc(I, 2);
-    end
-    else
-    begin
-      OpenFileName := ParamStr(I);
-      Inc(I);
-    end;
-end;
 
 procedure SetHighlightColors(const Canvas: TCanvas; Highlight: THighlight);
 begin
@@ -656,20 +634,17 @@ begin
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
-var
-  PortablePath: string;
 begin
   FBusy := False;
   FBatchOperationCount := 0;
   FPendingChanges := [];
   FApplyingChanges := False;
+  FOpenFileName := OpenFileName;
   FStayOnTop := False;
   FTransparency := 0;
   FSelectedObjects := TO2ObjectListViewEnumerable.Create(ObjectsView);
 
   Application.HintHidePause := 4500;
-
-  GetCommandLineParams(FOpenFileName, PortablePath);
 
   FMRUList := TMRUList.Create;
   FMRUMenuItems := TList.Create;
@@ -695,6 +670,7 @@ begin
 
   ActiveControl := ObjectsView;
 
+  NotesView.UserDataFolder := WebDataPath;
   NotesView.CreateWebView;
 end;
 
@@ -1529,12 +1505,10 @@ end;
 
 procedure TMainForm.OpenNewInstance(const AFileName: string);
 var
-  ACmdLineFileName, APortablePath, AppExe, Parameters: string;
+  AppExe, Parameters: string;
 begin
-  GetCommandLineParams(ACmdLineFileName, APortablePath);
-
-  if APortablePath <> '' then
-    Parameters := 'portable "' + APortablePath + '" '
+  if PortablePath <> '' then
+    Parameters := 'portable "' + PortablePath + '" '
   else
     Parameters := '';
 
