@@ -13,6 +13,7 @@
 #define LauncherFile "O2Portable.exe"
 #define LicenseFile "License.rtf"
 #define ReadmeFile "ReadMe.rtf"
+#define WebView2LoaderFile "WebView2Loader.dll"
 
 [Setup]
 SourceDir=..
@@ -51,6 +52,7 @@ Name: languages\it; Description: Italian; Types: full
 
 [Files]
 Source: {#AppExeDir}\{#AppExeFile}; DestDir: {app}; Components: program; Flags: replacesameversion
+Source: {#AppExeDir}\{#WebView2LoaderFile}; DestDir: {app}; Components: program; Flags: replacesameversion
 Source: {#LauncherDir}\{#LauncherFile}; DestDir: {app}; Components: program; Flags: replacesameversion
 Source: {#SetupDir}\appicon.ico; DestDir: {app}; Components: program;
 Source: {#SetupDir}\appicon_16.png; DestDir: {app}; Components: program;
