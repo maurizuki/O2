@@ -999,7 +999,6 @@
         <DCCReference Include="Utils\uPasswordScoreCache.pas"/>
         <DCCReference Include="Utils\uShellUtils.pas"/>
         <DCCReference Include="Utils\uStorageUtils.pas"/>
-        <DCCReference Include="Utils\uStuffHTML.pas"/>
         <DCCReference Include="Utils\uUtils.pas"/>
         <DCCReference Include="Utils\uXmlStorage.pas"/>
         <DCCReference Include="FileOps\uFileOperation.pas"/>

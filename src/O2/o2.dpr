@@ -80,7 +80,6 @@ uses
   uPasswordScoreCache in 'Utils\uPasswordScoreCache.pas',
   uShellUtils in 'Utils\uShellUtils.pas',
   uStorageUtils in 'Utils\uStorageUtils.pas',
-  uStuffHTML in 'Utils\uStuffHTML.pas',
   uUtils in 'Utils\uUtils.pas',
   uXmlStorage in 'Utils\uXmlStorage.pas',
   uFileOperation in 'FileOps\uFileOperation.pas',
