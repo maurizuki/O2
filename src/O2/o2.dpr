@@ -74,7 +74,6 @@ uses
   uO2Utils in 'DataModel\uO2Utils.pas',
   uO2Xml in 'DataModel\uO2Xml.pas',
   uAppFiles in 'Utils\uAppFiles.pas',
-  uBrowserEmulation in 'Utils\uBrowserEmulation.pas',
   uCtrlHelpers in 'Utils\uCtrlHelpers.pas',
   uHTMLHelper in 'Utils\uHTMLHelper.pas',
   uMRUList in 'Utils\uMRUList.pas',

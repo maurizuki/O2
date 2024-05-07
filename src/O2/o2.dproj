@@ -993,7 +993,6 @@
         <DCCReference Include="DataModel\uO2Utils.pas"/>
         <DCCReference Include="DataModel\uO2Xml.pas"/>
         <DCCReference Include="Utils\uAppFiles.pas"/>
-        <DCCReference Include="Utils\uBrowserEmulation.pas"/>
         <DCCReference Include="Utils\uCtrlHelpers.pas"/>
         <DCCReference Include="Utils\uHTMLHelper.pas"/>
         <DCCReference Include="Utils\uMRUList.pas"/>
