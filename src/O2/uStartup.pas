@@ -232,7 +232,8 @@ begin
             SSettingsOverwriteQuery)
           .Add(IdHelp, HTMLHelpFile, AppPath, PortableLauncherPath)
           .Add(IdLicense, LicenseFile, AppPath, PortableAppPath)
-          .Add(IdReadMe, ReadMeFile, AppPath, PortableAppPath);
+          .Add(IdReadMe, ReadMeFile, AppPath, PortableAppPath)
+          .Add(IdWebView2Loader, WebView2LoaderFile, AppPath, PortableAppPath);
 
         for I := Low(Languages) to High(Languages) do
         begin

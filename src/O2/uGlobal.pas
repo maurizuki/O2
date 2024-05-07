@@ -63,6 +63,7 @@ const
   HTMLHelpFile = 'help.html';
   LicenseFile = 'License.rtf';
   ReadMeFile = 'ReadMe.rtf';
+  WebView2LoaderFile = 'WebView2Loader.dll';
 
   LocalSettingsDir = 'O2';
 
@@ -88,6 +89,7 @@ const
   IdLicense = 'License';
   IdReadMe = 'ReadMe';
   IdResourceModule = 'ResourceModule';
+  IdWebView2Loader = 'WebView2Loader';
 
 { Configuration file IDs }
 
