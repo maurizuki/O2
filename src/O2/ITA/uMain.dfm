@@ -160,19 +160,13 @@ object MainForm: TMainForm
       object tsNotes: TTabSheet
         Caption = 'Note'
         ImageIndex = 1
-        object NotesView: TWebBrowser
+        object NotesView: TEdgeBrowser
           Left = 0
           Top = 0
           Width = 582
           Height = 172
           Align = alClient
           TabOrder = 0
-          ControlData = {
-            4C000000273C0000C71100000100000001020000000000000000000000000000
-            000000004C000000000000000000000001000000E0D057007335CF11AE690800
-            2B2E126208000000000000004C0000000114020000000000C000000000000046
-            8000000000000000000000000000000000000000000000000000000000000000
-            00000000000000000100000000000000000000000000000000000000}
         end
       end
       object tsRelations: TTabSheet
@@ -4663,7 +4657,6 @@ object MainForm: TMainForm
     OnActivate = ApplicationEventsActivate
     OnDeactivate = ApplicationEventsDeactivate
     OnIdle = ApplicationEventsIdle
-    OnMessage = ApplicationEventsMessage
     Left = 392
     Top = 40
   end

@@ -167,7 +167,6 @@ object MainForm: TMainForm
           Height = 172
           Align = alClient
           TabOrder = 0
-          UserDataFolder = '%LOCALAPPDATA%\bds.exe.WebView2'
         end
       end
       object tsRelations: TTabSheet
