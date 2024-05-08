@@ -670,6 +670,11 @@ begin
 
   ActiveControl := ObjectsView;
 
+  ResizeObjectsViewColumns;
+  ResizeFieldsViewColumns;
+  ResizeRelationsViewColumns;
+  ResizeRulesViewColumns;
+
   NotesView.UserDataFolder := WebDataPath;
   NotesView.CreateWebView;
 end;
