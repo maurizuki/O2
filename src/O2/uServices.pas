@@ -357,7 +357,7 @@ type
 
     function AddStyle(const Style: string): Integer;
 
-    function ExportToHTML: string; overload;
+    function ExportToHTML(Preview: Boolean): string; overload;
     procedure ExportToHTML(const FileName: string); overload;
 
     function GetIncludeIndex: Boolean;

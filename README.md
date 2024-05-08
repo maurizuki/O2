@@ -17,6 +17,10 @@ In order to start to use O2 - after installing it on your computer - see the exa
 - __AddressBook.o2__ shows how to use the *rules* of type *E-mail address*, *Highlight*, *Internet link*, *Recurrence* to organize contact informations and recurrences of your relatives, friends, co-workers. The example also shows how to use the *relations* to connect husbands with wives, brothers with sisters, companies with employees.
 - __PasswordWallet.o2__ shows how to use the *rule* of type *Password* to create a safe place to store the credentials of your accounts. The password to open the file is *password*.
 
+### System requirements
+
+To work properly, O2 needs Microsoft Edge WebView2 Runtime. If it is not already installed, download it from the official [webpage](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) (the evergreen version is recommended).
+
 ### Install with Windows Package Manager
 
 To install O2 with the Windows Package Manager - a.k.a. *winget* - use the following command:

@@ -46,6 +46,8 @@ function YesNoWarningBox(const Text: string): Boolean; inline;
 function YesNoCancelBox(const Text: string): Integer; inline;
 function AbortRetryIgnoreBox(const Text: string): Integer; inline;
 
+function CombinePath(const S1, S2: string): string; inline;
+
 function GetLanguageName(LangId: Word): string;
 
 procedure SetLocaleOverride(const FileName, LocaleId: string);
@@ -101,6 +103,11 @@ end;
 function AbortRetryIgnoreBox(const Text: string): Integer;
 begin
   Result := MsgBox(Text, MB_ICONWARNING or MB_ABORTRETRYIGNORE);
+end;
+
+function CombinePath(const S1, S2: string): string;
+begin
+  Result := IncludeTrailingPathDelimiter(S1) + S2;
 end;
 
 function GetLanguageName(LangId: Word): string;

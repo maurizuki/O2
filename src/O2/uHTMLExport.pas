@@ -19,8 +19,8 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ComCtrls, ToolWin, Menus, ImgList, ActnList, OleCtrls, SHDocVw,
-  System.ImageList, System.Actions, JvStringHolder, uServices;
+  Dialogs, ComCtrls, ToolWin, Menus, ImgList, ActnList, ImageList, Actions,
+  WebView2, ActiveX, Edge, JvStringHolder, uServices;
 
 type
   THTMLExport = class(TForm)
@@ -46,7 +46,7 @@ type
     ToolBar: TToolBar;
     ToolButton1: TToolButton;
     ToolButton2: TToolButton;
-    WebBrowser: TWebBrowser;
+    WebBrowser: TEdgeBrowser;
     DefaultStyle: TJvStrHolder;
     ExportDialog: TSaveDialog;
     ToolButton3: TToolButton;
@@ -75,10 +75,10 @@ type
     procedure StyleExecute(Sender: TObject);
     procedure StyleUpdate(Sender: TObject);
     procedure ExportDialogCanClose(Sender: TObject; var CanClose: Boolean);
+    procedure WebBrowserCreateWebViewCompleted(Sender: TCustomEdgeBrowser;
+      AResult: HRESULT);
   private
     FModel: IHTMLExport;
-    OriginalApplicationMessage: TMessageEvent;
-    procedure ApplicationMessage(var Msg: TMsg; var Handled: Boolean);
     procedure SetModel(Value: IHTMLExport);
     procedure SetStyleCaption(Action: TCustomAction);
     procedure RefreshPreview;
@@ -93,7 +93,7 @@ var
 implementation
 
 uses
-  uGlobal, uStuffHTML, uUtils;
+  uGlobal, uUtils;
 
 {$R *.dfm}
 
@@ -110,15 +110,6 @@ begin
   finally
     Form.Free;
   end;
-end;
-
-procedure THTMLExport.ApplicationMessage(var Msg: TMsg; var Handled: Boolean);
-begin
-  if ((Msg.Message = WM_RBUTTONDOWN) or (Msg.Message = WM_RBUTTONDBLCLK))
-    and IsChild(WebBrowser.Handle, Msg.hwnd) then
-    Handled := True
-  else
-    OriginalApplicationMessage(Msg, Handled);
 end;
 
 procedure THTMLExport.SetModel(Value: IHTMLExport);
@@ -153,7 +144,7 @@ end;
 
 procedure THTMLExport.RefreshPreview;
 begin
-  StuffHTML(WebBrowser.DefaultInterface, FModel.ExportToHTML);
+  WebBrowser.NavigateToString(FModel.ExportToHTML(True));
 end;
 
 procedure THTMLExport.FormCreate(Sender: TObject);
@@ -164,13 +155,12 @@ begin
   SetBounds(WorkArea.Left, WorkArea.Top,
     WorkArea.Right - WorkArea.Left, WorkArea.Bottom - WorkArea.Top);
 
-  OriginalApplicationMessage := Application.OnMessage;
-  Application.OnMessage := ApplicationMessage;
+  WebBrowser.UserDataFolder := WebDataPath;
+  WebBrowser.CreateWebView;
 end;
 
 procedure THTMLExport.FormDestroy(Sender: TObject);
 begin
-  Application.OnMessage := OriginalApplicationMessage;
   FModel.StoreSettings;
 end;
 
@@ -250,6 +240,12 @@ end;
 procedure THTMLExport.StyleUpdate(Sender: TObject);
 begin
   TAction(Sender).Checked := FModel.StyleIndex = TComponent(Sender).Tag;
+end;
+
+procedure THTMLExport.WebBrowserCreateWebViewCompleted(
+  Sender: TCustomEdgeBrowser; AResult: HRESULT);
+begin
+  RefreshPreview;
 end;
 
 procedure THTMLExport.ExportDialogCanClose(Sender: TObject;

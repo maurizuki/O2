@@ -14,7 +14,7 @@ object HTMLExport: THTMLExport
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   TextHeight = 13
-  object WebBrowser: TWebBrowser
+  object WebBrowser: TEdgeBrowser
     AlignWithMargins = True
     Left = 4
     Top = 38
@@ -26,12 +26,9 @@ object HTMLExport: THTMLExport
     Margins.Bottom = 4
     Align = alClient
     TabOrder = 0
-    ControlData = {
-      4C000000CA2A00001D1900000000000000000000000000000000000000000000
-      000000004C000000000000000000000001000000E0D057007335CF11AE690800
-      2B2E126208000000000000004C0000000114020000000000C000000000000046
-      8000000000000000000000000000000000000000000000000000000000000000
-      00000000000000000100000000000000000000000000000000000000}
+    OnCreateWebViewCompleted = WebBrowserCreateWebViewCompleted
+    ExplicitWidth = 410
+    ExplicitHeight = 242
   end
   object ToolBar: TToolBar
     Left = 0

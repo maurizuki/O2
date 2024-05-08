@@ -5,10 +5,10 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">45407.6224768519</prop>
-        <prop prop-type="OrigDateTime">45407.6212268519</prop>
+        <prop prop-type="SelfDateTime">45419.7774074074</prop>
+        <prop prop-type="OrigDateTime">45419.7774074074</prop>
         <prop prop-type="XlatDateTime">45296.7456944444</prop>
-        <prop prop-type="Translated">1223</prop>
+        <prop prop-type="Translated">1211</prop>
         <prop prop-type="UnTranslated">0</prop>
       </prop-group>
     </header>
@@ -6520,42 +6520,42 @@
         <source>"'%s' is not a valid property value"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44198.742179537</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="Vcl_OleConst_SCannotActivate" resname="Vcl_OleConst_SCannotActivate">
         <source>"OLE control activation failed"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44198.742179537</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="Vcl_OleConst_SNoWindowHandle" resname="Vcl_OleConst_SNoWindowHandle">
         <source>"Could not obtain OLE control window handle"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44198.742179537</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="Vcl_OleConst_SInvalidLicense" resname="Vcl_OleConst_SInvalidLicense">
         <source>"License information for %s is invalid"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44198.742179537</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="Vcl_OleConst_SNotLicensed" resname="Vcl_OleConst_SNotLicensed">
         <source>"License information for %s not found. You cannot use this control in design mode"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44198.742179537</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="Vcl_OleConst_sNoRunningObject" resname="Vcl_OleConst_sNoRunningObject">
         <source>"Unable to retrieve a pointer to a running object registered with OLE for %s/%s"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44198.742179537</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="Data_DBConsts_SBcdOverflow" resname="Data_DBConsts_SBcdOverflow">
@@ -6919,7 +6919,7 @@
         <source>"DCOM not installed"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44198.7421797222</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="Vcl_ComStrs_sTabFailClear" resname="Vcl_ComStrs_sTabFailClear">
@@ -8200,7 +8200,7 @@
         <source>"Invalid operation on TOleGraphic"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44198.7421802662</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="Vcl_Consts_SUnknownExtension" resname="Vcl_Consts_SUnknownExtension">
@@ -11981,7 +11981,7 @@
         <source>"Operation not supported by Edge WebView2 control"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44566.64887875</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="System_Bindings_Consts_sBoolToInteger" resname="System_Bindings_Consts_sBoolToInteger">
@@ -12107,14 +12107,14 @@
         <source>"Invalid characters in file name"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44566.6488796412</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SPathTooLong" resname="System_RTLConsts_SPathTooLong">
         <source>"The specified path is too long"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44566.6488796412</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="System_SysConst_SAggregateException" resname="System_SysConst_SAggregateException">
@@ -12198,7 +12198,7 @@
         <source>"File name is empty"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45047.6527285995</prop>
-          <prop prop-type="Status">1</prop>
+          <prop prop-type="Status">3</prop>
         </prop-group>
       </trans-unit>
       <trans-unit id="System_RTLConsts_SInvalidDateDay" resname="System_RTLConsts_SInvalidDateDay">

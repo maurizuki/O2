@@ -63,14 +63,17 @@ const
   HTMLHelpFile = 'help.html';
   LicenseFile = 'License.rtf';
   ReadMeFile = 'ReadMe.rtf';
+  WebView2LoaderFile = 'WebView2Loader.dll';
 
-  LocalSettingsDir = 'O2';
+  LocalSettingsPath = 'O2';
+  LocalWebDataPath = 'O2\WebView2';
 
   PortableLauncherPath = '';
   PortableAppPath = 'App\O2';
   PortableAppInfoPath = 'App\AppInfo';
   PortableSettingsPath = 'Data\Settings';
   PortableFileTypeIconsPath = 'App\AppInfo\FileTypeIcons';
+  PortableWebDataPath = 'Data\WebView2';
 
 { Application file list IDs }
 
@@ -88,6 +91,7 @@ const
   IdLicense = 'License';
   IdReadMe = 'ReadMe';
   IdResourceModule = 'ResourceModule';
+  IdWebView2Loader = 'WebView2Loader';
 
 { Configuration file IDs }
 
@@ -307,6 +311,40 @@ const
     (Value: Integer(vsList);      Name: 'List'),
     (Value: Integer(vsReport);    Name: 'Report'));
 
+var
+  OpenFileName, PortablePath, WebDataPath: string;
+
 implementation
+
+uses
+  SysUtils, uShellUtils, uUtils;
+
+procedure GetCommandLineParams(out OpenFileName, PortablePath: string);
+var
+  I: Integer;
+begin
+  OpenFileName := '';
+  PortablePath := '';
+  I := 1;
+  while I <= ParamCount do
+    if SameText(ParamStr(I), 'portable') and (ParamStr(I + 1) <> '') then
+    begin
+      PortablePath := ParamStr(I + 1);
+      Inc(I, 2);
+    end
+    else
+    begin
+      OpenFileName := ParamStr(I);
+      Inc(I);
+    end;
+end;
+
+initialization
+  GetCommandLineParams(OpenFileName, PortablePath);
+
+  if PortablePath <> '' then
+    WebDataPath := CombinePath(PortablePath, PortableWebDataPath)
+  else
+    WebDataPath := CombinePath(TShellFolders.AppData, LocalWebDataPath);
 
 end.

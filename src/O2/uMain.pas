@@ -24,8 +24,8 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, ToolWin, ImgList, ActnList, Menus, XPMan, AppEvnts,
-  StdCtrls, ExtCtrls, FileCtrl, Types, System.ImageList, System.Actions,
-  REST.Client, Data.Bind.Components, Data.Bind.ObjectScope, OleCtrls, SHDocVw,
+  StdCtrls, ExtCtrls, FileCtrl, Types, ImageList, Actions, REST.Client,
+  Data.Bind.Components, Data.Bind.ObjectScope, WebView2, ActiveX, Edge,
   JvComponentBase, JvDragDrop, Spring.Container,
   uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist, uServices;
 
@@ -307,7 +307,7 @@ type
     tsRelations: TTabSheet;
     tsRules: TTabSheet;
     FieldsView: TListView;
-    NotesView: TWebBrowser;
+    NotesView: TEdgeBrowser;
     RelationsView: TListView;
     RulesView: TListView;
     HSplitter: TSplitter;
@@ -345,7 +345,6 @@ type
     procedure ApplicationEventsActivate(Sender: TObject);
     procedure ApplicationEventsDeactivate(Sender: TObject);
     procedure ApplicationEventsIdle(Sender: TObject; var Done: Boolean);
-    procedure ApplicationEventsMessage(var Msg: tagMSG; var Handled: Boolean);
     procedure ObjectsViewChange(Sender: TObject; Item: TListItem;
       Change: TItemChange);
     procedure ObjectsViewColumnClick(Sender: TObject; Column: TListColumn);
@@ -608,38 +607,15 @@ type
 var
   MainForm: TMainForm;
 
-procedure GetCommandLineParams(out OpenFileName, PortablePath: string);
-
 implementation
 
 uses
   StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, JSON, UITypes,
   uShellUtils, uStorageUtils, uAbout, uGetPassword, uSetPassword, uFilePropsDlg,
   uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg, uReplaceDlg, uPrintPreview,
-  uHTMLExport, uO2Defs, uBrowserEmulation, uCtrlHelpers, uStuffHTML,
-  uHTMLHelper, uO2ObjectsUtils, uUtils;
+  uHTMLExport, uO2Defs, uCtrlHelpers, uHTMLHelper, uO2ObjectsUtils, uUtils;
 
 {$R *.dfm}
-
-procedure GetCommandLineParams(out OpenFileName, PortablePath: string);
-var
-  I: Integer;
-begin
-  OpenFileName := '';
-  PortablePath := '';
-  I := 1;
-  while I <= ParamCount do
-    if SameText(ParamStr(I), 'portable') and (ParamStr(I + 1) <> '') then
-    begin
-      PortablePath := ParamStr(I + 1);
-      Inc(I, 2);
-    end
-    else
-    begin
-      OpenFileName := ParamStr(I);
-      Inc(I);
-    end;
-end;
 
 procedure SetHighlightColors(const Canvas: TCanvas; Highlight: THighlight);
 begin
@@ -658,20 +634,17 @@ begin
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
-var
-  PortablePath: string;
 begin
   FBusy := False;
   FBatchOperationCount := 0;
   FPendingChanges := [];
   FApplyingChanges := False;
+  FOpenFileName := OpenFileName;
   FStayOnTop := False;
   FTransparency := 0;
   FSelectedObjects := TO2ObjectListViewEnumerable.Create(ObjectsView);
 
   Application.HintHidePause := 4500;
-
-  GetCommandLineParams(FOpenFileName, PortablePath);
 
   FMRUList := TMRUList.Create;
   FMRUMenuItems := TList.Create;
@@ -697,7 +670,8 @@ begin
 
   ActiveControl := ObjectsView;
 
-  SetBrowserEmulation(ExtractFileName(Application.ExeName), IE11Default);
+  NotesView.UserDataFolder := WebDataPath;
+  NotesView.CreateWebView;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
@@ -800,14 +774,6 @@ begin
     FCheckForUpdatesSilent := True;
     CheckForUpdatesNow.Execute;
   end;
-end;
-
-procedure TMainForm.ApplicationEventsMessage(var Msg: tagMSG;
-  var Handled: Boolean);
-begin
-  if ((Msg.Message = WM_RBUTTONDOWN) or (Msg.Message = WM_RBUTTONDBLCLK))
-    and IsChild(NotesView.Handle, Msg.hwnd) then
-    Handled := True;
 end;
 
 procedure TMainForm.ObjectsViewChange(Sender: TObject; Item: TListItem;
@@ -1539,12 +1505,10 @@ end;
 
 procedure TMainForm.OpenNewInstance(const AFileName: string);
 var
-  ACmdLineFileName, APortablePath, AppExe, Parameters: string;
+  AppExe, Parameters: string;
 begin
-  GetCommandLineParams(ACmdLineFileName, APortablePath);
-
-  if APortablePath <> '' then
-    Parameters := 'portable "' + APortablePath + '" '
+  if PortablePath <> '' then
+    Parameters := 'portable "' + PortablePath + '" '
   else
     Parameters := '';
 
@@ -1863,6 +1827,7 @@ begin
   try
     SB.AppendLine('<!DOCTYPE html>')
       .AppendLine('<html>')
+      .AppendLine('<script type="text/javascript">document.addEventListener("contextmenu", (event) => { event.preventDefault(); }, true);</script>')
       .Append('<body style="color: #000; background-color: #fff; font-family: sans-serif; font-size: 1rem;">');
 
     if HasSelectedObject then
@@ -1870,7 +1835,7 @@ begin
 
     SB.AppendLine('</body>').Append('</html>');
 
-    StuffHTML(NotesView.DefaultInterface, SB.ToString);
+    NotesView.NavigateToString(SB.ToString);
   finally
     SB.Free;
   end;

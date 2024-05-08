@@ -72,6 +72,7 @@ uses
   uServices in '..\O2\uServices.pas',
   uGlobal in '..\O2\uGlobal.pas',
   uO2ObjectsUtils in '..\O2\Utils\uO2ObjectsUtils.pas',
+  uShellUtils in '..\O2\Utils\uShellUtils.pas',
   uUtils in '..\O2\Utils\uUtils.pas',
   uHTMLHelper in '..\O2\Utils\uHTMLHelper.pas',
   uEncryptionPropsModel in '..\O2\ViewModels\uEncryptionPropsModel.pas',
