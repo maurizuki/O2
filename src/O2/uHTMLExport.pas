@@ -144,7 +144,7 @@ end;
 
 procedure THTMLExport.RefreshPreview;
 begin
-  WebBrowser.NavigateToString(FModel.ExportToHTML);
+  WebBrowser.NavigateToString(FModel.ExportToHTML(True));
 end;
 
 procedure THTMLExport.FormCreate(Sender: TObject);

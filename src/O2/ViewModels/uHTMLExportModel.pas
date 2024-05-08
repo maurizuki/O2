@@ -64,7 +64,7 @@ type
 
     function AddStyle(const Style: string): Integer;
 
-    function ExportToHTML: string; overload;
+    function ExportToHTML(Preview: Boolean): string; overload;
     procedure ExportToHTML(const FileName: string); overload;
 
     property IncludeIndex: Boolean read GetIncludeIndex write SetIncludeIndex;
@@ -157,12 +157,18 @@ begin
   Result := FStyles.Add(Style);
 end;
 
-function THTMLExportModel.ExportToHTML: string;
+function THTMLExportModel.ExportToHTML(Preview: Boolean): string;
 begin
   FBuilder.Clear;
 
-  FBuilder.AppendLine('<!DOCTYPE html>')
-    .AppendLine('<html>')
+  FBuilder
+    .AppendLine('<!DOCTYPE html>')
+    .AppendLine('<html>');
+
+  if Preview then
+    FBuilder.AppendLine('<script type="text/javascript">document.addEventListener("contextmenu", (event) => { event.preventDefault(); }, true);</script>');
+
+  FBuilder
     .AppendLine('<head>')
     .AppendFormat('<meta name="generator" content="%s %s" />',
       [FAppVersionInfo.AppName, FAppVersionInfo.DisplayVersion])
@@ -192,7 +198,7 @@ var
 begin
   Writer := TStreamWriter.Create(FileName);
   try
-    Writer.Write(ExportToHTML);
+    Writer.Write(ExportToHTML(False));
   finally
     Writer.Free;
   end;

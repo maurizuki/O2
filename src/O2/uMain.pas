@@ -1827,6 +1827,7 @@ begin
   try
     SB.AppendLine('<!DOCTYPE html>')
       .AppendLine('<html>')
+      .AppendLine('<script type="text/javascript">document.addEventListener("contextmenu", (event) => { event.preventDefault(); }, true);</script>')
       .Append('<body style="color: #000; background-color: #fff; font-family: sans-serif; font-size: 1rem;">');
 
     if HasSelectedObject then
