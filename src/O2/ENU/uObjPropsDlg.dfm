@@ -3,37 +3,36 @@ object ObjPropsDlg: TObjPropsDlg
   Top = 111
   BorderIcons = [biSystemMenu]
   Caption = 'Object properties'
-  ClientHeight = 417
-  ClientWidth = 357
+  ClientHeight = 442
+  ClientWidth = 388
   Color = clBtnFace
-  Constraints.MinHeight = 452
-  Constraints.MinWidth = 354
+  Constraints.MinHeight = 480
+  Constraints.MinWidth = 400
   Font.Charset = ANSI_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
   Position = poMainFormCenter
-  OnCreate = FormCreate
-  OnDestroy = FormDestroy
-  OnShow = FormShow
   DesignSize = (
-    357
-    417)
+    388
+    442)
   TextHeight = 13
   object PageControl: TPageControl
     Left = 8
     Top = 8
-    Width = 341
-    Height = 370
+    Width = 372
+    Height = 396
     ActivePage = TabSheet1
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 0
+    ExplicitWidth = 368
+    ExplicitHeight = 395
     object TabSheet1: TTabSheet
       Caption = 'General'
       DesignSize = (
-        333
-        342)
+        364
+        368)
       object Label1: TLabel
         Left = 3
         Top = 12
@@ -42,103 +41,89 @@ object ObjPropsDlg: TObjPropsDlg
         Caption = '&Name:'
         FocusControl = edName
       end
-      object Label2: TLabel
-        Left = 3
-        Top = 113
-        Width = 27
-        Height = 13
-        Caption = '&Tags:'
-        FocusControl = cbTag
-      end
       object edName: TEdit
         Left = 3
         Top = 31
-        Width = 327
+        Width = 358
         Height = 21
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         OnChange = edNameChange
-        ExplicitWidth = 319
+        ExplicitWidth = 354
       end
-      object cbTag: TComboBox
+      object GroupBox1: TGroupBox
         Left = 3
-        Top = 132
-        Width = 241
-        Height = 21
-        Anchors = [akLeft, akTop, akRight]
-        TabOrder = 1
-        ExplicitWidth = 233
-      end
-      object lbxTags: TListBox
-        Left = 3
-        Top = 159
-        Width = 241
-        Height = 180
+        Top = 112
+        Width = 358
+        Height = 252
         Anchors = [akLeft, akTop, akRight, akBottom]
-        ItemHeight = 13
-        Sorted = True
-        TabOrder = 3
-        ExplicitWidth = 233
-        ExplicitHeight = 179
-      end
-      object Button4: TButton
-        Left = 250
-        Top = 132
-        Width = 80
-        Height = 25
-        Action = AddTag
-        Anchors = [akTop, akRight]
-        ParentShowHint = False
-        ShowHint = True
-        TabOrder = 2
-        ExplicitLeft = 242
-      end
-      object Button5: TButton
-        Left = 250
-        Top = 159
-        Width = 80
-        Height = 25
-        Action = DeleteTag
-        Anchors = [akTop, akRight]
-        ParentShowHint = False
-        ShowHint = True
-        TabOrder = 4
-        ExplicitLeft = 242
+        Caption = '&Tags'
+        TabOrder = 1
+        ExplicitWidth = 354
+        ExplicitHeight = 251
+        DesignSize = (
+          358
+          252)
+        object edTag: TEdit
+          Left = 3
+          Top = 16
+          Width = 266
+          Height = 21
+          Anchors = [akLeft, akTop, akRight]
+          TabOrder = 0
+          TextHint = 'New tag'
+          ExplicitWidth = 262
+        end
+        object lbxTags: TListBox
+          Left = 3
+          Top = 45
+          Width = 352
+          Height = 204
+          Anchors = [akLeft, akTop, akRight, akBottom]
+          Columns = 3
+          ExtendedSelect = False
+          ItemHeight = 13
+          MultiSelect = True
+          Sorted = True
+          TabOrder = 2
+          OnClick = lbxTagsClick
+          ExplicitWidth = 348
+          ExplicitHeight = 203
+        end
+        object Button4: TButton
+          Left = 275
+          Top = 14
+          Width = 80
+          Height = 25
+          Action = AddTag
+          Anchors = [akTop, akRight]
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 1
+          ExplicitLeft = 271
+        end
       end
     end
     object TabSheet2: TTabSheet
       Caption = 'Fields'
       ImageIndex = 1
       DesignSize = (
-        333
-        342)
-      object pbPasswordStrength: TPaintBox
-        Left = 152
-        Top = 290
-        Width = 178
-        Height = 17
-        Cursor = crHelp
-        Anchors = [akLeft, akRight, akBottom]
-        ParentShowHint = False
-        ShowHint = True
-        Visible = False
-        OnPaint = pbPasswordStrengthPaint
-        ExplicitTop = 292
-      end
+        364
+        368)
       object FieldsView: TListView
         Left = 3
         Top = 3
-        Width = 327
-        Height = 255
+        Width = 358
+        Height = 281
         Anchors = [akLeft, akTop, akRight, akBottom]
         Columns = <
           item
             Caption = 'Field'
-            Width = 140
+            Width = 155
           end
           item
             Caption = 'Value'
-            Width = 160
+            Width = 155
           end>
         ColumnClick = False
         HideSelection = False
@@ -151,19 +136,20 @@ object ObjPropsDlg: TObjPropsDlg
       end
       object cbFieldName: TComboBox
         Left = 3
-        Top = 264
-        Width = 143
+        Top = 290
+        Width = 156
         Height = 21
         Hint = 'Field name'
         Anchors = [akLeft, akBottom]
         ParentShowHint = False
         ShowHint = True
         TabOrder = 1
+        OnChange = cbFieldNameChange
       end
       object cbFieldValue: TComboBox
-        Left = 152
-        Top = 264
-        Width = 178
+        Left = 165
+        Top = 290
+        Width = 196
         Height = 21
         Hint = 'Field value'
         Anchors = [akLeft, akRight, akBottom]
@@ -175,7 +161,7 @@ object ObjPropsDlg: TObjPropsDlg
       end
       object Button1: TButton
         Left = 3
-        Top = 314
+        Top = 340
         Width = 75
         Height = 25
         Action = AddField
@@ -186,7 +172,7 @@ object ObjPropsDlg: TObjPropsDlg
       end
       object Button2: TButton
         Left = 84
-        Top = 314
+        Top = 340
         Width = 75
         Height = 25
         Action = ReplaceField
@@ -197,7 +183,7 @@ object ObjPropsDlg: TObjPropsDlg
       end
       object Button3: TButton
         Left = 165
-        Top = 314
+        Top = 340
         Width = 75
         Height = 25
         Action = DeleteField
@@ -207,8 +193,8 @@ object ObjPropsDlg: TObjPropsDlg
         TabOrder = 5
       end
       object Button6: TButton
-        Left = 258
-        Top = 314
+        Left = 289
+        Top = 340
         Width = 33
         Height = 25
         Action = MoveUp
@@ -218,8 +204,8 @@ object ObjPropsDlg: TObjPropsDlg
         TabOrder = 6
       end
       object Button7: TButton
-        Left = 297
-        Top = 314
+        Left = 328
+        Top = 340
         Width = 33
         Height = 25
         Action = MoveDown
@@ -228,26 +214,34 @@ object ObjPropsDlg: TObjPropsDlg
         ShowHint = True
         TabOrder = 7
       end
-      object ckDisplayPasswordStrength: TCheckBox
-        Left = 3
-        Top = 290
-        Width = 143
-        Height = 17
+      inline PasswordStrengthIndicator: TPasswordStrengthIndicator
+        Left = 165
+        Top = 316
+        Width = 196
+        Height = 9
         Anchors = [akLeft, akRight, akBottom]
-        Caption = '&Password strength'
         TabOrder = 8
-        OnClick = ckDisplayPasswordStrengthClick
+        ExplicitLeft = 165
+        ExplicitTop = 316
+        ExplicitWidth = 196
+        ExplicitHeight = 9
+        inherited PaintBox: TPaintBox
+          Width = 196
+          Height = 9
+          ExplicitWidth = 196
+          ExplicitHeight = 10
+        end
       end
     end
     object TabSheet3: TTabSheet
       Caption = 'Notes'
       ImageIndex = 2
       DesignSize = (
-        333
-        342)
+        364
+        368)
       object Label3: TLabel
-        Left = 222
-        Top = 323
+        Left = 253
+        Top = 349
         Width = 108
         Height = 13
         Cursor = crHandPoint
@@ -264,12 +258,14 @@ object ObjPropsDlg: TObjPropsDlg
         ParentShowHint = False
         ShowHint = True
         OnClick = LinkClick
+        ExplicitLeft = 222
+        ExplicitTop = 323
       end
       object Memo: TMemo
         Left = 3
         Top = 3
-        Width = 327
-        Height = 313
+        Width = 358
+        Height = 339
         Anchors = [akLeft, akTop, akRight, akBottom]
         Font.Charset = ANSI_CHARSET
         Font.Color = clWindowText
@@ -283,28 +279,32 @@ object ObjPropsDlg: TObjPropsDlg
       end
       object ckMarkdown: TCheckBox
         Left = 3
-        Top = 322
-        Width = 213
+        Top = 348
+        Width = 244
         Height = 17
         Anchors = [akLeft, akRight, akBottom]
         Caption = '&Markdown syntax'
         TabOrder = 1
+        OnClick = ckMarkdownClick
       end
     end
   end
   object btOk: TButton
-    Left = 193
-    Top = 384
+    Left = 224
+    Top = 409
     Width = 75
     Height = 25
     Action = OK
     Anchors = [akRight, akBottom]
     Default = True
+    ModalResult = 1
     TabOrder = 1
+    ExplicitLeft = 220
+    ExplicitTop = 408
   end
   object btCancel: TButton
-    Left = 274
-    Top = 384
+    Left = 305
+    Top = 409
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -312,6 +312,8 @@ object ObjPropsDlg: TObjPropsDlg
     Caption = 'Cancel'
     ModalResult = 2
     TabOrder = 2
+    ExplicitLeft = 301
+    ExplicitTop = 408
   end
   object ActionList: TActionList
     Left = 8
@@ -368,14 +370,6 @@ object ObjPropsDlg: TObjPropsDlg
       ShortCut = 8237
       OnExecute = AddTagExecute
       OnUpdate = AddTagUpdate
-    end
-    object DeleteTag: TAction
-      Category = 'Tags'
-      Caption = '&Delete'
-      Hint = 'Delete tag'
-      ShortCut = 8238
-      OnExecute = DeleteTagExecute
-      OnUpdate = DeleteTagUpdate
     end
   end
 end

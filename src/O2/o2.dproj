@@ -53,14 +53,12 @@
         <SanitizedProjectName>o2</SanitizedProjectName>
         <DCC_Namespace>Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;Winapi;Xml.Win;System.Win;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_MajorVer>2</VerInfo_MajorVer>
-        <VerInfo_MinorVer>2</VerInfo_MinorVer>
-        <VerInfo_Release>1</VerInfo_Release>
+        <VerInfo_MajorVer>3</VerInfo_MajorVer>
+        <VerInfo_MinorVer>3</VerInfo_MinorVer>
         <VerInfo_Build>445</VerInfo_Build>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.2.1.445;InternalName=O2;LegalCopyright=(C) 2004-2021 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.2.1;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
-        <DCC_UnitSearchPath>..\Library;..\DCPcrypt2;..\DCPcrypt2\Ciphers;..\DCPcrypt2\Hashes;..\Markdown;..\Zxcvbn\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.3.0.445;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.0;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_DependencyCheckOutputName>o2.exe</DCC_DependencyCheckOutputName>
@@ -69,10 +67,9 @@
         <UWP_DelphiLogo44>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_44.png</UWP_DelphiLogo44>
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
         <Manifest_File>(None)</Manifest_File>
-        <VerInfo_MinorVer>4</VerInfo_MinorVer>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.4.0.445;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.4;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
+        <VerInfo_MinorVer>0</VerInfo_MinorVer>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.0.0.445;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.0;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
-        <VerInfo_Release>0</VerInfo_Release>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
         <Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
@@ -87,20 +84,22 @@
         <DCC_LocalDebugSymbols>False</DCC_LocalDebugSymbols>
         <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
         <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+        <VerInfo_MinorVer>0</VerInfo_MinorVer>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.0.0.445;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.0;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_DependencyCheckOutputName>o2.exe</DCC_DependencyCheckOutputName>
         <SanitizedProjectName>o2</SanitizedProjectName>
-        <VerInfo_Build>520</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.4.0.520;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.4;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
+        <VerInfo_Build>550</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.0.0.550;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.0;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
-        <VerInfo_MinorVer>4</VerInfo_MinorVer>
-        <VerInfo_Release>0</VerInfo_Release>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <Version>7.0</Version>
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
         <DCC_OutputDRCFile>True</DCC_OutputDRCFile>
+        <VerInfo_MinorVer>0</VerInfo_MinorVer>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.0.0.445;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.0;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <DCC_DependencyCheckOutputName>o2.exe</DCC_DependencyCheckOutputName>
@@ -108,9 +107,7 @@
         <VerInfo_Debug>true</VerInfo_Debug>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_Build>462</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=2.4.0.462;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=2.4;Comments=A safe storage for your personal data.;Homepage=http://o2project.sourceforge.net</VerInfo_Keys>
-        <VerInfo_MinorVer>4</VerInfo_MinorVer>
-        <VerInfo_Release>0</VerInfo_Release>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.0.0.462;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.0;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
     </PropertyGroup>
     <ProjectExtensions>
         <Borland.Personality>Delphi.Personality.12</Borland.Personality>
@@ -187,7 +184,8 @@
                     <RDP_Source_Files Name="Item12">uPrintPreview.dfm</RDP_Source_Files>
                     <RDP_Source_Files Name="Item13">uHTMLExport.dfm</RDP_Source_Files>
                     <RDP_Source_Files Name="Item14">uRTFViewer.dfm</RDP_Source_Files>
-                    <RDP_Source_Files Name="Item15">o2.drc</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item15">uPasswordStrengthIndicator.dfm</RDP_Source_Files>
+                    <RDP_Source_Files Name="Item16">o2.drc</RDP_Source_Files>
                 </RDP_Source_Files>
             </Delphi.Personality>
             <Platforms>
@@ -936,13 +934,91 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
+        <DCCReference Include="..\DCPcrypt2\DCPbase64.pas"/>
+        <DCCReference Include="..\DCPcrypt2\DCPblockciphers.pas"/>
+        <DCCReference Include="..\DCPcrypt2\DCPconst.pas"/>
+        <DCCReference Include="..\DCPcrypt2\DCPcrypt2.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPblowfish.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPcast128.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPcast256.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPdes.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPice.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPidea.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPmars.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPmisty1.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPrc2.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPrc4.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPrc5.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPrc6.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPrijndael.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPserpent.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPtea.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Ciphers\DCPtwofish.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Hashes\DCPhaval.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Hashes\DCPmd4.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Hashes\DCPmd5.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Hashes\DCPripemd128.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Hashes\DCPripemd160.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Hashes\DCPsha1.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Hashes\DCPsha256.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Hashes\DCPsha512.pas"/>
+        <DCCReference Include="..\DCPcrypt2\Hashes\DCPtiger.pas"/>
+        <DCCReference Include="..\Markdown\MarkdownCommonMark.pas"/>
+        <DCCReference Include="..\Markdown\MarkdownHTMLEntities.pas"/>
+        <DCCReference Include="..\Markdown\MarkdownProcessor.pas"/>
+        <DCCReference Include="..\Markdown\MarkdownUnicodeUtils.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.DateMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.DefaultMatcherFactory.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.DictionaryMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.L33tMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.Matcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.MatcherFactory.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.PasswordScoring.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.RegexMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.RepeatMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.Result.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.SequenceMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.SpatialMatcher.pas"/>
+        <DCCReference Include="..\Zxcvbn\src\Zxcvbn.Utility.pas"/>
+        <DCCReference Include="Utils\SZCRC32.pas"/>
+        <DCCReference Include="DataModel\uO2Classes.pas"/>
+        <DCCReference Include="DataModel\uO2Defs.pas"/>
+        <DCCReference Include="DataModel\uO2File.pas"/>
+        <DCCReference Include="DataModel\uO2Objects.pas"/>
+        <DCCReference Include="DataModel\uO2Relations.pas"/>
+        <DCCReference Include="DataModel\uO2Rules.pas"/>
+        <DCCReference Include="DataModel\uO2Utils.pas"/>
+        <DCCReference Include="DataModel\uO2Xml.pas"/>
+        <DCCReference Include="Utils\uAppFiles.pas"/>
+        <DCCReference Include="Utils\uCtrlHelpers.pas"/>
+        <DCCReference Include="Utils\uHTMLHelper.pas"/>
+        <DCCReference Include="Utils\uMRUList.pas"/>
+        <DCCReference Include="Utils\uPasswordScoreCache.pas"/>
+        <DCCReference Include="Utils\uShellUtils.pas"/>
+        <DCCReference Include="Utils\uStorageUtils.pas"/>
+        <DCCReference Include="Utils\uUtils.pas"/>
+        <DCCReference Include="Utils\uXmlStorage.pas"/>
+        <DCCReference Include="FileOps\uFileOperation.pas"/>
+        <DCCReference Include="FileOps\uiCalendarExport.pas"/>
+        <DCCReference Include="FileOps\uO2ImportExport.pas"/>
+        <DCCReference Include="FileOps\uXmlImportExport.pas"/>
+        <DCCReference Include="Utils\uO2ObjectsUtils.pas"/>
+        <DCCReference Include="ViewModels\uEncryptionPropsModel.pas"/>
+        <DCCReference Include="ViewModels\uEventFilters.pas"/>
+        <DCCReference Include="ViewModels\uFileManager.pas"/>
+        <DCCReference Include="ViewModels\uFilePropsModel.pas"/>
+        <DCCReference Include="ViewModels\uHTMLExportModel.pas"/>
+        <DCCReference Include="ViewModels\uObjectModels.pas"/>
+        <DCCReference Include="ViewModels\uPasswordStrengthInfo.pas"/>
+        <DCCReference Include="ViewModels\uPrintModel.pas"/>
+        <DCCReference Include="ViewModels\uRelationModels.pas"/>
+        <DCCReference Include="ViewModels\uReplaceOperations.pas"/>
+        <DCCReference Include="ViewModels\uRuleModels.pas"/>
         <DCCReference Include="uMain.pas">
             <Form>MainForm</Form>
         </DCCReference>
-        <DCCReference Include="uUtils.pas"/>
-        <DCCReference Include="uShellUtils.pas"/>
         <DCCReference Include="uGlobal.pas"/>
-        <DCCReference Include="uAppFiles.pas"/>
         <DCCReference Include="uObjPropsDlg.pas">
             <Form>ObjPropsDlg</Form>
         </DCCReference>
@@ -970,26 +1046,19 @@
         <DCCReference Include="uPrintPreview.pas">
             <Form>PrintPreview</Form>
         </DCCReference>
-        <DCCReference Include="uLookupHelper.pas"/>
-        <DCCReference Include="uPAFConsts.pas"/>
-        <DCCReference Include="uXmlStorage.pas"/>
         <DCCReference Include="uHTMLExport.pas">
             <Form>HTMLExport</Form>
         </DCCReference>
-        <DCCReference Include="uStuffHTML.pas"/>
-        <DCCReference Include="uMRUList.pas"/>
-        <DCCReference Include="uBrowserEmulation.pas"/>
-        <DCCReference Include="uCtrlHelpers.pas"/>
-        <DCCReference Include="uImportExport.pas"/>
-        <DCCReference Include="uXmlImportExport.pas"/>
-        <DCCReference Include="uO2ImportExport.pas"/>
-        <DCCReference Include="uiCalendarExport.pas"/>
-        <DCCReference Include="uPasswordScoreProvider.pas"/>
         <DCCReference Include="uRTFViewer.pas">
             <Form>RTFViewer</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="uHTMLHelper.pas"/>
+        <DCCReference Include="uPasswordStrengthIndicator.pas">
+            <Form>PasswordStrengthIndicator</Form>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="uServices.pas"/>
+        <DCCReference Include="uStartup.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

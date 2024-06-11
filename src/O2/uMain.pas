@@ -19,28 +19,29 @@ interface
 
 {$WARN UNIT_PLATFORM OFF}
 
-{$R Dictionaries.res}
 {$R Icons.res}
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, ToolWin, ImgList, ActnList, Menus, XPMan, AppEvnts,
-  StdCtrls, ExtCtrls, FileCtrl, Types, System.ImageList, System.Actions,
-  REST.Client, Data.Bind.Components, Data.Bind.ObjectScope, OleCtrls, SHDocVw,
-  JvComponentBase, JvDragDrop,
-  uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist,
-  uPasswordScoreProvider;
+  StdCtrls, ExtCtrls, FileCtrl, Types, ImageList, Actions, REST.Client,
+  Data.Bind.Components, Data.Bind.ObjectScope, WebView2, ActiveX, Edge,
+  JvComponentBase, JvDragDrop, Spring.Container,
+  uO2File, uO2Objects, uO2Relations, uO2Rules, uGlobal, uMRUlist, uServices;
 
 type
-  TCmdLineAction = (caNone, caOpenFile);
+  TNotifyChange = (
+    ncObjectsView,
+    ncObjPropsViews,
+    ncRelationsView,
+    ncRulesView,
+    ncTagList,
+    ncRuleList
+    );
 
-  TNotifyChange = (ncObjects, ncObjProps, ncRelations, ncRules,
-    ncTagList, ncRuleList);
   TNotifyChanges = set of TNotifyChange;
 
-  TObjectViewColumn = (ocName, ocTags, ocNextEvent);
-
-  TMainForm = class(TForm)
+  TMainForm = class(TForm, IPasswordProvider)
     ToolBar: TToolBar;
     StatusBar: TStatusBar;
     ActionList: TActionList;
@@ -153,8 +154,6 @@ type
     N11: TMenuItem;
     Properties1: TMenuItem;
     DragDrop: TJvDragDrop;
-    AddToIEFavorites: TAction;
-    AddtoIEfavorites1: TMenuItem;
     SaveFileAsCopy: TAction;
     Saveascopy1: TMenuItem;
     ReopenFile: TAction;
@@ -308,7 +307,7 @@ type
     tsRelations: TTabSheet;
     tsRules: TTabSheet;
     FieldsView: TListView;
-    NotesView: TWebBrowser;
+    NotesView: TEdgeBrowser;
     RelationsView: TListView;
     RulesView: TListView;
     HSplitter: TSplitter;
@@ -340,12 +339,12 @@ type
     CheckForUpdatesRequest: TRESTRequest;
     CheckForUpdatesResponse: TRESTResponse;
     procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure ApplicationEventsActivate(Sender: TObject);
     procedure ApplicationEventsDeactivate(Sender: TObject);
     procedure ApplicationEventsIdle(Sender: TObject; var Done: Boolean);
-    procedure ApplicationEventsMessage(var Msg: tagMSG; var Handled: Boolean);
     procedure ObjectsViewChange(Sender: TObject; Item: TListItem;
       Change: TItemChange);
     procedure ObjectsViewColumnClick(Sender: TObject; Column: TListColumn);
@@ -360,14 +359,16 @@ type
       Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
     procedure ObjectsViewResize(Sender: TObject);
     procedure FindByNameChange(Sender: TObject);
+    procedure TimerTimer(Sender: TObject);
+    procedure FindByEventChange(Sender: TObject);
+    procedure FindByTagClick(Sender: TObject);
     procedure FindByTagSelectAllExecute(Sender: TObject);
     procedure FindByTagDeselectExecute(Sender: TObject);
     procedure FindByTagInvertSelectionExecute(Sender: TObject);
+    procedure FindByRuleClick(Sender: TObject);
     procedure FindByRuleSelectAllExecute(Sender: TObject);
     procedure FindByRuleDeselectExecute(Sender: TObject);
     procedure FindByRuleInvertSelectionExecute(Sender: TObject);
-    procedure FilterChange(Sender: TObject);
-    procedure TimerTimer(Sender: TObject);
     procedure MRUItemClick(Sender: TObject);
     procedure LanguageClick(Sender: TObject);
     procedure ActionUpdate(Sender: TObject);
@@ -460,7 +461,6 @@ type
     procedure CopyAsRowsExecute(Sender: TObject);
     procedure CopyAsColumnsExecute(Sender: TObject);
     procedure CopyUpdate(Sender: TObject);
-    procedure AddToIEFavoritesExecute(Sender: TObject);
     procedure OpenLinkExecute(Sender: TObject);
     procedure OpenLinkUpdate(Sender: TObject);
     procedure SendEmailExecute(Sender: TObject);
@@ -508,67 +508,58 @@ type
     procedure DragDropDrop(Sender: TObject; Pos: TPoint;
       Value: TStrings);
   private
-    FFile: TO2File;
-    FFileName: string;
+    FServiceContainer: TContainer;
+    FModel: IFileManager;
+    FAppFiles: IAppFiles;
+    FStorage: IStorage;
     FBusy: Boolean;
+    FBatchOperationCount: Integer;
+    FPendingChanges: TNotifyChanges;
+    FApplyingChanges: Boolean;
+    FOpenFileName: string;
+    FFileName: string;
+    FMRUMenuItems: TList;
+    FMRUList: TMRUList;
     FStayOnTop: Boolean;
     FTransparency: Integer;
     FTransparencyOnlyIfDeactivated: Boolean;
+    FSortKind: TObjectSortKind;
+    FSortSign: Integer;
+    FAutoCheckForUpdates: Boolean;
+    FLastCheckForUpdates: TDateTime;
+    FCheckForUpdatesSilent: Boolean;
+    FSelectedObjects: IEnumerable<TO2Object>;
     FShowPasswords: Boolean;
-    FPasswordScoreProvider: TPasswordScoreProvider;
 
-    MRUMenuItems: TList;
-    MRUList: TMRUList;
-
-    CmdLineAction: TCmdLineAction;
-    CmdLineFileName: string;
-
-    BatchOperationCount: Integer;
-
-    PendingChanges: TNotifyChanges;
-    ApplyingChanges: Boolean;
-
-    SortColumn: TObjectViewColumn;
-    SortSign: Integer;
-
-    AutoCheckForUpdates: Boolean;
-    LastCheckForUpdates: TDateTime;
-    CheckForUpdatesSilent: Boolean;
-
-    function GetFile: TO2File;
     function GetHasSelectedObject: Boolean;
     function GetSelectedObject: TO2Object;
     function GetHasSelectedField: Boolean;
     function GetSelectedField: TO2Field;
-    function GetEventFilter: TEventFilter;
-    procedure SetFileName(const Value: string);
+    function GetSelectedRelation: TO2Relation;
+    function GetSelectedRule: TO2Rule;
+    procedure SetServiceContainer(const Value: TContainer);
     procedure SetBusy(const Value: Boolean);
+    procedure SetFileName(const Value: string);
     procedure SetStayOnTop(const Value: Boolean);
     procedure SetTransparency(const Value: Integer);
 
+    procedure BeginBatchOperation;
+    procedure EndBatchOperation;
     function CanCloseFile: Boolean;
-    procedure PasswordQuery(Sender: TObject; var APassword: string;
-      var Acknowledge: Boolean);
+    function TryGetPassword(var Password: string): Boolean;
     procedure Initialize;
     procedure InitializeSearch;
-    procedure LoadLanguageList;
-    procedure DecodeCommandLine(out ACmdLineAction: TCmdLineAction;
-      out ACmdLineFileName, APortablePath: string);
-    procedure OpenNewInstance(const FileName: string = '');
-    procedure LoadFromFile(const FileName: string);
-    procedure SaveToFile(const FileName: string; Copy: Boolean = False);
-    procedure GetAppInfo(Sender: TObject; F: TStream);
+    procedure LoadLanguageMenu;
+    procedure OpenNewInstance(const AFileName: string = '');
+    procedure LoadFromFile(const AFileName: string);
+    procedure SaveToFile(const AFileName: string; Copy: Boolean = False);
     procedure LoadMRUList;
     procedure SaveMRUList;
-    procedure ConvertSettings;
-    procedure LoadSettings(const FileName: string);
-    procedure SaveSettings(const FileName: string);
+    procedure LoadSettings(const AFileName: string);
+    procedure SaveSettings(const AFileName: string);
 
-    procedure GetStartDate(out StartDate: TDateTime; out UseParams: Boolean);
     function ObjToListItem(const AObject: TO2Object;
-      const Item: TListItem): TListItem; overload;
-    function ObjToListItem(ObjectIndex: Integer;
-      const Item: TListItem): TListItem; overload;
+      const Item: TListItem): TListItem;
     function FieldToListItem(const AField: TO2Field;
       const Item: TListItem): TListItem;
     function RelationToListItem(const ARelation: TO2Relation;
@@ -576,13 +567,10 @@ type
     function RelationToListItem(const AObjRelation: TO2ObjRelation;
       const Item: TListItem): TListItem; overload;
     function RuleToListItem(const ARule: TO2Rule;
-      const Item: TListItem): TListItem; overload;
-    function RuleToListItem(RuleIndex: Integer;
-      const Item: TListItem): TListItem; overload;
+      const Item: TListItem): TListItem;
     procedure EnableSelectedRules(Enable: Boolean);
     procedure UpdateRulesStatus;
-    procedure SortObjectsView(Column: TObjectViewColumn);
-    function CompareObjectsByName(const Obj1, Obj2: TO2Object): Integer;
+    procedure SortObjectsView(SortKind: TObjectSortKind);
     function CompareObjectsByTags(const Obj1, Obj2: TO2Object): Integer;
     function CompareObjectsByNextEvent(const Obj1, Obj2: TO2Object): Integer;
     procedure UpdateAllActions;
@@ -598,23 +586,22 @@ type
     procedure UpdateRulesView;
     procedure UpdateTagList;
     procedure UpdateRuleList;
-    procedure UpdateMRUList(const FileName: string = '');
-  protected
-    property EventFilter: TEventFilter read GetEventFilter;
+    procedure UpdateMRUList(const AFileName: string = '');
+
+    property FileName: string read FFileName write SetFileName;
+    property HasSelectedObject: Boolean read GetHasSelectedObject;
+    property HasSelectedField: Boolean read GetHasSelectedField;
+    property SelectedField: TO2Field read GetSelectedField;
     property StayOnTop: Boolean read FStayOnTop write SetStayOnTop;
     property Transparency: Integer read FTransparency write SetTransparency;
   public
-    procedure BeginBatchOperation;
-    procedure EndBatchOperation;
-    procedure FillObjList(const Objects: TO2ObjectList);
-
-    property O2File: TO2File read GetFile;
-    property O2FileName: string read FFileName write SetFileName;
-    property HasSelectedObject: Boolean read GetHasSelectedObject;
+    property ServiceContainer: TContainer read FServiceContainer
+      write SetServiceContainer;
+    property Model: IFileManager read FModel;
+    property SelectedObjects: IEnumerable<TO2Object> read FSelectedObjects;
     property SelectedObject: TO2Object read GetSelectedObject;
-    property HasSelectedField: Boolean read GetHasSelectedField;
-    property SelectedField: TO2Field read GetSelectedField;
-    property Busy: Boolean read FBusy;
+    property SelectedRelation: TO2Relation read GetSelectedRelation;
+    property SelectedRule: TO2Rule read GetSelectedRule;
   end;
 
 var
@@ -623,152 +610,53 @@ var
 implementation
 
 uses
-  TypInfo, StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, XMLDoc, XMLIntf,
-  xmldom, msxmldom, System.JSON, JclFileUtils,
-  uAppFiles, uUtils, uShellUtils, uPAFConsts, uAbout, uGetPassword,
-  uSetPassword, uFilePropsDlg, uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg,
-  uReplaceDlg, uPrintPreview, uHTMLExport, uXmlStorage, uO2Xml, uO2Defs,
-  uBrowserEmulation, uCtrlHelpers, uImportExport, uO2ImportExport,
-  uXmlImportExport, uiCalendarExport, uStuffHTML, uHTMLHelper;
+  StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, JSON, UITypes,
+  uShellUtils, uStorageUtils, uAbout, uGetPassword, uSetPassword, uFilePropsDlg,
+  uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg, uReplaceDlg, uPrintPreview,
+  uHTMLExport, uO2Defs, uCtrlHelpers, uHTMLHelper, uO2ObjectsUtils, uUtils;
 
 {$R *.dfm}
 
-const
-  ViewStyles: array[0..3] of TIdentMapEntry = (
-    (Value: Integer(vsIcon);      Name: 'Icons'),
-    (Value: Integer(vsSmallIcon); Name: 'SmallIcons'),
-    (Value: Integer(vsList);      Name: 'List'),
-    (Value: Integer(vsReport);    Name: 'Report'));
-
-  SortColumns: array[0..2] of TIdentMapEntry = (
-    (Value: Integer(ocName);      Name: 'Name'),
-    (Value: Integer(ocTags);      Name: 'Tags'),
-    (Value: Integer(ocNextEvent); Name: 'NextEvent'));
+procedure SetHighlightColors(const Canvas: TCanvas; Highlight: THighlight);
+begin
+  case Highlight.Highlight of
+    htCustom:
+    begin
+      Canvas.Brush.Color := Highlight.Color;
+      Canvas.Font.Color := Highlight.TextColor;
+    end;
+    htPasswordScore:
+    begin
+      Canvas.Brush.Color := PasswordScoreColors[Highlight.PasswordScore];
+      Canvas.Font.Color := clBlack;
+    end;
+  end;
+end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
-var
-  AppPath, SettingsPath, LauncherPath, PortablePath: string;
-  AppFile: TAppFile;
 begin
   FBusy := False;
-  BatchOperationCount := 0;
-
+  FBatchOperationCount := 0;
+  FPendingChanges := [];
+  FApplyingChanges := False;
+  FOpenFileName := OpenFileName;
   FStayOnTop := False;
   FTransparency := 0;
-
-  PendingChanges := [];
-  ApplyingChanges := False;
+  FSelectedObjects := TO2ObjectListViewEnumerable.Create(ObjectsView);
 
   Application.HintHidePause := 4500;
 
-  DecodeCommandLine(CmdLineAction, CmdLineFileName, PortablePath);
-
-  if PortablePath <> '' then
-  begin
-    AppPath :=
-      IncludeTrailingPathDelimiter(PortablePath) + PortableAppPath;
-    if not GetSettingsOverride(Application.ExeName, SettingsPath) then
-      SettingsPath :=
-        IncludeTrailingPathDelimiter(PortablePath) + PortableSettingsPath;
-    LauncherPath :=
-      IncludeTrailingPathDelimiter(PortablePath) + PortableLauncherPath;
-  end
-  else
-  begin
-    AppPath := ExtractFilePath(Application.ExeName);
-    if not GetSettingsOverride(Application.ExeName, SettingsPath) then
-      SettingsPath :=
-        IncludeTrailingPathDelimiter(TShellFolders.AppData) + LocalSettingsDir;
-    LauncherPath := AppPath;
-  end;
-
-  AppFile := TPortableAppFile.Create(ExtractFileName(Application.ExeName));
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableAppPath;
-  AppFiles.Add(IdAppExe, AppFile);
-
-  AppFile := TPortableAppFile.Create(AppInfoFile);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableAppInfoPath;
-  TPortableAppFile(AppFile).OnGetData := GetAppInfo;
-  AppFiles.Add(IdAppInfo, AppFile);
-
-  AppFile := TPortableAppFile.Create(AppIconFile);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableAppInfoPath;
-  AppFiles.Add(IdAppIcon, AppFile);
-
-  AppFile := TPortableAppFile.Create(AppIcon16File);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableAppInfoPath;
-  AppFiles.Add(IdAppIcon16, AppFile);
-
-  AppFile := TPortableAppFile.Create(AppIcon32File);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableAppInfoPath;
-  AppFiles.Add(IdAppIcon32, AppFile);
-
-  AppFile := TPortableAppFile.Create(FileTypeIconFile);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableFileTypeIconsPath;
-  AppFiles.Add(IdFileTypeIcon, AppFile);
-
-  AppFile := TPortableAppFile.Create(FileTypeIcon16File);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableFileTypeIconsPath;
-  AppFiles.Add(IdFileTypeIcon16, AppFile);
-
-  AppFile := TPortableAppFile.Create(FileTypeIcon32File);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableFileTypeIconsPath;
-  AppFiles.Add(IdFileTypeIcon32, AppFile);
-
-  AppFile := TPortableAppFile.Create(LauncherFile);
-  AppFile.Path := LauncherPath;
-  TPortableAppFile(AppFile).PortablePath := PortableLauncherPath;
-  AppFiles.Add(IdLauncher, AppFile);
-
-  AppFile := TPortableAppFile.Create(SettingsFile);
-  AppFile.Path := SettingsPath;
-  TPortableAppFile(AppFile).PortablePath := PortableSettingsPath;
-  TPortableAppFile(AppFile).OverwritePrompt := SSettingsOverwriteQuery;
-  AppFiles.Add(IdSettings, AppFile);
-
-  AppFile := TPortableAppFile.Create(HTMLHelpFile);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableLauncherPath;
-  AppFiles.Add(IdHelp, AppFile);
-
-  AppFile := TPortableAppFile.Create(LicenseFile);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableAppPath;
-  AppFiles.Add(IdLicense, AppFile);
-
-  AppFile := TPortableAppFile.Create(ReadMeFile);
-  AppFile.Path := AppPath;
-  TPortableAppFile(AppFile).PortablePath := PortableAppPath;
-  AppFiles.Add(IdReadMe, AppFile);
-
-  LoadLanguageList;
-
-  InstallOnRemovableMedia.Visible := AppFiles.Exists(IdLauncher);
-
-  TEventFilterLookup.Fill(FindByEvent);
-
-  MRUList := TMRUList.Create;
-  MRUMenuItems := TList.Create;
-  MRUMenuItems.Add(MRU1);
-  MRUMenuItems.Add(MRU2);
-  MRUMenuItems.Add(MRU3);
-  MRUMenuItems.Add(MRU4);
-  MRUMenuItems.Add(MRU5);
-  MRUMenuItems.Add(MRU6);
-  MRUMenuItems.Add(MRU7);
-  MRUMenuItems.Add(MRU8);
-  MRUMenuItems.Add(MRU9);
-
-  LoadSettings(AppFiles.FullPath[IdSettings]);
-  Initialize;
+  FMRUList := TMRUList.Create;
+  FMRUMenuItems := TList.Create;
+  FMRUMenuItems.Add(MRU1);
+  FMRUMenuItems.Add(MRU2);
+  FMRUMenuItems.Add(MRU3);
+  FMRUMenuItems.Add(MRU4);
+  FMRUMenuItems.Add(MRU5);
+  FMRUMenuItems.Add(MRU6);
+  FMRUMenuItems.Add(MRU7);
+  FMRUMenuItems.Add(MRU8);
+  FMRUMenuItems.Add(MRU9);
 
   FieldsView.Hint := SFieldsViewHint + #13#10 + SFieldsViewHint2;
   RelationsView.Hint := SRelationsViewHint + #13#10 + SRelationsViewHint2;
@@ -780,19 +668,29 @@ begin
   ImportSettingsDlg.Filter := SImportSettingsFileFilter;
   ExportSettingsDlg.Filter := SExportSettingsFileFilter;
 
-  FPasswordScoreProvider := TPasswordScoreProvider.Create;
-
   ActiveControl := ObjectsView;
 
-  SetBrowserEmulation(ExtractFileName(Application.ExeName), IE11Default);
+  ResizeObjectsViewColumns;
+  ResizeFieldsViewColumns;
+  ResizeRelationsViewColumns;
+  ResizeRulesViewColumns;
+
+  NotesView.UserDataFolder := WebDataPath;
+  NotesView.CreateWebView;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-  SaveSettings(AppFiles.FullPath[IdSettings]);
-  MRUList.Free;
-  MRUMenuItems.Free;
-  FPasswordScoreProvider.Free;
+  SaveSettings(FAppFiles.FullPaths[IdSettings]);
+  FMRUList.Free;
+  FMRUMenuItems.Free;
+end;
+
+procedure TMainForm.FormShow(Sender: TObject);
+begin
+  LoadLanguageMenu;
+  InstallOnRemovableMedia.Visible := FAppFiles.FileExists(IdLauncher);
+  LoadSettings(FAppFiles.FullPaths[IdSettings]);
 end;
 
 procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -814,51 +712,54 @@ end;
 
 procedure TMainForm.ApplicationEventsIdle(Sender: TObject;
   var Done: Boolean);
+var
+  OpenFileName: string;
 begin
-  if (PendingChanges <> []) and not ApplyingChanges then
+  if (FPendingChanges <> []) and not FApplyingChanges then
   begin
-    ApplyingChanges := True;
+    FApplyingChanges := True;
     try
-      if ncObjects in PendingChanges then
+      if ncTagList in FPendingChanges then
+        UpdateTagList;
+
+      if ncRuleList in FPendingChanges then
+        UpdateRuleList;
+
+      if ncObjectsView in FPendingChanges then
       begin
         UpdateObjectsView;
-        PendingChanges := PendingChanges + [ncObjProps, ncRelations];
+        FPendingChanges := FPendingChanges + [ncObjPropsViews, ncRelationsView];
       end;
 
-      if ncObjProps in PendingChanges then
+      if ncObjPropsViews in FPendingChanges then
       begin
         UpdateFieldsView;
         UpdateNotesView;
       end;
 
-      if ncRelations in PendingChanges then
+      if ncRelationsView in FPendingChanges then
         UpdateRelationsView;
 
-      if ncRules in PendingChanges then
+      if ncRulesView in FPendingChanges then
         UpdateRulesView;
-
-      if ncTagList in PendingChanges then
-        UpdateTagList;
-
-      if ncRuleList in PendingChanges then
-        UpdateRuleList;
     finally
-      PendingChanges := [];
-      ApplyingChanges := False;
+      FPendingChanges := [];
+      FApplyingChanges := False;
     end;
   end;
 
-  if CmdLineAction = caOpenFile then
+  if FOpenFileName <> '' then
   begin
-    CmdLineAction := caNone;
-    LoadFromFile(CmdLineFileName);
+    OpenFileName := FOpenFileName;
+    FOpenFileName := '';
+    LoadFromFile(OpenFileName);
   end;
 
   if ObjectsView.SelCount = 0 then
   begin
     StatusBar.Panels[0].Text :=
       Format(SStatusItemsCount, [ObjectsView.Items.Count]);
-    StatusBar.Panels[1].Text := O2FileName;
+    StatusBar.Panels[1].Text := FFileName;
   end
   else
   begin
@@ -872,47 +773,37 @@ begin
         STagsNone]);
   end;
 
-  if AutoCheckForUpdates and (LastCheckForUpdates < Today) then
+  if FAutoCheckForUpdates and (FLastCheckForUpdates < Today) then
   begin
-    LastCheckForUpdates := Today;
-    CheckForUpdatesSilent := True;
+    FLastCheckForUpdates := Today;
+    FCheckForUpdatesSilent := True;
     CheckForUpdatesNow.Execute;
   end;
-end;
-
-procedure TMainForm.ApplicationEventsMessage(var Msg: tagMSG;
-  var Handled: Boolean);
-begin
-  if ((Msg.Message = WM_RBUTTONDOWN) or (Msg.Message = WM_RBUTTONDBLCLK))
-    and IsChild(NotesView.Handle, Msg.hwnd) then
-    Handled := True;
 end;
 
 procedure TMainForm.ObjectsViewChange(Sender: TObject; Item: TListItem;
   Change: TItemChange);
 begin
-  NotifyChanges([ncObjProps, ncRelations]);
+  NotifyChanges([ncObjPropsViews, ncRelationsView]);
 end;
 
 procedure TMainForm.ObjectsViewColumnClick(Sender: TObject;
   Column: TListColumn);
 begin
-  SortObjectsView(TObjectViewColumn(Column.Index));
+  SortObjectsView(TObjectSortKind(Column.Tag));
 end;
 
 procedure TMainForm.ObjectsViewCompare(Sender: TObject; Item1,
   Item2: TListItem; Data: Integer; var Compare: Integer);
 begin
-  case SortColumn of
-    ocName:
-      Compare := CompareObjectsByName(TO2Object(Item1.Data),
-        TO2Object(Item2.Data)) * SortSign;
-    ocTags:
-      Compare := CompareObjectsByTags(TO2Object(Item1.Data),
-        TO2Object(Item2.Data)) * SortSign;
-    ocNextEvent:
-      Compare := CompareObjectsByNextEvent(TO2Object(Item1.Data),
-        TO2Object(Item2.Data)) * SortSign;
+  case FSortKind of
+    osName:
+      Compare := CompareText(TO2Object(Item1.Data).Name,
+        TO2Object(Item2.Data).Name) * FSortSign;
+    osTags:
+      Compare := CompareObjectsByTags(Item1.Data, Item2.Data) * FSortSign;
+    osNextEvent:
+      Compare := CompareObjectsByNextEvent(Item1.Data, Item2.Data) * FSortSign;
     else
       Compare := 0;
   end;
@@ -947,23 +838,27 @@ end;
 
 procedure TMainForm.ObjectsViewCustomDrawItem(Sender: TCustomListView;
   Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
-var
-  BrushColor, FontColor: TColor;
 begin
-  if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data)
-    and O2File.Rules.GetHighlightColors(TO2Object(Item.Data),
-    FPasswordScoreProvider, BrushColor, FontColor) then
-  begin
-    Sender.Canvas.Brush.Color := BrushColor;
-    Sender.Canvas.Font.Color := FontColor;
-  end;
+  if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data) then
+    SetHighlightColors(Sender.Canvas,
+      FModel.GetHighlight(TO2Object(Item.Data)));
+end;
+
+procedure TMainForm.FindByEventChange(Sender: TObject);
+begin
+  FModel.EventFilterIndex := FindByEvent.ItemIndex;
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.FindByNameChange(Sender: TObject);
 begin
+  if FModel = nil then Exit;
+
+  FModel.ObjectName := FindByName.Text;
+
   Timer.Enabled := False;
-  if FindByName.Text = '' then
-    NotifyChanges([ncObjects])
+  if FModel.ObjectName = '' then
+    NotifyChanges([ncObjectsView])
   else
     Timer.Enabled := True;
 end;
@@ -971,13 +866,27 @@ end;
 procedure TMainForm.FindByTagSelectAllExecute(Sender: TObject);
 begin
   FindByTag.SelectAll;
-  NotifyChanges([ncObjects]);
+  NotifyChanges([ncObjectsView]);
+end;
+
+procedure TMainForm.FindByTagClick(Sender: TObject);
+var
+  I: Integer;
+begin
+  FModel.IncludeUntagged := FindByTag.Selected[0];
+
+  FModel.ObjectTags.Clear;
+  for I := 1 to FindByTag.Count - 1 do
+    if FindByTag.Selected[I] then
+      FModel.ObjectTags.Add(FindByTag.Items[I]);
+
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.FindByTagDeselectExecute(Sender: TObject);
 begin
   FindByTag.ClearSelection;
-  NotifyChanges([ncObjects]);
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.FindByTagInvertSelectionExecute(Sender: TObject);
@@ -986,19 +895,31 @@ var
 begin
   for I := 0 to FindByTag.Count - 1 do
     FindByTag.Selected[I] := not FindByTag.Selected[I];
-  NotifyChanges([ncObjects]);
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.FindByRuleSelectAllExecute(Sender: TObject);
 begin
   FindByRule.SelectAll;
-  NotifyChanges([ncObjects]);
+  NotifyChanges([ncObjectsView]);
+end;
+
+procedure TMainForm.FindByRuleClick(Sender: TObject);
+var
+  I: Integer;
+begin
+  FModel.ObjectRules.Clear;
+  for I := 0 to FindByRule.Count - 1 do
+    if FindByRule.Selected[I] then
+      FModel.ObjectRules.Add(TO2Rule(FindByRule.Items.Objects[I]));
+
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.FindByRuleDeselectExecute(Sender: TObject);
 begin
   FindByRule.ClearSelection;
-  NotifyChanges([ncObjects]);
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.FindByRuleInvertSelectionExecute(Sender: TObject);
@@ -1007,56 +928,50 @@ var
 begin
   for I := 0 to FindByRule.Count - 1 do
     FindByRule.Selected[I] := not FindByRule.Selected[I];
-  NotifyChanges([ncObjects]);
-end;
-
-procedure TMainForm.FilterChange(Sender: TObject);
-begin
-  NotifyChanges([ncObjects]);
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.TimerTimer(Sender: TObject);
 begin
   Timer.Enabled := False;
-  NotifyChanges([ncObjects]);
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.MRUItemClick(Sender: TObject);
 var
   MRUItem: TMRUItem;
 begin
-  MRUItem := MRUList[TComponent(Sender).Tag];
+  MRUItem := FMRUList[TComponent(Sender).Tag];
   if CanCloseFile then
     if FileExists(MRUItem.Item) then
       LoadFromFile(MRUItem.Item)
     else
       if YesNoWarningBox(SRemoveFromMRUListQuery) then
       begin
-        MRUList.Remove(MRUItem);
+        FMRUList.Remove(MRUItem);
         UpdateMRUList;
       end;
 end;
 
 procedure TMainForm.LanguageClick(Sender: TObject);
 begin
-  SetLocaleOverride(AppFiles.FullPath[IdAppExe],
+  SetLocaleOverride(FAppFiles.FullPaths[IdAppExe],
     Languages[TComponent(Sender).Tag].Language);
   InfoBox(SApplyAtNextStartup);
 end;
 
 procedure TMainForm.ActionUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy;
+  TAction(Sender).Enabled := not FBusy;
 end;
 
 procedure TMainForm.NewFileExecute(Sender: TObject);
 begin
   if CanCloseFile then
   begin
-    ObjectsView.Clear;
-    FreeAndNil(FFile);
+    FModel.NewFile;
     Initialize;
-    O2FileName := '';
+    FileName := '';
   end;
 end;
 
@@ -1074,61 +989,48 @@ end;
 
 procedure TMainForm.ReopenFileExecute(Sender: TObject);
 begin
-  if CanCloseFile then LoadFromFile(O2FileName);
+  if CanCloseFile then LoadFromFile(FFileName);
 end;
 
 procedure TMainForm.ReopenFileUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and (O2FileName <> '');
+  TAction(Sender).Enabled := not FBusy and (FFileName <> '');
 end;
 
 procedure TMainForm.OpenFolderExecute(Sender: TObject);
 begin
-  ShellOpen(ExtractFileDir(O2FileName));
+  ShellOpen(ExtractFileDir(FFileName));
 end;
 
 procedure TMainForm.OpenFolderUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and (O2FileName <> '');
+  TAction(Sender).Enabled := not FBusy and (FFileName <> '');
 end;
 
 procedure TMainForm.ClearMRUListExecute(Sender: TObject);
 begin
-  MRUList.Clear;
+  FMRUList.Clear;
   UpdateMRUList;
 end;
 
 procedure TMainForm.ClearMRUListUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := MRUList.Count > 0;
+  TAction(Sender).Enabled := FMRUList.Count > 0;
 end;
 
 procedure TMainForm.ImportExecute(Sender: TObject);
 const
-  idxImportFromO2File = 1;
-  idxImportFromXmlFile = 2;
-var
-  Import: TImportExport;
+  ServiceNames: array [1..2] of string = (
+    ImportFromO2FileService,
+    ImportFromXmlFileService);
 begin
   ImportDialog.FileName := '';
   if ImportDialog.Execute then
   begin
     BeginBatchOperation;
     try
-      Import := nil;
-      case ImportDialog.FilterIndex of
-        idxImportFromO2File:
-          Import := TO2Import.Create(O2File, PasswordQuery);
-        idxImportFromXmlFile:
-          Import := TXmlImport.Create(O2File);
-      end;
-
-      try
-        if Assigned(Import) then
-          Import.Execute(ImportDialog.FileName);
-      finally
-        Import.Free;
-      end;
+      FServiceContainer.Resolve<IFileOperation>(
+        ServiceNames[ImportDialog.FilterIndex]).Execute(ImportDialog.FileName);
     finally
       EndBatchOperation;
     end;
@@ -1138,12 +1040,12 @@ end;
 
 procedure TMainForm.SaveFileExecute(Sender: TObject);
 begin
-  if (O2FileName = '')
-    or O2File.Encrypted and ((O2File.Cipher in DeprecatedCiphers)
-    or (O2File.Hash in DeprecatedHashes)) then
+  if (FFileName = '')
+    or FModel.O2File.Encrypted and ((FModel.O2File.Cipher in DeprecatedCiphers)
+    or (FModel.O2File.Hash in DeprecatedHashes)) then
     SaveFileAs.Execute
   else
-    SaveToFile(O2FileName);
+    SaveToFile(FFileName);
 end;
 
 procedure TMainForm.SaveFileAsExecute(Sender: TObject);
@@ -1162,45 +1064,18 @@ end;
 
 procedure TMainForm.ExportExecute(Sender: TObject);
 const
-  idxExportToO2File = 1;
-  idxExportToXmlFile = 2;
-  idxExportToIcsFile = 3;
-var
-  Export: TImportExport;
-  Selection: TO2ObjectList;
+  ServiceNames: array [1..3] of string = (
+    ExportToO2FileService,
+    ExportToXmlFileService,
+    ExportToIcsFileService);
 begin
   ExportDialog.FileName := '';
   if ExportDialog.Execute then
   begin
     BeginBatchOperation;
     try
-      Selection := TO2ObjectList.Create;
-      try
-        Export := nil;
-        case ExportDialog.FilterIndex of
-          idxExportToO2File:
-          begin
-            FillObjList(Selection);
-            Export := TO2Export.Create(O2File, Selection);
-          end;
-          idxExportToXmlFile:
-            Export := TXmlExport.Create(O2File);
-          idxExportToIcsFile:
-          begin
-            FillObjList(Selection);
-            Export := TiCalendarExport.Create(O2File, Selection);
-          end;
-        end;
-
-        try
-          if Assigned(Export) then
-            Export.Execute(ExportDialog.FileName);
-        finally
-          Export.Free;
-        end;
-      finally
-        Selection.Free;
-      end;
+      FServiceContainer.Resolve<IFileOperation>(
+        ServiceNames[ExportDialog.FilterIndex]).Execute(ExportDialog.FileName);
     finally
       EndBatchOperation;
     end;
@@ -1208,83 +1083,23 @@ begin
 end;
 
 procedure TMainForm.ExportToHTMLExecute(Sender: TObject);
-var
-  Selection: TO2ObjectList;
-  Options: TExportToHTMLOptions;
 begin
-  Options := [];
-  THTMLExport.IncludeOption(Options, xoIncludeIndex,
-    XmlStorage.ReadBoolean(IdHTMLExportIncludeIndex, True));
-  THTMLExport.IncludeOption(Options, xoIncludeTags,
-    XmlStorage.ReadBoolean(IdHTMLExportIncludeTags, True));
-  THTMLExport.IncludeOption(Options, xoIncludeNotes,
-    XmlStorage.ReadBoolean(IdHTMLExportIncludeNotes, True));
-  THTMLExport.IncludeOption(Options, xoIncludeRelations,
-    XmlStorage.ReadBoolean(IdHTMLExportIncludeRelations, True));
-  THTMLExport.IncludeOption(Options, xoIncludePasswords,
-    XmlStorage.ReadBoolean(IdHTMLExportIncludePasswords, True));
-
-  Selection := TO2ObjectList.Create;
-  try
-    FillObjList(Selection);
-    THTMLExport.Execute(Application, O2FileName, O2File, Selection, Options);
-  finally
-    Selection.Free;
-  end;
-
-  XmlStorage.WriteBoolean(IdHTMLExportIncludeIndex,
-    xoIncludeIndex in Options);
-  XmlStorage.WriteBoolean(IdHTMLExportIncludeTags,
-    xoIncludeTags in Options);
-  XmlStorage.WriteBoolean(IdHTMLExportIncludeNotes,
-    xoIncludeNotes in Options);
-  XmlStorage.WriteBoolean(IdHTMLExportIncludeRelations,
-    xoIncludeRelations in Options);
-  XmlStorage.WriteBoolean(IdHTMLExportIncludePasswords,
-    xoIncludePasswords in Options);
+  THTMLExport.Execute(FServiceContainer.Resolve<IHTMLExport>);
 end;
 
 procedure TMainForm.PrintFileExecute(Sender: TObject);
-var
-  Selection: TO2ObjectList;
-  Options: TPrintOptions;
 begin
-  Options := [];
-  TPrintPreview.IncludeOption(Options, poIncludeTags,
-    XmlStorage.ReadBoolean(IdPrintIncludeTags, True));
-  TPrintPreview.IncludeOption(Options, poIncludeNotes,
-    XmlStorage.ReadBoolean(IdPrintIncludeNotes, True));
-  TPrintPreview.IncludeOption(Options, poIncludeRelations,
-    XmlStorage.ReadBoolean(IdPrintIncludeRelations, True));
-  TPrintPreview.IncludeOption(Options, poIncludePasswords,
-    XmlStorage.ReadBoolean(IdPrintIncludePasswords, True));
-
-  Selection := TO2ObjectList.Create;
-  try
-    FillObjList(Selection);
-    TPrintPreview.Execute(Application, O2FileName, O2File, Selection, Options);
-  finally
-    Selection.Free;
-  end;
-
-  XmlStorage.WriteBoolean(IdPrintIncludeTags,
-    poIncludeTags in Options);
-  XmlStorage.WriteBoolean(IdPrintIncludeNotes,
-    poIncludeNotes in Options);
-  XmlStorage.WriteBoolean(IdPrintIncludeRelations,
-    poIncludeRelations in Options);
-  XmlStorage.WriteBoolean(IdPrintIncludePasswords,
-    poIncludePasswords in Options);
+  TPrintPreview.Execute(FServiceContainer.Resolve<IPrint>);
 end;
 
 procedure TMainForm.PrintFileUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and (ObjectsView.Items.Count > 0);
+  TAction(Sender).Enabled := not FBusy and (ObjectsView.Items.Count > 0);
 end;
 
 procedure TMainForm.FilePropsExecute(Sender: TObject);
 begin
-  TFilePropsDlg.Execute(Application, O2File);
+  TFilePropsDlg.Execute(FServiceContainer.Resolve<IFileProps>);
 end;
 
 procedure TMainForm.ImportSettingsExecute(Sender: TObject);
@@ -1303,7 +1118,7 @@ end;
 
 procedure TMainForm.DefaultLanguageExecute(Sender: TObject);
 begin
-  DeleteLocaleOverride(AppFiles.FullPath[IdAppExe]);
+  DeleteLocaleOverride(FAppFiles.FullPaths[IdAppExe]);
   InfoBox(SApplyAtNextStartup);
 end;
 
@@ -1314,12 +1129,12 @@ begin
   Dir := '';
   if SelectDirectory(Format(SInstallOnRemovableMediaPrompt +
     #13#10 + SInstallOnRemovableMediaFolderPrompt,
-    [AppFiles.InstallPortableSpaceRequired / (1024 * 1024)]),
-    '', Dir, [sdNewUI, sdNewFolder]) then
+    [FAppFiles.GetTotalSize / (1024 * 1024)]), '', Dir,
+    [sdNewUI, sdNewFolder]) then
   begin
     BeginBatchOperation;
     try
-      AppFiles.InstallPortable(Dir);
+      FAppFiles.InstallPortable(Dir);
     finally
       EndBatchOperation;
     end;
@@ -1331,58 +1146,53 @@ begin
   CheckForUpdatesRequest.ExecuteAsync(
     procedure
     const
-      DebugOutputFmt = 'Application Version Check: Application ID: %s. '
-        + 'Current Version: %d.%d.%d.%d. Available Version %d.%d.%d.%d. '
-        + 'Download URL: %s.';
+      DebugOutputFmt =
+        'Application Version Check: Current Version: %d.%d.%d.%d. Available Version %d.%d.%d.%d. Download URL: %s.';
     var
-      MajorVersion, MinorVersion, Release, Build: Word;
-      AppUpdate: TAppUpdate;
+      AppVersionInfo: TAppVersionInfo;
+      AppUpdateInfo: TAppUpdateInfo;
       DebugOutput: string;
     begin
-      with TJclFileVersionInfo.Create(AppFiles.FullPath[IdAppExe]) do
+      AppVersionInfo := FServiceContainer.Resolve<TAppVersionInfo>;
       try
-        VersionExtractFileInfo(FixedInfo,
-          MajorVersion, MinorVersion, Release, Build);
-      finally
-        Free;
-      end;
+        AppUpdateInfo := TAppUpdateInfo
+          .Create(CheckForUpdatesResponse.JSONValue);
 
-      AppUpdate := TAppUpdate.Create;
-      try
-        AppUpdate.AppName := 'O2';
-        AppUpdate.LoadFromJSON(CheckForUpdatesResponse.JSONValue);
-
-        DebugOutput := Format(DebugOutputFmt, [AppUpdate.AppName,
-          MajorVersion, MinorVersion, Release, Build,
-          AppUpdate.AppVersion.MajorVersion, AppUpdate.AppVersion.MinorVersion,
-          AppUpdate.AppVersion.Release, AppUpdate.AppVersion.Build,
-          AppUpdate.DownloadURL]);
+        DebugOutput := Format(DebugOutputFmt,
+          [AppVersionInfo.Version.MajorVersion,
+          AppVersionInfo.Version.MinorVersion,
+          AppVersionInfo.Version.Release,
+          AppVersionInfo.Version.Build,
+          AppUpdateInfo.Version.MajorVersion,
+          AppUpdateInfo.Version.MinorVersion,
+          AppUpdateInfo.Version.Release,
+          AppUpdateInfo.Version.Build,
+          AppUpdateInfo.DownloadURL]);
         OutputDebugString(PChar(DebugOutput));
 
-        if AppUpdate.AppVersion.Compare(
-          MajorVersion, MinorVersion, Release, Build) = GreaterThanValue then
+        if AppUpdateInfo.Version
+          .Compare(AppVersionInfo.Version) = GreaterThanValue then
         begin
           if YesNoBox(Format(SDownloadUpdatesQuery,
-            [AppUpdate.AppVersion.MajorVersion,
-            AppUpdate.AppVersion.MinorVersion,
-            AppUpdate.AppVersion.Release])) then
-            ShellOpen(AppUpdate.DownloadURL);
+            [AppUpdateInfo.Version.MajorVersion,
+            AppUpdateInfo.Version.MinorVersion,
+            AppUpdateInfo.Version.Release])) then
+            ShellOpen(AppUpdateInfo.DownloadURL);
         end
-        else if not CheckForUpdatesSilent then
+        else if not FCheckForUpdatesSilent then
           InfoBox(SNoAvailableUpdates);
       except
-        if not CheckForUpdatesSilent then
+        if not FCheckForUpdatesSilent then
           ErrorBox(SCannotCheckForUpdates);
       end;
-      AppUpdate.Free;
 
-      CheckForUpdatesSilent := False;
+      FCheckForUpdatesSilent := False;
     end,
     True,
     True,
     procedure (Obj: TObject)
     begin
-      if not CheckForUpdatesSilent then
+      if not FCheckForUpdatesSilent then
         ErrorBox(SCannotCheckForUpdates);
     end
   );
@@ -1390,17 +1200,17 @@ end;
 
 procedure TMainForm.CheckForUpdatesPeriodicallyExecute(Sender: TObject);
 begin
-  AutoCheckForUpdates := not AutoCheckForUpdates;
+  FAutoCheckForUpdates := not FAutoCheckForUpdates;
 end;
 
 procedure TMainForm.CheckForUpdatesPeriodicallyUpdate(Sender: TObject);
 begin
-  TAction(Sender).Checked := AutoCheckForUpdates;
+  TAction(Sender).Checked := FAutoCheckForUpdates;
 end;
 
 procedure TMainForm.RefreshViewsExecute(Sender: TObject);
 begin
-  NotifyChanges([ncObjects, ncRules, ncTagList, ncRuleList]);
+  NotifyChanges([ncObjectsView, ncRulesView, ncTagList, ncRuleList]);
 end;
 
 procedure TMainForm.ViewLargeIconsExecute(Sender: TObject);
@@ -1445,32 +1255,32 @@ end;
 
 procedure TMainForm.SortByNameExecute(Sender: TObject);
 begin
-  SortObjectsView(ocName);
+  SortObjectsView(osName);
 end;
 
 procedure TMainForm.SortByNameUpdate(Sender: TObject);
 begin
-  TAction(Sender).Checked := SortColumn = ocName;
+  TAction(Sender).Checked := FSortKind = osName;
 end;
 
 procedure TMainForm.SortByTagsExecute(Sender: TObject);
 begin
-  SortObjectsView(ocTags);
+  SortObjectsView(osTags);
 end;
 
 procedure TMainForm.SortByTagsUpdate(Sender: TObject);
 begin
-  TAction(Sender).Checked := SortColumn = ocTags;
+  TAction(Sender).Checked := FSortKind = osTags;
 end;
 
 procedure TMainForm.SortByNextEventExecute(Sender: TObject);
 begin
-  SortObjectsView(ocNextEvent);
+  SortObjectsView(osNextEvent);
 end;
 
 procedure TMainForm.SortByNextEventUpdate(Sender: TObject);
 begin
-  TAction(Sender).Checked := SortColumn = ocNextEvent;
+  TAction(Sender).Checked := FSortKind = osNextEvent;
 end;
 
 procedure TMainForm.TransparencyExecute(Sender: TObject);
@@ -1522,39 +1332,24 @@ end;
 
 procedure TMainForm.FindUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy;
+  TAction(Sender).Enabled := not FBusy;
   TAction(Sender).Checked := SearchBox.Visible;
 end;
 
 procedure TMainForm.ClearSearchExecute(Sender: TObject);
 begin
   InitializeSearch;
-  NotifyChanges([ncObjects]);
+  NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.AboutExecute(Sender: TObject);
 begin
-  AboutForm := TAboutForm.Create(Self);
-  try
-    AboutForm.ShowModal;
-  finally
-    FreeAndNil(AboutForm);
-  end;
+  TAboutForm.Execute(FServiceContainer.Resolve<TAppVersionInfo>, FAppFiles);
 end;
 
 procedure TMainForm.WebExecute(Sender: TObject);
 begin
   ShellOpen(TAction(Sender).Hint);
-end;
-
-function TMainForm.GetFile: TO2File;
-begin
-  if FFile = nil then
-  begin
-    FFile := TO2File.Create;
-    FFile.OnPasswordQuery := PasswordQuery;
-  end;
-  Result := FFile;
 end;
 
 function TMainForm.GetHasSelectedObject: Boolean;
@@ -1567,6 +1362,16 @@ begin
   Result := TO2Object(ObjectsView.Selected.Data);
 end;
 
+function TMainForm.GetSelectedRelation: TO2Relation;
+begin
+  Result := TO2Relation(RelationsView.Selected.Data);
+end;
+
+function TMainForm.GetSelectedRule: TO2Rule;
+begin
+  Result := TO2Rule(RulesView.Selected.Data);
+end;
+
 function TMainForm.GetHasSelectedField: Boolean;
 begin
   Result := Assigned(FieldsView.Selected);
@@ -1575,11 +1380,6 @@ end;
 function TMainForm.GetSelectedField: TO2Field;
 begin
   Result := TO2Field(FieldsView.Selected.Data);
-end;
-
-function TMainForm.GetEventFilter: TEventFilter;
-begin
-  Result := TEventFilter(TEventFilterLookup.SelectedValue(FindByEvent));
 end;
 
 procedure TMainForm.SetFileName(const Value: string);
@@ -1615,6 +1415,22 @@ begin
   end;
 end;
 
+procedure TMainForm.SetServiceContainer(const Value: TContainer);
+begin
+  if FServiceContainer <> Value then
+  begin
+    FServiceContainer := Value;
+
+    FModel := FServiceContainer.Resolve<IFileManager>;
+    FAppFiles := FServiceContainer.Resolve<IAppFiles>;
+    FStorage := FServiceContainer.Resolve<IStorage>;
+
+    FindByEvent.Items := FModel.EventFilters;
+
+    Initialize;
+  end;
+end;
+
 procedure TMainForm.SetStayOnTop(const Value: Boolean);
 begin
   if FStayOnTop <> Value then
@@ -1639,189 +1455,108 @@ end;
 function TMainForm.CanCloseFile: Boolean;
 begin
   Result := True;
-  if O2File.Modified then
+  if FModel.O2File.Modified then
     case YesNoCancelBox(SSaveChangesQuery) of
       ID_YES:
       begin
         SaveFile.Execute;
-        Result := not O2File.Modified;
+        Result := not FModel.O2File.Modified;
       end;
       ID_CANCEL:
         Result := False;
     end;
 end;
 
-procedure TMainForm.PasswordQuery(Sender: TObject;
-  var APassword: string; var Acknowledge: Boolean);
+function TMainForm.TryGetPassword(var Password: string): Boolean;
 begin
-  APassword := '';
-  Acknowledge := TGetPasswordDlg.Execute(Application, APassword);
+  Result := TGetPasswordDlg.Execute(Application, Password);
 end;
 
 procedure TMainForm.Initialize;
 begin
   InitializeSearch;
-  NotifyChanges([ncObjects, ncRules, ncTagList, ncRuleList]);
+  NotifyChanges([ncObjectsView, ncRulesView, ncTagList, ncRuleList]);
 end;
 
 procedure TMainForm.InitializeSearch;
 begin
+  FModel.ObjectName := '';
+  FModel.EventFilterIndex := 0;
+  FModel.IncludeUntagged := False;
+  FModel.ObjectTags.Clear;
+  FModel.ObjectRules.Clear;
+
   FindByName.Clear;
   FindByEvent.ItemIndex := 0;
   FindByTag.ClearSelection;
   FindByRule.ClearSelection;
 end;
 
-procedure TMainForm.LoadLanguageList;
+procedure TMainForm.LoadLanguageMenu;
 var
-  LanguageModule: string;
-  AppFile: TAppFile;
   Item: TMenuItem;
   I: Integer;
 begin
   for I := Low(Languages) to High(Languages) do
-  begin
-    LanguageModule := ChangeFileExt(AppFiles.FullPath[IdAppExe],
-      '.' + Languages[I].Language);
-    if FileExists(LanguageModule) then
+    if FAppFiles.FileExists(IdResourceModule + Languages[I].Language) then
     begin
-      AppFile := TPortableAppFile.Create(ExtractFileName(LanguageModule));
-      AppFile.Path := ExtractFilePath(LanguageModule);
-      TPortableAppFile(AppFile).PortablePath := PortableAppPath;
-      AppFiles.Add(IdResourceModule + Languages[I].Language, AppFile);
-
       Item := TMenuItem.Create(LanguageMenu);
       Item.Caption := GetLanguageName(Languages[I].LangId);
       Item.Tag := I;
       Item.OnClick := LanguageClick;
       LanguageMenu.Add(Item);
     end;
-  end;
 end;
 
-procedure TMainForm.DecodeCommandLine(out ACmdLineAction: TCmdLineAction;
-  out ACmdLineFileName, APortablePath: string);
+procedure TMainForm.OpenNewInstance(const AFileName: string);
 var
-  I: Integer;
+  AppExe, Parameters: string;
 begin
-  ACmdLineAction := caNone;
-  ACmdLineFileName := '';
-  APortablePath := '';
-  I := 1;
-  while I <= ParamCount do
-    if SameText(ParamStr(I), 'portable') and (ParamStr(I + 1) <> '') then
-    begin
-      APortablePath := ParamStr(I + 1);
-      Inc(I, 2);
-    end
-    else
-    begin
-      ACmdLineAction := caOpenFile;
-      ACmdLineFileName := ParamStr(I);
-      Inc(I);
-    end;
-end;
-
-procedure TMainForm.OpenNewInstance(const FileName: string);
-var
-  ACmdLineAction: TCmdLineAction;
-  ACmdLineFileName, APortablePath, AppExe, Parameters: string;
-begin
-  DecodeCommandLine(ACmdLineAction, ACmdLineFileName, APortablePath);
-
-  if APortablePath <> '' then
-    Parameters := 'portable "' + APortablePath + '" '
+  if PortablePath <> '' then
+    Parameters := 'portable "' + PortablePath + '" '
   else
     Parameters := '';
 
-  if FileName <> '' then
-    Parameters := Parameters + '"' + FileName + '"';
+  if AFileName <> '' then
+    Parameters := Parameters + '"' + AFileName + '"';
 
-  AppExe := AppFiles.FullPath[IdAppExe];
+  AppExe := FAppFiles.FullPaths[IdAppExe];
   ShellExecute(Application.Handle, 'open', PChar(AppExe), PChar(Parameters),
     PChar(ExtractFileDir(AppExe)), SW_SHOWNORMAL);
 end;
 
-procedure TMainForm.LoadFromFile(const FileName: string);
-var
-  OldFile: TO2File;
+procedure TMainForm.LoadFromFile(const AFileName: string);
 begin
-  OldFile := O2File;
-  try
-    FFile := nil;
-    O2File.FileName := FileName;
-
-    BeginBatchOperation;
-    try
-      O2File.Load;
-      FPasswordScoreProvider.Update(O2File);
-    finally
-      EndBatchOperation;
-    end;
-  except
-    if Assigned(O2File) then O2File.Free;
-    FFile := OldFile;
-    raise;
-  end;
-  OldFile.Free;
-
-  Initialize;
-  O2FileName := O2File.FileName;
-end;
-
-procedure TMainForm.SaveToFile(const FileName: string; Copy: Boolean);
-begin
-  O2File.FileName := FileName;
-
   BeginBatchOperation;
   try
-    O2File.Save(Copy);
+    FModel.LoadFromFile(AFileName);
+  finally
+    EndBatchOperation;
+  end;
+
+  Initialize;
+  FileName := FModel.O2File.FileName;
+end;
+
+procedure TMainForm.SaveToFile(const AFileName: string; Copy: Boolean);
+begin
+  BeginBatchOperation;
+  try
+    FModel.SaveToFile(AFileName, Copy);
   finally
     EndBatchOperation;
   end;
 
   if Copy then
-    O2File.FileName := O2FileName
+    FModel.O2File.FileName := FFileName
   else
-    O2FileName := O2File.FileName;
-end;
-
-procedure TMainForm.GetStartDate(out StartDate: TDateTime;
-  out UseParams: Boolean);
-begin
-  UseParams := False;
-  if FindByEvent.ItemIndex <> -1 then
-    case EventFilter of
-      efAll,
-      efAllEvents,
-      efCustom:
-        UseParams := True;
-      efToday:
-        StartDate := Date;
-      efTomorrow:
-        StartDate := Date + 1;
-      efThisWeek:
-        StartDate := StartOfTheWeek(Date);
-      efThisMonth:
-        StartDate := StartOfTheMonth(Date);
-      efThisYear:
-        StartDate := StartOfTheYear(Date);
-      efNext7days,
-      efNext15days,
-      efNext30days,
-      efNext60days,
-      efNext90days,
-      efNext180days,
-      efNext365days:
-        StartDate := Date;
-    end;
+    FileName := FModel.O2File.FileName;
 end;
 
 function TMainForm.ObjToListItem(const AObject: TO2Object;
   const Item: TListItem): TListItem;
 var
-  StartDate, EventDate: TDateTime;
-  UseParams: Boolean;
+  EventDate: TDateTime;
 begin
   if Assigned(Item) then
     Result := Item
@@ -1830,18 +1565,11 @@ begin
   Result.Caption := AObject.Name;
   Result.ImageIndex := 0;
   Result.SubItems.Add(AObject.Tag);
-  GetStartDate(StartDate, UseParams);
-  if O2File.Rules.GetNextEvent(AObject, StartDate, EventDate, UseParams) then
+  if FModel.GetNextEvent(AObject, EventDate) then
     Result.SubItems.Add(DateToStr(EventDate))
   else
     Result.SubItems.Add('');
   Result.Data := AObject;
-end;
-
-function TMainForm.ObjToListItem(ObjectIndex: Integer;
-  const Item: TListItem): TListItem;
-begin
-  Result := ObjToListItem(O2File.Objects[ObjectIndex], Item);
 end;
 
 function TMainForm.FieldToListItem(const AField: TO2Field;
@@ -1853,7 +1581,8 @@ begin
     Result := FieldsView.Items.Add;
   Result.Caption := AField.FieldName;
   Result.SubItems.Clear;
-  Result.SubItems.Add(O2File.Rules.GetDisplayText(AField, FShowPasswords));
+  Result.SubItems.Add(FModel.O2File.Rules.GetDisplayText(
+    AField, FShowPasswords));
   Result.Data := AField;
 end;
 
@@ -1862,7 +1591,7 @@ function TMainForm.RelationToListItem(const ARelation: TO2Relation;
 var
   AObjRelation: TO2ObjRelation;
 begin
-  AObjRelation := ARelation.GetObjectRelation(AObject);
+  AObjRelation := FModel.O2File.GetObjectRelation(AObject, ARelation);
   try
     Result := RelationToListItem(AObjRelation, Item);
   finally
@@ -1896,16 +1625,10 @@ begin
   Result.Checked := ARule.Active;
   Result.Caption := ARule.Name;
   Result.SubItems.Clear;
-  Result.SubItems.Add(TRuleTypeLookup.Lookup(Integer(ARule.RuleType)));
+  Result.SubItems.Add(RuleTypes[ARule.RuleType]);
   Result.SubItems.Add(ARule.FieldName);
   Result.SubItems.Add(ARule.FieldValue);
   Result.Data := ARule;
-end;
-
-function TMainForm.RuleToListItem(RuleIndex: Integer;
-  const Item: TListItem): TListItem;
-begin
-  Result := RuleToListItem(O2File.Rules[RuleIndex], Item);
 end;
 
 procedure TMainForm.EnableSelectedRules(Enable: Boolean);
@@ -1923,7 +1646,7 @@ begin
   finally
     RulesView.Items.EndUpdate;
   end;
-  NotifyChanges([ncObjects, ncRuleList]);
+  NotifyChanges([ncObjectsView, ncRuleList]);
 end;
 
 procedure TMainForm.UpdateRulesStatus;
@@ -1937,26 +1660,21 @@ begin
     if AItem.Checked <> ARule.Active then
     begin
       ARule.Active := AItem.Checked;
-      NotifyChanges([ncObjects, ncRuleList]);
+      NotifyChanges([ncObjectsView, ncRuleList]);
     end;
   end;
 end;
 
-procedure TMainForm.SortObjectsView(Column: TObjectViewColumn);
+procedure TMainForm.SortObjectsView(SortKind: TObjectSortKind);
 begin
-  if SortColumn = Column then
-    SortSign := -SortSign
+  if FSortKind = SortKind then
+    FSortSign := -FSortSign
   else
   begin
-    SortColumn := Column;
-    SortSign := 1;
+    FSortKind := SortKind;
+    FSortSign := 1;
   end;
   ObjectsView.AlphaSort;
-end;
-
-function TMainForm.CompareObjectsByName(const Obj1, Obj2: TO2Object): Integer;
-begin
-  Result := CompareText(Obj1.Name, Obj2.Name);
 end;
 
 function TMainForm.CompareObjectsByTags(const Obj1, Obj2: TO2Object): Integer;
@@ -1995,20 +1713,18 @@ end;
 function TMainForm.CompareObjectsByNextEvent(const Obj1,
   Obj2: TO2Object): Integer;
 var
-  StartDate, Date1, Date2: TDateTime;
-  UseParams: Boolean;
+  Date1, Date2: TDateTime;
 begin
-  GetStartDate(StartDate, UseParams);
-  if O2File.Rules.GetNextEvent(Obj1, StartDate, Date1, UseParams) then
+  if FModel.GetNextEvent(Obj1, Date1) then
   begin
-    if O2File.Rules.GetNextEvent(Obj2, StartDate, Date2, UseParams) then
+    if FModel.GetNextEvent(Obj2, Date2) then
       Result := CompareDate(Date1, Date2)
     else
       Result := -1;
   end
   else
   begin
-    if O2File.Rules.GetNextEvent(Obj2, StartDate, Date2, UseParams) then
+    if FModel.GetNextEvent(Obj2, Date2) then
       Result := 1
     else
       Result := 0;
@@ -2017,28 +1733,28 @@ end;
 
 procedure TMainForm.BeginBatchOperation;
 begin
-  Inc(BatchOperationCount);
-  SetBusy(BatchOperationCount > 0);
+  Inc(FBatchOperationCount);
+  SetBusy(FBatchOperationCount > 0);
 end;
 
 procedure TMainForm.EndBatchOperation;
 begin
-  Dec(BatchOperationCount);
-  SetBusy(BatchOperationCount > 0);
+  Dec(FBatchOperationCount);
+  SetBusy(FBatchOperationCount > 0);
 end;
 
 procedure TMainForm.UpdateAllActions;
 var
   I: Integer;
 begin
-  for I := 0 to Pred(ActionList.ActionCount) do
+  for I := 0 to ActionList.ActionCount - 1 do
     ActionList.Actions[I].Update;
 end;
 
 procedure TMainForm.NotifyChanges(Changes: TNotifyChanges);
 begin
-  if not ApplyingChanges then
-    PendingChanges := PendingChanges + Changes;
+  if not FApplyingChanges then
+    FPendingChanges := FPendingChanges + Changes;
 end;
 
 procedure TMainForm.ResizeObjectsViewColumns;
@@ -2063,174 +1779,34 @@ end;
 
 procedure TMainForm.UpdateObjectsView;
 var
-  Date1, Date2: TDateTime;
-  UseParams: Boolean;
+  SelectedItemsData: TList;
   AObject: TO2Object;
-  Selection: TList;
-
-function CheckName(const Obj: TO2Object): Boolean;
 begin
-  Result := (FindByName.Text = '')
-    or (Pos(LowerCase(FindByName.Text), LowerCase(Obj.Name)) > 0);
-end;
-
-function CheckTag(const Obj: TO2Object): Boolean;
-var
-  Tags: TStringList;
-  I: Integer;
-begin
-  if (FindByTag.SelCount = 0)
-    or FindByTag.Selected[0] and (Obj.Tag = '') then
-    Result := True
-  else
-  begin
-    Result := False;
-    Tags := TStringList.Create;
-    try
-      Obj.GetTags(Tags);
-      for I := 1 to FindByTag.Items.Count - 1 do
-        if FindByTag.Selected[I]
-          and (Tags.IndexOf(FindByTag.Items[I]) > -1) then
-        begin
-          Result := True;
-          Break;
-        end;
-    finally
-      Tags.Free;
-    end;
-  end;
-end;
-
-function CheckEvents(const Obj: TO2Object): Boolean;
-begin
-  Result := (FindByEvent.ItemIndex = -1) or (EventFilter = efAll)
-    or O2File.Rules.CheckEvents(Obj, Date1, Date2, UseParams);
-end;
-
-function CheckRules(const Obj: TO2Object): Boolean;
-var
-  AField: TO2Field;
-  I: Integer;
-begin
-  if FindByRule.SelCount = 0 then
-    Result := True
-  else
-  begin
-    Result := False;
-    for AField in Obj.Fields do
-      for I := 0 to FindByRule.Items.Count - 1 do
-        if FindByRule.Selected[I] then
-          with TO2Rule(FindByRule.Items.Objects[I]) do
-            if not (RuleType in EventRules) and Matches(AField)
-              or CheckEvents(AField, 0, 0, True) then
-            begin
-              Result := True;
-              Break;
-            end;
-  end;
-end;
-
-begin
-  Selection := ObjectsView.ListSelectedItemsData;
+  SelectedItemsData := ObjectsView.ListSelectedItemsData;
   try
-    UseParams := False;
-    if FindByEvent.ItemIndex <> -1 then
-      case EventFilter of
-        efAllEvents:
-        begin
-          Date1 := EncodeDate(1, 1, 1);
-          Date2 := EncodeDate(9999, 12, 31);
-        end;
-        efCustom:
-          UseParams := True;
-        efToday:
-        begin
-          Date1 := Date;
-          Date2 := Date;
-        end;
-        efTomorrow:
-        begin
-          Date1 := Date + 1;
-          Date2 := Date + 1;
-        end;
-        efThisWeek:
-        begin
-          Date1 := StartOfTheWeek(Date);
-          Date2 := StartOfTheDay(EndOfTheWeek(Date));
-        end;
-        efThisMonth:
-        begin
-          Date1 := StartOfTheMonth(Date);
-          Date2 := StartOfTheDay(EndOfTheMonth(Date));
-        end;
-        efThisYear:
-        begin
-          Date1 := StartOfTheYear(Date);
-          Date2 := StartOfTheDay(EndOfTheYear(Date));
-        end;
-        efNext7days:
-        begin
-          Date1 := Date;
-          Date2 := Date + 7;
-        end;
-        efNext15days:
-        begin
-          Date1 := Date;
-          Date2 := Date + 15;
-        end;
-        efNext30days:
-        begin
-          Date1 := Date;
-          Date2 := Date + 30;
-        end;
-        efNext60days:
-        begin
-          Date1 := Date;
-          Date2 := Date + 60;
-        end;
-        efNext90days:
-        begin
-          Date1 := Date;
-          Date2 := Date + 90;
-        end;
-        efNext180days:
-        begin
-          Date1 := Date;
-          Date2 := Date + 180;
-        end;
-        efNext365days:
-        begin
-          Date1 := Date;
-          Date2 := Date + 365;
-        end;
-      end;
-
     ObjectsView.Items.BeginUpdate;
     try
       ObjectsView.Clear;
-      for AObject in O2File.Objects do
-        if CheckName(AObject) and CheckTag(AObject)
-          and CheckEvents(AObject) and CheckRules(AObject) then
-          ObjToListItem(AObject, nil);
+      for AObject in FModel.GetObjects do ObjToListItem(AObject, nil);
 
       ObjectsView.AlphaSort;
 
       ResizeObjectsViewColumns;
-      ObjectsView.SelectItemsByData(Selection);
+      ObjectsView.SelectItemsByData(SelectedItemsData);
     finally
       ObjectsView.Items.EndUpdate;
     end;
   finally
-    Selection.Free;
+    SelectedItemsData.Free;
   end;
 end;
 
 procedure TMainForm.UpdateFieldsView;
 var
+  SelectedItemsData: TList;
   AField: TO2Field;
-  Selection: TList;
 begin
-  Selection := FieldsView.ListSelectedItemsData;
+  SelectedItemsData := FieldsView.ListSelectedItemsData;
   try
     FieldsView.Items.BeginUpdate;
     try
@@ -2239,12 +1815,12 @@ begin
         for AField in SelectedObject.Fields do
           FieldToListItem(AField, nil);
       ResizeFieldsViewColumns;
-      FieldsView.SelectItemsByData(Selection);
+      FieldsView.SelectItemsByData(SelectedItemsData);
     finally
       FieldsView.Items.EndUpdate;
     end;
   finally
-    Selection.Free;
+    SelectedItemsData.Free;
   end;
 end;
 
@@ -2256,6 +1832,7 @@ begin
   try
     SB.AppendLine('<!DOCTYPE html>')
       .AppendLine('<html>')
+      .AppendLine('<script type="text/javascript">document.addEventListener("contextmenu", (event) => { event.preventDefault(); }, true);</script>')
       .Append('<body style="color: #000; background-color: #fff; font-family: sans-serif; font-size: 1rem;">');
 
     if HasSelectedObject then
@@ -2263,7 +1840,7 @@ begin
 
     SB.AppendLine('</body>').Append('</html>');
 
-    StuffHTML(NotesView.DefaultInterface, SB.ToString);
+    NotesView.NavigateToString(SB.ToString);
   finally
     SB.Free;
   end;
@@ -2273,16 +1850,16 @@ procedure TMainForm.UpdateRelationsView;
 var
   AObjRelation: TO2ObjRelation;
   ObjRelations: TO2ObjRelations;
-  Selection: TList;
+  SelectedItemsData: TList;
 begin
-  Selection := RelationsView.ListSelectedItemsData;
+  SelectedItemsData := RelationsView.ListSelectedItemsData;
   try
     RelationsView.Items.BeginUpdate;
     try
       RelationsView.Clear;
       if HasSelectedObject then
       begin
-        ObjRelations := O2File.Relations.GetObjectRelations(SelectedObject);
+        ObjRelations := FModel.O2File.GetObjectRelations(SelectedObject);
         try
           for AObjRelation in ObjRelations do
             RelationToListItem(AObjRelation, nil);
@@ -2291,28 +1868,28 @@ begin
         end;
       end;
       ResizeRelationsViewColumns;
-      RelationsView.SelectItemsByData(Selection);
+      RelationsView.SelectItemsByData(SelectedItemsData);
     finally
       RelationsView.Items.EndUpdate;
     end;
   finally
-    Selection.Free;
+    SelectedItemsData.Free;
   end;
 end;
 
 procedure TMainForm.UpdateRulesView;
 var
   ARule: TO2Rule;
-  Selection: TList;
+  SelectedItemsData: TList;
 begin
-  Selection := RulesView.ListSelectedItemsData;
+  SelectedItemsData := RulesView.ListSelectedItemsData;
   try
     RulesView.Items.BeginUpdate;
     try
       RulesView.Clear;
-      for ARule in O2File.Rules do RuleToListItem(ARule, nil);
+      for ARule in FModel.O2File.Rules do RuleToListItem(ARule, nil);
       ResizeRulesViewColumns;
-      RulesView.SelectItemsByData(Selection);
+      RulesView.SelectItemsByData(SelectedItemsData);
       if Assigned(RulesView.Selected) then
       begin
         RulesView.Selected.Focused := True;
@@ -2322,89 +1899,76 @@ begin
       RulesView.Items.EndUpdate;
     end;
   finally
-    Selection.Free;
+    SelectedItemsData.Free;
   end;
 end;
 
 procedure TMainForm.UpdateTagList;
 var
-  NoneSelected: Boolean;
-  Selection: TStrings;
   I: Integer;
 begin
-  Selection := TStringList.Create;
-  try
-    if FindByTag.Items.Count > 0 then
-      NoneSelected := FindByTag.Selected[0]
+  FindByTag.Items := FModel.Tags;
+
+  I := 0;
+  while I < FModel.ObjectTags.Count do
+    if FModel.Tags.IndexOf(FModel.ObjectTags[I]) = -1 then
+      FModel.ObjectTags.Delete(I)
     else
-      NoneSelected := False;
-    for I := 1 to FindByTag.Items.Count - 1 do
-      if FindByTag.Selected[I] then
-        Selection.Add(FindByTag.Items[I]);
+      Inc(I);
 
-    FindByTag.Items.BeginUpdate;
-    try
-      FindByTag.Items.Clear;
-      FindByTag.Items.Add(STagsNone);
-      O2File.Objects.GetTags(FindByTag.Items);
-    finally
-      FindByTag.Items.EndUpdate;
-    end;
+  for I := 1 to FindByTag.Count - 1 do
+    if FModel.ObjectTags.IndexOf(FindByTag.Items[I]) <> -1 then
+      FindByTag.Selected[I] := True;
 
-    FindByTag.Selected[0] := NoneSelected;
-    for I := 1 to FindByTag.Items.Count - 1 do
-      FindByTag.Selected[I] := Selection.IndexOf(FindByTag.Items[I]) > -1;
-  finally
-    Selection.Free;
-  end;
+  FindByTag.Selected[0] := FModel.IncludeUntagged;
 end;
 
 procedure TMainForm.UpdateRuleList;
 var
-  Selection: TObjectList;
   ARule: TO2Rule;
   I: Integer;
 begin
-  Selection := TObjectList.Create(False);
+  FindByRule.Items.BeginUpdate;
   try
-    for I := 0 to FindByRule.Items.Count - 1 do
-      if FindByRule.Selected[I] then
-        Selection.Add(FindByRule.Items.Objects[I]);
-
-    FindByRule.Items.BeginUpdate;
-    try
-      FindByRule.Items.Clear;
-      for ARule in O2File.Rules do
-        if ARule.Active then
-          FindByRule.AddItem(ARule.Name, ARule);
-    finally
-      FindByRule.Items.EndUpdate;
-    end;
-
-    for I := 0 to FindByRule.Items.Count - 1 do
-      FindByRule.Selected[I] :=
-        Selection.IndexOf(FindByRule.Items.Objects[I]) > -1;
+    FindByRule.Items.Clear;
+    for ARule in FModel.O2File.Rules do
+      if ARule.Active then
+        FindByRule.AddItem(ARule.Name, ARule);
   finally
-    Selection.Free;
+    FindByRule.Items.EndUpdate;
   end;
+
+  I := 0;
+  while I < FModel.ObjectRules.Count do
+    if not FModel.ObjectRules[I].Active
+      or (FModel.O2File.Rules.IndexOf(FModel.ObjectRules[I]) = -1) then
+      FModel.ObjectRules.Delete(I)
+    else
+      Inc(I);
+
+  for I := 0 to FindByRule.Count - 1 do
+    if FModel.ObjectRules.IndexOf(
+      TO2Rule(FindByRule.Items.Objects[I])) <> -1 then
+      FindByRule.Selected[I] := True;
 end;
 
-procedure TMainForm.UpdateMRUList(const FileName: string);
+procedure TMainForm.UpdateMRUList(const AFileName: string);
 var
   I, J: Integer;
 begin
-  if FileName <> '' then MRUList.AddItem(FileName);
+  if AFileName <> '' then FMRUList.AddItem(AFileName);
 
   J := 0;
-  for I := 0 to MRUMenuItems.Count - 1 do
+  for I := 0 to FMRUMenuItems.Count - 1 do
   begin
-    while (J < MRUList.Count) and SameText(MRUList[J].Item, FileName) do Inc(J);
+    while (J < FMRUList.Count) and SameText(FMRUList[J].Item, AFileName) do
+      Inc(J);
 
-    with TMenuItem(MRUMenuItems[I]) do
-      if J < MRUList.Count then
+    with TMenuItem(FMRUMenuItems[I]) do
+      if J < FMRUList.Count then
       begin
         Caption := IntToStr(Succ(I)) + ' '
-          + MinimizeName(MRUList[J].Item, Canvas, 400);
+          + MinimizeName(FMRUList[J].Item, Canvas, 400);
         Visible := True;
         Tag := J;
         Inc(J);
@@ -2414,219 +1978,73 @@ begin
   end;
 end;
 
-procedure TMainForm.GetAppInfo(Sender: TObject; F: TStream);
-var
-  VersionInfo: TJclFileVersionInfo;
-begin
-  VersionInfo := TJclFileVersionInfo.Create(AppFiles.FullPath[IdAppExe]);
-  try
-    with TStringList.Create do
-    try
-      Add('[' + PAF_FormatSection + ']');
-      Add(PAF_FormatTypeId + '=' + PAF_FormatType);
-      Add(PAF_FormatVersionId + '=' + PAF_FormatVersion);
-      Add('');
-      Add('[' + PAF_DetailsSection + ']');
-      Add(PAF_AppNameId + '=' + VersionInfo.ProductName + ' ' + 'Portable');
-      Add(PAF_AppIDId + '=' + VersionInfo.ProductName);
-      Add(PAF_PublisherId + '=' + VersionInfo.CompanyName);
-      Add(PAF_HomepageId + '=' + VersionInfo.GetCustomFieldValue('Homepage'));
-      Add(PAF_CategoryId + '=' + PAF_CategorySecurity);
-      Add(PAF_DescriptionId + '=' + VersionInfo.Comments);
-      Add(PAF_LanguageId + '=' + PAF_LanguageMultilingual);
-      Add('');
-      Add('[' + PAF_LicenseSection + ']');
-      Add(PAF_ShareableId + '=' + BoolToStr(True, True));
-      Add(PAF_OpenSourceId + '=' + BoolToStr(True, True));
-      Add(PAF_FreewareId + '=' + BoolToStr(True, True));
-      Add(PAF_CommercialUseId + '=' + BoolToStr(True, True));
-      Add('');
-      Add('[' + PAF_VersionSection + ']');
-      Add(PAF_PackageVersionId + '=' + VersionInfo.BinFileVersion);
-      Add(PAF_DisplayVersionId + '=' + VersionInfo.BinFileVersion);
-      Add('');
-      Add('[' + PAF_ControlSection + ']');
-      Add(PAF_IconsId + '=' + IntToStr(1));
-      Add(PAF_StartId + '=' + LauncherFile);
-      Add('');
-      Add('[' + PAF_AssociationsSection + ']');
-      Add(PAF_FileTypesId + '=' + DefaultFileExt);
-      Add('');
-      Add('[' + PAF_FileTypeIconsSection + ']');
-      Add(DefaultFileExt + '=' + PAF_FileTypeIconCustom);
-      SaveToStream(F);
-    finally
-      Free;
-    end;
-  finally
-    VersionInfo.Free;
-  end;
-end;
-
-const
-  IdMRUListItemFmt = '%s.%d';
-  IdMRUListItemCntFmt = '%s.%d.Count';
-
 procedure TMainForm.LoadMRUList;
 var
-  I: Integer;
+  I, Count: Integer;
 begin
-  MRUList.Clear;
-  for I := 0 to XmlStorage.ReadInteger(IdMRUList, 0) - 1 do
-  begin
-    MRUList.Add(TMRUItem.Create(
-      XmlStorage.ReadString(Format(IdMRUListItemFmt, [IdMRUList, I]), ''),
-      XmlStorage.ReadInteger(Format(IdMRUListItemCntFmt, [IdMRUList, I]), 1)));
-  end;
+  FMRUList.Clear;
+  Count := FStorage.ReadInteger(IdMRUList, 0);
+  for I := 0 to Count - 1 do
+    FMRUList.Add(TMRUItem.Create(
+      FStorage.ReadString(Format(IdMRUListItemFmt, [I])),
+      FStorage.ReadInteger(Format(IdMRUListItemCntFmt, [I]), 1)));
 end;
 
 procedure TMainForm.SaveMRUList;
 var
   I: Integer;
 begin
-  XmlStorage.WriteInteger(IdMRUList, MRUList.Count);
-  for I := 0 to MRUList.Count - 1 do
+  FStorage.WriteInteger(IdMRUList, FMRUList.Count);
+  for I := 0 to FMRUList.Count - 1 do
   begin
-    XmlStorage.WriteString(Format(IdMRUListItemFmt,
-      [IdMRUList, I]), MRUList[I].Item);
-    XmlStorage.WriteInteger(Format(IdMRUListItemCntFmt,
-      [IdMRUList, I]), MRUList[I].Count);
+    FStorage.WriteString(Format(IdMRUListItemFmt, [I]), FMRUList[I].Item);
+    FStorage.WriteInteger(Format(IdMRUListItemCntFmt, [I]), FMRUList[I].Count);
   end;
 end;
 
-procedure TMainForm.ConvertSettings;
-var
-  XML: IXMLDocument;
-  Node: IXMLNode;
-  NodeValue: Variant;
-  I: Integer;
-begin
-  if SameText(XmlStorage.XML.DocumentElement.NodeName, 'Configuration') then
-  begin
-    XML := XmlStorage.XML;
-    XmlStorage.XML := nil;
-
-    Node := XML.DocumentElement.ChildNodes.FindNode('MRUList');
-    if Assigned(Node) then
-    begin
-      NodeValue := Node.ChildValues['Count'];
-      if not VarIsNull(NodeValue) then
-      begin
-        MRUList.Clear;
-        for I := 0 to StrToIntDef(NodeValue, 0) - 1 do
-        begin
-          NodeValue := Node.ChildValues['Item' + IntToStr(I)];
-          if not VarIsNull(NodeValue) then
-            MRUList.Add(TMRUItem.Create(NodeValue));
-        end;
-        SaveMRUList;
-      end;
-    end;
-
-    NodeValue := XML.DocumentElement.ChildValues['StayOnTop'];
-    if not VarIsNull(NodeValue) then
-      XmlStorage.WriteBoolean(IdStayOnTop,
-        StrToBoolDef(NodeValue, False));
-
-    NodeValue := XML.DocumentElement.ChildValues['Transparency'];
-    if not VarIsNull(NodeValue) then
-      XmlStorage.WriteInteger(IdTransparency,
-        StrToIntDef(NodeValue, 0));
-
-    NodeValue := XML.DocumentElement.ChildValues['AutoCheckForUpdates'];
-    if not VarIsNull(NodeValue) then
-      XmlStorage.WriteBoolean(IdAutoCheckForUpdates,
-        StrToBoolDef(NodeValue, True));
-
-    NodeValue := XML.DocumentElement.ChildValues['ViewStyle'];
-    if not VarIsNull(NodeValue) then
-      XmlStorage.WriteIntIdent(IdViewStyle, ViewStyles,
-        GetEnumValue(TypeInfo(TViewStyle), NodeValue));
-
-    NodeValue := XML.DocumentElement.ChildValues['SortColumn'];
-    if not VarIsNull(NodeValue) then
-      XmlStorage.WriteIntIdent(IdSortColumn, SortColumns,
-        GetEnumValue(TypeInfo(TObjectViewColumn), NodeValue));
-
-    NodeValue := XML.DocumentElement.ChildValues['SortSign'];
-    if not VarIsNull(NodeValue) then
-      XmlStorage.WriteBoolean(IdSortAscending,
-        StrToIntDef(NodeValue, 1) > 0);
-
-    Node := XML.DocumentElement.ChildNodes.FindNode('Print');
-    if Assigned(Node) then
-    begin
-      NodeValue := Node.ChildValues['IncludeTags'];
-      if not VarIsNull(NodeValue) then
-        XmlStorage.WriteBoolean(IdPrintIncludeTags,
-          StrToBoolDef(NodeValue, True));
-
-      NodeValue := Node.ChildValues['IncludeNotes'];
-      if not VarIsNull(NodeValue) then
-        XmlStorage.WriteBoolean(IdPrintIncludeNotes,
-          StrToBoolDef(NodeValue, True));
-
-      NodeValue := Node.ChildValues['IncludeRelations'];
-      if not VarIsNull(NodeValue) then
-        XmlStorage.WriteBoolean(IdPrintIncludeRelations,
-          StrToBoolDef(NodeValue, True));
-
-      NodeValue := Node.ChildValues['IncludePasswords'];
-      if not VarIsNull(NodeValue) then
-        XmlStorage.WriteBoolean(IdPrintIncludePasswords,
-          StrToBoolDef(NodeValue, True));
-    end;
-  end;
-end;
-
-procedure TMainForm.LoadSettings(const FileName: string);
+procedure TMainForm.LoadSettings(const AFileName: string);
 const
   SortSigns: array[Boolean] of Integer = (-1, 1);
 begin
-  XmlStorage.DocumentElementName := 'O2';
-  XmlStorage.LoadFromFile(FileName);
-
-  ConvertSettings;
+  FStorage.LoadFromFile(AFileName);
 
   LoadMRUList;
   UpdateMRUList;
 
-  StayOnTop := XmlStorage.ReadBoolean(IdStayOnTop, False);
+  StayOnTop := FStorage.ReadBoolean(IdStayOnTop, False);
   FTransparencyOnlyIfDeactivated :=
-    XmlStorage.ReadBoolean(IdTransparencyOnlyIfDeactivated, True);
-  Transparency := XmlStorage.ReadInteger(IdTransparency, 0);
-  AutoCheckForUpdates := XmlStorage.ReadBoolean(IdAutoCheckForUpdates, True);
-  LastCheckForUpdates := XmlStorage.ReadFloat(IdLastCheckForUpdates, Yesterday);
-  ObjectsView.ViewStyle := TViewStyle(XmlStorage.ReadIntIdent(IdViewStyle,
+    FStorage.ReadBoolean(IdTransparencyOnlyIfDeactivated, True);
+  Transparency := FStorage.ReadInteger(IdTransparency, 0);
+  FAutoCheckForUpdates := FStorage.ReadBoolean(IdAutoCheckForUpdates, True);
+  FLastCheckForUpdates := FStorage.ReadFloat(IdLastCheckForUpdates, Yesterday);
+  ObjectsView.ViewStyle := TViewStyle(ReadIntIdent(FStorage, IdViewStyle,
     ViewStyles, Integer(vsIcon)));
-  SortColumn := TObjectViewColumn(XmlStorage.ReadIntIdent(IdSortColumn,
-    SortColumns, Integer(ocName)));
-  SortSign := SortSigns[XmlStorage.ReadBoolean(IdSortAscending, True)];
+  FSortKind := TObjectSortKind(ReadIntIdent(FStorage, IdSortKind,
+    SortKinds, Integer(osName)));
+  FSortSign := SortSigns[FStorage.ReadBoolean(IdSortAscending, True)];
 end;
 
-procedure TMainForm.SaveSettings(const FileName: string);
+procedure TMainForm.SaveSettings(const AFileName: string);
 begin
   SaveMRUList;
 
-  XmlStorage.WriteBoolean(IdStayOnTop, StayOnTop);
-  XmlStorage.WriteInteger(IdTransparency, Transparency);
-  XmlStorage.WriteBoolean(IdAutoCheckForUpdates, AutoCheckForUpdates);
-  XmlStorage.WriteBoolean(IdTransparencyOnlyIfDeactivated,
+  FStorage.WriteBoolean(IdStayOnTop, StayOnTop);
+  FStorage.WriteInteger(IdTransparency, Transparency);
+  FStorage.WriteBoolean(IdAutoCheckForUpdates, FAutoCheckForUpdates);
+  FStorage.WriteBoolean(IdTransparencyOnlyIfDeactivated,
     FTransparencyOnlyIfDeactivated);
-  XmlStorage.WriteFloat(IdLastCheckForUpdates, LastCheckForUpdates);
-  XmlStorage.WriteIntIdent(IdViewStyle, ViewStyles,
+  FStorage.WriteFloat(IdLastCheckForUpdates, FLastCheckForUpdates);
+  WriteIntIdent(FStorage, IdViewStyle, ViewStyles,
     Integer(ObjectsView.ViewStyle));
-  XmlStorage.WriteIntIdent(IdSortColumn, SortColumns,
-    Integer(SortColumn));
-  XmlStorage.WriteBoolean(IdSortAscending, SortSign > 0);
+  WriteIntIdent(FStorage, IdSortKind, SortKinds, Integer(FSortKind));
+  FStorage.WriteBoolean(IdSortAscending, FSortSign > 0);
 
-  ForceDirectories(ExtractFileDir(FileName));
-  XmlStorage.SaveToFile(FileName);
+  SysUtils.ForceDirectories(ExtractFileDir(AFileName));
+  FStorage.SaveToFile(AFileName);
 end;
 
 procedure TMainForm.ObjectMenuPopup(Sender: TObject);
 var
-  Selection: TO2ObjectList;
   Item: TMenuItem;
   Tags: TStrings;
   Tag: string;
@@ -2635,12 +2053,9 @@ begin
   DeleteTag.Clear;
   if HasSelectedObject then
   begin
-    Selection := TO2ObjectList.Create;
     Tags := TStringList.Create;
     try
-      FillObjList(Selection);
-
-      O2File.Objects.GetTags(Tags);
+      AppendTagsToList(FModel.O2File.Objects.ToEnumerable, Tags);
       for Tag in Tags do
       begin
         Item := TMenuItem.Create(Self);
@@ -2651,7 +2066,7 @@ begin
       AddTag.Enabled := AddTag.Count > 0;
 
       Tags.Clear;
-      Selection.GetTags(Tags);
+      AppendTagsToList(FSelectedObjects, Tags);
       for Tag in Tags do
       begin
         Item := TMenuItem.Create(Self);
@@ -2661,7 +2076,6 @@ begin
       end;
       DeleteTag.Enabled := DeleteTag.Count > 0;
     finally
-      Selection.Free;
       Tags.Free;
     end;
   end
@@ -2674,37 +2088,33 @@ end;
 
 procedure TMainForm.NewObjectExecute(Sender: TObject);
 var
+  Model: IObjectProps;
   Item: TListItem;
-  Index: Integer;
 begin
-  Index := -1;
-  if TObjPropsDlg.Execute(Application, O2File.Objects, Index, False,
-    pgGeneral) then
+  Model := FServiceContainer.Resolve<IObjectProps>(NewObjectService);
+  if TObjPropsDlg.Execute(Model, pgGeneral) then
   begin
-    FPasswordScoreProvider.Update(O2File, Index);
-    Item := ObjToListItem(Index, nil);
+    Item := ObjToListItem(Model.O2Object, nil);
     ObjectsView.ClearSelection;
     Item.Selected := True;
     Item.Focused := True;
-    NotifyChanges([ncObjProps, ncRelations, ncTagList]);
+    NotifyChanges([ncObjPropsViews, ncRelationsView, ncTagList]);
   end;
 end;
 
 procedure TMainForm.DuplicateObjectExecute(Sender: TObject);
 var
+  Model: IObjectProps;
   Item: TListItem;
-  Index: Integer;
 begin
-  Index := SelectedObject.Index;
-  if TObjPropsDlg.Execute(Application, O2File.Objects, Index, True,
-    pgGeneral) then
+  Model := FServiceContainer.Resolve<IObjectProps>(DuplicateObjectService);
+  if TObjPropsDlg.Execute(Model, pgGeneral) then
   begin
-    FPasswordScoreProvider.Update(O2File, Index);
-    Item := ObjToListItem(Index, nil);
+    Item := ObjToListItem(Model.O2Object, nil);
     ObjectsView.ClearSelection;
     Item.Selected := True;
     Item.Focused := True;
-    NotifyChanges([ncObjProps, ncRelations, ncTagList]);
+    NotifyChanges([ncObjPropsViews, ncRelationsView, ncTagList]);
   end;
 end;
 
@@ -2739,175 +2149,86 @@ end;
 
 procedure TMainForm.ObjectTagsExecute(Sender: TObject);
 var
-  Index: Integer;
+  Model: IObjectProps;
 begin
-  Index := SelectedObject.Index;
-  if TObjPropsDlg.Execute(Application, O2File.Objects, Index, False,
-    pgGeneralTags) then
+  Model := FServiceContainer.Resolve<IObjectProps>(EditObjectService);
+  if TObjPropsDlg.Execute(Model, pgGeneralTags) then
   begin
-    ObjToListItem(Index, ObjectsView.Selected);
-    NotifyChanges([ncObjProps, ncTagList]);
+    ObjToListItem(Model.O2Object, ObjectsView.Selected);
+    NotifyChanges([ncObjPropsViews, ncTagList]);
   end;
 end;
 
 procedure TMainForm.AddTagClick(Sender: TObject);
 var
-  Selection: TO2ObjectList;
+  AObject: TO2Object;
   Tag: string;
 begin
-  Selection := TO2ObjectList.Create;
-  try
-    FillObjList(Selection);
-    Tag := StringReplace(TMenuItem(Sender).Caption, '&&', '&', [rfReplaceAll]);
-    Selection.AddTag(Tag);
-  finally
-    Selection.Free;
-  end;
+  Tag := StringReplace(TMenuItem(Sender).Caption, '&&', '&', [rfReplaceAll]);
+  for AObject in FSelectedObjects do
+    AObject.AddTag(Tag);
 end;
 
 procedure TMainForm.DeleteTagClick(Sender: TObject);
 var
-  Selection: TO2ObjectList;
+  AObject: TO2Object;
   Tag: string;
 begin
-  Selection := TO2ObjectList.Create;
-  try
-    FillObjList(Selection);
-    Tag := StringReplace(TMenuItem(Sender).Caption, '&&', '&', [rfReplaceAll]);
-    Selection.DeleteTag(Tag);
-  finally
-    Selection.Free;
-  end;
+  Tag := StringReplace(TMenuItem(Sender).Caption, '&&', '&', [rfReplaceAll]);
+  for AObject in FSelectedObjects do
+    AObject.DeleteTag(Tag);
+  NotifyChanges([ncObjectsView, ncTagList]);
 end;
 
 procedure TMainForm.ReplaceTagExecute(Sender: TObject);
-var
-  Selection: TO2ObjectList;
-  SearchTag, ReplaceTag: string;
-  SearchTags, ReplaceTags: TStrings;
 begin
-  Selection := TO2ObjectList.Create;
-  SearchTags := TStringList.Create;
-  ReplaceTags := TStringList.Create;
-  try
-    FillObjList(Selection);
-    Selection.GetTags(SearchTags);
-    O2File.Objects.GetTags(ReplaceTags);
-    if TReplaceDlg.Execute(Application, acReplaceTag,
-      SearchTags, ReplaceTags, SearchTag, ReplaceTag) then
-    begin
-      Selection.ReplaceTag(SearchTag, ReplaceTag);
-      NotifyChanges([ncObjects, ncTagList]);
-    end;
-  finally
-    Selection.Free;
-    SearchTags.Free;
-    ReplaceTags.Free;
-  end;
+  if TReplaceDlg.Execute(
+    FServiceContainer.Resolve<IReplaceOperation>(ReplaceTagService)) then
+    NotifyChanges([ncObjectsView, ncTagList]);
 end;
 
 procedure TMainForm.ReplaceFieldNameExecute(Sender: TObject);
-var
-  Selection: TO2ObjectList;
-  SearchFieldName, ReplaceFieldName: string;
-  SearchFieldNames, ReplaceFieldNames: TStrings;
 begin
-  Selection := TO2ObjectList.Create;
-  SearchFieldNames := TStringList.Create;
-  ReplaceFieldNames := TStringList.Create;
-  try
-    FillObjList(Selection);
-    Selection.GetFieldNames(SearchFieldNames);
-    O2File.Objects.GetFieldNames(ReplaceFieldNames);
-    if TReplaceDlg.Execute(Application, acReplaceFieldName,
-      SearchFieldNames, ReplaceFieldNames,
-      SearchFieldName, ReplaceFieldName) then
-    begin
-      Selection.ReplaceFieldName(SearchFieldName, ReplaceFieldName);
-      NotifyChanges([ncObjects]);
-    end;
-  finally
-    Selection.Free;
-    SearchFieldNames.Free;
-    ReplaceFieldNames.Free;
-  end;
+  if TReplaceDlg.Execute(
+    FServiceContainer.Resolve<IReplaceOperation>(ReplaceFieldNameService)) then
+    NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.ReplaceFieldValueExecute(Sender: TObject);
-var
-  Selection: TO2ObjectList;
-  SearchFieldName, ReplaceFieldValue: string;
-  SearchFieldNames, ReplaceFieldValues: TStrings;
 begin
-  Selection := TO2ObjectList.Create;
-  SearchFieldNames := TStringList.Create;
-  ReplaceFieldValues := TStringList.Create;
-  try
-    FillObjList(Selection);
-    Selection.GetFieldNames(SearchFieldNames);
-    O2File.Objects.GetFieldValues('', ReplaceFieldValues);
-    if TReplaceDlg.Execute(Application, acReplaceFieldValue,
-      SearchFieldNames, ReplaceFieldValues,
-      SearchFieldName, ReplaceFieldValue) then
-    begin
-      Selection.ReplaceFieldValue(SearchFieldName, ReplaceFieldValue);
-      NotifyChanges([ncObjects]);
-    end;
-  finally
-    Selection.Free;
-    SearchFieldNames.Free;
-    ReplaceFieldValues.Free;
-  end;
+  if TReplaceDlg.Execute(
+    FServiceContainer.Resolve<IReplaceOperation>(ReplaceFieldValueService)) then
+    NotifyChanges([ncObjectsView]);
 end;
 
 procedure TMainForm.ReplaceRoleExecute(Sender: TObject);
-var
-  Selection: TO2ObjectList;
-  SearchRole, ReplaceRole: string;
-  SearchRoles, ReplaceRoles: TStrings;
 begin
-  Selection := TO2ObjectList.Create;
-  SearchRoles := TStringList.Create;
-  ReplaceRoles := TStringList.Create;
-  try
-    FillObjList(Selection);
-    O2File.Relations.GetRoles(Selection, SearchRoles);
-    O2File.Relations.GetRoles(ReplaceRoles);
-    if TReplaceDlg.Execute(Application, acReplaceRole,
-      SearchRoles, ReplaceRoles, SearchRole, ReplaceRole) then
-    begin
-      O2File.Relations.ReplaceRole(Selection, SearchRole, ReplaceRole);
-      NotifyChanges([ncRelations]);
-    end;
-  finally
-    Selection.Free;
-    SearchRoles.Free;
-    ReplaceRoles.Free;
-  end;
+  if TReplaceDlg.Execute(
+    FServiceContainer.Resolve<IReplaceOperation>(ReplaceRoleService)) then
+    NotifyChanges([ncRelationsView]);
 end;
 
 procedure TMainForm.ObjectPropsExecute(Sender: TObject);
 var
   Page: TObjPropsDlgPage;
-  Index: Integer;
+  Model: IObjectProps;
 begin
   case PageControl.ActivePageIndex of
     0: Page := pgFields;
     1: Page := pgNotes;
     else Page := pgGeneral;
   end;
-  Index := SelectedObject.Index;
-  if TObjPropsDlg.Execute(Application, O2File.Objects, Index, False, Page) then
+  Model := FServiceContainer.Resolve<IObjectProps>(EditObjectService);
+  if TObjPropsDlg.Execute(Model, Page) then
   begin
-    FPasswordScoreProvider.Update(O2File, Index);
-    ObjToListItem(Index, ObjectsView.Selected);
-    NotifyChanges([ncObjProps, ncTagList]);
+    ObjToListItem(Model.O2Object, ObjectsView.Selected);
+    NotifyChanges([ncObjPropsViews, ncTagList]);
   end;
 end;
 
 procedure TMainForm.ObjectActionUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and HasSelectedObject;
+  TAction(Sender).Enabled := not FBusy and HasSelectedObject;
 end;
 
 procedure TMainForm.FieldsViewDblClick(Sender: TObject);
@@ -2938,35 +2259,22 @@ end;
 
 procedure TMainForm.FieldsViewCustomDrawItem(Sender: TCustomListView;
   Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
-var
-  BrushColor, FontColor: TColor;
 begin
-  if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data)
-    and O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
-    FPasswordScoreProvider, BrushColor, FontColor) then
-  begin
-    Sender.Canvas.Brush.Color := BrushColor;
-    Sender.Canvas.Font.Color := FontColor;
-  end;
+  if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data) then
+    SetHighlightColors(Sender.Canvas, FModel.GetHighlight(TO2Field(Item.Data)));
 end;
 
 procedure TMainForm.FieldsViewCustomDrawSubItem(Sender: TCustomListView;
   Item: TListItem; SubItem: Integer; State: TCustomDrawState;
   var DefaultDraw: Boolean);
-var
-  BrushColor, FontColor: TColor;
 begin
   if Assigned(Item.Data) then
   begin
-    if (State * [cdsFocused, cdsHot] = [])
-      and O2File.Rules.GetHighlightColors(TO2Field(Item.Data),
-      FPasswordScoreProvider, BrushColor, FontColor) then
-    begin
-      Sender.Canvas.Brush.Color := BrushColor;
-      Sender.Canvas.Font.Color := FontColor;
-    end;
-    if Assigned(O2File.Rules.FindFirstRule(
-      TO2Field(Item.Data), HyperlinkRules)) then
+    if (State * [cdsFocused, cdsHot] = []) then
+      SetHighlightColors(Sender.Canvas,
+        FModel.GetHighlight(TO2Field(Item.Data)));
+
+    if FModel.IsHyperlinkOrEmail(Item.Data) then
       Sender.Canvas.Font.Style := Sender.Canvas.Font.Style + [fsUnderline];
   end;
 end;
@@ -2994,7 +2302,7 @@ end;
 
 procedure TMainForm.CopyNameValueUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and HasSelectedField;
+  TAction(Sender).Enabled := not FBusy and HasSelectedField;
 end;
 
 procedure TMainForm.CopyValuesAsRowsExecute(Sender: TObject);
@@ -3052,33 +2360,18 @@ end;
 
 procedure TMainForm.CopyUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and (FieldsView.Items.Count > 0);
-end;
-
-procedure TMainForm.AddToIEFavoritesExecute(Sender: TObject);
-var
-  URLFile: TStrings;
-begin
-  URLFile := TStringList.Create;
-  try
-    URLFile.Add('[InternetShortcut]');
-    URLFile.Add('URL=' + O2File.Rules.GetHyperLink(SelectedField));
-    URLFile.SaveToFile(IncludeTrailingPathDelimiter(TShellFolders.Favorites)
-      + SelectedObject.Name + '.url');
-  finally
-    URLFile.Free;
-  end;
+  TAction(Sender).Enabled := not FBusy and (FieldsView.Items.Count > 0);
 end;
 
 procedure TMainForm.OpenLinkExecute(Sender: TObject);
 begin
-  ShellOpen(O2File.Rules.GetHyperLink(SelectedField));
+  ShellOpen(FModel.O2File.Rules.GetHyperLink(SelectedField));
 end;
 
 procedure TMainForm.OpenLinkUpdate(Sender: TObject);
 begin
-  TAction(Sender).Visible := not Busy and HasSelectedField
-    and Assigned(O2File.Rules.FindFirstRule(SelectedField, [rtHyperLink]));
+  TAction(Sender).Visible := not FBusy
+    and HasSelectedField and FModel.IsHyperlink(SelectedField);
   TAction(Sender).Enabled := TAction(Sender).Visible;
 end;
 
@@ -3089,21 +2382,21 @@ end;
 
 procedure TMainForm.SendEmailUpdate(Sender: TObject);
 begin
-  TAction(Sender).Visible := not Busy and HasSelectedField
-    and Assigned(O2File.Rules.FindFirstRule(SelectedField, [rtEmail]));
+  TAction(Sender).Visible := not FBusy
+    and HasSelectedField and FModel.IsEmail(SelectedField);
   TAction(Sender).Enabled := TAction(Sender).Visible;
 end;
 
 procedure TMainForm.ShowPasswordsExecute(Sender: TObject);
 begin
   FShowPasswords := not FShowPasswords;
-  NotifyChanges([ncObjProps]);
+  NotifyChanges([ncObjPropsViews]);
 end;
 
 procedure TMainForm.ShowPasswordsUpdate(Sender: TObject);
 begin
   TAction(sender).Checked := FShowPasswords;
-  TAction(sender).Enabled := not Busy;
+  TAction(sender).Enabled := not FBusy;
 end;
 
 procedure TMainForm.RelationsViewDblClick(Sender: TObject);
@@ -3130,24 +2423,16 @@ end;
 
 procedure TMainForm.NewRelationExecute(Sender: TObject);
 var
-  ARelation: TO2Relation;
-  Selection: TO2ObjectList;
+  Model: IRelationProps;
 begin
-  ARelation := nil;
-  Selection := TO2ObjectList.Create;
-  try
-    FillObjList(Selection);
-    if TRelationPropsDlg.Execute(Application,
-      O2File, Selection[0], Selection[1], ARelation) then
-      RelationToListItem(ARelation, SelectedObject, nil);
-  finally
-    Selection.Free;
-  end;
+  Model := FServiceContainer.Resolve<IRelationProps>(NewRelationService);
+  if TRelationPropsDlg.Execute(Model) then
+    RelationToListItem(Model.Relation, SelectedObject, nil);
 end;
 
 procedure TMainForm.NewRelationUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and (ObjectsView.SelCount = 2);
+  TAction(Sender).Enabled := not FBusy and (ObjectsView.SelCount = 2);
 end;
 
 procedure TMainForm.DeleteRelationExecute(Sender: TObject);
@@ -3164,8 +2449,8 @@ var
   AObjRelation: TO2ObjRelation;
   Item: TListItem;
 begin
-  AObjRelation := TO2Relation(RelationsView.Selected.Data).GetObjectRelation(
-    SelectedObject);
+  AObjRelation := FModel.O2File.GetObjectRelation(SelectedObject,
+    SelectedRelation);
   try
     Item := ObjectsView.FindData(0, AObjRelation.Obj, True, False);
     if Assigned(Item) then
@@ -3181,16 +2466,16 @@ end;
 
 procedure TMainForm.RelationPropsExecute(Sender: TObject);
 var
-  ARelation: TO2Relation;
+  Model: IRelationProps;
 begin
-  ARelation := TO2Relation(RelationsView.Selected.Data);
-  if TRelationPropsDlg.Execute(Application, O2File, nil, nil, ARelation) then
-    RelationToListItem(ARelation, SelectedObject, RelationsView.Selected);
+  Model := FServiceContainer.Resolve<IRelationProps>(EditRelationService);
+  if TRelationPropsDlg.Execute(Model) then
+    RelationToListItem(Model.Relation, SelectedObject, RelationsView.Selected);
 end;
 
 procedure TMainForm.RelationActionUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and Assigned(RelationsView.Selected);
+  TAction(Sender).Enabled := not FBusy and Assigned(RelationsView.Selected);
 end;
 
 procedure TMainForm.RulesViewDblClick(Sender: TObject);
@@ -3223,31 +2508,31 @@ end;
 
 procedure TMainForm.NewRuleExecute(Sender: TObject);
 var
+  Model: IRuleProps;
   Item: TListItem;
-  Index: Integer;
 begin
-  Index := -1;
-  if TRulePropsDlg.Execute(Application, O2File.Rules, Index, False) then
+  Model := FServiceContainer.Resolve<IRuleProps>(NewRuleService);
+  if TRulePropsDlg.Execute(Model) then
   begin
-    Item := RuleToListItem(Index, nil);
+    Item := RuleToListItem(Model.Rule, nil);
     Item.Selected := True;
     Item.Focused := True;
-    NotifyChanges([ncObjects, ncRuleList]);
+    NotifyChanges([ncObjectsView, ncRuleList]);
   end;
 end;
 
 procedure TMainForm.DuplicateRuleExecute(Sender: TObject);
 var
+  Model: IRuleProps;
   Item: TListItem;
-  Index: Integer;
 begin
-  Index := TO2Rule(RulesView.Selected.Data).Index;
-  if TRulePropsDlg.Execute(Application, O2File.Rules, Index, True) then
+  Model := FServiceContainer.Resolve<IRuleProps>(DuplicateRuleService);
+  if TRulePropsDlg.Execute(Model) then
   begin
-    Item := RuleToListItem(Index, nil);
+    Item := RuleToListItem(Model.Rule, nil);
     Item.Selected := True;
     Item.Focused := True;
-    NotifyChanges([ncObjects, ncRuleList]);
+    NotifyChanges([ncObjectsView, ncRuleList]);
   end;
 end;
 
@@ -3257,32 +2542,32 @@ begin
   begin
     RulesView.FreeSelectedItemsData;
     RulesView.DeleteSelected;
-    NotifyChanges([ncObjects, ncRuleList]);
+    NotifyChanges([ncObjectsView, ncRuleList]);
   end;
 end;
 
 procedure TMainForm.MoveUpRuleExecute(Sender: TObject);
 begin
   with TO2Rule(RulesView.Selected.Data) do Index := Index - 1;
-  NotifyChanges([ncObjects, ncRules]);
+  NotifyChanges([ncObjectsView, ncRulesView]);
 end;
 
 procedure TMainForm.MoveUpRuleUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and Assigned(RulesView.Selected)
+  TAction(Sender).Enabled := not FBusy and Assigned(RulesView.Selected)
     and (TO2Rule(RulesView.Selected.Data).Index > 0);
 end;
 
 procedure TMainForm.MoveDownRuleExecute(Sender: TObject);
 begin
   with TO2Rule(RulesView.Selected.Data) do Index := Index + 1;
-  NotifyChanges([ncObjects, ncRules]);
+  NotifyChanges([ncObjectsView, ncRulesView]);
 end;
 
 procedure TMainForm.MoveDownRuleUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and Assigned(RulesView.Selected)
-    and (TO2Rule(RulesView.Selected.Data).Index < Pred(O2File.Rules.Count));
+  TAction(Sender).Enabled := not FBusy and Assigned(RulesView.Selected)
+    and (TO2Rule(RulesView.Selected.Data).Index < FModel.O2File.Rules.Count - 1)
 end;
 
 procedure TMainForm.EnableRulesExecute(Sender: TObject);
@@ -3312,45 +2597,27 @@ end;
 
 procedure TMainForm.RulePropsExecute(Sender: TObject);
 var
-  Index: Integer;
+  Model: IRuleProps;
 begin
-  Index := TO2Rule(RulesView.Selected.Data).Index;
-  if TRulePropsDlg.Execute(Application, O2File.Rules, Index, False) then
+  Model := FServiceContainer.Resolve<IRuleProps>(EditRuleService);
+  if TRulePropsDlg.Execute(Model) then
   begin
-    RuleToListItem(Index, RulesView.Selected);
-    NotifyChanges([ncObjects, ncRuleList]);
+    RuleToListItem(Model.Rule, RulesView.Selected);
+    NotifyChanges([ncObjectsView, ncRuleList]);
   end;
 end;
 
 procedure TMainForm.RuleActionUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := not Busy and Assigned(RulesView.Selected);
+  TAction(Sender).Enabled := not FBusy and Assigned(RulesView.Selected);
 end;
 
 procedure TMainForm.SaveDialogCanClose(Sender: TObject;
   var CanClose: Boolean);
-var
-  Cipher, Hash: Byte;
-  Encrypted: Boolean;
-  Password: string;
 begin
-  if not FileExists(SaveDialog.FileName)
-    or YesNoBox(SFileOverwriteQuery) then
-  begin
-    Encrypted := O2File.Encrypted;
-    Cipher := O2File.Cipher;
-    Hash := O2File.Hash;
-    Password := O2File.Password;
-    CanClose := TSetPasswordDlg.Execute(Application, Encrypted, Cipher, Hash,
-      Password);
-    if CanClose then
-    begin
-      O2File.Encrypted := Encrypted;
-      O2File.Cipher := Cipher;
-      O2File.Hash := Hash;
-      O2File.Password := Password;
-    end;
-  end
+  if not FileExists(SaveDialog.FileName) or YesNoBox(SFileOverwriteQuery) then
+    CanClose := TSetPasswordDlg.Execute(
+      FServiceContainer.Resolve<IEncryptionProps>)
   else
     CanClose := False;
 end;
@@ -3373,16 +2640,6 @@ procedure TMainForm.DragDropDrop(Sender: TObject; Pos: TPoint;
   Value: TStrings);
 begin
   if (Value.Count > 0) and CanCloseFile then LoadFromFile(Value[0]);
-end;
-
-procedure TMainForm.FillObjList(const Objects: TO2ObjectList);
-var
-  NoneSelected: Boolean;
-  AItem: TListItem;
-begin
-  NoneSelected := ObjectsView.SelCount = 0;
-  for AItem in ObjectsView.Items do
-    if NoneSelected or AItem.Selected then Objects.Add(AItem.Data);
 end;
 
 end.

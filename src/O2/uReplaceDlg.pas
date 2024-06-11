@@ -19,11 +19,9 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls;
+  Dialogs, StdCtrls, uServices;
 
 type
-  TReplaceDlgAction = (acReplaceTag, acReplaceFieldName, acReplaceFieldValue, acReplaceRole);
-
   TReplaceDlg = class(TForm)
     lbReplaceValue: TLabel;
     btOk: TButton;
@@ -34,12 +32,13 @@ type
     procedure FormShow(Sender: TObject);
     procedure cbSearchValueChange(Sender: TObject);
     procedure cbReplaceValueChange(Sender: TObject);
+    procedure btOkClick(Sender: TObject);
   private
-    procedure EnableControls;
+    FModel: IReplaceOperation;
+    procedure SetModel(const Value: IReplaceOperation);
   public
-    class function Execute(AOwner: TComponent; Action: TReplaceDlgAction;
-      SearchList, ReplaceList: TStrings;
-      out SearchValue, ReplaceValue: string): Boolean;
+    class function Execute(Model: IReplaceOperation): Boolean;
+    property Model: IReplaceOperation read FModel write SetModel;
   end;
 
 var
@@ -47,55 +46,16 @@ var
 
 implementation
 
-uses
-  uGlobal;
-
 {$R *.dfm}
 
-class function TReplaceDlg.Execute(AOwner: TComponent;
-  Action: TReplaceDlgAction; SearchList, ReplaceList: TStrings;
-  out SearchValue, ReplaceValue: string): Boolean;
+class function TReplaceDlg.Execute(Model: IReplaceOperation): Boolean;
 var
   Form: TReplaceDlg;
 begin
-  Form := TReplaceDlg.Create(AOwner);
+  Form := TReplaceDlg.Create(Application);
   try
-    case Action of
-      acReplaceTag:
-      begin
-        Form.Caption := SReplaceTagDlgTitle;
-        Form.lbSearchValue.Caption := SReplaceTagDlgSearchLabel;
-        Form.lbReplaceValue.Caption := SReplaceTagDlgReplaceLabel;
-      end;
-      acReplaceFieldName:
-      begin
-        Form.Caption := SReplaceFieldNameDlgTitle;
-        Form.lbSearchValue.Caption := SReplaceFieldNameDlgSearchLabel;
-        Form.lbReplaceValue.Caption := SReplaceFieldNameDlgReplaceLabel;
-      end;
-      acReplaceFieldValue:
-      begin
-        Form.Caption := SReplaceFieldValueDlgTitle;
-        Form.lbSearchValue.Caption := SReplaceFieldValueDlgSearchLabel;
-        Form.lbReplaceValue.Caption := SReplaceFieldValueDlgReplaceLabel;
-      end;
-      acReplaceRole:
-      begin
-        Form.Caption := SReplaceRoleDlgTitle;
-        Form.lbSearchValue.Caption := SReplaceRoleDlgSearchLabel;
-        Form.lbReplaceValue.Caption := SReplaceRoleDlgReplaceLabel;
-      end;
-    end;
-    Form.cbSearchValue.Items := SearchList;
-    Form.cbReplaceValue.Items := ReplaceList;
-
+    Form.Model := Model;
     Result := Form.ShowModal = mrOk;
-
-    if Result then
-    begin
-      SearchValue := Form.cbSearchValue.Text;
-      ReplaceValue := Form.cbReplaceValue.Text;
-    end;
   finally
     Form.Free;
   end;
@@ -103,23 +63,40 @@ end;
 
 procedure TReplaceDlg.FormShow(Sender: TObject);
 begin
-  EnableControls;
+  btOk.Enabled := FModel.Valid;
+end;
+
+procedure TReplaceDlg.SetModel(const Value: IReplaceOperation);
+begin
+  if FModel <> Value then
+  begin
+    FModel := Value;
+
+    Caption := FModel.Title;
+    lbSearchValue.Caption := FModel.SearchValueLabel;
+    lbReplaceValue.Caption := FModel.ReplaceValueLabel;
+    cbSearchValue.Items := FModel.SearchList;
+    cbSearchValue.Text := FModel.SearchValue;
+    cbReplaceValue.Items := FModel.ReplaceList;
+    cbReplaceValue.Text := FModel.ReplaceValue;
+  end;
 end;
 
 procedure TReplaceDlg.cbSearchValueChange(Sender: TObject);
 begin
-  EnableControls;
+  FModel.SearchValue := cbSearchValue.Text;
+  btOk.Enabled := FModel.Valid;
 end;
 
 procedure TReplaceDlg.cbReplaceValueChange(Sender: TObject);
 begin
-  EnableControls;
+  FModel.ReplaceValue := cbReplaceValue.Text;
+  btOk.Enabled := FModel.Valid;
 end;
 
-procedure TReplaceDlg.EnableControls;
+procedure TReplaceDlg.btOkClick(Sender: TObject);
 begin
-  btOk.Enabled := (cbSearchValue.ItemIndex <> -1)
-    and (cbReplaceValue.Text <> '');
+  FModel.Replace;
 end;
 
 end.

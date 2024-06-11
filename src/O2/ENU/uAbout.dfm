@@ -13,7 +13,6 @@ object AboutForm: TAboutForm
   Font.Style = []
   KeyPreview = True
   Position = poMainFormCenter
-  OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   DesignSize = (
     295
@@ -389,18 +388,21 @@ object AboutForm: TAboutForm
         'Copyright (C) 2011+ Health Intersections Pty Ltd.'
         ''
         'Inno Setup'
-        'Copyright (C) 1997-2023 Jordan Russell.'
+        'Copyright (C) 1997-2024 Jordan Russell.'
         'Portions Copyright (C) 2000-2023 Martijn Laan.'
         ''
         'JEDI Visual Component Library'
-        'Copyright (C) 1999-2023 the Project JEDI '
+        'Copyright (C) 1999-2024 the Project JEDI '
         'community.'
+        ''
+        'Spring4D'
+        'Copyright (C) 2009-2023 Spring4D Team.'
         ''
         'SZCRC32 unit'
         'Copyright (C) 2004 Sasa Zeman.'
         ''
         'UPX - The Ultimate Packer for eXecutables'
-        'Copyright (C) 1996-2023 Markus Oberhumer, '
+        'Copyright (C) 1996-2024 Markus Oberhumer, '
         'Laszlo Molnar, John Reiser.'
         ''
         'zxcvbn'

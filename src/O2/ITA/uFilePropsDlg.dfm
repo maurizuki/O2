@@ -12,7 +12,6 @@ object FilePropsDlg: TFilePropsDlg
   Font.Name = 'Tahoma'
   Font.Style = []
   Position = poMainFormCenter
-  OnShow = FormShow
   DesignSize = (
     293
     330)
@@ -64,6 +63,7 @@ object FilePropsDlg: TFilePropsDlg
     Height = 21
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 0
+    OnChange = edTitleChange
   end
   object edDescription: TEdit
     Left = 8
@@ -72,6 +72,7 @@ object FilePropsDlg: TFilePropsDlg
     Height = 21
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 1
+    OnChange = edDescriptionChange
   end
   object edAuthor: TEdit
     Left = 8
@@ -80,6 +81,7 @@ object FilePropsDlg: TFilePropsDlg
     Height = 21
     Anchors = [akLeft, akTop, akRight]
     TabOrder = 2
+    OnChange = edAuthorChange
   end
   object edCipher: TEdit
     Left = 8
@@ -109,6 +111,7 @@ object FilePropsDlg: TFilePropsDlg
     Anchors = [akRight, akBottom]
     Caption = 'OK'
     Default = True
+    ModalResult = 1
     TabOrder = 5
     OnClick = btOkClick
   end

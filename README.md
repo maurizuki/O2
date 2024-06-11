@@ -17,6 +17,10 @@ In order to start to use O2 - after installing it on your computer - see the exa
 - __AddressBook.o2__ shows how to use the *rules* of type *E-mail address*, *Highlight*, *Internet link*, *Recurrence* to organize contact informations and recurrences of your relatives, friends, co-workers. The example also shows how to use the *relations* to connect husbands with wives, brothers with sisters, companies with employees.
 - __PasswordWallet.o2__ shows how to use the *rule* of type *Password* to create a safe place to store the credentials of your accounts. The password to open the file is *password*.
 
+### System requirements
+
+To work properly, O2 needs Microsoft Edge WebView2 Runtime. If it is not already installed, download it from the official [webpage](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) (the evergreen version is recommended).
+
 ### Install with Windows Package Manager
 
 To install O2 with the Windows Package Manager - a.k.a. *winget* - use the following command:
@@ -25,6 +29,13 @@ winget install --id=maurizuki.O2 -e
 ```
 
 ## Change log
+
+### Version 3.0
+- Extensive source code rewrite in order to upgrade it to much modern coding techniques. This may or may not cause some bugs 🙂
+- *Object notes* view: note text is now displayed using an Edge-based control instead of an Internet Explorer-based one.
+- *Export to HTML*: export preview is now displayed using an Edge-based control instead of an Internet Explorer-based one.
+- *Object properties* dialog: simplified tags management.
+- *Object properties* dialog: the password strength indicator is now automatically displayed for fields that matches rules of type *Password*.
 
 ### Version 2.4
 - New feature: support for [Markdown syntax](https://commonmark.org/) in notes text. Text and paragraph styles are applied to objects notes in the notes view and in the HTML export.
@@ -88,6 +99,9 @@ Portions Copyright (C) 2000-2023 Martijn Laan.
 
 __JEDI Visual Component Library__  
 Copyright (C) 1999-2023 the Project JEDI community.  
+
+__Spring4D__  
+Copyright (C) 2009-2023 Spring4D Team.  
 
 __SZCRC32 unit__  
 Copyright (C) 2004 Sasa Zeman.  

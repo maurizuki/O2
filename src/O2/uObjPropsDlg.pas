@@ -20,7 +20,7 @@ interface
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
   Dialogs, ComCtrls, StdCtrls, Grids, ValEdit, ExtCtrls, ActnList, Menus,
-  Actions, Zxcvbn, uO2Objects;
+  Actions, uServices, uPasswordStrengthIndicator;
 
 type
   TObjPropsDlgPage = (pgGeneral, pgGeneralTags, pgFields, pgNotes);
@@ -35,8 +35,6 @@ type
     TabSheet3: TTabSheet;
     Memo: TMemo;
     Label1: TLabel;
-    Label2: TLabel;
-    cbTag: TComboBox;
     ActionList: TActionList;
     OK: TAction;
     MoveUp: TAction;
@@ -50,28 +48,23 @@ type
     Button1: TButton;
     Button2: TButton;
     Button3: TButton;
-    lbxTags: TListBox;
-    Button4: TButton;
-    Button5: TButton;
     AddTag: TAction;
-    DeleteTag: TAction;
     Button6: TButton;
     Button7: TButton;
-    ckDisplayPasswordStrength: TCheckBox;
-    pbPasswordStrength: TPaintBox;
     ckMarkdown: TCheckBox;
     Label3: TLabel;
-    procedure FormCreate(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
-    procedure FormShow(Sender: TObject);
+    PasswordStrengthIndicator: TPasswordStrengthIndicator;
+    GroupBox1: TGroupBox;
+    edTag: TEdit;
+    lbxTags: TListBox;
+    Button4: TButton;
     procedure edNameChange(Sender: TObject);
+    procedure lbxTagsClick(Sender: TObject);
+    procedure AddTagExecute(Sender: TObject);
+    procedure AddTagUpdate(Sender: TObject);
     procedure FieldsViewResize(Sender: TObject);
     procedure FieldsViewSelectItem(Sender: TObject; Item: TListItem;
       Selected: Boolean);
-    procedure AddTagExecute(Sender: TObject);
-    procedure AddTagUpdate(Sender: TObject);
-    procedure DeleteTagExecute(Sender: TObject);
-    procedure DeleteTagUpdate(Sender: TObject);
     procedure AddFieldExecute(Sender: TObject);
     procedure AddFieldUpdate(Sender: TObject);
     procedure ReplaceFieldExecute(Sender: TObject);
@@ -82,39 +75,25 @@ type
     procedure MoveUpUpdate(Sender: TObject);
     procedure MoveDownExecute(Sender: TObject);
     procedure MoveDownUpdate(Sender: TObject);
+    procedure cbFieldNameChange(Sender: TObject);
     procedure cbFieldValueEnter(Sender: TObject);
     procedure cbFieldValueChange(Sender: TObject);
-    procedure ckDisplayPasswordStrengthClick(Sender: TObject);
-    procedure pbPasswordStrengthPaint(Sender: TObject);
+    procedure ckMarkdownClick(Sender: TObject);
     procedure LinkClick(Sender: TObject);
     procedure OKExecute(Sender: TObject);
     procedure OKUpdate(Sender: TObject);
   private
-    FObjects: TO2Objects;
-    FObjectIndex: Integer;
-    FDuplicate: Boolean;
-    FFields: TO2Fields;
-    FZxcvbn: TZxcvbn;
-    FPasswordScore: Integer;
-    procedure SetFields(const Value: TO2Fields);
-    function GetSelectedField: TO2Field;
-    function FieldToListItem(const AField: TO2Field;
-      const Item: TListItem; Index: Integer = -1): TListItem;
-    procedure SetFocusAndMakeVisible;
-    procedure MoveSelectedField(Offset: Integer);
+    FModel: IObjectProps;
+    procedure SetModel(const Value: IObjectProps);
+
     procedure ResizeFieldsViewColumns;
-    procedure UpdateFieldsView;
+    procedure MoveField(Offset: Integer);
     procedure UpdatePasswordStrengthInfo;
-  protected
-    property Fields: TO2Fields read FFields write SetFields;
-    property SelectedField: TO2Field read GetSelectedField;
   public
-    class function Execute(AOwner: TComponent; const Objects: TO2Objects;
-      var ObjectIndex: Integer; Duplicate: Boolean;
+    class function Execute(Model: IObjectProps;
       Page: TObjPropsDlgPage): Boolean;
-    property Objects: TO2Objects read FObjects write FObjects;
-    property ObjectIndex: Integer read FObjectIndex write FObjectIndex;
-    property Duplicate: Boolean read FDuplicate write FDuplicate;
+
+    property Model: IObjectProps read FModel write SetModel;
   end;
 
 var
@@ -123,22 +102,19 @@ var
 implementation
 
 uses
-  Zxcvbn.Result, Zxcvbn.Utility, uO2Rules, uGlobal, uCtrlHelpers, uUtils,
-  uShellUtils;
+  uGlobal, uCtrlHelpers, uShellUtils;
 
 {$R *.dfm}
 
-class function TObjPropsDlg.Execute(AOwner: TComponent;
-  const Objects: TO2Objects; var ObjectIndex: Integer; Duplicate: Boolean;
+class function TObjPropsDlg.Execute(Model: IObjectProps;
   Page: TObjPropsDlgPage): Boolean;
 var
   Form: TObjPropsDlg;
 begin
-  Form := TObjPropsDlg.Create(AOwner);
+  Form := TObjPropsDlg.Create(Application);
   try
-    Form.Objects := Objects;
-    Form.ObjectIndex := ObjectIndex;
-    Form.Duplicate := Duplicate;
+    Form.Model := Model;
+
     case Page of
       pgGeneral:
       begin
@@ -148,7 +124,7 @@ begin
       pgGeneralTags:
       begin
         Form.PageControl.ActivePage := Form.TabSheet1;
-        Form.ActiveControl := Form.cbTag;
+        Form.ActiveControl := Form.edTag;
       end;
       pgFields:
       begin
@@ -161,46 +137,11 @@ begin
         Form.ActiveControl := Form.Memo;
       end;
     end;
+
     Result := Form.ShowModal = mrOk;
-    if Result then ObjectIndex := Form.ObjectIndex;
   finally
     Form.Free;
   end;
-end;
-
-procedure TObjPropsDlg.FormCreate(Sender: TObject);
-begin
-  FFields := TO2Fields.Create(nil);
-  FZxcvbn := TZxcvbn.Create;
-  FPasswordScore := 0;
-end;
-
-procedure TObjPropsDlg.FormDestroy(Sender: TObject);
-begin
-  FFields.Free;
-  FZxcvbn.Free;
-end;
-
-procedure TObjPropsDlg.FormShow(Sender: TObject);
-var
-  AObject: TO2Object;
-begin
-  if ObjectIndex <> -1 then
-  begin
-    AObject := Objects[ObjectIndex];
-    if not Duplicate then
-      edName.Text := AObject.Name;
-    AObject.GetTags(lbxTags.Items);
-    Fields := AObject.Fields;
-    Memo.Lines := AObject.Text;
-    Memo.SelStart := 0;
-    ckMarkdown.Checked := AObject.TextType = ttCommonMark;
-  end;
-  UpdateFieldsView;
-  Objects.GetTags(cbTag.Items);
-  Objects.GetFieldNames(cbFieldName.Items);
-
-  if Duplicate then ObjectIndex := -1;
 end;
 
 procedure TObjPropsDlg.edNameChange(Sender: TObject);
@@ -209,6 +150,8 @@ begin
     Caption := SObjPropsDlgTitle + ' - ' + edName.Text
   else
     Caption := SObjPropsDlgTitle;
+
+  FModel.ObjectName := edName.Text;
 end;
 
 procedure TObjPropsDlg.FieldsViewResize(Sender: TObject);
@@ -219,135 +162,145 @@ end;
 procedure TObjPropsDlg.FieldsViewSelectItem(Sender: TObject; Item: TListItem;
   Selected: Boolean);
 begin
-  if Selected then
-  begin
-    cbFieldName.Text := TO2Field(Item.Data).FieldName;
-    cbFieldValue.Text := TO2Field(Item.Data).FieldValue;
-    UpdatePasswordStrengthInfo;
-  end;
+  if not Selected then Exit;
+  FModel.FieldIndex := Item.Index;
+  cbFieldName.Text := FModel.FieldName;
+  cbFieldValue.Text := FModel.FieldValue;
+  UpdatePasswordStrengthInfo;
+end;
+
+procedure TObjPropsDlg.lbxTagsClick(Sender: TObject);
+var
+  I: Integer;
+begin
+  FModel.ObjectTags.Clear;
+  for I := 0 to lbxTags.Count - 1 do
+    if lbxTags.Selected[I] then
+      FModel.ObjectTags.Add(lbxTags.Items[i]);
 end;
 
 procedure TObjPropsDlg.AddTagExecute(Sender: TObject);
 begin
-  lbxTags.Items.Add(cbTag.Text);
-  cbTag.Text := '';
-  cbTag.SetFocus;
+  lbxTags.Selected[lbxTags.Items.Add(edTag.Text)] := True;
+  FModel.ObjectTags.Add(edTag.Text);
 end;
 
 procedure TObjPropsDlg.AddTagUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := (cbTag.Text <> '')
-    and (lbxTags.Items.IndexOf(cbTag.Text) = -1);
-end;
-
-procedure TObjPropsDlg.DeleteTagExecute(Sender: TObject);
-begin
-  lbxTags.DeleteSelected;
-end;
-
-procedure TObjPropsDlg.DeleteTagUpdate(Sender: TObject);
-begin
-  TAction(Sender).Enabled := lbxTags.ItemIndex <> -1;
+  TAction(Sender).Enabled := (edTag.Text <> '')
+    and (lbxTags.Items.IndexOf(edTag.Text) = -1);
 end;
 
 procedure TObjPropsDlg.AddFieldExecute(Sender: TObject);
-var
-  AField: TO2Field;
 begin
-  AField := Fields.AddField(cbFieldName.Text);
-  AField.FieldValue := cbFieldValue.Text;
-  if Assigned(FieldsView.Selected) then
-    AField.Index := FieldsView.Selected.Index + 1;
-  FieldsView.ClearSelection;
-  UpdateFieldsView;
-  FieldsView.Selected := FieldsView.FindData(0, AField, True, False);
-  SetFocusAndMakeVisible;
+  FModel.AddField;
+
+  FieldsView.Items.BeginUpdate;
+  try
+    with FieldsView.Items.Insert(FModel.FieldIndex) do
+    begin
+      Caption := FModel.FieldName;
+      SubItems.Add(FModel.FieldValue);
+    end;
+
+    FieldsView.ItemIndex := FModel.FieldIndex;
+    FieldsView.Selected.Focused := True;
+    FieldsView.Selected.MakeVisible(False);
+  finally
+    FieldsView.Items.EndUpdate;
+  end;
+
   cbFieldName.SetFocus;
 end;
 
 procedure TObjPropsDlg.AddFieldUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := cbFieldName.Text <> '';
+  TAction(Sender).Enabled := FModel.CanAddField;
 end;
 
 procedure TObjPropsDlg.ReplaceFieldExecute(Sender: TObject);
 begin
-  SelectedField.FieldName := cbFieldName.Text;
-  SelectedField.FieldValue := cbFieldValue.Text;
-  FieldToListItem(SelectedField, FieldsView.Selected);
+  FModel.ReplaceField;
+
+  FieldsView.Items.BeginUpdate;
+  try
+    with FieldsView.Selected do
+    begin
+      Caption := FModel.FieldName;
+      SubItems[0] := FModel.FieldValue;
+    end;
+  finally
+    FieldsView.Items.EndUpdate
+  end;
+
   cbFieldName.SetFocus;
 end;
 
 procedure TObjPropsDlg.ReplaceFieldUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := Assigned(SelectedField)
-    and (cbFieldName.Text <> '');
+  TAction(Sender).Enabled := FModel.CanReplaceField;
 end;
 
 procedure TObjPropsDlg.DeleteFieldExecute(Sender: TObject);
-var
-  Index: Integer;
 begin
-  Index := FieldsView.Selected.Index;
-  FieldsView.FreeSelectedItemsData;
-  UpdateFieldsView;
-  if Index >= FieldsView.Items.Count then
-    Index := FieldsView.Items.Count - 1;
-  if Index >= 0 then
-  begin
-    FieldsView.Selected := FieldsView.Items[Index];
-    SetFocusAndMakeVisible;
+  FModel.DeleteField;
+
+  FieldsView.Items.BeginUpdate;
+  try
+    FieldsView.DeleteSelected;
+    FieldsView.ItemIndex := FModel.FieldIndex;
+    FieldsView.Selected.Focused := True;
+    FieldsView.Selected.MakeVisible(False);
+  finally
+    FieldsView.Items.EndUpdate;
   end;
 end;
 
 procedure TObjPropsDlg.DeleteFieldUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := Assigned(SelectedField);
+  TAction(Sender).Enabled := FModel.CanDeleteField;
 end;
 
 procedure TObjPropsDlg.MoveUpExecute(Sender: TObject);
 begin
-  MoveSelectedField(-1);
+  MoveField(-1);
 end;
 
 procedure TObjPropsDlg.MoveUpUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := Assigned(FieldsView.Selected)
-    and (FieldsView.Selected.Index > 0);
+  TAction(Sender).Enabled := FModel.FieldIndex > 0;
 end;
 
 procedure TObjPropsDlg.MoveDownExecute(Sender: TObject);
 begin
-  MoveSelectedField(1);
+  MoveField(1);
 end;
 
 procedure TObjPropsDlg.MoveDownUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := Assigned(FieldsView.Selected)
-    and (FieldsView.Selected.Index < FieldsView.Items.Count - 1);
+  TAction(Sender).Enabled := FModel.FieldIndex < FModel.FieldCount - 1;
 end;
 
 procedure TObjPropsDlg.cbFieldValueEnter(Sender: TObject);
 begin
-  TComboBox(Sender).Items.Clear;
-  Objects.GetFieldValues(cbFieldName.Text, TComboBox(Sender).Items);
+  TCustomComboBox(Sender).Items := FModel.FieldValues;
+end;
+
+procedure TObjPropsDlg.cbFieldNameChange(Sender: TObject);
+begin
+  FModel.FieldName := cbFieldName.Text;
+  UpdatePasswordStrengthInfo;
 end;
 
 procedure TObjPropsDlg.cbFieldValueChange(Sender: TObject);
 begin
+  FModel.FieldValue := cbFieldValue.Text;
   UpdatePasswordStrengthInfo;
 end;
 
-procedure TObjPropsDlg.ckDisplayPasswordStrengthClick(Sender: TObject);
+procedure TObjPropsDlg.ckMarkdownClick(Sender: TObject);
 begin
-  pbPasswordStrength.Visible := ckDisplayPasswordStrength.Checked;
-  UpdatePasswordStrengthInfo;
-end;
-
-procedure TObjPropsDlg.pbPasswordStrengthPaint(Sender: TObject);
-begin
-  DrawHIndicator(pbPasswordStrength.Canvas, pbPasswordStrength.ClientRect,
-    PasswordScoreColors[FPasswordScore], (FPasswordScore + 1) / 5);
+  FModel.Markdown := ckMarkdown.Checked;
 end;
 
 procedure TObjPropsDlg.LinkClick(Sender: TObject);
@@ -356,74 +309,83 @@ begin
 end;
 
 procedure TObjPropsDlg.OKExecute(Sender: TObject);
-const
-  TextTypes: array[Boolean] of TO2TextType = (ttPlainText, ttCommonMark);
-var
-  AObject: TO2Object;
 begin
-  if ObjectIndex = -1 then
-    AObject := Objects.AddObject(edName.Text)
-  else
-  begin
-    AObject := Objects[ObjectIndex];
-    AObject.Name := edName.Text;
-  end;
-  AObject.SetTags(lbxTags.Items);
-  AObject.Fields := Fields;
   Memo.WordWrap := False;
-  AObject.Text := Memo.Lines;
-  AObject.TextType := TextTypes[ckMarkdown.Checked];
-  ObjectIndex := AObject.Index;
+  FModel.ObjectNotes := Memo.Lines;
 
-  ModalResult := mrOk;
+  FModel.ApplyChanges;
 end;
 
 procedure TObjPropsDlg.OKUpdate(Sender: TObject);
 begin
-  TAction(Sender).Enabled := edName.Text <> '';
+  TAction(Sender).Enabled := FModel.Valid;
 end;
 
-procedure TObjPropsDlg.SetFields(const Value: TO2Fields);
-begin
-  FFields.Assign(Value);
-end;
-
-function TObjPropsDlg.GetSelectedField: TO2Field;
-begin
-  if Assigned(FieldsView.Selected) then
-    Result := TO2Field(FieldsView.Selected.Data)
-  else
-    Result := nil;
-end;
-
-function TObjPropsDlg.FieldToListItem(const AField: TO2Field;
-  const Item: TListItem; Index: Integer): TListItem;
-begin
-  if Assigned(Item) then
-    Result := Item
-  else
-    Result := FieldsView.Items.AddItem(nil, Index);
-  Result.Caption := AField.FieldName;
-  Result.SubItems.Clear;
-  Result.SubItems.Add(AField.FieldValue);
-  Result.Data := AField;
-end;
-
-procedure TObjPropsDlg.SetFocusAndMakeVisible;
-begin
-  FieldsView.Selected.Focused := True;
-  FieldsView.Selected.MakeVisible(False);
-end;
-
-procedure TObjPropsDlg.MoveSelectedField(Offset: Integer);
+procedure TObjPropsDlg.SetModel(const Value: IObjectProps);
 var
-  AField: TO2Field;
+  I: Integer;
 begin
-  if Offset = 0 then Exit;
-  AField := SelectedField;
-  AField.Index := AField.Index + Offset;
-  UpdateFieldsView;
-  SetFocusAndMakeVisible;
+  if FModel <> Value then
+  begin
+    FModel := Value;
+
+    edName.Text := FModel.ObjectName;
+
+    lbxTags.Items := FModel.Tags;
+    for I := 0 to lbxTags.Count - 1 do
+      lbxTags.Selected[I] := FModel.ObjectTags.IndexOf(lbxTags.Items[I]) <> -1;
+    lbxTags.ItemIndex := 0;
+
+    FieldsView.Items.BeginUpdate;
+    try
+      for I := 0 to FModel.FieldCount - 1 do
+        with FieldsView.Items.Add do
+        begin
+          Caption := FModel.ObjectFieldNames[I];
+          SubItems.Add(FModel.ObjectFieldValues[I]);
+        end;
+
+      ResizeFieldsViewColumns;
+    finally
+      FieldsView.Items.EndUpdate;
+    end;
+
+    cbFieldName.Items := FModel.FieldNames;
+    cbFieldValue.Items := FModel.FieldValues;
+
+    UpdatePasswordStrengthInfo;
+
+    Memo.Lines := FModel.ObjectNotes;
+    Memo.SelStart := 0;
+
+    ckMarkdown.Checked := FModel.Markdown;
+  end;
+end;
+
+procedure TObjPropsDlg.MoveField(Offset: Integer);
+begin
+  FModel.SwapFields(FModel.FieldIndex + Offset);
+
+  FieldsView.Items.BeginUpdate;
+  try
+    with FieldsView.Items[FModel.FieldIndex] do
+    begin
+      Caption := FModel.FieldName;
+      SubItems[0] := FModel.FieldValue;
+    end;
+
+    with FieldsView.Items[FModel.FieldIndex - Offset] do
+    begin
+      Caption := FModel.ObjectFieldNames[FModel.FieldIndex - Offset];
+      SubItems[0] := FModel.ObjectFieldValues[FModel.FieldIndex - Offset];
+    end;
+
+    FieldsView.ItemIndex := FModel.FieldIndex;
+    FieldsView.Selected.Focused := True;
+    FieldsView.Selected.MakeVisible(False);
+  finally
+    FieldsView.Items.EndUpdate;
+  end;
 end;
 
 procedure TObjPropsDlg.ResizeFieldsViewColumns;
@@ -431,58 +393,10 @@ begin
   FieldsView.ResizeColumns(1);
 end;
 
-procedure TObjPropsDlg.UpdateFieldsView;
-var
-  AField: TO2Field;
-  Selection: TList;
-begin
-  Selection := FieldsView.ListSelectedItemsData;
-  try
-    FieldsView.Items.BeginUpdate;
-    try
-      FieldsView.Clear;
-      for AField in Fields do FieldToListItem(AField, nil);
-      ResizeFieldsViewColumns;
-      FieldsView.SelectItemsByData(Selection);
-    finally
-      FieldsView.Items.EndUpdate;
-    end;
-  finally
-    Selection.Free;
-  end;
-end;
-
 procedure TObjPropsDlg.UpdatePasswordStrengthInfo;
-var
-  ZxcvbnResult: TZxcvbnResult;
-  ASuggestion: TZxcvbnSuggestion;
-  SB: TStringBuilder;
 begin
-  if ckDisplayPasswordStrength.Checked then
-  begin
-    ZxcvbnResult := FZxcvbn.EvaluatePassword(cbFieldValue.Text);
-    try
-      FPasswordScore := ZxcvbnResult.Score;
-
-      SB := TStringBuilder.Create;
-      try
-        if ZxcvbnResult.Warning <> zwDefault then
-        begin
-          SB.AppendLine(GetWarning(ZxcvbnResult.Warning));
-          SB.AppendLine();
-        end;
-        for ASuggestion in ZxcvbnResult.Suggestions do
-          SB.AppendLine(GetSuggestion(ASuggestion));
-        pbPasswordStrength.Hint := Trim(SB.ToString);
-      finally
-        SB.Free;
-      end;
-    finally
-      ZxcvbnResult.Free;
-    end;
-
-    pbPasswordStrength.Invalidate;
-  end;
+  PasswordStrengthIndicator.PasswordScore := FModel.PasswordScore;
+  PasswordStrengthIndicator.PasswordStrengthInfo := FModel.PasswordStrengthInfo;
 end;
 
 end.

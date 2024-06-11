@@ -36,6 +36,9 @@ var
 
 implementation
 
+uses
+  uGlobal;
+
 {$R *.dfm}
 
 class function TGetPasswordDlg.Execute(AOwner: TComponent;
@@ -56,7 +59,7 @@ end;
 
 procedure TGetPasswordDlg.edPasswordChange(Sender: TObject);
 begin
-  btOk.Enabled := Length(edPassword.Text) >= 5;
+  btOk.Enabled := Length(edPassword.Text) >= MinPasswordLength;
 end;
 
 end.

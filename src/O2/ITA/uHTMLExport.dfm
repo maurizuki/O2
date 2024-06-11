@@ -14,7 +14,7 @@ object HTMLExport: THTMLExport
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   TextHeight = 13
-  object WebBrowser: TWebBrowser
+  object WebBrowser: TEdgeBrowser
     AlignWithMargins = True
     Left = 4
     Top = 38
@@ -26,12 +26,9 @@ object HTMLExport: THTMLExport
     Margins.Bottom = 4
     Align = alClient
     TabOrder = 0
-    ControlData = {
-      4C000000CA2A00001D1900000000000000000000000000000000000000000000
-      000000004C000000000000000000000001000000E0D057007335CF11AE690800
-      2B2E126208000000000000004C0000000114020000000000C000000000000046
-      8000000000000000000000000000000000000000000000000000000000000000
-      00000000000000000100000000000000000000000000000000000000}
+    OnCreateWebViewCompleted = WebBrowserCreateWebViewCompleted
+    ExplicitWidth = 410
+    ExplicitHeight = 242
   end
   object ToolBar: TToolBar
     Left = 0
@@ -97,36 +94,36 @@ object HTMLExport: THTMLExport
       Category = 'Options'
       Caption = 'Includi indice'
       Hint = 'Includi indice'
-      OnExecute = OptionExecute
-      OnUpdate = ActionUpdate
+      OnExecute = IncludeIndexExecute
+      OnUpdate = IncludeIndexUpdate
     end
     object IncludeTags: TAction
       Category = 'Options'
       Caption = 'Includi etichette'
       Hint = 'Includi etichette'
-      OnExecute = OptionExecute
-      OnUpdate = ActionUpdate
+      OnExecute = IncludeTagsExecute
+      OnUpdate = IncludeTagsUpdate
     end
     object IncludeNotes: TAction
       Category = 'Options'
       Caption = 'Includi note'
       Hint = 'Includi note'
-      OnExecute = OptionExecute
-      OnUpdate = ActionUpdate
+      OnExecute = IncludeNotesExecute
+      OnUpdate = IncludeNotesUpdate
     end
     object IncludeRelations: TAction
       Category = 'Options'
       Caption = 'Includi relazioni'
       Hint = 'Includi relazioni'
-      OnExecute = OptionExecute
-      OnUpdate = ActionUpdate
+      OnExecute = IncludeRelationsExecute
+      OnUpdate = IncludeRelationsUpdate
     end
     object IncludePasswords: TAction
       Category = 'Options'
       Caption = 'Includi password'
       Hint = 'Includi password'
-      OnExecute = OptionExecute
-      OnUpdate = ActionUpdate
+      OnExecute = IncludePasswordsExecute
+      OnUpdate = IncludePasswordsUpdate
     end
     object HTMLStyle: TAction
       Category = 'Style'
@@ -1152,7 +1149,7 @@ object HTMLExport: THTMLExport
       '626f6479206c69207b'
       '0970616464696e673a202e31323572656d3b'
       '7d'
-      '2e616c742d6267207b'
+      '626f6479206c693a6e74682d6368696c64286576656e29207b'
       
         '096261636b67726f756e642d636f6c6f723a2024616c742d62672d636f6c6f72' +
         '3b'
@@ -1204,6 +1201,11 @@ object HTMLExport: THTMLExport
       '2e6669656c642d6974656d207b'
       '09646973706c61793a207461626c652d726f773b'
       '7d'
+      '2e6669656c642d6974656d3a6e74682d6368696c64286576656e29207b'
+      
+        '096261636b67726f756e642d636f6c6f723a2024616c742d62672d636f6c6f72' +
+        '3b'
+      '7d'
       '2e6669656c642d6e616d65207b'
       '09646973706c61793a207461626c652d63656c6c3b'
       '0970616464696e673a202e31323572656d3b'
@@ -1224,6 +1226,11 @@ object HTMLExport: THTMLExport
       '7d'
       '2e72656c6174696f6e2d6974656d207b'
       '09646973706c61793a207461626c652d726f773b'
+      '7d'
+      '2e72656c6174696f6e2d6974656d3a6e74682d6368696c64286576656e29207b'
+      
+        '096261636b67726f756e642d636f6c6f723a2024616c742d62672d636f6c6f72' +
+        '3b'
       '7d'
       '2e72656c6174696f6e2d6f626a656374207b'
       '09646973706c61793a207461626c652d63656c6c3b'

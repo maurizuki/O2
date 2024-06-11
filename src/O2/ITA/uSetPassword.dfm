@@ -14,9 +14,6 @@ object SetPasswordDlg: TSetPasswordDlg
   Font.Name = 'Tahoma'
   Font.Style = []
   Position = poMainFormCenter
-  OnCreate = FormCreate
-  OnDestroy = FormDestroy
-  OnShow = FormShow
   DesignSize = (
     430
     274)
@@ -73,7 +70,7 @@ object SetPasswordDlg: TSetPasswordDlg
     ThemedPassword = True
     TabOrder = 3
     Text = ''
-    OnChange = edPasswordChange
+    OnChange = edConfPasswordChange
   end
   object btOk: TButton
     Left = 266
@@ -83,9 +80,9 @@ object SetPasswordDlg: TSetPasswordDlg
     Anchors = [akRight, akBottom]
     Caption = 'OK'
     Default = True
-    Enabled = False
     ModalResult = 1
     TabOrder = 4
+    OnClick = btOkClick
   end
   object btCancel: TButton
     Left = 347
@@ -128,15 +125,6 @@ object SetPasswordDlg: TSetPasswordDlg
     DesignSize = (
       230
       200)
-    object pbPasswordStrength: TPaintBox
-      Left = 3
-      Top = 19
-      Width = 224
-      Height = 21
-      Anchors = [akLeft, akTop, akRight]
-      OnPaint = pbPasswordStrengthPaint
-      ExplicitWidth = 232
-    end
     object PasswordStrengthMemo: TMemo
       Left = 3
       Top = 52
@@ -150,6 +138,25 @@ object SetPasswordDlg: TSetPasswordDlg
       ScrollBars = ssVertical
       TabOrder = 0
       ExplicitWidth = 216
+    end
+    inline PasswordStrengthIndicator: TPasswordStrengthIndicator
+      Left = 3
+      Top = 19
+      Width = 224
+      Height = 21
+      Anchors = [akLeft, akTop, akRight]
+      TabOrder = 1
+      ExplicitLeft = 3
+      ExplicitTop = 19
+      ExplicitWidth = 216
+      ExplicitHeight = 21
+      inherited PaintBox: TPaintBox
+        Width = 224
+        Height = 21
+        ExplicitTop = 3
+        ExplicitWidth = 178
+        ExplicitHeight = 17
+      end
     end
   end
 end

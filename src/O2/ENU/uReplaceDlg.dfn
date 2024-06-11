@@ -5,9 +5,9 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">45299.4982175926</prop>
-        <prop prop-type="OrigDateTime">45146.4415046296</prop>
-        <prop prop-type="XlatDateTime">41679.6039583333</prop>
+        <prop prop-type="SelfDateTime">45383.6769444444</prop>
+        <prop prop-type="OrigDateTime">45353.6214351852</prop>
+        <prop prop-type="XlatDateTime">41679.645625</prop>
         <prop prop-type="Translated">62</prop>
         <prop prop-type="UnTranslated">0</prop>
       </prop-group>
@@ -470,8 +470,8 @@
           <prop prop-type="Localize">1</prop>
         </prop-group>
       </trans-unit>
-      <trans-unit id="O:ReplaceDlg.O:btOk.Enabled" resname="O:ReplaceDlg.O:btOk.Enabled">
-        <source>False</source>
+      <trans-unit id="O:ReplaceDlg.O:btOk.ModalResult" resname="O:ReplaceDlg.O:btOk.ModalResult">
+        <source>1</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">41679.6205470486</prop>
           <prop prop-type="Status">1</prop>
@@ -480,8 +480,8 @@
           <prop prop-type="Localize">1</prop>
         </prop-group>
       </trans-unit>
-      <trans-unit id="O:ReplaceDlg.O:btOk.ModalResult" resname="O:ReplaceDlg.O:btOk.ModalResult">
-        <source>1</source>
+      <trans-unit id="O:ReplaceDlg.O:btOk.TabOrder" resname="O:ReplaceDlg.O:btOk.TabOrder">
+        <source>2</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">41679.6205470486</prop>
           <prop prop-type="Status">1</prop>
@@ -490,10 +490,10 @@
           <prop prop-type="Localize">1</prop>
         </prop-group>
       </trans-unit>
-      <trans-unit id="O:ReplaceDlg.O:btOk.TabOrder" resname="O:ReplaceDlg.O:btOk.TabOrder">
-        <source>2</source>
+      <trans-unit id="O:ReplaceDlg.O:btOk.OnClick" resname="O:ReplaceDlg.O:btOk.OnClick">
+        <source>btOkClick</source>
         <prop-group name="ITEFieldProp">
-          <prop prop-type="Created">41679.6205470486</prop>
+          <prop prop-type="Created">45374.5981041088</prop>
           <prop prop-type="Status">1</prop>
           <prop prop-type="Order">37</prop>
           <prop prop-type="Type">TButton</prop>

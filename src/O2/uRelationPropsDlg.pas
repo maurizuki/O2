@@ -19,7 +19,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, uO2File, uO2Objects, uO2Relations;
+  Dialogs, StdCtrls, uServices;
 
 type
   TRelationPropsDlg = class(TForm)
@@ -33,21 +33,15 @@ type
     cbRole2: TComboBox;
     btOk: TButton;
     btCancel: TButton;
-    procedure FormShow(Sender: TObject);
+    procedure cbRole1Change(Sender: TObject);
+    procedure cbRole2Change(Sender: TObject);
     procedure btOkClick(Sender: TObject);
   private
-    FO2File: TO2File;
-    FRelation: TO2Relation;
-    FObject1: TO2Object;
-    FObject2: TO2Object;
-  protected
-    property O2File: TO2File read FO2File write FO2File;
-    property Relation: TO2Relation read FRelation write FRelation;
-    property Object1: TO2Object read FObject1 write FObject1;
-    property Object2: TO2Object read FObject2 write FObject2;
+    FModel: IRelationProps;
+    procedure SetModel(const Value: IRelationProps);
   public
-    class function Execute(const AOwner: TComponent; const O2File: TO2File;
-      const Object1, Object2: TO2Object; var Relation: TO2Relation): Boolean;
+    class function Execute(Model: IRelationProps): Boolean;
+    property Model: IRelationProps read FModel write SetModel;
   end;
 
 var
@@ -59,53 +53,47 @@ implementation
 
 { TRelationPropsDlg }
 
-class function TRelationPropsDlg.Execute(const AOwner: TComponent;
-  const O2File: TO2File; const Object1, Object2: TO2Object;
-  var Relation: TO2Relation): Boolean;
+class function TRelationPropsDlg.Execute(Model: IRelationProps): Boolean;
 var
   Form: TRelationPropsDlg;
 begin
-  Form := TRelationPropsDlg.Create(AOwner);
+  Form := TRelationPropsDlg.Create(Application);
   try
-    Form.O2File := O2File;
-    Form.Relation := Relation;
-    Form.Object1 := Object1;
-    Form.Object2 := Object2;
+    Form.Model := Model;
     Result := Form.ShowModal = mrOk;
-    if Result then Relation := Form.Relation;
   finally
     Form.Free;
   end;
 end;
 
-procedure TRelationPropsDlg.FormShow(Sender: TObject);
+procedure TRelationPropsDlg.SetModel(const Value: IRelationProps);
 begin
-  O2File.Relations.GetRoles(cbRole1.Items);
-  cbRole2.Items := cbRole1.Items; 
-  if Assigned(Relation) then
+  if FModel <> Value then
   begin
-    Object1 := O2File.Objects.FindObjectByID(Relation.ObjectID1);
-    Object2 := O2File.Objects.FindObjectByID(Relation.ObjectID2);
-    cbRole1.Text := Relation.Role1;
-    cbRole2.Text := Relation.Role2;
+    FModel := Value;
+
+    edObject1.Text := FModel.ObjectName1;
+    edObject2.Text := FModel.ObjectName2;
+    cbRole1.Items := FModel.Roles;
+    cbRole1.Text := FModel.Role1;
+    cbRole2.Items := FModel.Roles;
+    cbRole2.Text := FModel.Role2;
   end;
-  if Assigned(Object1) then
-    edObject1.Text := Object1.Name;
-  if Assigned(Object2) then
-    edObject2.Text := Object2.Name;
+end;
+
+procedure TRelationPropsDlg.cbRole1Change(Sender: TObject);
+begin
+  FModel.Role1 := cbRole1.Text;
+end;
+
+procedure TRelationPropsDlg.cbRole2Change(Sender: TObject);
+begin
+  FModel.Role2 := cbRole2.Text;
 end;
 
 procedure TRelationPropsDlg.btOkClick(Sender: TObject);
 begin
-  if Relation = nil then
-  begin
-    Relation := O2File.Relations.AddRelation;
-    Relation.ObjectID1 := Object1.ObjectID;
-    Relation.ObjectID2 := Object2.ObjectID;
-  end;
-  Relation.Role1 := cbRole1.Text;
-  Relation.Role2 := cbRole2.Text;
-  ModalResult := mrOk;
+  FModel.ApplyChanges;
 end;
 
 end.

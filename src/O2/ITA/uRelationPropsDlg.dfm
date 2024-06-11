@@ -13,7 +13,6 @@ object RelationPropsDlg: TRelationPropsDlg
   Font.Name = 'Tahoma'
   Font.Style = []
   Position = poMainFormCenter
-  OnShow = FormShow
   DesignSize = (
     333
     166)
@@ -81,6 +80,7 @@ object RelationPropsDlg: TRelationPropsDlg
     Height = 21
     Anchors = [akTop, akRight]
     TabOrder = 1
+    OnChange = cbRole1Change
   end
   object cbRole2: TComboBox
     Left = 167
@@ -89,6 +89,7 @@ object RelationPropsDlg: TRelationPropsDlg
     Height = 21
     Anchors = [akTop, akRight]
     TabOrder = 3
+    OnChange = cbRole2Change
   end
   object btOk: TButton
     Left = 167
@@ -98,6 +99,7 @@ object RelationPropsDlg: TRelationPropsDlg
     Anchors = [akRight, akBottom]
     Caption = 'OK'
     Default = True
+    ModalResult = 1
     TabOrder = 4
     OnClick = btOkClick
   end

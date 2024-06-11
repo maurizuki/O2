@@ -52,12 +52,10 @@
         <SanitizedProjectName>O2Portable</SanitizedProjectName>
         <DCC_Namespace>Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;System;Xml;Data;Datasnap;Web;Soap;Winapi;$(DCC_Namespace)</DCC_Namespace>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
-        <VerInfo_MajorVer>2</VerInfo_MajorVer>
-        <VerInfo_MinorVer>2</VerInfo_MinorVer>
+        <VerInfo_MajorVer>3</VerInfo_MajorVer>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2 Portable;FileVersion=2.2.1.0;InternalName=AppLauncher;LegalCopyright=(C) 2004-2021 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=O2Portable.exe;ProductName=O2;ProductVersion=2.2.1;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2 Portable;FileVersion=3.0.0.0;InternalName=AppLauncher;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=O2Portable.exe;ProductName=O2;ProductVersion=3.0;Comments=</VerInfo_Keys>
         <DCC_OutputDRCFile>true</DCC_OutputDRCFile>
-        <VerInfo_Release>1</VerInfo_Release>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_DependencyCheckOutputName>O2Portable.exe</DCC_DependencyCheckOutputName>
@@ -67,9 +65,6 @@
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
         <Manifest_File>(None)</Manifest_File>
         <DCC_OutputDRCFile>true</DCC_OutputDRCFile>
-        <VerInfo_MinorVer>4</VerInfo_MinorVer>
-        <VerInfo_Release>0</VerInfo_Release>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2 Portable;FileVersion=2.4.0.0;InternalName=AppLauncher;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=O2Portable.exe;ProductName=O2;ProductVersion=2.4;Comments=</VerInfo_Keys>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
@@ -89,9 +84,6 @@
         <SanitizedProjectName>O2Portable</SanitizedProjectName>
         <DCC_OutputDRCFile>true</DCC_OutputDRCFile>
         <BT_BuildType>Debug</BT_BuildType>
-        <VerInfo_Release>0</VerInfo_Release>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2 Portable;FileVersion=2.4.0.0;InternalName=AppLauncher;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=O2Portable.exe;ProductName=O2;ProductVersion=2.4;Comments=</VerInfo_Keys>
-        <VerInfo_MinorVer>4</VerInfo_MinorVer>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <Version>7.0</Version>
@@ -103,9 +95,6 @@
         <VerInfo_Debug>true</VerInfo_Debug>
         <DCC_OutputDRCFile>true</DCC_OutputDRCFile>
         <BT_BuildType>Debug</BT_BuildType>
-        <VerInfo_Release>0</VerInfo_Release>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2 Portable;FileVersion=2.4.0.0;InternalName=AppLauncher;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=O2Portable.exe;ProductName=O2;ProductVersion=2.4;Comments=</VerInfo_Keys>
-        <VerInfo_MinorVer>4</VerInfo_MinorVer>
     </PropertyGroup>
     <ProjectExtensions>
         <Borland.Personality>Delphi.Personality.12</Borland.Personality>

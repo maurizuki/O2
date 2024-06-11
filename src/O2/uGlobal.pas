@@ -17,12 +17,37 @@ unit uGlobal;
 
 interface
 
+{$R Dictionaries.res}
+
 uses
-  Windows, Classes, Graphics, ComCtrls, StdCtrls, uO2Defs, uO2Rules,
-  uLookupHelper;
+  Windows, Classes, Graphics, ComCtrls, uO2Defs, uO2Rules;
+
+{$I PAFConsts.inc}
 
 const
+  MinPasswordLength = 5;
+
   DefaultFileExt = 'o2';
+
+{ Service names }
+
+  NewObjectService = 'NewObject';
+  DuplicateObjectService = 'DuplicateObject';
+  EditObjectService = 'EditObject';
+  NewRelationService = 'NewRelation';
+  EditRelationService = 'EditRelation';
+  NewRuleService = 'NewRule';
+  DuplicateRuleService = 'DuplicateRule';
+  EditRuleService = 'EditRule';
+  ImportFromO2FileService = 'ImportFromO2File';
+  ImportFromXmlFileService = 'ImportFromXmlFile';
+  ExportToO2FileService = 'ExportToO2File';
+  ExportToXmlFileService = 'ExportToXmlFile';
+  ExportToIcsFileService = 'ExportToIcsFile';
+  ReplaceTagService = 'ReplaceTag';
+  ReplaceFieldNameService = 'ReplaceFieldName';
+  ReplaceFieldValueService = 'ReplaceFieldValue';
+  ReplaceRoleService = 'ReplaceRole';
 
 { Application file names and paths }
 
@@ -38,14 +63,17 @@ const
   HTMLHelpFile = 'help.html';
   LicenseFile = 'License.rtf';
   ReadMeFile = 'ReadMe.rtf';
+  WebView2LoaderFile = 'WebView2Loader.dll';
 
-  LocalSettingsDir = 'O2';
+  LocalSettingsPath = 'O2';
+  LocalWebDataPath = 'O2\WebView2';
 
   PortableLauncherPath = '';
   PortableAppPath = 'App\O2';
   PortableAppInfoPath = 'App\AppInfo';
   PortableSettingsPath = 'Data\Settings';
   PortableFileTypeIconsPath = 'App\AppInfo\FileTypeIcons';
+  PortableWebDataPath = 'Data\WebView2';
 
 { Application file list IDs }
 
@@ -63,17 +91,20 @@ const
   IdLicense = 'License';
   IdReadMe = 'ReadMe';
   IdResourceModule = 'ResourceModule';
+  IdWebView2Loader = 'WebView2Loader';
 
 { Configuration file IDs }
 
   IdMRUList = 'Application.MRU';
+  IdMRUListItemFmt = IdMRUList + '.%d';
+  IdMRUListItemCntFmt = IdMRUList + '.%d.Count';
   IdStayOnTop = 'Application.StayOnTop';
   IdTransparency = 'Application.Transparency';
   IdTransparencyOnlyIfDeactivated = 'Application.Transparency.OnlyIfDeactivated';
   IdAutoCheckForUpdates = 'Application.AutoCheckForUpdates';
   IdLastCheckForUpdates = 'Application.AutoCheckForUpdates.LastCheck';
   IdViewStyle = 'MainWindow.ObjectView.ViewStyle';
-  IdSortColumn = 'MainWindow.ObjectView.Sort.Column';
+  IdSortKind = 'MainWindow.ObjectView.Sort.Column';
   IdSortAscending = 'MainWindow.ObjectView.Sort.Ascending';
   IdHTMLExportIncludeIndex = 'ExportToHTML.Include.Index';
   IdHTMLExportIncludeTags = 'ExportToHTML.Include.Tags';
@@ -84,6 +115,11 @@ const
   IdPrintIncludeNotes = 'Print.Include.Notes';
   IdPrintIncludeRelations = 'Print.Include.Relations';
   IdPrintIncludePasswords = 'Print.Include.Passwords';
+
+{ Password score colors }
+
+  PasswordScoreColors: array [0..4] of TColor = (
+    $00241CED, $00277FFF, $000EC9FF, $00E8A200, $004CB122);
 
 { UI localization languages }
 
@@ -215,226 +251,100 @@ resourcestring
   SMDY = 'Month, day, year';
   SDMY = 'Day, month, year';
 
+const
+  RuleTypes: array[TO2RuleType] of string = (
+    '',
+    SRuleHyperLink,
+    SRuleEmail,
+    SRulePassword,
+    SRuleExpirationDate,
+    SRuleRecurrence,
+    SRuleHighlight);
+
+  Ciphers: array[ocNone..ocTwofish] of string = (
+    SCipherNone,
+    SCipherBlowfish,
+    SCipherCast128,
+    SCipherCast256,
+    SCipherDES,
+    SCipher3DES,
+    SCipherIce,
+    SCipherThinIce,
+    SCipherIce2,
+    SCipherIDEA,
+    SCipherMARS,
+    SCipherMisty1,
+    SCipherRC2,
+    SCipherRC4,
+    SCipherRC5,
+    SCipherRC6,
+    SCipherRijndael,
+    SCipherSerpent,
+    SCipherTEA,
+    SCipherTwofish);
+
+  Hashes: array[ohNone..ohTiger] of string = (
+    SHashNone,
+    SHashHaval,
+    SHashMD4,
+    SHashMD5,
+    SHashRipeMD128,
+    SHashRipeMD160,
+    SHashSHA1,
+    SHashSHA256,
+    SHashSHA384,
+    SHashSHA512,
+    SHashTiger);
+
 type
-  TEventFilter = (
-    efAll,
-    efAllEvents,
-    efCustom,
-    efToday,
-    efTomorrow,
-    efThisWeek,
-    efThisMonth,
-    efThisYear,
-    efNext7days,
-    efNext15days,
-    efNext30days,
-    efNext60days,
-    efNext90days,
-    efNext180days,
-    efNext365days);
+  TObjectSortKind = (osName, osTags, osNextEvent);
 
-  TDateFormat = (dfYMD, dfMDY, dfDMY);
+const
+  SortKinds: array[0..2] of TIdentMapEntry = (
+    (Value: Integer(osName);      Name: 'Name'),
+    (Value: Integer(osTags);      Name: 'Tags'),
+    (Value: Integer(osNextEvent); Name: 'NextEvent'));
 
-  TCipherLookup = class(TLookupHelper)
-  protected
-    class procedure GetMapBounds(out LowerBound, UpperBound: Integer); override;
-    class function GetMapEntry(Index: Integer): PLookupMapEntry; override;
-  end;
+  ViewStyles: array[0..3] of TIdentMapEntry = (
+    (Value: Integer(vsIcon);      Name: 'Icons'),
+    (Value: Integer(vsSmallIcon); Name: 'SmallIcons'),
+    (Value: Integer(vsList);      Name: 'List'),
+    (Value: Integer(vsReport);    Name: 'Report'));
 
-  THashLookup = class(TLookupHelper)
-  protected
-    class procedure GetMapBounds(out LowerBound, UpperBound: Integer); override;
-    class function GetMapEntry(Index: Integer): PLookupMapEntry; override;
-  end;
-
-  TRuleTypeLookup = class(TLookupHelper)
-  protected
-    class procedure GetMapBounds(out LowerBound, UpperBound: Integer); override;
-    class function GetMapEntry(Index: Integer): PLookupMapEntry; override;
-  end;
-
-  TEventFilterLookup = class(TLookupHelper)
-  protected
-    class procedure GetMapBounds(out LowerBound, UpperBound: Integer); override;
-    class function GetMapEntry(Index: Integer): PLookupMapEntry; override;
-  end;
-
-  TDateFormatLookup = class(TLookupHelper)
-  protected
-    class procedure GetMapBounds(out LowerBound, UpperBound: Integer); override;
-    class function GetMapEntry(Index: Integer): PLookupMapEntry; override;
-  public
-    class procedure Select(const Combo: TCustomCombo; Value: string); overload;
-    class function SelectedValue(const Combo: TCustomCombo): string; overload;
-  end;
+var
+  OpenFileName, PortablePath, WebDataPath: string;
 
 implementation
 
 uses
-  SysUtils;
+  SysUtils, uShellUtils, uUtils;
 
-const
-  Ciphers: array[0..19] of TLookupMapEntry = (
-    (Value: ocNone;     Item: SCipherNone),
-    (Value: ocBlowfish; Item: SCipherBlowfish),
-    (Value: ocCast128;  Item: SCipherCast128),
-    (Value: ocCast256;  Item: SCipherCast256),
-    (Value: ocDES;      Item: SCipherDES),
-    (Value: oc3DES;     Item: SCipher3DES),
-    (Value: ocIce;      Item: SCipherIce),
-    (Value: ocThinIce;  Item: SCipherThinIce),
-    (Value: ocIce2;     Item: SCipherIce2),
-    (Value: ocIDEA;     Item: SCipherIDEA),
-    (Value: ocMARS;     Item: SCipherMARS),
-    (Value: ocMisty1;   Item: SCipherMisty1),
-    (Value: ocRC2;      Item: SCipherRC2),
-    (Value: ocRC4;      Item: SCipherRC4),
-    (Value: ocRC5;      Item: SCipherRC5),
-    (Value: ocRC6;      Item: SCipherRC6),
-    (Value: ocRijndael; Item: SCipherRijndael),
-    (Value: ocSerpent;  Item: SCipherSerpent),
-    (Value: ocTEA;      Item: SCipherTEA),
-    (Value: ocTwofish;  Item: SCipherTwofish));
-
-  Hashes: array[0..9] of TLookupMapEntry = (
-    (Value: ohHaval;     Item: SHashHaval),
-    (Value: ohMD4;       Item: SHashMD4),
-    (Value: ohMD5;       Item: SHashMD5),
-    (Value: ohRipeMD128; Item: SHashRipeMD128),
-    (Value: ohRipeMD160; Item: SHashRipeMD128),
-    (Value: ohSHA1;      Item: SHashSHA1),
-    (Value: ohSHA256;    Item: SHashSHA256),
-    (Value: ohSHA384;    Item: SHashSHA384),
-    (Value: ohSHA512;    Item: SHashSHA512),
-    (Value: ohTiger;     Item: SHashTiger));
-
-  RuleTypes: array[0..5] of TLookupMapEntry = (
-    (Value: Integer(rtHyperLink);      Item: SRuleHyperLink),
-    (Value: Integer(rtEmail);          Item: SRuleEmail),
-    (Value: Integer(rtPassword);       Item: SRulePassword),
-    (Value: Integer(rtExpirationDate); Item: SRuleExpirationDate),
-    (Value: Integer(rtRecurrence);     Item: SRuleRecurrence),
-    (Value: Integer(rtHighlight);      Item: SRuleHighlight));
-
-  EventFilters: array[0..14] of TLookupMapEntry = (
-    (Value: Integer(efAll);         Item: SEventAll),
-    (Value: Integer(efAllEvents);   Item: SEventAllEvents),
-    (Value: Integer(efCustom);      Item: SEventCustom),
-    (Value: Integer(efToday);       Item: SEventToday),
-    (Value: Integer(efTomorrow);    Item: SEventTomorrow),
-    (Value: Integer(efThisWeek);    Item: SEventThisWeek),
-    (Value: Integer(efThisMonth);   Item: SEventThisMonth),
-    (Value: Integer(efThisYear);    Item: SEventThisYear),
-    (Value: Integer(efNext7days);   Item: SEventNext7days),
-    (Value: Integer(efNext15days);  Item: SEventNext15days),
-    (Value: Integer(efNext30days);  Item: SEventNext30days),
-    (Value: Integer(efNext60days);  Item: SEventNext60days),
-    (Value: Integer(efNext90days);  Item: SEventNext90days),
-    (Value: Integer(efNext180days); Item: SEventNext180days),
-    (Value: Integer(efNext365days); Item: SEventNext365days));
-
-  DateFormats: array[0..2] of TLookupMapEntry = (
-    (Value: Integer(dfYMD); Item: SYMD),
-    (Value: Integer(dfMDY); Item: SMDY),
-    (Value: Integer(dfDMY); Item: SDMY));
-
-{ TCipherLookup }
-
-class procedure TCipherLookup.GetMapBounds(out LowerBound,
-  UpperBound: Integer);
-begin
-  LowerBound := Low(Ciphers);
-  UpperBound := High(Ciphers);
-end;
-
-class function TCipherLookup.GetMapEntry(Index: Integer): PLookupMapEntry;
-begin
-  Result := @Ciphers[Index];
-end;
-
-{ THashLookup }
-
-class procedure THashLookup.GetMapBounds(out LowerBound,
-  UpperBound: Integer);
-begin
-  LowerBound := Low(Hashes);
-  UpperBound := High(Hashes);
-end;
-
-class function THashLookup.GetMapEntry(Index: Integer): PLookupMapEntry;
-begin
-  Result := @Hashes[Index];
-end;
-
-{ TRuleTypeLookup }
-
-class procedure TRuleTypeLookup.GetMapBounds(out LowerBound,
-  UpperBound: Integer);
-begin
-  LowerBound := Low(RuleTypes);
-  UpperBound := High(RuleTypes);
-end;
-
-class function TRuleTypeLookup.GetMapEntry(Index: Integer): PLookupMapEntry;
-begin
-  Result := @RuleTypes[Index];
-end;
-
-{ TEventFilterLookup }
-
-class procedure TEventFilterLookup.GetMapBounds(out LowerBound,
-  UpperBound: Integer);
-begin
-  LowerBound := Low(EventFilters);
-  UpperBound := High(EventFilters);
-end;
-
-class function TEventFilterLookup.GetMapEntry(Index: Integer): PLookupMapEntry;
-begin
-  Result := @EventFilters[Index];
-end;
-
-{ TDateFormatLookup }
-
-class procedure TDateFormatLookup.GetMapBounds(out LowerBound,
-  UpperBound: Integer);
-begin
-  LowerBound := Low(DateFormats);
-  UpperBound := High(DateFormats);
-end;
-
-class function TDateFormatLookup.GetMapEntry(Index: Integer): PLookupMapEntry;
-begin
-  Result := @DateFormats[Index];
-end;
-
-class procedure TDateFormatLookup.Select(const Combo: TCustomCombo;
-  Value: string);
+procedure GetCommandLineParams(out OpenFileName, PortablePath: string);
 var
-  Y, M, D: Integer;
+  I: Integer;
 begin
-  Y := Pos('y', LowerCase(Value));
-  M := Pos('m', LowerCase(Value));
-  D := Pos('d', LowerCase(Value));
-
-  if (Y < M) and (M < D) then
-    Select(Combo, Integer(dfYMD))
-  else if (M < D) and (D < Y) then
-    Select(Combo, Integer(dfMDY))
-  else if (D < M) and (M < Y) then
-    Select(Combo, Integer(dfDMY));
+  OpenFileName := '';
+  PortablePath := '';
+  I := 1;
+  while I <= ParamCount do
+    if SameText(ParamStr(I), 'portable') and (ParamStr(I + 1) <> '') then
+    begin
+      PortablePath := ParamStr(I + 1);
+      Inc(I, 2);
+    end
+    else
+    begin
+      OpenFileName := ParamStr(I);
+      Inc(I);
+    end;
 end;
 
-class function TDateFormatLookup.SelectedValue(
-  const Combo: TCustomCombo): string;
-begin
-  case SelectedValue(Combo, -1) of
-    Integer(dfYMD): Result := 'yyyy/mm/dd';
-    Integer(dfMDY): Result := 'mm/dd/yyyy';
-    Integer(dfDMY): Result := 'dd/mm/yyyy';
+initialization
+  GetCommandLineParams(OpenFileName, PortablePath);
+
+  if PortablePath <> '' then
+    WebDataPath := CombinePath(PortablePath, PortableWebDataPath)
   else
-    Result := '';
-  end;
-end;
+    WebDataPath := CombinePath(TShellFolders.AppData, LocalWebDataPath);
 
 end.

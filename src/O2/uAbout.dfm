@@ -13,7 +13,6 @@ object AboutForm: TAboutForm
   Font.Style = []
   KeyPreview = True
   Position = poMainFormCenter
-  OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   DesignSize = (
     295
@@ -395,6 +394,9 @@ object AboutForm: TAboutForm
         'JEDI Visual Component Library'
         'Copyright (C) 1999-2024 the Project JEDI '
         'community.'
+        ''
+        'Spring4D'
+        'Copyright (C) 2009-2023 Spring4D Team.'
         ''
         'SZCRC32 unit'
         'Copyright (C) 2004 Sasa Zeman.'

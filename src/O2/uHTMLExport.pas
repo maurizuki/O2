@@ -19,15 +19,10 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, ComCtrls, ToolWin, Menus, ImgList, ActnList, OleCtrls, SHDocVw,
-  JvStringHolder, uO2File, uO2Objects, uO2Rules, uO2Relations, System.ImageList,
-  System.Actions;
+  Dialogs, ComCtrls, ToolWin, Menus, ImgList, ActnList, ImageList, Actions,
+  WebView2, ActiveX, Edge, JvStringHolder, uServices;
 
 type
-  TExportToHTMLOption = (xoIncludeIndex, xoIncludeTags, xoIncludeNotes,
-    xoIncludeRelations, xoIncludePasswords);
-  TExportToHTMLOptions = set of TExportToHTMLOption;
-
   THTMLExport = class(TForm)
     ActionList: TActionList;
     ExportFile: TAction;
@@ -51,7 +46,7 @@ type
     ToolBar: TToolBar;
     ToolButton1: TToolButton;
     ToolButton2: TToolButton;
-    WebBrowser: TWebBrowser;
+    WebBrowser: TEdgeBrowser;
     DefaultStyle: TJvStrHolder;
     ExportDialog: TSaveDialog;
     ToolButton3: TToolButton;
@@ -67,40 +62,29 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure ActionUpdate(Sender: TObject);
     procedure ExportFileExecute(Sender: TObject);
-    procedure OptionExecute(Sender: TObject);
+    procedure IncludeIndexExecute(Sender: TObject);
+    procedure IncludeIndexUpdate(Sender: TObject);
+    procedure IncludeTagsExecute(Sender: TObject);
+    procedure IncludeTagsUpdate(Sender: TObject);
+    procedure IncludeNotesExecute(Sender: TObject);
+    procedure IncludeNotesUpdate(Sender: TObject);
+    procedure IncludeRelationsExecute(Sender: TObject);
+    procedure IncludeRelationsUpdate(Sender: TObject);
+    procedure IncludePasswordsExecute(Sender: TObject);
+    procedure IncludePasswordsUpdate(Sender: TObject);
     procedure StyleExecute(Sender: TObject);
     procedure StyleUpdate(Sender: TObject);
     procedure ExportDialogCanClose(Sender: TObject; var CanClose: Boolean);
+    procedure WebBrowserCreateWebViewCompleted(Sender: TCustomEdgeBrowser;
+      AResult: HRESULT);
   private
-    FFileName: string;
-    FTitle: string;
-    FO2File: TO2File;
-    FObjects: TO2ObjectList;
-    FStyleIndex: Integer;
-    OriginalApplicationMessage: TMessageEvent;
-    procedure ApplicationMessage(var Msg: TMsg; var Handled: Boolean);
-    procedure SetStyleIndex(const Value: Integer);
+    FModel: IHTMLExport;
+    procedure SetModel(Value: IHTMLExport);
     procedure SetStyleCaption(Action: TCustomAction);
-  protected
-    procedure AppendObjectIndex(const SB: TStringBuilder);
-    procedure AppendObjectList(const SB: TStringBuilder);
-    procedure AppendTagList(const SB: TStringBuilder; const Obj: TO2Object);
-    procedure AppendFieldList(const SB: TStringBuilder; const Obj: TO2Object);
-    procedure AppendRelationList(const SB: TStringBuilder;
-      const Obj: TO2Object);
-    function ExportToHTML: string;
     procedure RefreshPreview;
-    property StyleIndex: Integer read FStyleIndex write SetStyleIndex;
   public
-    class procedure IncludeOption(var Options: TExportToHTMLOptions;
-      AOption: TExportToHTMLOption; Include: Boolean);
-    class procedure Execute(AOwner: TComponent; const FileName: string;
-      const O2File: TO2File; const Selection: TO2ObjectList;
-      var Options: TExportToHTMLOptions);
-    property FileName: string read FFileName write FFileName;
-    property Title: string read FTitle write FTitle;
-    property O2File: TO2File read FO2File write FO2File;
-    property Objects: TO2ObjectList read FObjects write FObjects;
+    class procedure Execute(Model: IHTMLExport);
+    property Model: IHTMLExport read FModel write SetModel;
   end;
 
 var
@@ -109,92 +93,47 @@ var
 implementation
 
 uses
-  System.Generics.Collections, JclFileUtils, uGlobal, uAppFiles, uStuffHTML,
-  uHTMLHelper, uUtils;
+  uGlobal, uUtils;
 
 {$R *.dfm}
 
-type
-  TDefaultStylePalette = record
-    LinkColor: string;
-    BorderColor: string;
-    AltBgColor: string;
-  end;
-
-const
-  Palettes: array [0..2] of TDefaultStylePalette = (
-    ( LinkColor: '#0d6efd'; BorderColor: '#9ec5fe'; AltBgColor: '#f4f8ff' ),
-    ( LinkColor: '#a1952e'; BorderColor: '#d5e3c0'; AltBgColor: '#f1f6ea' ),
-    ( LinkColor: '#c3829e'; BorderColor: '#fcc9b9'; AltBgColor: '#fff5f2' )
-  );
-
 { THTMLExport }
 
-class procedure THTMLExport.IncludeOption(var Options: TExportToHTMLOptions;
-  AOption: TExportToHTMLOption; Include: Boolean);
-begin
-  if Include then
-    System.Include(Options, AOption)
-  else
-    System.Exclude(Options, AOption);
-end;
-
-class procedure THTMLExport.Execute(AOwner: TComponent; const FileName: string;
-  const O2File: TO2File; const Selection: TO2ObjectList;
-  var Options: TExportToHTMLOptions);
+class procedure THTMLExport.Execute(Model: IHTMLExport);
 var
   Form: THTMLExport;
 begin
-  Form := THTMLExport.Create(AOwner);
+  Form := THTMLExport.Create(Application);
   try
-    Form.FileName := FileName;
-    if O2File.Title = '' then
-      Form.Title := ChangeFileExt(ExtractFileName(FileName), '')
-    else
-      Form.Title := O2File.Title;
-    Form.O2File := O2File;
-    Form.Objects := Selection;
-
-    Form.IncludeIndex.Checked := xoIncludeIndex in Options;
-    Form.IncludeTags.Checked := xoIncludeTags in Options;
-    Form.IncludeNotes.Checked := xoIncludeNotes in Options;
-    Form.IncludeRelations.Checked := xoIncludeRelations in Options;
-    Form.IncludePasswords.Checked := xoIncludePasswords in Options;
-
-    Form.RefreshPreview;
-    Form.BlueWaterStyle.Execute;
+    Form.Model := Model;
     Form.ShowModal;
-
-    THTMLExport.IncludeOption(Options, xoIncludeIndex,
-      Form.IncludeIndex.Checked);
-    THTMLExport.IncludeOption(Options, xoIncludeTags,
-      Form.IncludeTags.Checked);
-    THTMLExport.IncludeOption(Options, xoIncludeNotes,
-      Form.IncludeNotes.Checked);
-    THTMLExport.IncludeOption(Options, xoIncludeRelations,
-      Form.IncludeRelations.Checked);
-    THTMLExport.IncludeOption(Options, xoIncludePasswords,
-      Form.IncludePasswords.Checked);
   finally
     Form.Free;
   end;
 end;
 
-procedure THTMLExport.ApplicationMessage(var Msg: TMsg; var Handled: Boolean);
+procedure THTMLExport.SetModel(Value: IHTMLExport);
 begin
-  if ((Msg.Message = WM_RBUTTONDOWN) or (Msg.Message = WM_RBUTTONDBLCLK))
-    and IsChild(WebBrowser.Handle, Msg.hwnd) then
-    Handled := True
-  else
-    OriginalApplicationMessage(Msg, Handled);
-end;
-
-procedure THTMLExport.SetStyleIndex(const Value: Integer);
-begin
-  if FStyleIndex <> Value then
+  if FModel <> Value then
   begin
-    FStyleIndex := Value;
-    RefreshPreview;
+    FModel := Value;
+
+    DefaultStyle.MacroByName('link-color').Value := '#0d6efd';
+    DefaultStyle.MacroByName('border-color').Value := '#9ec5fe';
+    DefaultStyle.MacroByName('alt-bg-color').Value := '#f4f8ff';
+    BlueWaterStyle.Tag := FModel.AddStyle(DefaultStyle.ExpandMacros);
+
+    DefaultStyle.MacroByName('link-color').Value := '#a1952e';
+    DefaultStyle.MacroByName('border-color').Value := '#d5e3c0';
+    DefaultStyle.MacroByName('alt-bg-color').Value := '#f1f6ea';
+    MatchaStyle.Tag := FModel.AddStyle(DefaultStyle.ExpandMacros);
+
+    DefaultStyle.MacroByName('link-color').Value := '#c3829e';
+    DefaultStyle.MacroByName('border-color').Value := '#fcc9b9';
+    DefaultStyle.MacroByName('alt-bg-color').Value := '#fff5f2';
+    SakuraStyle.Tag := FModel.AddStyle(DefaultStyle.ExpandMacros);
+
+    BlueWaterStyle.Execute;
   end;
 end;
 
@@ -203,225 +142,9 @@ begin
   HTMLStyle.Caption := Format('%s (%s)', [SHTMLExportStyle, Action.Caption]);
 end;
 
-procedure THTMLExport.AppendObjectIndex(const SB: TStringBuilder);
-var
-  I: Integer;
-begin
-  SB.Append('<div class="object-index"><ul>');
-
-  for I := 0 to Objects.Count - 1 do
-  begin
-    if I mod 2 = 0 then
-      SB.Append('<li>')
-    else
-      SB.Append('<li class="alt-bg">');
-
-    SB.AppendFormat('<a href="#%d">', [Objects[I].Index])
-      .AppendHTML(Objects[I].Name).Append('</a>');
-
-    SB.Append('</li>');
-  end;
-
-  SB.Append('</ul></div>');
-end;
-
-procedure THTMLExport.AppendObjectList(const SB: TStringBuilder);
-var
-  I: Integer;
-begin
-    SB.Append('<div class="object-list">');
-
-    for I := 0 to Objects.Count - 1 do
-    begin
-      SB.AppendFormat('<a name="%d"></a>', [Objects[I].Index])
-        .Append('<div class="object-item"><h2>')
-        .AppendHTML(Objects[I].Name).Append('</h2>');
-
-      if IncludeTags.Checked then AppendTagList(SB, Objects[I]);
-
-      AppendFieldList(SB, Objects[I]);
-
-      if IncludeRelations.Checked then AppendRelationList(SB, Objects[I]);
-
-      if IncludeNotes.Checked and (Objects[I].Text.Count > 0) then
-        SB.Append('<div class="notes">')
-          .AppendHTML(Objects[I].Text, Objects[I].TextType)
-          .Append('</div>');
-
-      SB.Append('</div>');
-    end;
-
-    SB.Append('</div>');
-end;
-
-procedure THTMLExport.AppendTagList(const SB: TStringBuilder;
-  const Obj: TO2Object);
-var
-  Tags: TStringList;
-  ATag: string;
-begin
-  Tags := TStringList.Create;
-  try
-    Obj.GetTags(Tags);
-
-    if Tags.Count > 0 then
-    begin
-      SB.Append('<div class="tag-list">');
-
-      for ATag in Tags do
-        SB.Append('<div class="tag-item">')
-          .AppendHTML(ATag).Append('</div>');
-
-      SB.Append('</div>');
-    end;
-  finally
-    Tags.Free;
-  end;
-end;
-
-procedure THTMLExport.AppendFieldList(const SB: TStringBuilder;
-  const Obj: TO2Object);
-var
-  Fields: TList<TO2Field>;
-  AField: TO2Field;
-  ARule: TO2Rule;
-  I: Integer;
-begin
-  Fields := TList<TO2Field>.Create;
-  try
-    for AField in Obj.Fields do
-      if IncludePasswords.Checked
-        or not Assigned(O2File.Rules.FindFirstRule(AField, [rtPassword])) then
-        Fields.Add(AField);
-
-    if Fields.Count > 0 then
-    begin
-      SB.Append('<div class="field-list">');
-
-      for I := 0 to Fields.Count - 1 do
-      begin
-        if I mod 2 = 0 then
-          SB.Append('<div class="field-item">')
-        else
-          SB.Append('<div class="field-item alt-bg">');
-
-        SB.Append('<div class="field-name">')
-          .AppendHTML(Fields[I].FieldName).Append('</div>');
-
-        SB.Append('<div class="field-value">');
-        ARule := O2File.Rules.FindFirstRule(Fields[I], [rtHyperLink, rtEmail]);
-        if Assigned(ARule) then
-          case ARule.RuleType of
-            rtHyperLink:
-              SB.AppendFormat('<a href="%s" target="_blank">',
-                [ARule.GetHyperLink(Fields[I])])
-                .AppendHTML(Fields[I].FieldValue).Append('</a>');
-            rtEmail:
-              SB.AppendFormat('<a href="mailto:%s">', [Fields[I].FieldValue])
-                .AppendHTML(Fields[I].FieldValue).Append('</a>');
-          end
-        else
-          SB.AppendHTML(Fields[I].FieldValue);
-        SB.Append('</div>');
-
-        SB.Append('</div>');
-      end;
-
-      SB.Append('</div>');
-    end;
-  finally
-    Fields.Free;
-  end;
-end;
-
-procedure THTMLExport.AppendRelationList(const SB: TStringBuilder;
-  const Obj: TO2Object);
-var
-  AObjRelations: TO2ObjRelations;
-  I: Integer;
-begin
-  AObjRelations := O2File.Relations.GetObjectRelations(Obj);
-  try
-    if AObjRelations.Count > 0 then
-    begin
-      SB.Append('<div class="relation-list">');
-
-      AObjRelations.SortByObjName;
-      for I := 0 to AObjRelations.Count - 1 do
-        if Assigned(AObjRelations[I].Obj) then
-        begin
-          if I mod 2 = 0 then
-            SB.Append('<div class="relation-item">')
-          else
-            SB.Append('<div class="relation-item alt-bg">');
-
-          SB.Append('<div class="relation-object">')
-            .AppendFormat('<a href="#%d">', [AObjRelations[I].Obj.Index])
-            .AppendHTML(AObjRelations[I].Obj.Name).Append('</a></div>');
-
-          SB.Append('<div class="relation-role">')
-            .AppendHTML(AObjRelations[I].Role).Append('</div>');
-
-          SB.Append('</div>');
-        end;
-
-      SB.Append('</div>');
-    end;
-  finally
-    AObjRelations.Free;
-  end;
-end;
-
-function THTMLExport.ExportToHTML: string;
-var
-  VersionInfo: TJclFileVersionInfo;
-  SB: TStringBuilder;
-begin
-  DefaultStyle.MacroByName('link-color').Value :=
-    Palettes[StyleIndex].LinkColor;
-  DefaultStyle.MacroByName('border-color').Value :=
-    Palettes[StyleIndex].BorderColor;
-  DefaultStyle.MacroByName('alt-bg-color').Value :=
-    Palettes[StyleIndex].AltBgColor;
-
-  VersionInfo := TJclFileVersionInfo.Create(AppFiles.FullPath[IdAppExe]);
-  try
-    SB := TStringBuilder.Create;
-    try
-      SB.AppendLine('<!DOCTYPE html>')
-        .AppendLine('<html>')
-        .AppendLine('<head>')
-        .AppendFormat('<meta name="generator" content="%s %s" />',
-          [VersionInfo.ProductName, VersionInfo.BinFileVersion])
-        .AppendFormat('<meta name="description" content="%s" />',
-          [O2File.Description])
-        .AppendFormat('<meta name="author" content="%s" />', [O2File.Author])
-        .AppendLine('<style>')
-        .AppendLine(DefaultStyle.ExpandMacros)
-        .AppendLine('</style>')
-        .Append('<title>').AppendHTML(Title).AppendLine('</title>')
-        .AppendLine('</head>')
-        .Append('<body><div class="container">')
-        .Append('<h1>').AppendHTML(Title).Append('</h1>');
-
-      if IncludeIndex.Checked then AppendObjectIndex(SB);
-
-      AppendObjectList(SB);
-
-      SB.AppendLine('</div></body>').Append('</html>');
-
-      Result := SB.ToString;
-    finally
-      SB.Free;
-    end;
-  finally
-    VersionInfo.Free;
-  end;
-end;
-
 procedure THTMLExport.RefreshPreview;
 begin
-  StuffHTML(WebBrowser.DefaultInterface, ExportToHTML);
+  WebBrowser.NavigateToString(FModel.ExportToHTML(True));
 end;
 
 procedure THTMLExport.FormCreate(Sender: TObject);
@@ -432,13 +155,13 @@ begin
   SetBounds(WorkArea.Left, WorkArea.Top,
     WorkArea.Right - WorkArea.Left, WorkArea.Bottom - WorkArea.Top);
 
-  OriginalApplicationMessage := Application.OnMessage;
-  Application.OnMessage := ApplicationMessage;
+  WebBrowser.UserDataFolder := WebDataPath;
+  WebBrowser.CreateWebView;
 end;
 
 procedure THTMLExport.FormDestroy(Sender: TObject);
 begin
-  Application.OnMessage := OriginalApplicationMessage;
+  FModel.StoreSettings;
 end;
 
 procedure THTMLExport.ActionUpdate(Sender: TObject);
@@ -447,36 +170,82 @@ begin
 end;
 
 procedure THTMLExport.ExportFileExecute(Sender: TObject);
-var
-  Writer: TTextWriter;
 begin
   ExportDialog.FileName := '';
-  if ExportDialog.Execute then
-  begin
-    Writer := TStreamWriter.Create(ExportDialog.FileName);
-    try
-      Writer.Write(ExportToHTML);
-    finally
-      Writer.Free;
-    end;
-  end;
+  if ExportDialog.Execute then FModel.ExportToHTML(ExportDialog.FileName);
 end;
 
-procedure THTMLExport.OptionExecute(Sender: TObject);
+procedure THTMLExport.IncludeIndexExecute(Sender: TObject);
 begin
-  TAction(Sender).Checked := not TAction(Sender).Checked;
+  FModel.IncludeIndex := not FModel.IncludeIndex;
   RefreshPreview;
+end;
+
+procedure THTMLExport.IncludeIndexUpdate(Sender: TObject);
+begin
+  TAction(Sender).Checked := FModel.IncludeIndex;
+end;
+
+procedure THTMLExport.IncludeTagsExecute(Sender: TObject);
+begin
+  FModel.IncludeTags := not FModel.IncludeTags;
+  RefreshPreview;
+end;
+
+procedure THTMLExport.IncludeTagsUpdate(Sender: TObject);
+begin
+  TAction(Sender).Checked := FModel.IncludeTags;
+end;
+
+procedure THTMLExport.IncludeNotesExecute(Sender: TObject);
+begin
+  FModel.IncludeNotes := not FModel.IncludeNotes;
+  RefreshPreview;
+end;
+
+procedure THTMLExport.IncludeNotesUpdate(Sender: TObject);
+begin
+  TAction(Sender).Checked := FModel.IncludeNotes;
+end;
+
+procedure THTMLExport.IncludeRelationsExecute(Sender: TObject);
+begin
+  FModel.IncludeRelations := not FModel.IncludeRelations;
+  RefreshPreview;
+end;
+
+procedure THTMLExport.IncludeRelationsUpdate(Sender: TObject);
+begin
+  TAction(Sender).Checked := FModel.IncludeRelations;
+end;
+
+procedure THTMLExport.IncludePasswordsExecute(Sender: TObject);
+begin
+  FModel.IncludePasswords := not FModel.IncludePasswords;
+  RefreshPreview;
+end;
+
+procedure THTMLExport.IncludePasswordsUpdate(Sender: TObject);
+begin
+  TAction(Sender).Checked := FModel.IncludePasswords;
 end;
 
 procedure THTMLExport.StyleExecute(Sender: TObject);
 begin
-  StyleIndex := TComponent(Sender).Tag;
+  FModel.StyleIndex := TComponent(Sender).Tag;
   SetStyleCaption(TCustomAction(Sender));
+  RefreshPreview;
 end;
 
 procedure THTMLExport.StyleUpdate(Sender: TObject);
 begin
-  TAction(Sender).Checked := StyleIndex = TComponent(Sender).Tag;
+  TAction(Sender).Checked := FModel.StyleIndex = TComponent(Sender).Tag;
+end;
+
+procedure THTMLExport.WebBrowserCreateWebViewCompleted(
+  Sender: TCustomEdgeBrowser; AResult: HRESULT);
+begin
+  RefreshPreview;
 end;
 
 procedure THTMLExport.ExportDialogCanClose(Sender: TObject;
