@@ -30,6 +30,13 @@ winget install --id=maurizuki.O2 -e
 
 ## Change log
 
+### Version 3.0
+- Extensive source code rewrite in order to upgrade it to much modern coding techniques. This may or may not cause some bugs 🙂
+- *Object notes* view: note text is now displayed using an Edge-based control instead of an Internet Explorer-based one.
+- *Export to HTML*: export preview is now displayed using an Edge-based control instead of an Internet Explorer-based one.
+- *Object properties* dialog: simplified tags management.
+- *Object properties* dialog: the password strength indicator is now automatically displayed for fields that matches rules of type *Password*.
+
 ### Version 2.4
 - New feature: support for [Markdown syntax](https://commonmark.org/) in notes text. Text and paragraph styles are applied to objects notes in the notes view and in the HTML export.
 - *About* box: the release notes are now displayed through an internal viewer.
