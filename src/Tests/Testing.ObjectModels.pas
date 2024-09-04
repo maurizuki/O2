@@ -5,7 +5,6 @@ interface
 uses
   DUnitX.TestFramework, uO2File, uO2Objects, uServices;
 
-{ TODO -omaurizuki -cTest : Test DeleteField method }
 { TODO -omaurizuki -cTest : Test SwapFields method }
 
 type
@@ -79,6 +78,9 @@ type
 
     [Test]
     procedure CannotDeleteFieldEmptyFields;
+
+    [Test]
+    procedure DeleteField;
 
     [Test]
     procedure Valid;
@@ -458,6 +460,21 @@ begin
   Model := CreateModel;
 
   Assert.IsFalse(Model.CanDeleteField);
+end;
+
+procedure TObjectPropsModelTests.DeleteField;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := 'Valid field name';
+  Model.FieldValue := 'Valid field value';
+  Model.AddField;
+  Model.DeleteField;
+
+  Assert.AreEqual(-1, Model.FieldIndex);
+  Assert.AreEqual(0, Model.FieldCount);
 end;
 
 procedure TObjectPropsModelTests.Valid;
