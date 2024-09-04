@@ -212,13 +212,13 @@ end;
 function TObjectPropsModel.CanAddField: Boolean;
 begin
   Result := (FFieldName <> '')
-    and (FFieldIndex <= FObjectFieldValues.Count)
+    and (FFieldIndex <= FObjectFieldNames.Count)
     and (FObjectFieldNames.IndexOf(FFieldName) = -1);
 end;
 
 function TObjectPropsModel.CanDeleteField: Boolean;
 begin
-  Result :=(FFieldIndex >= 0) and (FFieldIndex < FObjectFieldValues.Count);
+  Result := (FFieldIndex >= 0) and (FFieldIndex < FObjectFieldNames.Count);
 end;
 
 function TObjectPropsModel.CanReplaceField: Boolean;
@@ -227,7 +227,7 @@ var
 begin
   FieldNameIndex := FObjectFieldNames.IndexOf(FFieldName);
   Result := (FFieldName <> '')
-    and (FFieldIndex >= 0) and (FFieldIndex < FObjectFieldValues.Count)
+    and (FFieldIndex >= 0) and (FFieldIndex < FObjectFieldNames.Count)
     and ((FieldNameIndex = -1) or (FieldNameIndex = FFieldIndex));
 end;
 
