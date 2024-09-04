@@ -5,8 +5,6 @@ interface
 uses
   DUnitX.TestFramework, uO2File, uO2Objects, uServices;
 
-{ TODO -omaurizuki -cTest : Test SwapFields method }
-
 type
   TObjectPropsModelTests = class
   protected
@@ -81,6 +79,9 @@ type
 
     [Test]
     procedure DeleteField;
+
+    [Test]
+    procedure SwapFields;
 
     [Test]
     procedure Valid;
@@ -475,6 +476,26 @@ begin
 
   Assert.AreEqual(-1, Model.FieldIndex);
   Assert.AreEqual(0, Model.FieldCount);
+end;
+
+procedure TObjectPropsModelTests.SwapFields;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := 'Valid field name';
+  Model.FieldValue := 'Valid field value';
+  Model.AddField;
+  Model.FieldName := 'Another field name';
+  Model.FieldValue := 'Another field value';
+  Model.AddField;
+  Model.SwapFields(0);
+
+  Assert.AreEqual(0, Model.FieldIndex);
+  Assert.AreEqual(2, Model.FieldCount);
+  Assert.AreEqual('Another field name', Model.ObjectFieldNames[0]);
+  Assert.AreEqual('Another field value', Model.ObjectFieldValues[0]);
 end;
 
 procedure TObjectPropsModelTests.Valid;
