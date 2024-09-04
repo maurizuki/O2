@@ -6,7 +6,6 @@ uses
   DUnitX.TestFramework, uO2File, uO2Objects, uServices;
 
 { TODO -omaurizuki -cTest : Test AddField method }
-{ TODO -omaurizuki -cTest : Test CanReplaceField method }
 { TODO -omaurizuki -cTest : Test ReplaceField method }
 { TODO -omaurizuki -cTest : Test CanDeleteField method }
 { TODO -omaurizuki -cTest : Test DeleteField method }
@@ -62,6 +61,15 @@ type
 
     [Test]
     procedure CannotAddFieldDuplicatedFieldName;
+
+    [Test]
+    procedure CanReplaceField;
+
+    [Test]
+    procedure CannotReplaceFieldEmptyFieldName;
+
+    [Test]
+    procedure CannotReplaceFieldDuplicatedFieldName;
 
     [Test]
     procedure Valid;
@@ -346,6 +354,45 @@ begin
   Model.FieldName := 'Valid field name';
 
   Assert.IsFalse(Model.CanAddField);
+end;
+
+procedure TObjectPropsModelTests.CanReplaceField;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := 'Valid field name';
+  Model.AddField;
+  Model.FieldName := 'Another field name';
+
+  Assert.IsTrue(Model.CanReplaceField);
+end;
+
+procedure TObjectPropsModelTests.CannotReplaceFieldEmptyFieldName;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := '';
+
+  Assert.IsFalse(Model.CanReplaceField);
+end;
+
+procedure TObjectPropsModelTests.CannotReplaceFieldDuplicatedFieldName;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := 'Valid field name';
+  Model.AddField;
+  Model.FieldName := 'Another field name';
+  Model.AddField;
+  Model.FieldName := 'Valid field name';
+
+  Assert.IsFalse(Model.CanReplaceField);
 end;
 
 procedure TObjectPropsModelTests.Valid;
