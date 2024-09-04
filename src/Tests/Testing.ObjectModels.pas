@@ -7,7 +7,6 @@ uses
 
 { TODO -omaurizuki -cTest : Test AddField method }
 { TODO -omaurizuki -cTest : Test ReplaceField method }
-{ TODO -omaurizuki -cTest : Test CanDeleteField method }
 { TODO -omaurizuki -cTest : Test DeleteField method }
 { TODO -omaurizuki -cTest : Test SwapFields method }
 
@@ -70,6 +69,12 @@ type
 
     [Test]
     procedure CannotReplaceFieldDuplicatedFieldName;
+
+    [Test]
+    procedure CanDeleteField;
+
+    [Test]
+    procedure CannotDeleteFieldEmptyFields;
 
     [Test]
     procedure Valid;
@@ -393,6 +398,27 @@ begin
   Model.FieldName := 'Valid field name';
 
   Assert.IsFalse(Model.CanReplaceField);
+end;
+
+procedure TObjectPropsModelTests.CanDeleteField;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := 'Valid field name';
+  Model.AddField;
+
+  Assert.IsTrue(Model.CanDeleteField);
+end;
+
+procedure TObjectPropsModelTests.CannotDeleteFieldEmptyFields;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Assert.IsFalse(Model.CanDeleteField);
 end;
 
 procedure TObjectPropsModelTests.Valid;
