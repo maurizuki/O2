@@ -5,7 +5,6 @@ interface
 uses
   DUnitX.TestFramework, uO2File, uO2Objects, uServices;
 
-{ TODO -omaurizuki -cTest : Test CanAddField method }
 { TODO -omaurizuki -cTest : Test AddField method }
 { TODO -omaurizuki -cTest : Test CanReplaceField method }
 { TODO -omaurizuki -cTest : Test ReplaceField method }
@@ -54,6 +53,15 @@ type
     [TestCase('False', 'False,ttPlainText')]
     [TestCase('True' , 'True,ttCommonMark')]
     procedure SaveMarkdown(Markdown: Boolean; Expected: TO2TextType);
+
+    [Test]
+    procedure CanAddField;
+
+    [Test]
+    procedure CannotAddFieldEmptyFieldName;
+
+    [Test]
+    procedure CannotAddFieldDuplicatedFieldName;
 
     [Test]
     procedure Valid;
@@ -305,6 +313,41 @@ begin
   Assert.AreEqual(Expected, Model.O2Object.TextType);
 end;
 
+procedure TObjectPropsModelTests.CanAddField;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := 'Valid field name';
+
+  Assert.IsTrue(Model.CanAddField);
+end;
+
+procedure TObjectPropsModelTests.CannotAddFieldEmptyFieldName;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := '';
+
+  Assert.IsFalse(Model.CanAddField);
+end;
+
+procedure TObjectPropsModelTests.CannotAddFieldDuplicatedFieldName;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := 'Valid field name';
+  Model.AddField;
+  Model.FieldName := 'Valid field name';
+
+  Assert.IsFalse(Model.CanAddField);
+end;
+
 procedure TObjectPropsModelTests.Valid;
 var
   Model: IObjectProps;
@@ -312,7 +355,6 @@ begin
   Model := CreateModel;
 
   Model.ObjectName := 'Valid object name';
-  Model.ApplyChanges;
 
   Assert.IsTrue(Model.Valid);
 end;
@@ -324,7 +366,6 @@ begin
   Model := CreateModel;
 
   Model.ObjectName := '';
-  Model.ApplyChanges;
 
   Assert.IsFalse(Model.Valid);
 end;
