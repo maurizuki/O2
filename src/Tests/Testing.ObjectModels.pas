@@ -5,7 +5,6 @@ interface
 uses
   DUnitX.TestFramework, uO2File, uO2Objects, uServices;
 
-{ TODO -omaurizuki -cTest : Test ReplaceField method }
 { TODO -omaurizuki -cTest : Test DeleteField method }
 { TODO -omaurizuki -cTest : Test SwapFields method }
 
@@ -71,6 +70,9 @@ type
 
     [Test]
     procedure CannotReplaceFieldDuplicatedFieldName;
+
+    [Test]
+    procedure ReplaceField;
 
     [Test]
     procedure CanDeleteField;
@@ -416,6 +418,25 @@ begin
   Model.FieldName := 'Valid field name';
 
   Assert.IsFalse(Model.CanReplaceField);
+end;
+
+procedure TObjectPropsModelTests.ReplaceField;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := 'Valid field name';
+  Model.FieldValue := 'Valid field value';
+  Model.AddField;
+  Model.FieldName := 'Another field name';
+  Model.FieldValue := 'Another field value';
+  Model.ReplaceField;
+
+  Assert.AreEqual(0, Model.FieldIndex);
+  Assert.AreEqual(1, Model.FieldCount);
+  Assert.AreEqual('Another field name', Model.ObjectFieldNames[0]);
+  Assert.AreEqual('Another field value', Model.ObjectFieldValues[0]);
 end;
 
 procedure TObjectPropsModelTests.CanDeleteField;
