@@ -33,6 +33,22 @@ type
     procedure Replace;
   end;
 
+  [TestFixture]
+  TReplaceFieldNameModelTests = class(TReplaceOperationTests)
+  public
+    [Test]
+    procedure LoadSearchList;
+
+    [Test]
+    procedure LoadReplaceList;
+
+    [Test]
+    procedure Valid;
+
+    [Test]
+    procedure Replace;
+  end;
+
 implementation
 
 uses
@@ -111,6 +127,93 @@ begin
 
   Assert.AreEqual('New tag,Tag 1', FO2File.Objects.FindObject('Object 1').Tag);
   Assert.AreEqual('New tag', FO2File.Objects.FindObject('Object 2').Tag);
+end;
+
+{ TReplaceFieldNameModelTests }
+
+procedure TReplaceFieldNameModelTests.LoadSearchList;
+var
+  Model: IReplaceOperation;
+begin
+  with FO2File.Objects.AddObject('Object 1') do
+  begin
+    Fields.AddField('Field 1');
+    Fields.AddField('Field 2');
+  end;
+  with FO2File.Objects.AddObject('Object 2') do
+  begin
+    Fields.AddField('field 2');
+    Fields.AddField('Field 3');
+  end;
+
+  Model := TReplaceFieldNameModel.Create(FO2File, FO2File.Objects.ToEnumerable);
+
+  Assert.AreEqual(3, Model.SearchList.Count);
+  Assert.Contains(Model.SearchList, 'Field 1');
+  Assert.Contains(Model.SearchList, 'Field 2');
+  Assert.Contains(Model.SearchList, 'Field 3');
+end;
+
+procedure TReplaceFieldNameModelTests.LoadReplaceList;
+var
+  Model: IReplaceOperation;
+begin
+  with FO2File.Objects.AddObject('Object 1') do
+  begin
+    Fields.AddField('Field 1');
+    Fields.AddField('Field 2');
+  end;
+  with FO2File.Objects.AddObject('Object 2') do
+  begin
+    Fields.AddField('field 2');
+    Fields.AddField('Field 3');
+  end;
+
+  Model := TReplaceFieldNameModel.Create(FO2File, FO2File.Objects.ToEnumerable);
+
+  Assert.AreEqual(3, Model.ReplaceList.Count);
+  Assert.Contains(Model.ReplaceList, 'Field 1');
+  Assert.Contains(Model.ReplaceList, 'Field 2');
+  Assert.Contains(Model.ReplaceList, 'Field 3');
+end;
+
+procedure TReplaceFieldNameModelTests.Valid;
+var
+  Model: IReplaceOperation;
+begin
+  FO2File.Objects.AddObject().Fields.AddField('Old field');
+
+  Model := TReplaceFieldNameModel.Create(FO2File, FO2File.Objects.ToEnumerable);
+
+  Model.SearchValue := 'Old field';
+  Model.ReplaceValue := 'New field';
+
+  Assert.IsTrue(Model.Valid);
+end;
+
+procedure TReplaceFieldNameModelTests.Replace;
+var
+  Model: IReplaceOperation;
+begin
+  with FO2File.Objects.AddObject('Object 1') do
+  begin
+    Fields.AddField('Field 1');
+    Fields.AddField('Old field');
+  end;
+  FO2File.Objects.AddObject('Object 2').Fields.AddField('old field');
+
+  Model := TReplaceFieldNameModel.Create(FO2File, FO2File.Objects.ToEnumerable);
+
+  Model.SearchValue := 'Old field';
+  Model.ReplaceValue := 'New field';
+  Model.Replace;
+
+  Assert.AreEqual('Field 1',
+    FO2File.Objects.FindObject('Object 1').Fields[0].FieldName);
+  Assert.AreEqual('New field',
+    FO2File.Objects.FindObject('Object 1').Fields[1].FieldName);
+  Assert.AreEqual('New field',
+    FO2File.Objects.FindObject('Object 2').Fields[0].FieldName);
 end;
 
 end.
