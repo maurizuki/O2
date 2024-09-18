@@ -165,6 +165,7 @@
         <DCCReference Include="Testing.ObjectModels.pas"/>
         <DCCReference Include="Testing.RelationModels.pas"/>
         <DCCReference Include="Testing.RuleModels.pas"/>
+        <DCCReference Include="Testing.ReplaceOperations.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

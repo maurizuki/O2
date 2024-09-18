@@ -90,7 +90,8 @@ uses
   Testing.FilePropsModel in 'Testing.FilePropsModel.pas',
   Testing.ObjectModels in 'Testing.ObjectModels.pas',
   Testing.RelationModels in 'Testing.RelationModels.pas',
-  Testing.RuleModels in 'Testing.RuleModels.pas';
+  Testing.RuleModels in 'Testing.RuleModels.pas',
+  Testing.ReplaceOperations in 'Testing.ReplaceOperations.pas';
 
 {$IFNDEF TESTINSIGHT}
 var
