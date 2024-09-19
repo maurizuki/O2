@@ -65,6 +65,22 @@ type
     procedure Replace;
   end;
 
+  [TestFixture]
+  TReplaceRoleModelTests = class(TReplaceOperationTests)
+  public
+    [Test]
+    procedure LoadSearchList;
+
+    [Test]
+    procedure LoadReplaceList;
+
+    [Test]
+    procedure Valid;
+
+    [Test]
+    procedure Replace;
+  end;
+
 implementation
 
 uses
@@ -322,6 +338,124 @@ begin
     FO2File.Objects.FindObject('Object 1').Fields[1].FieldValue);
   Assert.AreEqual('New value',
     FO2File.Objects.FindObject('Object 2').Fields[0].FieldValue);
+end;
+
+{ TReplaceRoleModelTests }
+
+procedure TReplaceRoleModelTests.LoadSearchList;
+var
+  Model: IReplaceOperation;
+begin
+  FO2File.Objects.AddObject('Object 1');
+  FO2File.Objects.AddObject('Object 2');
+  FO2File.Objects.AddObject('Object 3');
+  with FO2File.Relations.AddRelation do
+  begin
+    ObjectID1 := FO2File.Objects.FindObject('Object 1').ObjectID;
+    Role1 := 'Role 1';
+    ObjectID2 := FO2File.Objects.FindObject('Object 2').ObjectID;
+    Role2 := 'Role 2';
+  end;
+  with FO2File.Relations.AddRelation do
+  begin
+    ObjectID1 := FO2File.Objects.FindObject('Object 2').ObjectID;
+    Role1 := 'role 2';
+    ObjectID2 := FO2File.Objects.FindObject('Object 3').ObjectID;
+    Role2 := 'Role 3';
+  end;
+
+  Model := TReplaceRoleModel.Create(FO2File, FO2File.Objects.ToEnumerable);
+
+  Assert.AreEqual(3, Model.SearchList.Count);
+  Assert.Contains(Model.SearchList, 'Role 1');
+  Assert.Contains(Model.SearchList, 'Role 2');
+  Assert.Contains(Model.SearchList, 'Role 3');
+end;
+
+procedure TReplaceRoleModelTests.LoadReplaceList;
+var
+  Model: IReplaceOperation;
+begin
+  FO2File.Objects.AddObject('Object 1');
+  FO2File.Objects.AddObject('Object 2');
+  FO2File.Objects.AddObject('Object 3');
+  with FO2File.Relations.AddRelation do
+  begin
+    ObjectID1 := FO2File.Objects.FindObject('Object 1').ObjectID;
+    Role1 := 'Role 1';
+    ObjectID2 := FO2File.Objects.FindObject('Object 2').ObjectID;
+    Role2 := 'Role 2';
+  end;
+  with FO2File.Relations.AddRelation do
+  begin
+    ObjectID1 := FO2File.Objects.FindObject('Object 2').ObjectID;
+    Role1 := 'role 2';
+    ObjectID2 := FO2File.Objects.FindObject('Object 3').ObjectID;
+    Role2 := 'Role 3';
+  end;
+
+  Model := TReplaceRoleModel.Create(FO2File, FO2File.Objects.ToEnumerable);
+
+  Assert.AreEqual(3, Model.ReplaceList.Count);
+  Assert.Contains(Model.ReplaceList, 'Role 1');
+  Assert.Contains(Model.ReplaceList, 'Role 2');
+  Assert.Contains(Model.ReplaceList, 'Role 3');
+end;
+
+procedure TReplaceRoleModelTests.Valid;
+var
+  Model: IReplaceOperation;
+begin
+  FO2File.Objects.AddObject('Object 1');
+  FO2File.Objects.AddObject('Object 2');
+  with FO2File.Relations.AddRelation do
+  begin
+    ObjectID1 := FO2File.Objects.FindObject('Object 1').ObjectID;
+    Role1 := 'Old role';
+    ObjectID2 := FO2File.Objects.FindObject('Object 2').ObjectID;
+    Role2 := 'Role 2';
+  end;
+
+  Model := TReplaceRoleModel.Create(FO2File, FO2File.Objects.ToEnumerable);
+
+  Model.SearchValue := 'Old role';
+  Model.ReplaceValue := 'New role';
+
+  Assert.IsTrue(Model.Valid);
+end;
+
+procedure TReplaceRoleModelTests.Replace;
+var
+  Model: IReplaceOperation;
+begin
+  FO2File.Objects.AddObject('Object 1');
+  FO2File.Objects.AddObject('Object 2');
+  FO2File.Objects.AddObject('Object 3');
+  with FO2File.Relations.AddRelation do
+  begin
+    ObjectID1 := FO2File.Objects.FindObject('Object 1').ObjectID;
+    Role1 := 'Role 1';
+    ObjectID2 := FO2File.Objects.FindObject('Object 2').ObjectID;
+    Role2 := 'Old role';
+  end;
+  with FO2File.Relations.AddRelation do
+  begin
+    ObjectID1 := FO2File.Objects.FindObject('Object 2').ObjectID;
+    Role1 := 'Old role';
+    ObjectID2 := FO2File.Objects.FindObject('Object 3').ObjectID;
+    Role2 := 'Role 2';
+  end;
+
+  Model := TReplaceRoleModel.Create(FO2File, FO2File.Objects.ToEnumerable);
+
+  Model.SearchValue := 'Old role';
+  Model.ReplaceValue := 'New role';
+  Model.Replace;
+
+  Assert.AreEqual('Role 1', FO2File.Relations[0].Role1);
+  Assert.AreEqual('New role', FO2File.Relations[0].Role2);
+  Assert.AreEqual('New role', FO2File.Relations[1].Role1);
+  Assert.AreEqual('Role 2', FO2File.Relations[1].Role2);
 end;
 
 end.
