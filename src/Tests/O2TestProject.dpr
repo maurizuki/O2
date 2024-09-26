@@ -93,7 +93,8 @@ uses
   Testing.RelationModels in 'Testing.RelationModels.pas',
   Testing.RuleModels in 'Testing.RuleModels.pas',
   Testing.ReplaceOperations in 'Testing.ReplaceOperations.pas',
-  Testing.XmlStorage in 'Testing.XmlStorage.pas';
+  Testing.XmlStorage in 'Testing.XmlStorage.pas',
+  Testing.PrintModel in 'Testing.PrintModel.pas';
 
 {$IFNDEF TESTINSIGHT}
 var
