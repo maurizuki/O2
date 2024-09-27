@@ -75,6 +75,7 @@ uses
   uShellUtils in '..\O2\Utils\uShellUtils.pas',
   uUtils in '..\O2\Utils\uUtils.pas',
   uHTMLHelper in '..\O2\Utils\uHTMLHelper.pas',
+  uXmlStorage in '..\O2\Utils\uXmlStorage.pas',
   uEncryptionPropsModel in '..\O2\ViewModels\uEncryptionPropsModel.pas',
   uEventFilters in '..\O2\ViewModels\uEventFilters.pas',
   uFileManager in '..\O2\ViewModels\uFileManager.pas',
@@ -90,7 +91,12 @@ uses
   Testing.FilePropsModel in 'Testing.FilePropsModel.pas',
   Testing.ObjectModels in 'Testing.ObjectModels.pas',
   Testing.RelationModels in 'Testing.RelationModels.pas',
-  Testing.RuleModels in 'Testing.RuleModels.pas';
+  Testing.RuleModels in 'Testing.RuleModels.pas',
+  Testing.ReplaceOperations in 'Testing.ReplaceOperations.pas',
+  Testing.XmlStorage in 'Testing.XmlStorage.pas',
+  Testing.PrintModel in 'Testing.PrintModel.pas',
+  Testing.HTMLExportModel in 'Testing.HTMLExportModel.pas',
+  Testing.EncryptionPropsModel in 'Testing.EncryptionPropsModel.pas';
 
 {$IFNDEF TESTINSIGHT}
 var

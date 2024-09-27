@@ -149,6 +149,7 @@
         <DCCReference Include="..\O2\Utils\uShellUtils.pas"/>
         <DCCReference Include="..\O2\Utils\uUtils.pas"/>
         <DCCReference Include="..\O2\Utils\uHTMLHelper.pas"/>
+        <DCCReference Include="..\O2\Utils\uXmlStorage.pas"/>
         <DCCReference Include="..\O2\ViewModels\uEncryptionPropsModel.pas"/>
         <DCCReference Include="..\O2\ViewModels\uEventFilters.pas"/>
         <DCCReference Include="..\O2\ViewModels\uFileManager.pas"/>
@@ -165,6 +166,11 @@
         <DCCReference Include="Testing.ObjectModels.pas"/>
         <DCCReference Include="Testing.RelationModels.pas"/>
         <DCCReference Include="Testing.RuleModels.pas"/>
+        <DCCReference Include="Testing.ReplaceOperations.pas"/>
+        <DCCReference Include="Testing.XmlStorage.pas"/>
+        <DCCReference Include="Testing.PrintModel.pas"/>
+        <DCCReference Include="Testing.HTMLExportModel.pas"/>
+        <DCCReference Include="Testing.EncryptionPropsModel.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

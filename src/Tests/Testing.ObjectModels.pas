@@ -5,14 +5,6 @@ interface
 uses
   DUnitX.TestFramework, uO2File, uO2Objects, uServices;
 
-{ TODO -omaurizuki -cTest : Test CanAddField method }
-{ TODO -omaurizuki -cTest : Test AddField method }
-{ TODO -omaurizuki -cTest : Test CanReplaceField method }
-{ TODO -omaurizuki -cTest : Test ReplaceField method }
-{ TODO -omaurizuki -cTest : Test CanDeleteField method }
-{ TODO -omaurizuki -cTest : Test DeleteField method }
-{ TODO -omaurizuki -cTest : Test SwapFields method }
-
 type
   TObjectPropsModelTests = class
   protected
@@ -54,6 +46,42 @@ type
     [TestCase('False', 'False,ttPlainText')]
     [TestCase('True' , 'True,ttCommonMark')]
     procedure SaveMarkdown(Markdown: Boolean; Expected: TO2TextType);
+
+    [Test]
+    procedure CanAddField;
+
+    [Test]
+    procedure CannotAddFieldEmptyFieldName;
+
+    [Test]
+    procedure CannotAddFieldDuplicatedFieldName;
+
+    [Test]
+    procedure AddField;
+
+    [Test]
+    procedure CanReplaceField;
+
+    [Test]
+    procedure CannotReplaceFieldEmptyFieldName;
+
+    [Test]
+    procedure CannotReplaceFieldDuplicatedFieldName;
+
+    [Test]
+    procedure ReplaceField;
+
+    [Test]
+    procedure CanDeleteField;
+
+    [Test]
+    procedure CannotDeleteFieldEmptyFields;
+
+    [Test]
+    procedure DeleteField;
+
+    [Test]
+    procedure SwapFields;
 
     [Test]
     procedure Valid;
@@ -305,6 +333,171 @@ begin
   Assert.AreEqual(Expected, Model.O2Object.TextType);
 end;
 
+procedure TObjectPropsModelTests.CanAddField;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := 'Valid field name';
+
+  Assert.IsTrue(Model.CanAddField);
+end;
+
+procedure TObjectPropsModelTests.CannotAddFieldEmptyFieldName;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := '';
+
+  Assert.IsFalse(Model.CanAddField);
+end;
+
+procedure TObjectPropsModelTests.CannotAddFieldDuplicatedFieldName;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := 'Valid field name';
+  Model.AddField;
+  Model.FieldName := 'Valid field name';
+
+  Assert.IsFalse(Model.CanAddField);
+end;
+
+procedure TObjectPropsModelTests.AddField;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := 'Valid field name';
+  Model.FieldValue := 'Valid field value';
+  Model.AddField;
+
+  Assert.AreEqual(0, Model.FieldIndex);
+  Assert.AreEqual(1, Model.FieldCount);
+  Assert.AreEqual('Valid field name', Model.ObjectFieldNames[0]);
+  Assert.AreEqual('Valid field value', Model.ObjectFieldValues[0]);
+end;
+
+procedure TObjectPropsModelTests.CanReplaceField;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := 'Valid field name';
+  Model.AddField;
+  Model.FieldName := 'Another field name';
+
+  Assert.IsTrue(Model.CanReplaceField);
+end;
+
+procedure TObjectPropsModelTests.CannotReplaceFieldEmptyFieldName;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := '';
+
+  Assert.IsFalse(Model.CanReplaceField);
+end;
+
+procedure TObjectPropsModelTests.CannotReplaceFieldDuplicatedFieldName;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := 'Valid field name';
+  Model.AddField;
+  Model.FieldName := 'Another field name';
+  Model.AddField;
+  Model.FieldName := 'Valid field name';
+
+  Assert.IsFalse(Model.CanReplaceField);
+end;
+
+procedure TObjectPropsModelTests.ReplaceField;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := 'Valid field name';
+  Model.FieldValue := 'Valid field value';
+  Model.AddField;
+  Model.FieldName := 'Another field name';
+  Model.FieldValue := 'Another field value';
+  Model.ReplaceField;
+
+  Assert.AreEqual(0, Model.FieldIndex);
+  Assert.AreEqual(1, Model.FieldCount);
+  Assert.AreEqual('Another field name', Model.ObjectFieldNames[0]);
+  Assert.AreEqual('Another field value', Model.ObjectFieldValues[0]);
+end;
+
+procedure TObjectPropsModelTests.CanDeleteField;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := 'Valid field name';
+  Model.AddField;
+
+  Assert.IsTrue(Model.CanDeleteField);
+end;
+
+procedure TObjectPropsModelTests.CannotDeleteFieldEmptyFields;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Assert.IsFalse(Model.CanDeleteField);
+end;
+
+procedure TObjectPropsModelTests.DeleteField;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := 'Valid field name';
+  Model.FieldValue := 'Valid field value';
+  Model.AddField;
+  Model.DeleteField;
+
+  Assert.AreEqual(-1, Model.FieldIndex);
+  Assert.AreEqual(0, Model.FieldCount);
+end;
+
+procedure TObjectPropsModelTests.SwapFields;
+var
+  Model: IObjectProps;
+begin
+  Model := CreateModel;
+
+  Model.FieldName := 'Valid field name';
+  Model.FieldValue := 'Valid field value';
+  Model.AddField;
+  Model.FieldName := 'Another field name';
+  Model.FieldValue := 'Another field value';
+  Model.AddField;
+  Model.SwapFields(0);
+
+  Assert.AreEqual(0, Model.FieldIndex);
+  Assert.AreEqual(2, Model.FieldCount);
+  Assert.AreEqual('Another field name', Model.ObjectFieldNames[0]);
+  Assert.AreEqual('Another field value', Model.ObjectFieldValues[0]);
+end;
+
 procedure TObjectPropsModelTests.Valid;
 var
   Model: IObjectProps;
@@ -312,7 +505,6 @@ begin
   Model := CreateModel;
 
   Model.ObjectName := 'Valid object name';
-  Model.ApplyChanges;
 
   Assert.IsTrue(Model.Valid);
 end;
@@ -324,7 +516,6 @@ begin
   Model := CreateModel;
 
   Model.ObjectName := '';
-  Model.ApplyChanges;
 
   Assert.IsFalse(Model.Valid);
 end;
