@@ -8,7 +8,7 @@ uses
 type
   [TestFixture]
   TPrintModelTests = class
-  protected
+  private
     FO2File: TO2File;
   public
     [Setup]
