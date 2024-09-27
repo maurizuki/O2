@@ -95,7 +95,8 @@ uses
   Testing.ReplaceOperations in 'Testing.ReplaceOperations.pas',
   Testing.XmlStorage in 'Testing.XmlStorage.pas',
   Testing.PrintModel in 'Testing.PrintModel.pas',
-  Testing.HTMLExportModel in 'Testing.HTMLExportModel.pas';
+  Testing.HTMLExportModel in 'Testing.HTMLExportModel.pas',
+  Testing.EncryptionPropsModel in 'Testing.EncryptionPropsModel.pas';
 
 {$IFNDEF TESTINSIGHT}
 var

@@ -170,6 +170,7 @@
         <DCCReference Include="Testing.XmlStorage.pas"/>
         <DCCReference Include="Testing.PrintModel.pas"/>
         <DCCReference Include="Testing.HTMLExportModel.pas"/>
+        <DCCReference Include="Testing.EncryptionPropsModel.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
