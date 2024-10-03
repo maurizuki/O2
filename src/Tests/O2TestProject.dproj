@@ -171,6 +171,7 @@
         <DCCReference Include="Testing.PrintModel.pas"/>
         <DCCReference Include="Testing.HTMLExportModel.pas"/>
         <DCCReference Include="Testing.EncryptionPropsModel.pas"/>
+        <DCCReference Include="Testing.FileManager.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
