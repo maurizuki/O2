@@ -33,6 +33,12 @@ type
     [TestCase('Next365days', '14,9,Next365days')]
     procedure FilterByEvent(EventFilterIndex, Count: Integer;
       const Tag: string);
+
+    [Test]
+    procedure FilterByTag;
+
+    [Test]
+    procedure FilterUntagged;
   end;
 
 implementation
@@ -181,6 +187,41 @@ begin
   end;
 
   Assert.AreEqual(Count, ActualCount);
+end;
+
+procedure TFileManagerTests.FilterByTag;
+var
+  Model: IFileManager;
+  AObject: TO2Object;
+begin
+  Model := TFileManager.Create(nil, nil);
+
+  Model.O2File.Objects.AddObject('Object 1').Tag := 'Tag 1';
+  Model.O2File.Objects.AddObject('Object 2').Tag := 'Tag 1,Tag 2';
+  Model.O2File.Objects.AddObject('Object 3');
+
+  Model.ObjectTags.Add('tag 2');
+  Model.IncludeUntagged := False;
+
+  for AObject in Model.GetObjects do
+    Assert.AreEqual('Object 2', AObject.Name);
+end;
+
+procedure TFileManagerTests.FilterUntagged;
+var
+  Model: IFileManager;
+  AObject: TO2Object;
+begin
+  Model := TFileManager.Create(nil, nil);
+
+  Model.O2File.Objects.AddObject('Object 1').Tag := 'Tag 1';
+  Model.O2File.Objects.AddObject('Object 2').Tag := 'Tag 1,Tag 2';
+  Model.O2File.Objects.AddObject('Object 3');
+
+  Model.IncludeUntagged := True;
+
+  for AObject in Model.GetObjects do
+    Assert.AreEqual('Object 3', AObject.Name);
 end;
 
 end.
