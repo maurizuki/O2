@@ -39,6 +39,9 @@ type
 
     [Test]
     procedure FilterUntagged;
+
+    [Test]
+    procedure FilterByRule;
   end;
 
 implementation
@@ -222,6 +225,32 @@ begin
 
   for AObject in Model.GetObjects do
     Assert.AreEqual('Object 3', AObject.Name);
+end;
+
+procedure TFileManagerTests.FilterByRule;
+var
+  Model: IFileManager;
+  AObject: TO2Object;
+  ARule: TO2Rule;
+begin
+  Model := TFileManager.Create(nil, nil);
+
+  Model.O2File.Objects.AddObject('Object 1').Fields.AddField('Field 1')
+    .FieldValue := 'No match';
+  Model.O2File.Objects.AddObject('Object 2').Fields.AddField('Field 1')
+    .FieldValue := 'Match';
+  Model.O2File.Objects.AddObject('Object 3');
+
+  ARule := Model.O2File.Rules.AddRule('Rule 1');
+  ARule.Active := True;
+  ARule.RuleType := rtHighlight;
+  ARule.FieldName := '*';
+  ARule.FieldValue := 'match';
+
+  Model.ObjectRules.Add(ARule);
+
+  for AObject in Model.GetObjects do
+    Assert.AreEqual('Object 2', AObject.Name);
 end;
 
 end.
