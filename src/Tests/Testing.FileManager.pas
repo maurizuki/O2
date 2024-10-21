@@ -3,7 +3,7 @@ unit Testing.FileManager;
 interface
 
 uses
-  DUnitX.TestFramework;
+  DUnitX.TestFramework, uO2Rules;
 
 type
   [TestFixture]
@@ -42,12 +42,46 @@ type
 
     [Test]
     procedure FilterByRule;
+
+    { TODO -omaurizuki : Test GetNextEvent }
+
+    { TODO -omaurizuki : Test GetHighlight }
+
+    [Test]
+    [TestCase('None'          , 'rtNone,False')]
+    [TestCase('HyperLink'     , 'rtHyperLink,True')]
+    [TestCase('Email'         , 'rtEmail,True')]
+    [TestCase('Password'      , 'rtPassword,False')]
+    [TestCase('ExpirationDate', 'rtExpirationDate,False')]
+    [TestCase('Recurrence'    , 'rtRecurrence,False')]
+    [TestCase('Highlight'     , 'rtHighlight,False')]
+    procedure IsHyperlinkOrEmail(ARuleType: TO2RuleType; Expected: Boolean);
+
+    [Test]
+    [TestCase('None'          , 'rtNone,False')]
+    [TestCase('HyperLink'     , 'rtHyperLink,True')]
+    [TestCase('Email'         , 'rtEmail,False')]
+    [TestCase('Password'      , 'rtPassword,False')]
+    [TestCase('ExpirationDate', 'rtExpirationDate,False')]
+    [TestCase('Recurrence'    , 'rtRecurrence,False')]
+    [TestCase('Highlight'     , 'rtHighlight,False')]
+    procedure IsHyperlink(ARuleType: TO2RuleType; Expected: Boolean);
+
+    [Test]
+    [TestCase('None'          , 'rtNone,False')]
+    [TestCase('HyperLink'     , 'rtHyperLink,False')]
+    [TestCase('Email'         , 'rtEmail,True')]
+    [TestCase('Password'      , 'rtPassword,False')]
+    [TestCase('ExpirationDate', 'rtExpirationDate,False')]
+    [TestCase('Recurrence'    , 'rtRecurrence,False')]
+    [TestCase('Highlight'     , 'rtHighlight,False')]
+    procedure IsEmail(ARuleType: TO2RuleType; Expected: Boolean);
   end;
 
 implementation
 
 uses
-  SysUtils, uServices, uFileManager, uO2Objects, uO2Rules;
+  SysUtils, uServices, uFileManager, uO2Objects;
 
 { TFileManagerTests }
 
@@ -251,6 +285,67 @@ begin
 
   for AObject in Model.GetObjects do
     Assert.AreEqual('Object 2', AObject.Name);
+end;
+
+procedure TFileManagerTests.IsHyperlinkOrEmail(ARuleType: TO2RuleType;
+  Expected: Boolean);
+var
+  Model: IFileManager;
+begin
+  Model := TFileManager.Create(nil, nil);
+
+  Model.O2File.Objects.AddObject('Object 1').Fields.AddField('Field 1');
+
+  with Model.O2File.Rules.AddRule('Rule 1') do
+  begin
+    Active := True;
+    RuleType := ARuleType;
+    FieldName := '*';
+    FieldValue := '*';
+  end;
+
+  Assert.AreEqual(Expected,
+    Model.IsHyperlinkOrEmail(Model.O2File.Objects[0].Fields[0]));
+end;
+
+procedure TFileManagerTests.IsHyperlink(ARuleType: TO2RuleType;
+  Expected: Boolean);
+var
+  Model: IFileManager;
+begin
+  Model := TFileManager.Create(nil, nil);
+
+  Model.O2File.Objects.AddObject('Object 1').Fields.AddField('Field 1');
+
+  with Model.O2File.Rules.AddRule('Rule 1') do
+  begin
+    Active := True;
+    RuleType := ARuleType;
+    FieldName := '*';
+    FieldValue := '*';
+  end;
+
+  Assert.AreEqual(Expected,
+    Model.IsHyperlink(Model.O2File.Objects[0].Fields[0]));
+end;
+
+procedure TFileManagerTests.IsEmail(ARuleType: TO2RuleType; Expected: Boolean);
+var
+  Model: IFileManager;
+begin
+  Model := TFileManager.Create(nil, nil);
+
+  Model.O2File.Objects.AddObject('Object 1').Fields.AddField('Field 1');
+
+  with Model.O2File.Rules.AddRule('Rule 1') do
+  begin
+    Active := True;
+    RuleType := ARuleType;
+    FieldName := '*';
+    FieldValue := '*';
+  end;
+
+  Assert.AreEqual(Expected, Model.IsEmail(Model.O2File.Objects[0].Fields[0]));
 end;
 
 end.
