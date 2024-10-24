@@ -172,7 +172,7 @@ begin
   FEventFilters := TStringList.Create;
   FEventFilters.AddStrings(EventFilterDescriptions);
 
-  FEventFilter := EventFilterClasses[FEventFilterIndex].Create;
+  FEventFilter := EventFilterClasses[FEventFilterIndex].Create(FDateProvider);
 
   FTags := TStringList.Create;
   FObjectTags := TStringList.Create;
@@ -310,7 +310,7 @@ begin
     FEventFilterIndex := Value;
 
     FEventFilter.Free;
-    FEventFilter := EventFilterClasses[FEventFilterIndex].Create;
+    FEventFilter := EventFilterClasses[FEventFilterIndex].Create(FDateProvider);
   end;
 end;
 

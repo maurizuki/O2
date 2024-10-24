@@ -17,6 +17,9 @@ unit uEventFilters;
 
 interface
 
+uses
+  uO2Rules;
+
 type
   TEventFilter = class
   private
@@ -26,7 +29,7 @@ type
     FStartDate: TDateTime;
     FEndDate: TDateTime;
   public
-    constructor Create; virtual;
+    constructor Create(DateProvider: IDateProvider); virtual;
     property All: Boolean read FAll;
     property UseParams: Boolean read FUseParams;
     property UseParamsForNextEvent: Boolean read FUseParamsForNextEvent;
@@ -37,59 +40,59 @@ type
   TEventFilterClass = class of TEventFilter;
 
   TEventFilterAllEvents = class(TEventFilter)
-    constructor Create; override;
+    constructor Create(DateProvider: IDateProvider); override;
   end;
 
   TEventFilterCustom = class(TEventFilter)
-    constructor Create; override;
+    constructor Create(DateProvider: IDateProvider); override;
   end;
 
   TEventFilterToday = class(TEventFilter)
-    constructor Create; override;
+    constructor Create(DateProvider: IDateProvider); override;
   end;
 
   TEventFilterTomorrow = class(TEventFilter)
-    constructor Create; override;
+    constructor Create(DateProvider: IDateProvider); override;
   end;
 
   TEventFilterThisWeek = class(TEventFilter)
-    constructor Create; override;
+    constructor Create(DateProvider: IDateProvider); override;
   end;
 
   TEventFilterThisMonth = class(TEventFilter)
-    constructor Create; override;
+    constructor Create(DateProvider: IDateProvider); override;
   end;
 
   TEventFilterThisYear = class(TEventFilter)
-    constructor Create; override;
+    constructor Create(DateProvider: IDateProvider); override;
   end;
 
   TEventFilterNext7days = class(TEventFilter)
-    constructor Create; override;
+    constructor Create(DateProvider: IDateProvider); override;
   end;
 
   TEventFilterNext15days = class(TEventFilter)
-    constructor Create; override;
+    constructor Create(DateProvider: IDateProvider); override;
   end;
 
   TEventFilterNext30days = class(TEventFilter)
-    constructor Create; override;
+    constructor Create(DateProvider: IDateProvider); override;
   end;
 
   TEventFilterNext60days = class(TEventFilter)
-    constructor Create; override;
+    constructor Create(DateProvider: IDateProvider); override;
   end;
 
   TEventFilterNext90days = class(TEventFilter)
-    constructor Create; override;
+    constructor Create(DateProvider: IDateProvider); override;
   end;
 
   TEventFilterNext180days = class(TEventFilter)
-    constructor Create; override;
+    constructor Create(DateProvider: IDateProvider); override;
   end;
 
   TEventFilterNext365days = class(TEventFilter)
-    constructor Create; override;
+    constructor Create(DateProvider: IDateProvider); override;
   end;
 
 implementation
@@ -99,7 +102,7 @@ uses
 
 { TEventFilter }
 
-constructor TEventFilter.Create;
+constructor TEventFilter.Create(DateProvider: IDateProvider);
 begin
   FAll := True;
   FUseParamsForNextEvent := True;
@@ -107,7 +110,7 @@ end;
 
 { TEventFilterAllEvents }
 
-constructor TEventFilterAllEvents.Create;
+constructor TEventFilterAllEvents.Create(DateProvider: IDateProvider);
 begin
   FUseParamsForNextEvent := True;
   FStartDate := EncodeDate(1, 1, 1);
@@ -116,7 +119,7 @@ end;
 
 { TEventFilterCustom }
 
-constructor TEventFilterCustom.Create;
+constructor TEventFilterCustom.Create(DateProvider: IDateProvider);
 begin
   FUseParams := True;
   FUseParamsForNextEvent := True;
@@ -124,97 +127,97 @@ end;
 
 { TEventFilterToday }
 
-constructor TEventFilterToday.Create;
+constructor TEventFilterToday.Create(DateProvider: IDateProvider);
 begin
-  FStartDate := Date;
+  FStartDate := DateProvider.GetDate;
   FEndDate := FStartDate;
 end;
 
 { TEventFilterTomorrow }
 
-constructor TEventFilterTomorrow.Create;
+constructor TEventFilterTomorrow.Create(DateProvider: IDateProvider);
 begin
-  FStartDate := Date + 1;
+  FStartDate := DateProvider.GetDate + 1;
   FEndDate := FStartDate;
 end;
 
 { TEventFilterThisWeek }
 
-constructor TEventFilterThisWeek.Create;
+constructor TEventFilterThisWeek.Create(DateProvider: IDateProvider);
 begin
-  FStartDate := StartOfTheWeek(Date);
-  FEndDate := StartOfTheDay(EndOfTheWeek(Date));
+  FStartDate := StartOfTheWeek(DateProvider.GetDate);
+  FEndDate := StartOfTheDay(EndOfTheWeek(DateProvider.GetDate));
 end;
 
 { TEventFilterThisMonth }
 
-constructor TEventFilterThisMonth.Create;
+constructor TEventFilterThisMonth.Create(DateProvider: IDateProvider);
 begin
-  FStartDate := StartOfTheMonth(Date);
-  FEndDate := StartOfTheDay(EndOfTheMonth(Date));
+  FStartDate := StartOfTheMonth(DateProvider.GetDate);
+  FEndDate := StartOfTheDay(EndOfTheMonth(DateProvider.GetDate));
 end;
 
 { TEventFilterThisYear }
 
-constructor TEventFilterThisYear.Create;
+constructor TEventFilterThisYear.Create(DateProvider: IDateProvider);
 begin
-  FStartDate := StartOfTheYear(Date);
-  FEndDate := StartOfTheDay(EndOfTheYear(Date));
+  FStartDate := StartOfTheYear(DateProvider.GetDate);
+  FEndDate := StartOfTheDay(EndOfTheYear(DateProvider.GetDate));
 end;
 
 { TEventFilterNext7days }
 
-constructor TEventFilterNext7days.Create;
+constructor TEventFilterNext7days.Create(DateProvider: IDateProvider);
 begin
-  FStartDate := Date;
+  FStartDate := DateProvider.GetDate;
   FEndDate := FStartDate + 7;
 end;
 
 { TEventFilterNext15days }
 
-constructor TEventFilterNext15days.Create;
+constructor TEventFilterNext15days.Create(DateProvider: IDateProvider);
 begin
-  FStartDate := Date;
+  FStartDate := DateProvider.GetDate;
   FEndDate := FStartDate + 15;
 end;
 
 { TEventFilterNext30days }
 
-constructor TEventFilterNext30days.Create;
+constructor TEventFilterNext30days.Create(DateProvider: IDateProvider);
 begin
-  FStartDate := Date;
+  FStartDate := DateProvider.GetDate;
   FEndDate := FStartDate + 30;
 end;
 
 { TEventFilterNext60days }
 
-constructor TEventFilterNext60days.Create;
+constructor TEventFilterNext60days.Create(DateProvider: IDateProvider);
 begin
-  FStartDate := Date;
+  FStartDate := DateProvider.GetDate;
   FEndDate := FStartDate + 60;
 end;
 
 { TEventFilterNext90days }
 
-constructor TEventFilterNext90days.Create;
+constructor TEventFilterNext90days.Create(DateProvider: IDateProvider);
 begin
-  FStartDate := Date;
+  FStartDate := DateProvider.GetDate;
   FEndDate := FStartDate + 90;
 end;
 
 { TEventFilterNext180days }
 
-constructor TEventFilterNext180days.Create;
+constructor TEventFilterNext180days.Create(DateProvider: IDateProvider);
 begin
-  FStartDate := Date;
+  FStartDate := DateProvider.GetDate;
   FEndDate := FStartDate + 180;
 end;
 
 { TEventFilterNext365days }
 
-constructor TEventFilterNext365days.Create;
+constructor TEventFilterNext365days.Create(DateProvider: IDateProvider);
 begin
-  FStartDate := Date;
+  FStartDate := DateProvider.GetDate;
   FEndDate := FStartDate + 365;
 end;
 

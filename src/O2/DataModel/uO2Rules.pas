@@ -155,7 +155,7 @@ type
 
   TDateProvider = class(TInterfacedObject, IDateProvider)
   public
-    function GetDate: TDateTime;
+    function GetDate: TDateTime; inline;
   end;
 
   IPasswordScoreProvider = interface
