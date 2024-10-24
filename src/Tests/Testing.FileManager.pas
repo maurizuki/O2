@@ -89,7 +89,7 @@ procedure TFileManagerTests.LoadTags;
 var
   Model: IFileManager;
 begin
-  Model := TFileManager.Create(nil, nil);
+  Model := TFileManager.Create(nil, nil, nil);
 
   Model.O2File.Objects.AddObject('Object 1').Tag := 'Tag 1,Tag 2';
   Model.O2File.Objects.AddObject('Object 2').Tag := 'tag 2,Tag 3';
@@ -105,7 +105,7 @@ var
   Model: IFileManager;
   AObject: TO2Object;
 begin
-  Model := TFileManager.Create(nil, nil);
+  Model := TFileManager.Create(nil, nil, nil);
 
   Model.O2File.Objects.AddObject('A matching object');
   Model.O2File.Objects.AddObject('Another object');
@@ -132,7 +132,7 @@ begin
 end;
 
 begin
-  Model := TFileManager.Create(nil, nil);
+  Model := TFileManager.Create(TDateProvider.Create, nil, nil);
 
   Model.O2File.Objects.AddObject('Object 1').Tag := '(All)';
 
@@ -231,7 +231,7 @@ var
   Model: IFileManager;
   AObject: TO2Object;
 begin
-  Model := TFileManager.Create(nil, nil);
+  Model := TFileManager.Create(nil, nil, nil);
 
   Model.O2File.Objects.AddObject('Object 1').Tag := 'Tag 1';
   Model.O2File.Objects.AddObject('Object 2').Tag := 'Tag 1,Tag 2';
@@ -249,7 +249,7 @@ var
   Model: IFileManager;
   AObject: TO2Object;
 begin
-  Model := TFileManager.Create(nil, nil);
+  Model := TFileManager.Create(nil, nil, nil);
 
   Model.O2File.Objects.AddObject('Object 1').Tag := 'Tag 1';
   Model.O2File.Objects.AddObject('Object 2').Tag := 'Tag 1,Tag 2';
@@ -267,7 +267,7 @@ var
   AObject: TO2Object;
   ARule: TO2Rule;
 begin
-  Model := TFileManager.Create(nil, nil);
+  Model := TFileManager.Create(nil, nil, nil);
 
   Model.O2File.Objects.AddObject('Object 1').Fields.AddField('Field 1')
     .FieldValue := 'No match';
@@ -292,7 +292,7 @@ procedure TFileManagerTests.IsHyperlinkOrEmail(ARuleType: TO2RuleType;
 var
   Model: IFileManager;
 begin
-  Model := TFileManager.Create(nil, nil);
+  Model := TFileManager.Create(nil, nil, nil);
 
   Model.O2File.Objects.AddObject('Object 1').Fields.AddField('Field 1');
 
@@ -313,7 +313,7 @@ procedure TFileManagerTests.IsHyperlink(ARuleType: TO2RuleType;
 var
   Model: IFileManager;
 begin
-  Model := TFileManager.Create(nil, nil);
+  Model := TFileManager.Create(nil, nil, nil);
 
   Model.O2File.Objects.AddObject('Object 1').Fields.AddField('Field 1');
 
@@ -333,7 +333,7 @@ procedure TFileManagerTests.IsEmail(ARuleType: TO2RuleType; Expected: Boolean);
 var
   Model: IFileManager;
 begin
-  Model := TFileManager.Create(nil, nil);
+  Model := TFileManager.Create(nil, nil, nil);
 
   Model.O2File.Objects.AddObject('Object 1').Fields.AddField('Field 1');
 

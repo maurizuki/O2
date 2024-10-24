@@ -247,6 +247,11 @@ begin
     .AsSingleton;
 
   ServiceContainer
+    .RegisterType<TDateProvider>
+    .Implements<IDateProvider>
+    .AsSingleton;
+
+  ServiceContainer
     .RegisterType<TPasswordScoreCache>
     .Implements<IPasswordScoreCache>
     .AsSingleton;

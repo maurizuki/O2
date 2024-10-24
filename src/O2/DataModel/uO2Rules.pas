@@ -149,6 +149,15 @@ type
       htPasswordScore: (PasswordScore: Integer);
   end;
 
+  IDateProvider = interface
+    function GetDate: TDateTime;
+  end;
+
+  TDateProvider = class(TInterfacedObject, IDateProvider)
+  public
+    function GetDate: TDateTime;
+  end;
+
   IPasswordScoreProvider = interface
     function TryGetPasswordScore(const Password: string;
       var Score: Integer): Boolean;
@@ -177,8 +186,9 @@ type
 
     function GetFormatSettings: TFormatSettings;
     function GetEventDisplayText(const AField: TO2Field): string;
-    function HasEventInWindow(const AField: TO2Field; StartDate,
-      EndDate: TDateTime; UseParams: Boolean): Boolean; overload;
+    function HasEventInWindow(const AField: TO2Field;
+      DateProvider: IDateProvider; StartDate, EndDate: TDateTime;
+      UseParams: Boolean): Boolean; overload;
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
@@ -190,13 +200,14 @@ type
     function GetDisplayText(const AField: TO2Field;
       ShowPasswords: Boolean): string;
     function GetHyperLink(const AField: TO2Field): string;
-    function HasEventInWindow(const AField: TO2Field): Boolean; overload;
-      inline;
+    function HasEventInWindow(const AField: TO2Field;
+      DateProvider: IDateProvider): Boolean; overload; inline;
     function GetFirstEvent(const AField: TO2Field;
       out FirstDate: TDateTime): Boolean;
     function GetNextEvent(const AField: TO2Field; StartDate: TDateTime;
       out NextDate: TDateTime; UseParams: Boolean = False): Boolean;
     function GetHighlightColors(const AField: TO2Field;
+      DateProvider: IDateProvider;
       PasswordScoreProvider: IPasswordScoreProvider): THighlight;
 
     property DisplayPasswordStrength: Boolean read GetDisplayPasswordStrength;
@@ -229,13 +240,16 @@ type
     function GetDisplayText(const AField: TO2Field;
       ShowPasswords: Boolean): string;
     function GetHyperLink(const AField: TO2Field): string;
-    function HasEventInWindow(const AObject: TO2Object; StartDate,
-      EndDate: TDateTime; UseParams: Boolean): Boolean;
+    function HasEventInWindow(const AObject: TO2Object;
+      DateProvider: IDateProvider; StartDate, EndDate: TDateTime;
+      UseParams: Boolean): Boolean;
     function GetNextEvent(const AObject: TO2Object; StartDate: TDateTime;
       out NextDate: TDateTime; UseParams: Boolean = False): Boolean;
     function GetHighlightColors(const AField: TO2Field;
+      DateProvider: IDateProvider;
       PasswordScoreProvider: IPasswordScoreProvider): THighlight; overload;
     function GetHighlightColors(const AObject: TO2Object;
+      DateProvider: IDateProvider;
       PasswordScoreProvider: IPasswordScoreProvider): THighlight; overload;
   end;
 
@@ -399,6 +413,13 @@ begin
   AParam.ParamValue := Value;
 end;
 
+{ TDateProvider }
+
+function TDateProvider.GetDate: TDateTime;
+begin
+  Result := Date;
+end;
+
 { TO2Rule }
 
 constructor TO2Rule.Create(Collection: TCollection);
@@ -554,10 +575,11 @@ begin
   end;
 end;
 
-function TO2Rule.HasEventInWindow(const AField: TO2Field; StartDate,
-  EndDate: TDateTime; UseParams: Boolean): Boolean;
+function TO2Rule.HasEventInWindow(const AField: TO2Field;
+  DateProvider: IDateProvider; StartDate, EndDate: TDateTime;
+  UseParams: Boolean): Boolean;
 var
-  DateValue, MinDate, MaxDate: TDateTime;
+  ADate, DateValue, MinDate, MaxDate: TDateTime;
 begin
   if not Active or not (RuleType in EventRules) or not Matches(AField)
     or not TryStrToDate(AField.FieldValue, DateValue, GetFormatSettings) then
@@ -565,8 +587,9 @@ begin
 
   if UseParams then
   begin
-    StartDate := Date - Params.ReadInteger(DaysBeforeParam, DefaultDaysBefore);
-    EndDate := Date + Params.ReadInteger(DaysAfterParam, DefaultDaysAfter);
+    ADate := DateProvider.GetDate;
+    StartDate := ADate - Params.ReadInteger(DaysBeforeParam, DefaultDaysBefore);
+    EndDate := ADate + Params.ReadInteger(DaysAfterParam, DefaultDaysAfter);
   end;
 
   case RuleType of
@@ -587,9 +610,10 @@ begin
   end;
 end;
 
-function TO2Rule.HasEventInWindow(const AField: TO2Field): Boolean;
+function TO2Rule.HasEventInWindow(const AField: TO2Field;
+  DateProvider: IDateProvider): Boolean;
 begin
-  Result := HasEventInWindow(AField, 0, 0, True);
+  Result := HasEventInWindow(AField, DateProvider, 0, 0, True);
 end;
 
 function TO2Rule.GetFirstEvent(const AField: TO2Field;
@@ -627,6 +651,7 @@ begin
 end;
 
 function TO2Rule.GetHighlightColors(const AField: TO2Field;
+  DateProvider: IDateProvider;
   PasswordScoreProvider: IPasswordScoreProvider): THighlight;
 var
   PasswordScore: Integer;
@@ -640,7 +665,7 @@ begin
   end
   else
     if Active and (RuleType = rtHighlight) and Matches(AField)
-      or HasEventInWindow(AField, 0, 0, True) then
+      or HasEventInWindow(AField, DateProvider) then
     begin
       Result.Highlight := htCustom;
       Result.Color := Params.ReadInteger(HighlightColorParam,
@@ -806,8 +831,9 @@ begin
     Result := ARule.GetHyperLink(AField);
 end;
 
-function TO2Rules.HasEventInWindow(const AObject: TO2Object; StartDate,
-  EndDate: TDateTime; UseParams: Boolean): Boolean;
+function TO2Rules.HasEventInWindow(const AObject: TO2Object;
+  DateProvider: IDateProvider; StartDate, EndDate: TDateTime;
+  UseParams: Boolean): Boolean;
 var
   AField: TO2Field;
   ARule: TO2Rule;
@@ -815,7 +841,8 @@ begin
   Result := False;
   for AField in AObject.Fields do
     for ARule in Self do
-      if ARule.HasEventInWindow(AField, StartDate, EndDate, UseParams) then
+      if ARule.HasEventInWindow(AField, DateProvider, StartDate, EndDate,
+        UseParams) then
         Exit(True);
 end;
 
@@ -837,6 +864,7 @@ begin
 end;
 
 function TO2Rules.GetHighlightColors(const AField: TO2Field;
+  DateProvider: IDateProvider;
   PasswordScoreProvider: IPasswordScoreProvider): THighlight;
 var
   ARule: TO2Rule;
@@ -844,12 +872,14 @@ begin
   Result.Highlight := htNone;
   for ARule in Self do
   begin
-    Result := ARule.GetHighlightColors(AField, PasswordScoreProvider);
+    Result := ARule.GetHighlightColors(AField, DateProvider,
+      PasswordScoreProvider);
     if Result.Highlight <> htNone then Break;
   end;
 end;
 
 function TO2Rules.GetHighlightColors(const AObject: TO2Object;
+  DateProvider: IDateProvider;
   PasswordScoreProvider: IPasswordScoreProvider): THighlight;
 var
   AHighlight: THighlight;
@@ -863,7 +893,8 @@ begin
     for ARule in Self do
       if ARule.Index < RuleIndex then
       begin
-        AHighlight := ARule.GetHighlightColors(AField, PasswordScoreProvider);
+        AHighlight := ARule.GetHighlightColors(AField, DateProvider,
+          PasswordScoreProvider);
         if AHighlight.Highlight <> htNone then
         begin
           Result := AHighlight;

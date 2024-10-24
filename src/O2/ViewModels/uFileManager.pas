@@ -24,6 +24,7 @@ uses
 type
   TFileManager = class(TInterfacedObject, IFileManager)
   private
+    FDateProvider: IDateProvider;
     FPasswordProvider: IPasswordProvider;
     FPasswordScoreCache: IPasswordScoreCache;
 
@@ -50,7 +51,8 @@ type
     procedure SetObjectTags(const Value: TStrings);
     procedure SetIncludeUntagged(const Value: Boolean);
   public
-    constructor Create(PasswordProvider: IPasswordProvider; 
+    constructor Create(DateProvider: IDateProvider;
+      PasswordProvider: IPasswordProvider;
       PasswordScoreCache: IPasswordScoreCache);
     destructor Destroy; override;
 
@@ -159,9 +161,11 @@ const
 
 { TFileManager }
 
-constructor TFileManager.Create(PasswordProvider: IPasswordProvider; 
+constructor TFileManager.Create(DateProvider: IDateProvider;
+  PasswordProvider: IPasswordProvider;
   PasswordScoreCache: IPasswordScoreCache);
 begin
+  FDateProvider := DateProvider;
   FPasswordProvider := PasswordProvider;
   FPasswordScoreCache := PasswordScoreCache;
 
@@ -204,12 +208,14 @@ end;
 
 function TFileManager.GetHighlight(const AObject: TO2Object): THighlight;
 begin
-  Result := O2File.Rules.GetHighlightColors(AObject, FPasswordScoreCache);
+  Result := O2File.Rules.GetHighlightColors(AObject, FDateProvider,
+    FPasswordScoreCache);
 end;
 
 function TFileManager.GetHighlight(const AField: TO2Field): THighlight;
 begin
-  Result := O2File.Rules.GetHighlightColors(AField, FPasswordScoreCache);
+  Result := O2File.Rules.GetHighlightColors(AField, FDateProvider,
+    FPasswordScoreCache);
 end;
 
 function TFileManager.GetIncludeUntagged: Boolean;
@@ -374,7 +380,7 @@ function TO2ObjectFilteredEnumerator.CheckEvents: Boolean;
 begin
   Result := FFileManager.EventFilter.All
     or FFileManager.O2File.Rules.HasEventInWindow(
-      FFileManager.O2File.Objects[FIndex],
+      FFileManager.O2File.Objects[FIndex], FFileManager.FDateProvider,
       FFileManager.EventFilter.StartDate, FFileManager.EventFilter.EndDate,
       FFileManager.EventFilter.UseParams);
 end;
@@ -385,11 +391,12 @@ var
   ARule: TO2Rule;
 begin
   if FFileManager.ObjectRules.Count = 0 then Exit(True);
-  
+
   for ARule in FFileManager.ObjectRules do
     for AField in FFileManager.O2File.Objects[FIndex].Fields do
       if ARule.Active and not (ARule.RuleType in EventRules)
-        and ARule.Matches(AField) or ARule.HasEventInWindow(AField) then
+        and ARule.Matches(AField)
+        or ARule.HasEventInWindow(AField, FFileManager.FDateProvider) then
         Exit(True);
 
   Result := False;
