@@ -1581,8 +1581,7 @@ begin
     Result := FieldsView.Items.Add;
   Result.Caption := AField.FieldName;
   Result.SubItems.Clear;
-  Result.SubItems.Add(FModel.O2File.Rules.GetDisplayText(
-    AField, FShowPasswords));
+  Result.SubItems.Add(FModel.GetDisplayText(AField, FShowPasswords));
   Result.Data := AField;
 end;
 

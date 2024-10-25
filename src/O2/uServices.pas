@@ -95,6 +95,8 @@ type
       out NextDate: TDateTime): Boolean;
     function GetHighlight(const AObject: TO2Object): THighlight; overload;
     function GetHighlight(const AField: TO2Field): THighlight; overload;
+    function GetDisplayText(const AField: TO2Field;
+      ShowPasswords: Boolean): string;
     function IsHyperlinkOrEmail(const AField: TO2Field): Boolean;
     function IsHyperlink(const AField: TO2Field): Boolean;
     function IsEmail(const AField: TO2Field): Boolean;

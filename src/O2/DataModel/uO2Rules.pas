@@ -185,7 +185,8 @@ type
     procedure SetActive(const Value: Boolean);
 
     function GetFormatSettings: TFormatSettings;
-    function GetEventDisplayText(const AField: TO2Field): string;
+    function GetEventDisplayText(const AField: TO2Field;
+      DateProvider: IDateProvider): string;
     function HasEventInWindow(const AField: TO2Field;
       DateProvider: IDateProvider; StartDate, EndDate: TDateTime;
       UseParams: Boolean): Boolean; overload;
@@ -197,15 +198,16 @@ type
 
     function Matches(const AFieldName, AFieldValue: string): Boolean; overload;
     function Matches(const AField: TO2Field): Boolean; overload; inline;
-    function GetDisplayText(const AField: TO2Field;
+    function GetDisplayText(const AField: TO2Field; DateProvider: IDateProvider;
       ShowPasswords: Boolean): string;
     function GetHyperLink(const AField: TO2Field): string;
     function HasEventInWindow(const AField: TO2Field;
       DateProvider: IDateProvider): Boolean; overload; inline;
     function GetFirstEvent(const AField: TO2Field;
       out FirstDate: TDateTime): Boolean;
-    function GetNextEvent(const AField: TO2Field; StartDate: TDateTime;
-      out NextDate: TDateTime; UseParams: Boolean = False): Boolean;
+    function GetNextEvent(const AField: TO2Field; DateProvider: IDateProvider;
+      StartDate: TDateTime; out NextDate: TDateTime;
+      UseParams: Boolean = False): Boolean;
     function GetHighlightColors(const AField: TO2Field;
       DateProvider: IDateProvider;
       PasswordScoreProvider: IPasswordScoreProvider): THighlight;
@@ -237,14 +239,15 @@ type
       RuleTypes: TO2RuleTypes): TO2Rule;
     function AddRule(const Name: string): TO2Rule;
 
-    function GetDisplayText(const AField: TO2Field;
+    function GetDisplayText(const AField: TO2Field; DateProvider: IDateProvider;
       ShowPasswords: Boolean): string;
     function GetHyperLink(const AField: TO2Field): string;
     function HasEventInWindow(const AObject: TO2Object;
       DateProvider: IDateProvider; StartDate, EndDate: TDateTime;
       UseParams: Boolean): Boolean;
-    function GetNextEvent(const AObject: TO2Object; StartDate: TDateTime;
-      out NextDate: TDateTime; UseParams: Boolean = False): Boolean;
+    function GetNextEvent(const AObject: TO2Object; DateProvider: IDateProvider;
+      StartDate: TDateTime; out NextDate: TDateTime;
+      UseParams: Boolean = False): Boolean;
     function GetHighlightColors(const AField: TO2Field;
       DateProvider: IDateProvider;
       PasswordScoreProvider: IPasswordScoreProvider): THighlight; overload;
@@ -473,21 +476,23 @@ begin
   Result := Matches(AField.FieldName, AField.FieldValue);
 end;
 
-function TO2Rule.GetEventDisplayText(const AField: TO2Field): string;
+function TO2Rule.GetEventDisplayText(const AField: TO2Field;
+  DateProvider: IDateProvider): string;
 var
   MacroProcessor: TMacroProcessor;
   Years, MonthsOfYear, DaysOfMonth: Word;
   Months, Days: Integer;
-  ADate: TDateTime;
+  ADate, EventDate: TDateTime;
   AMask: string;
 begin
-  if TryStrToDate(AField.FieldValue, ADate, GetFormatSettings)
-    and ((RuleType = rtExpirationDate) and (ADate >= Date)
-    or (RuleType = rtRecurrence) and (ADate <= Date)) then
+  ADate := DateProvider.GetDate;
+  if TryStrToDate(AField.FieldValue, EventDate, GetFormatSettings)
+    and ((RuleType = rtExpirationDate) and (EventDate >= ADate)
+    or (RuleType = rtRecurrence) and (EventDate <= ADate)) then
   begin
-    DateSpan(Date, ADate, Years, MonthsOfYear, DaysOfMonth);
-    Months := MonthsBetween(Date, ADate);
-    Days := DaysBetween(Date, ADate);
+    DateSpan(ADate, EventDate, Years, MonthsOfYear, DaysOfMonth);
+    Months := MonthsBetween(ADate, EventDate);
+    Days := DaysBetween(ADate, EventDate);
 
     if Params.Values[DisplayMaskParam] <> '' then
       AMask := Params.Values[DisplayMaskParam]
@@ -526,7 +531,7 @@ begin
 end;
 
 function TO2Rule.GetDisplayText(const AField: TO2Field;
-  ShowPasswords: Boolean): string;
+  DateProvider: IDateProvider; ShowPasswords: Boolean): string;
 begin
   case RuleType of
     rtPassword:
@@ -535,7 +540,7 @@ begin
       else
         Result := StringOfChar(PasswordChar, Length(AField.FieldValue));
     rtExpirationDate, rtRecurrence:
-      Result := GetEventDisplayText(AField);
+      Result := GetEventDisplayText(AField, DateProvider);
     else
       Result := AField.FieldValue;
   end;
@@ -623,8 +628,9 @@ begin
     and TryStrToDate(AField.FieldValue, FirstDate, GetFormatSettings);
 end;
 
-function TO2Rule.GetNextEvent(const AField: TO2Field; StartDate: TDateTime;
-  out NextDate: TDateTime; UseParams: Boolean): Boolean;
+function TO2Rule.GetNextEvent(const AField: TO2Field;
+  DateProvider: IDateProvider; StartDate: TDateTime; out NextDate: TDateTime;
+  UseParams: Boolean): Boolean;
 var
   FirstDate: TDateTime;
 begin
@@ -637,7 +643,7 @@ begin
     rtRecurrence:
     begin
       if UseParams then
-        StartDate := Date - Params.ReadInteger(DaysBeforeParam,
+        StartDate := DateProvider.GetDate - Params.ReadInteger(DaysBeforeParam,
           DefaultDaysBefore);
 
       NextDate := SafeRecodeYear(FirstDate, YearOf(StartDate));
@@ -808,7 +814,7 @@ begin
 end;
 
 function TO2Rules.GetDisplayText(const AField: TO2Field;
-  ShowPasswords: Boolean): string;
+  DateProvider: IDateProvider; ShowPasswords: Boolean): string;
 var
   ARule: TO2Rule;
 begin
@@ -816,7 +822,7 @@ begin
   for ARule in Self do
     if ARule.Active and ARule.Matches(AField) then
     begin
-      Result := ARule.GetDisplayText(AField, ShowPasswords);
+      Result := ARule.GetDisplayText(AField, DateProvider, ShowPasswords);
       if Result <> AField.FieldValue then Break;
     end;
 end;
@@ -846,8 +852,9 @@ begin
         Exit(True);
 end;
 
-function TO2Rules.GetNextEvent(const AObject: TO2Object; StartDate: TDateTime;
-  out NextDate: TDateTime; UseParams: Boolean): Boolean;
+function TO2Rules.GetNextEvent(const AObject: TO2Object;
+  DateProvider: IDateProvider; StartDate: TDateTime; out NextDate: TDateTime;
+  UseParams: Boolean): Boolean;
 var
   ANextDate: TDateTime;
   AField: TO2Field;
@@ -856,7 +863,8 @@ begin
   Result := False;
   for AField in AObject.Fields do
     for ARule in Self do
-      if ARule.GetNextEvent(AField, StartDate, ANextDate, UseParams) then
+      if ARule.GetNextEvent(AField, DateProvider, StartDate, ANextDate,
+        UseParams) then
       begin
         if not Result or (ANextDate < NextDate) then NextDate := ANextDate;
         Result := True;

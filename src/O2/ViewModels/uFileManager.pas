@@ -66,6 +66,8 @@ type
       out NextDate: TDateTime): Boolean;
     function GetHighlight(const AObject: TO2Object): THighlight; overload;
     function GetHighlight(const AField: TO2Field): THighlight; overload;
+    function GetDisplayText(const AField: TO2Field;
+      ShowPasswords: Boolean): string;
     function IsHyperlinkOrEmail(const AField: TO2Field): Boolean;
     function IsHyperlink(const AField: TO2Field): Boolean;
     function IsEmail(const AField: TO2Field): Boolean;
@@ -218,6 +220,12 @@ begin
     FPasswordScoreCache);
 end;
 
+function TFileManager.GetDisplayText(const AField: TO2Field;
+  ShowPasswords: Boolean): string;
+begin
+  Result := O2File.Rules.GetDisplayText(AField, FDateProvider, ShowPasswords);
+end;
+
 function TFileManager.GetIncludeUntagged: Boolean;
 begin
   Result := FIncludeUntagged;
@@ -226,8 +234,8 @@ end;
 function TFileManager.GetNextEvent(const AObject: TO2Object;
   out NextDate: TDateTime): Boolean;
 begin
-  Result := O2File.Rules.GetNextEvent(AObject, FEventFilter.StartDate, NextDate,
-    FEventFilter.UseParamsForNextEvent);
+  Result := O2File.Rules.GetNextEvent(AObject, FDateProvider,
+    FEventFilter.StartDate, NextDate, FEventFilter.UseParamsForNextEvent);
 end;
 
 function TFileManager.GetObjectName: string;
