@@ -16,23 +16,27 @@ type
     procedure FilterByName;
 
     [Test]
-    [TestCase('All'        , '0,12,All')]
-    [TestCase('AllEvents'  , '1,11,AllEvents')]
-    [TestCase('Custom'     , '2,2,Custom')]
-    [TestCase('Today'      , '3,1,Today')]
-    [TestCase('Tomorrow'   , '4,1,Tomorrow')]
-    { TODO -omaurizuki : TestCase ThisWeek }
-    { TODO -omaurizuki : TestCase ThisMonth }
-    { TODO -omaurizuki : TestCase ThisYear }
-    [TestCase('Next7days'  , '8,3,Next7days')]
-    [TestCase('Next15days' , '9,4,Next15days')]
-    [TestCase('Next30days' , '10,5,Next30days')]
-    [TestCase('Next60days' , '11,6,Next60days')]
-    [TestCase('Next90days' , '12,7,Next90days')]
-    [TestCase('Next180days', '13,8,Next180days')]
-    [TestCase('Next365days', '14,9,Next365days')]
-    procedure FilterByEvent(EventFilterIndex, Count: Integer;
-      const Tag: string);
+    [TestCase('All'            , '0,2000,1,1,0,0,')]
+    [TestCase('AllEvents'      , '1,2000,1,1,0,0,2000-01-01')]
+    [TestCase('Custom.Start'   , '2,2000,1,15,5,0,2000-01-10')]
+    [TestCase('Custom.End'     , '2,2000,1,15,0,5,2000-01-20')]
+    [TestCase('Today'          , '3,2000,1,1,0,0,2000-01-01')]
+    [TestCase('Tomorrow'       , '4,2000,1,1,0,0,2000-01-02')]
+    [TestCase('ThisWeek.Start' , '5,2000,1,9,0,0,2000-01-03')]
+    [TestCase('ThisWeek.End'   , '5,2000,1,10,0,0,2000-01-16')]
+    [TestCase('ThisMonth.Start', '6,2000,1,31,0,0,2000-01-01')]
+    [TestCase('ThisMonth.End'  , '6,2000,2,1,0,0,2000-02-29')]
+    [TestCase('ThisYear.Start' , '7,2000,12,31,0,0,2000-01-01')]
+    [TestCase('ThisYear.End'   , '7,2001,1,1,0,0,2001-12-31')]
+    [TestCase('Next7days'      , '8,2000,1,1,0,0,2000-01-07')]
+    [TestCase('Next15days'     , '9,2000,1,1,0,0,2000-01-15')]
+    [TestCase('Next30days'     , '10,2000,1,1,0,0,2000-01-30')]
+    [TestCase('Next60days'     , '11,2000,1,1,0,0,2000-03-01')]
+    [TestCase('Next90days'     , '12,2000,1,1,0,0,2000-03-31')]
+    [TestCase('Next180days'    , '13,2000,1,1,0,0,2000-06-29')]
+    [TestCase('Next365days'    , '14,2000,1,1,0,0,2000-12-31')]
+    procedure FilterByEvent(EventFilterIndex, AYear, AMonth, ADay: Integer;
+      const DaysBefore, DaysAfter, FieldValue: string);
 
     [Test]
     procedure FilterByTag;
@@ -78,10 +82,18 @@ type
     procedure IsEmail(ARuleType: TO2RuleType; Expected: Boolean);
   end;
 
+  TCustomDateProvider = class(TInterfacedObject, IDateProvider)
+  private
+    FDate: TDateTime;
+  public
+    constructor Create(ADate: TDateTime);
+    function GetDate: TDateTime;
+  end;
+
 implementation
 
 uses
-  SysUtils, uServices, uFileManager, uO2Objects;
+  SysUtils, DateUtils, uServices, uFileManager, uO2Objects;
 
 { TFileManagerTests }
 
@@ -116,91 +128,17 @@ begin
     Assert.AreEqual('A matching object', AObject.Name);
 end;
 
-procedure TFileManagerTests.FilterByEvent(EventFilterIndex, Count: Integer;
-  const Tag: string);
+procedure TFileManagerTests.FilterByEvent(EventFilterIndex, AYear, AMonth,
+  ADay: Integer; const DaysBefore, DaysAfter, FieldValue: string);
 var
   Model: IFileManager;
   AObject: TO2Object;
-  ActualCount: Integer;
-
-function ToStr(ADate: TDate): string;
-var
-  Year, Month, Day: Word;
 begin
-  DecodeDate(ADate, Year, Month, Day);
-  Result := Format('%.4d-%.2d-%.2d', [Year, Month, Day]);
-end;
+  Model := TFileManager.Create(TCustomDateProvider.Create(EncodeDate(AYear,
+    AMonth, ADay)), nil, nil);
 
-begin
-  Model := TFileManager.Create(TDateProvider.Create, nil, nil);
-
-  Model.O2File.Objects.AddObject('Object 1').Tag := '(All)';
-
-  with Model.O2File.Objects.AddObject('Object 2') do
-  begin
-    Tag := '(All),(AllEvents)';
-    Fields.AddField('Field 1').FieldValue := '1970-01-01';
-  end;
-
-  with Model.O2File.Objects.AddObject('Object 3') do
-  begin
-    Tag := '(All),(AllEvents),(Custom)';
-    Fields.AddField('Field 1').FieldValue := ToStr(Date - 10);
-  end;
-
-  with Model.O2File.Objects.AddObject('Object 4') do
-  begin
-    Tag := '(All),(AllEvents),(Custom),(Today),(Next7days),(Next15days),(Next30days),(Next60days),(Next90days),(Next180days),(Next365days)';
-    Fields.AddField('Field 1').FieldValue := ToStr(Date);
-  end;
-
-  with Model.O2File.Objects.AddObject('Object 5') do
-  begin
-    Tag := '(All),(AllEvents),(Tomorrow),(Next7days),(Next15days),(Next30days),(Next60days),(Next90days),(Next180days),(Next365days)';
-    Fields.AddField('Field 1').FieldValue := ToStr(Date + 1);
-  end;
-
-  with Model.O2File.Objects.AddObject('Object 6') do
-  begin
-    Tag := '(All),(AllEvents),(Next7days),(Next15days),(Next30days),(Next60days),(Next90days),(Next180days),(Next365days)';
-    Fields.AddField('Field 1').FieldValue := ToStr(Date + 7);
-  end;
-
-  with Model.O2File.Objects.AddObject('Object 7') do
-  begin
-    Tag := '(All),(AllEvents),(Next15days),(Next30days),(Next60days),(Next90days),(Next180days),(Next365days)';
-    Fields.AddField('Field 1').FieldValue := ToStr(Date + 15);
-  end;
-
-  with Model.O2File.Objects.AddObject('Object 8') do
-  begin
-    Tag := '(All),(AllEvents),(Next30days),(Next60days),(Next90days),(Next180days),(Next365days)';
-    Fields.AddField('Field 1').FieldValue := ToStr(Date + 30);
-  end;
-
-  with Model.O2File.Objects.AddObject('Object 9') do
-  begin
-    Tag := '(All),(AllEvents),(Next60days),(Next90days),(Next180days),(Next365days)';
-    Fields.AddField('Field 1').FieldValue := ToStr(Date + 60);
-  end;
-
-  with Model.O2File.Objects.AddObject('Object 10') do
-  begin
-    Tag := '(All),(AllEvents),(Next90days),(Next180days),(Next365days)';
-    Fields.AddField('Field 1').FieldValue := ToStr(Date + 90);
-  end;
-
-  with Model.O2File.Objects.AddObject('Object 11') do
-  begin
-    Tag := '(All),(AllEvents),(Next180days),(Next365days)';
-    Fields.AddField('Field 1').FieldValue := ToStr(Date + 180);
-  end;
-
-  with Model.O2File.Objects.AddObject('Object 12') do
-  begin
-    Tag := '(All),(AllEvents),(Next365days)';
-    Fields.AddField('Field 1').FieldValue := ToStr(Date + 365);
-  end;
+  Model.O2File.Objects.AddObject('Object 1').Fields.AddField('Field 1')
+    .FieldValue := FieldValue;
 
   with Model.O2File.Rules.AddRule('Rule 1') do
   begin
@@ -210,20 +148,14 @@ begin
     FieldValue := '*';
     Params.AddParam(DateSeparatorParam).ParamValue := '-';
     Params.AddParam(ShortDateFormatParam).ParamValue := 'yyyy/mm/dd';
-    Params.AddParam(DaysBeforeParam).ParamValue := '10';
-    Params.AddParam(DaysAfterParam).ParamValue := '0';
+    Params.AddParam(DaysBeforeParam).ParamValue := DaysBefore;
+    Params.AddParam(DaysAfterParam).ParamValue := DaysAfter;
   end;
 
   Model.EventFilterIndex := EventFilterIndex;
 
-  ActualCount := 0;
   for AObject in Model.GetObjects do
-  begin
-    Assert.Contains(AObject.Tag, '(' + Tag + ')', 'Object: ' + AObject.Name);
-    Inc(ActualCount);
-  end;
-
-  Assert.AreEqual(Count, ActualCount);
+    Assert.AreEqual('Object 1', AObject.Name);
 end;
 
 procedure TFileManagerTests.FilterByTag;
@@ -346,6 +278,18 @@ begin
   end;
 
   Assert.AreEqual(Expected, Model.IsEmail(Model.O2File.Objects[0].Fields[0]));
+end;
+
+{ TCustomDateProvider }
+
+constructor TCustomDateProvider.Create(ADate: TDateTime);
+begin
+  FDate := ADate;
+end;
+
+function TCustomDateProvider.GetDate: TDateTime;
+begin
+  Result := FDate;
 end;
 
 end.
