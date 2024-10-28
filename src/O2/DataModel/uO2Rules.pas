@@ -187,9 +187,6 @@ type
     function GetFormatSettings: TFormatSettings;
     function GetEventDisplayText(const AField: TO2Field;
       DateProvider: IDateProvider): string;
-    function HasEventInWindow(const AField: TO2Field;
-      DateProvider: IDateProvider; StartDate, EndDate: TDateTime;
-      UseParams: Boolean): Boolean; overload;
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
@@ -201,6 +198,9 @@ type
     function GetDisplayText(const AField: TO2Field; DateProvider: IDateProvider;
       ShowPasswords: Boolean): string;
     function GetHyperLink(const AField: TO2Field): string;
+    function HasEventInWindow(const AField: TO2Field;
+      DateProvider: IDateProvider; StartDate, EndDate: TDateTime;
+      UseParams: Boolean): Boolean; overload;
     function HasEventInWindow(const AField: TO2Field;
       DateProvider: IDateProvider): Boolean; overload; inline;
     function GetFirstEvent(const AField: TO2Field;
@@ -238,22 +238,6 @@ type
     function FindFirstRule(const AField: TO2Field;
       RuleTypes: TO2RuleTypes): TO2Rule;
     function AddRule(const Name: string): TO2Rule;
-
-    function GetDisplayText(const AField: TO2Field; DateProvider: IDateProvider;
-      ShowPasswords: Boolean): string;
-    function GetHyperLink(const AField: TO2Field): string;
-    function HasEventInWindow(const AObject: TO2Object;
-      DateProvider: IDateProvider; StartDate, EndDate: TDateTime;
-      UseParams: Boolean): Boolean;
-    function GetNextEvent(const AObject: TO2Object; DateProvider: IDateProvider;
-      StartDate: TDateTime; out NextDate: TDateTime;
-      UseParams: Boolean = False): Boolean;
-    function GetHighlightColors(const AField: TO2Field;
-      DateProvider: IDateProvider;
-      PasswordScoreProvider: IPasswordScoreProvider): THighlight; overload;
-    function GetHighlightColors(const AObject: TO2Object;
-      DateProvider: IDateProvider;
-      PasswordScoreProvider: IPasswordScoreProvider): THighlight; overload;
   end;
 
 implementation
@@ -811,104 +795,6 @@ begin
     Delete(Result.Index);
     raise;
   end;
-end;
-
-function TO2Rules.GetDisplayText(const AField: TO2Field;
-  DateProvider: IDateProvider; ShowPasswords: Boolean): string;
-var
-  ARule: TO2Rule;
-begin
-  Result := AField.FieldValue;
-  for ARule in Self do
-    if ARule.Active and ARule.Matches(AField) then
-    begin
-      Result := ARule.GetDisplayText(AField, DateProvider, ShowPasswords);
-      if Result <> AField.FieldValue then Break;
-    end;
-end;
-
-function TO2Rules.GetHyperLink(const AField: TO2Field): string;
-var
-  ARule: TO2Rule;
-begin
-  Result := AField.FieldValue;
-  ARule := FindFirstRule(AField, [rtHyperLink]);
-  if Assigned(ARule) then
-    Result := ARule.GetHyperLink(AField);
-end;
-
-function TO2Rules.HasEventInWindow(const AObject: TO2Object;
-  DateProvider: IDateProvider; StartDate, EndDate: TDateTime;
-  UseParams: Boolean): Boolean;
-var
-  AField: TO2Field;
-  ARule: TO2Rule;
-begin
-  Result := False;
-  for AField in AObject.Fields do
-    for ARule in Self do
-      if ARule.HasEventInWindow(AField, DateProvider, StartDate, EndDate,
-        UseParams) then
-        Exit(True);
-end;
-
-function TO2Rules.GetNextEvent(const AObject: TO2Object;
-  DateProvider: IDateProvider; StartDate: TDateTime; out NextDate: TDateTime;
-  UseParams: Boolean): Boolean;
-var
-  ANextDate: TDateTime;
-  AField: TO2Field;
-  ARule: TO2Rule;
-begin
-  Result := False;
-  for AField in AObject.Fields do
-    for ARule in Self do
-      if ARule.GetNextEvent(AField, DateProvider, StartDate, ANextDate,
-        UseParams) then
-      begin
-        if not Result or (ANextDate < NextDate) then NextDate := ANextDate;
-        Result := True;
-      end;
-end;
-
-function TO2Rules.GetHighlightColors(const AField: TO2Field;
-  DateProvider: IDateProvider;
-  PasswordScoreProvider: IPasswordScoreProvider): THighlight;
-var
-  ARule: TO2Rule;
-begin
-  Result.Highlight := htNone;
-  for ARule in Self do
-  begin
-    Result := ARule.GetHighlightColors(AField, DateProvider,
-      PasswordScoreProvider);
-    if Result.Highlight <> htNone then Break;
-  end;
-end;
-
-function TO2Rules.GetHighlightColors(const AObject: TO2Object;
-  DateProvider: IDateProvider;
-  PasswordScoreProvider: IPasswordScoreProvider): THighlight;
-var
-  AHighlight: THighlight;
-  RuleIndex: Integer;
-  AField: TO2Field;
-  ARule: TO2Rule;
-begin
-  Result.Highlight := htNone;
-  RuleIndex := Count;
-  for AField in AObject.Fields do
-    for ARule in Self do
-      if ARule.Index < RuleIndex then
-      begin
-        AHighlight := ARule.GetHighlightColors(AField, DateProvider,
-          PasswordScoreProvider);
-        if AHighlight.Highlight <> htNone then
-        begin
-          Result := AHighlight;
-          RuleIndex := ARule.Index;
-        end;
-      end;
 end;
 
 end.

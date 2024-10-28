@@ -2364,7 +2364,7 @@ end;
 
 procedure TMainForm.OpenLinkExecute(Sender: TObject);
 begin
-  ShellOpen(FModel.O2File.Rules.GetHyperLink(SelectedField));
+  ShellOpen(FModel.GetHyperLink(SelectedField));
 end;
 
 procedure TMainForm.OpenLinkUpdate(Sender: TObject);

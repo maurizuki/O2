@@ -97,6 +97,7 @@ type
     function GetHighlight(const AField: TO2Field): THighlight; overload;
     function GetDisplayText(const AField: TO2Field;
       ShowPasswords: Boolean): string;
+    function GetHyperLink(const AField: TO2Field): string;
     function IsHyperlinkOrEmail(const AField: TO2Field): Boolean;
     function IsHyperlink(const AField: TO2Field): Boolean;
     function IsEmail(const AField: TO2Field): Boolean;

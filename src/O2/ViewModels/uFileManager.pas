@@ -68,6 +68,7 @@ type
     function GetHighlight(const AField: TO2Field): THighlight; overload;
     function GetDisplayText(const AField: TO2Field;
       ShowPasswords: Boolean): string;
+    function GetHyperLink(const AField: TO2Field): string;
     function IsHyperlinkOrEmail(const AField: TO2Field): Boolean;
     function IsHyperlink(const AField: TO2Field): Boolean;
     function IsEmail(const AField: TO2Field): Boolean;
@@ -209,21 +210,62 @@ begin
 end;
 
 function TFileManager.GetHighlight(const AObject: TO2Object): THighlight;
+var
+  AHighlight: THighlight;
+  RuleIndex: Integer;
+  AField: TO2Field;
+  ARule: TO2Rule;
 begin
-  Result := O2File.Rules.GetHighlightColors(AObject, FDateProvider,
-    FPasswordScoreCache);
+  Result.Highlight := htNone;
+  RuleIndex := O2File.Rules.Count;
+  for AField in AObject.Fields do
+    for ARule in O2File.Rules do
+      if ARule.Index < RuleIndex then
+      begin
+        AHighlight := ARule.GetHighlightColors(AField, FDateProvider,
+          FPasswordScoreCache);
+        if AHighlight.Highlight <> htNone then
+        begin
+          Result := AHighlight;
+          RuleIndex := ARule.Index;
+        end;
+      end;
 end;
 
 function TFileManager.GetHighlight(const AField: TO2Field): THighlight;
+var
+  ARule: TO2Rule;
 begin
-  Result := O2File.Rules.GetHighlightColors(AField, FDateProvider,
-    FPasswordScoreCache);
+  Result.Highlight := htNone;
+  for ARule in O2File.Rules do
+  begin
+    Result := ARule.GetHighlightColors(AField, FDateProvider,
+      FPasswordScoreCache);
+    if Result.Highlight <> htNone then Break;
+  end;
 end;
 
 function TFileManager.GetDisplayText(const AField: TO2Field;
   ShowPasswords: Boolean): string;
+var
+  ARule: TO2Rule;
 begin
-  Result := O2File.Rules.GetDisplayText(AField, FDateProvider, ShowPasswords);
+  Result := AField.FieldValue;
+  for ARule in O2File.Rules do
+    if ARule.Active and ARule.Matches(AField) then
+    begin
+      Result := ARule.GetDisplayText(AField, FDateProvider, ShowPasswords);
+      if Result <> AField.FieldValue then Break;
+    end;
+end;
+
+function TFileManager.GetHyperLink(const AField: TO2Field): string;
+var
+  ARule: TO2Rule;
+begin
+  Result := AField.FieldValue;
+  ARule := O2File.Rules.FindFirstRule(AField, [rtHyperLink]);
+  if Assigned(ARule) then Result := ARule.GetHyperLink(AField);
 end;
 
 function TFileManager.GetIncludeUntagged: Boolean;
@@ -233,9 +275,20 @@ end;
 
 function TFileManager.GetNextEvent(const AObject: TO2Object;
   out NextDate: TDateTime): Boolean;
+var
+  ANextDate: TDateTime;
+  AField: TO2Field;
+  ARule: TO2Rule;
 begin
-  Result := O2File.Rules.GetNextEvent(AObject, FDateProvider,
-    FEventFilter.StartDate, NextDate, FEventFilter.UseParamsForNextEvent);
+  Result := False;
+  for AField in AObject.Fields do
+    for ARule in O2File.Rules do
+      if ARule.GetNextEvent(AField, FDateProvider, FEventFilter.StartDate,
+        ANextDate, FEventFilter.UseParamsForNextEvent) then
+      begin
+        if not Result or (ANextDate < NextDate) then NextDate := ANextDate;
+        Result := True;
+      end;
 end;
 
 function TFileManager.GetObjectName: string;
@@ -385,12 +438,21 @@ begin
 end;
 
 function TO2ObjectFilteredEnumerator.CheckEvents: Boolean;
+var
+  AField: TO2Field;
+  ARule: TO2Rule;
 begin
-  Result := FFileManager.EventFilter.All
-    or FFileManager.O2File.Rules.HasEventInWindow(
-      FFileManager.O2File.Objects[FIndex], FFileManager.FDateProvider,
-      FFileManager.EventFilter.StartDate, FFileManager.EventFilter.EndDate,
-      FFileManager.EventFilter.UseParams);
+  if FFileManager.EventFilter.All then Exit(True);
+
+  for AField in FFileManager.O2File.Objects[FIndex].Fields do
+    for ARule in FFileManager.O2File.Rules do
+      if ARule.HasEventInWindow(AField, FFileManager.FDateProvider,
+        FFileManager.EventFilter.StartDate,
+        FFileManager.EventFilter.EndDate,
+        FFileManager.EventFilter.UseParams) then
+        Exit(True);
+
+  Result := False;
 end;
 
 function TO2ObjectFilteredEnumerator.CheckRules: Boolean;
