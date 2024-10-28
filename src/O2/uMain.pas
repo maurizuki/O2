@@ -619,17 +619,10 @@ uses
 
 procedure SetHighlightColors(const Canvas: TCanvas; Highlight: THighlight);
 begin
-  case Highlight.Highlight of
-    htCustom:
-    begin
-      Canvas.Brush.Color := Highlight.Color;
-      Canvas.Font.Color := Highlight.TextColor;
-    end;
-    htPasswordScore:
-    begin
-      Canvas.Brush.Color := PasswordScoreColors[Highlight.PasswordScore];
-      Canvas.Font.Color := clBlack;
-    end;
+  if Highlight.Color <> clNone then
+  begin
+    Canvas.Brush.Color := Highlight.Color;
+    Canvas.Font.Color := Highlight.TextColor;
   end;
 end;
 

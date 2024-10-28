@@ -140,15 +140,6 @@ type
     property Values[Name: string]: string read GetValues write SetValues;
   end;
 
-  THighlightType = (htNone, htCustom, htPasswordScore);
-
-  THighlight = record
-    case Highlight: THighlightType of
-      htNone: ();
-      htCustom: (Color, TextColor: TColor);
-      htPasswordScore: (PasswordScore: Integer);
-  end;
-
   IDateProvider = interface
     function GetDate: TDateTime;
   end;
@@ -156,11 +147,6 @@ type
   TDateProvider = class(TInterfacedObject, IDateProvider)
   public
     function GetDate: TDateTime; inline;
-  end;
-
-  IPasswordScoreProvider = interface
-    function TryGetPasswordScore(const Password: string;
-      var Score: Integer): Boolean;
   end;
 
   TO2Rule = class(TO2CollectionItem)
@@ -208,9 +194,6 @@ type
     function GetNextEvent(const AField: TO2Field; DateProvider: IDateProvider;
       StartDate: TDateTime; out NextDate: TDateTime;
       UseParams: Boolean = False): Boolean;
-    function GetHighlightColors(const AField: TO2Field;
-      DateProvider: IDateProvider;
-      PasswordScoreProvider: IPasswordScoreProvider): THighlight;
 
     property DisplayPasswordStrength: Boolean read GetDisplayPasswordStrength;
   published
@@ -638,33 +621,6 @@ begin
   end;
 
   Result := True;
-end;
-
-function TO2Rule.GetHighlightColors(const AField: TO2Field;
-  DateProvider: IDateProvider;
-  PasswordScoreProvider: IPasswordScoreProvider): THighlight;
-var
-  PasswordScore: Integer;
-begin
-  if Active and (RuleType = rtPassword) and DisplayPasswordStrength
-    and Matches(AField) and PasswordScoreProvider.TryGetPasswordScore(
-      AField.FieldValue, PasswordScore) then
-  begin
-    Result.Highlight := htPasswordScore;
-    Result.PasswordScore := PasswordScore;
-  end
-  else
-    if Active and (RuleType = rtHighlight) and Matches(AField)
-      or HasEventInWindow(AField, DateProvider) then
-    begin
-      Result.Highlight := htCustom;
-      Result.Color := Params.ReadInteger(HighlightColorParam,
-        DefaultHighlightColor);
-      Result.TextColor := Params.ReadInteger(HighlightTextColorParam,
-        DefaultHighlightTextColor);
-    end
-    else
-      Result.Highlight := htNone;
 end;
 
 function TO2Rule.GetFormatSettings: TFormatSettings;

@@ -46,8 +46,17 @@ type
     procedure SaveToFile(const FileName: string);
   end;
 
+  IPasswordScoreProvider = interface
+    function TryGetPasswordScore(const Password: string;
+      var Score: Integer): Boolean;
+  end;
+
   IPasswordScoreCache = interface(IPasswordScoreProvider)
     procedure UpdateCache(const O2File: TO2File);
+  end;
+
+  THighlight = record
+    Color, TextColor: TColor;
   end;
 
   IFileManager = interface

@@ -50,6 +50,9 @@ type
     procedure SetEventFilterIndex(const Value: Integer);
     procedure SetObjectTags(const Value: TStrings);
     procedure SetIncludeUntagged(const Value: Boolean);
+
+    function GetHighlight(const AField: TO2Field; ARule: TO2Rule): THighlight;
+      overload;
   public
     constructor Create(DateProvider: IDateProvider;
       PasswordProvider: IPasswordProvider;
@@ -90,7 +93,7 @@ type
 implementation
 
 uses
-  SysUtils, StrUtils, uGlobal, uO2ObjectsUtils;
+  Graphics, SysUtils, StrUtils, uGlobal, uO2ObjectsUtils;
 
 type
   TO2ObjectFilteredEnumerator = class(TInterfacedObject,
@@ -216,15 +219,15 @@ var
   AField: TO2Field;
   ARule: TO2Rule;
 begin
-  Result.Highlight := htNone;
+  Result.Color := clNone;
+  Result.TextColor := clNone;
   RuleIndex := O2File.Rules.Count;
   for AField in AObject.Fields do
     for ARule in O2File.Rules do
       if ARule.Index < RuleIndex then
       begin
-        AHighlight := ARule.GetHighlightColors(AField, FDateProvider,
-          FPasswordScoreCache);
-        if AHighlight.Highlight <> htNone then
+        AHighlight := GetHighlight(AField, ARule);
+        if AHighlight.Color <> clNone then
         begin
           Result := AHighlight;
           RuleIndex := ARule.Index;
@@ -236,13 +239,42 @@ function TFileManager.GetHighlight(const AField: TO2Field): THighlight;
 var
   ARule: TO2Rule;
 begin
-  Result.Highlight := htNone;
+  Result.Color := clNone;
+  Result.TextColor := clNone;
   for ARule in O2File.Rules do
   begin
-    Result := ARule.GetHighlightColors(AField, FDateProvider,
-      FPasswordScoreCache);
-    if Result.Highlight <> htNone then Break;
+    Result := GetHighlight(AField, ARule);
+    if Result.Color <> clNone then Break;
   end;
+end;
+
+function TFileManager.GetHighlight(const AField: TO2Field;
+  ARule: TO2Rule): THighlight;
+var
+  PasswordScore: Integer;
+begin
+  if ARule.Active and (ARule.RuleType = rtPassword)
+    and ARule.DisplayPasswordStrength and ARule.Matches(AField)
+    and FPasswordScoreCache.TryGetPasswordScore(AField.FieldValue,
+      PasswordScore) then
+  begin
+    Result.Color := PasswordScoreColors[PasswordScore];
+    Result.TextColor := clBlack;
+  end
+  else
+    if ARule.Active and (ARule.RuleType = rtHighlight) and ARule.Matches(AField)
+      or ARule.HasEventInWindow(AField, FDateProvider) then
+    begin
+      Result.Color := ARule.Params.ReadInteger(HighlightColorParam,
+        DefaultHighlightColor);
+      Result.TextColor := ARule.Params.ReadInteger(HighlightTextColorParam,
+        DefaultHighlightTextColor);
+    end
+    else
+    begin
+      Result.Color := clNone;
+      Result.TextColor := clNone;
+    end;
 end;
 
 function TFileManager.GetDisplayText(const AField: TO2Field;
