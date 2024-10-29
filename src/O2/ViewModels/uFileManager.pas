@@ -51,8 +51,16 @@ type
     procedure SetObjectTags(const Value: TStrings);
     procedure SetIncludeUntagged(const Value: Boolean);
 
-    function GetHighlight(const AField: TO2Field; ARule: TO2Rule): THighlight;
-      overload;
+    function HasEventInWindow(const AField: TO2Field;
+      const ARule: TO2Rule; StartDate, EndDate: TDateTime;
+      UseParams: Boolean): Boolean;
+    function GetNextEvent(const AField: TO2Field; const ARule: TO2Rule;
+      StartDate: TDateTime; out NextDate: TDateTime;
+      UseParams: Boolean = False): Boolean; overload;
+    function GetHighlight(const AField: TO2Field;
+      const ARule: TO2Rule): THighlight; overload;
+    function GetDisplayText(const AField: TO2Field; const ARule: TO2Rule;
+      ShowPasswords: Boolean): string; overload;
   public
     constructor Create(DateProvider: IDateProvider;
       PasswordProvider: IPasswordProvider;
@@ -66,11 +74,11 @@ type
     function GetObjects: IEnumerable<TO2Object>;
 
     function GetNextEvent(const AObject: TO2Object;
-      out NextDate: TDateTime): Boolean;
+      out NextDate: TDateTime): Boolean; overload;
     function GetHighlight(const AObject: TO2Object): THighlight; overload;
     function GetHighlight(const AField: TO2Field): THighlight; overload;
     function GetDisplayText(const AField: TO2Field;
-      ShowPasswords: Boolean): string;
+      ShowPasswords: Boolean): string; overload;
     function GetHyperLink(const AField: TO2Field): string;
     function IsHyperlinkOrEmail(const AField: TO2Field): Boolean;
     function IsHyperlink(const AField: TO2Field): Boolean;
@@ -93,7 +101,7 @@ type
 implementation
 
 uses
-  Graphics, SysUtils, StrUtils, uGlobal, uO2ObjectsUtils;
+  Graphics, SysUtils, StrUtils, DateUtils, uGlobal, uO2Utils, uO2ObjectsUtils;
 
 type
   TO2ObjectFilteredEnumerator = class(TInterfacedObject,
@@ -249,7 +257,7 @@ begin
 end;
 
 function TFileManager.GetHighlight(const AField: TO2Field;
-  ARule: TO2Rule): THighlight;
+  const ARule: TO2Rule): THighlight;
 var
   PasswordScore: Integer;
 begin
@@ -263,7 +271,7 @@ begin
   end
   else
     if ARule.Active and (ARule.RuleType = rtHighlight) and ARule.Matches(AField)
-      or ARule.HasEventInWindow(AField, FDateProvider) then
+      or HasEventInWindow(AField, ARule, 0, 0, True) then
     begin
       Result.Color := ARule.Params.ReadInteger(HighlightColorParam,
         DefaultHighlightColor);
@@ -286,9 +294,67 @@ begin
   for ARule in O2File.Rules do
     if ARule.Active and ARule.Matches(AField) then
     begin
-      Result := ARule.GetDisplayText(AField, FDateProvider, ShowPasswords);
+      Result := GetDisplayText(AField, ARule, ShowPasswords);
       if Result <> AField.FieldValue then Break;
     end;
+end;
+
+function TFileManager.GetDisplayText(const AField: TO2Field;
+  const ARule: TO2Rule; ShowPasswords: Boolean): string;
+var
+  MacroProcessor: TMacroProcessor;
+  Years, MonthsOfYear, DaysOfMonth: Word;
+  Months, Days: Integer;
+  ADate, EventDate: TDateTime;
+  AMask: string;
+begin
+  Result := AField.FieldValue;
+
+  case ARule.RuleType of
+    rtPassword:
+      if not ShowPasswords then
+        Result := StringOfChar(PasswordChar, Length(AField.FieldValue));
+
+    rtExpirationDate, rtRecurrence:
+    begin
+      ADate := FDateProvider.GetDate;
+
+      if TryParseDate(AField, ARule, EventDate)
+        and ((ARule.RuleType = rtExpirationDate) and (EventDate >= ADate)
+        or (ARule.RuleType = rtRecurrence) and (EventDate <= ADate)) then
+      begin
+        DateSpan(ADate, EventDate, Years, MonthsOfYear, DaysOfMonth);
+        Months := MonthsBetween(ADate, EventDate);
+        Days := DaysBetween(ADate, EventDate);
+
+        if ARule.Params.Values[DisplayMaskParam] <> '' then
+          AMask := ARule.Params.Values[DisplayMaskParam]
+        else
+          case ARule.RuleType of
+            rtExpirationDate:
+              AMask := DefaultExpirationDateMask;
+            rtRecurrence:
+              AMask := DefaultRecurrenceMask;
+          end;
+
+        MacroProcessor := TMacroProcessor.Create(AMask, MacroStartDelimiter,
+          MacroEndDelimiter);
+        try
+          Result := MacroProcessor
+            .Macro(FieldNameMacro, AField.FieldName)
+            .Macro(FieldValueMacro, AField.FieldValue)
+            .Macro(YearsMacro, Years)
+            .Macro(MonthsOfYearMacro, MonthsOfYear)
+            .Macro(DaysOfMonthMacro, DaysOfMonth)
+            .Macro(MonthsMacro, Months)
+            .Macro(DaysMacro, Days)
+            .ToString;
+        finally
+          MacroProcessor.Free;
+        end;
+      end;
+    end;
+  end;
 end;
 
 function TFileManager.GetHyperLink(const AField: TO2Field): string;
@@ -305,6 +371,44 @@ begin
   Result := FIncludeUntagged;
 end;
 
+function TFileManager.HasEventInWindow(const AField: TO2Field;
+  const ARule: TO2Rule; StartDate, EndDate: TDateTime;
+  UseParams: Boolean): Boolean;
+var
+  ADate, DateValue, MinDate, MaxDate: TDateTime;
+begin
+  if not ARule.Active or not (ARule.RuleType in EventRules)
+    or not ARule.Matches(AField)
+    or not TryParseDate(AField, ARule, DateValue) then
+    Exit(False);
+
+  if UseParams then
+  begin
+    ADate := FDateProvider.GetDate;
+    StartDate := ADate - ARule.Params.ReadInteger(DaysBeforeParam,
+      DefaultDaysBefore);
+    EndDate := ADate + ARule.Params.ReadInteger(DaysAfterParam,
+      DefaultDaysAfter);
+  end;
+
+  case ARule.RuleType of
+    rtExpirationDate:
+      Result := (DateValue >= StartDate) and (DateValue <= EndDate);
+
+    rtRecurrence:
+    begin
+      MinDate := SafeRecodeYear(DateValue, YearOf(StartDate));
+      MaxDate := SafeRecodeYear(DateValue, YearOf(EndDate));
+
+      Result := (MinDate >= StartDate) and (MinDate <= EndDate)
+        or (MaxDate >= StartDate) and (MaxDate <= EndDate);
+    end;
+
+    else
+      Result := False;
+  end;
+end;
+
 function TFileManager.GetNextEvent(const AObject: TO2Object;
   out NextDate: TDateTime): Boolean;
 var
@@ -315,12 +419,41 @@ begin
   Result := False;
   for AField in AObject.Fields do
     for ARule in O2File.Rules do
-      if ARule.GetNextEvent(AField, FDateProvider, FEventFilter.StartDate,
-        ANextDate, FEventFilter.UseParamsForNextEvent) then
+      if GetNextEvent(AField, ARule, FEventFilter.StartDate, ANextDate,
+        FEventFilter.UseParamsForNextEvent) then
       begin
         if not Result or (ANextDate < NextDate) then NextDate := ANextDate;
         Result := True;
       end;
+end;
+
+function TFileManager.GetNextEvent(const AField: TO2Field; const ARule: TO2Rule;
+  StartDate: TDateTime; out NextDate: TDateTime; UseParams: Boolean): Boolean;
+var
+  FirstDate: TDateTime;
+begin
+  if not (ARule.Active and (ARule.RuleType in EventRules)
+    and ARule.Matches(AField) and TryParseDate(AField, ARule, FirstDate)) then
+    Exit(False);
+
+  case ARule.RuleType of
+    rtExpirationDate:
+      NextDate := FirstDate;
+
+    rtRecurrence:
+    begin
+      if UseParams then
+        StartDate := FDateProvider.GetDate - ARule.Params.ReadInteger(
+          DaysBeforeParam, DefaultDaysBefore);
+
+      NextDate := SafeRecodeYear(FirstDate, YearOf(StartDate));
+
+      if NextDate < StartDate then
+        NextDate := SafeRecodeYear(FirstDate, YearOf(IncYear(StartDate)));
+    end;
+  end;
+
+  Result := True;
 end;
 
 function TFileManager.GetObjectName: string;
@@ -478,7 +611,7 @@ begin
 
   for AField in FFileManager.O2File.Objects[FIndex].Fields do
     for ARule in FFileManager.O2File.Rules do
-      if ARule.HasEventInWindow(AField, FFileManager.FDateProvider,
+      if FFileManager.HasEventInWindow(AField, ARule,
         FFileManager.EventFilter.StartDate,
         FFileManager.EventFilter.EndDate,
         FFileManager.EventFilter.UseParams) then
@@ -498,7 +631,7 @@ begin
     for AField in FFileManager.O2File.Objects[FIndex].Fields do
       if ARule.Active and not (ARule.RuleType in EventRules)
         and ARule.Matches(AField)
-        or ARule.HasEventInWindow(AField, FFileManager.FDateProvider) then
+        or FFileManager.HasEventInWindow(AField, ARule, 0, 0, True) then
         Exit(True);
 
   Result := False;

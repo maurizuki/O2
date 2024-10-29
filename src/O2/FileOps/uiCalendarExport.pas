@@ -95,10 +95,9 @@ begin
         begin
           ARule := O2File.Rules.FindFirstRule(AField, EventRules);
 
-          if Assigned(ARule) then
+          if Assigned(ARule) and TryParseDate(AField, ARule, EventDate) then
           begin
             CreateGUID(UID);
-            ARule.GetFirstEvent(AField, EventDate);
 
             Writer.WriteLines('BEGIN:VEVENT');
             Writer.WriteLines(Format(

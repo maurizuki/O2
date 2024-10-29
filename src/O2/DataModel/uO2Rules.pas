@@ -169,10 +169,6 @@ type
     procedure SetFieldValue(const Value: string);
     procedure SetParams(const Value: TO2Params);
     procedure SetActive(const Value: Boolean);
-
-    function GetFormatSettings: TFormatSettings;
-    function GetEventDisplayText(const AField: TO2Field;
-      DateProvider: IDateProvider): string;
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
@@ -181,19 +177,7 @@ type
 
     function Matches(const AFieldName, AFieldValue: string): Boolean; overload;
     function Matches(const AField: TO2Field): Boolean; overload; inline;
-    function GetDisplayText(const AField: TO2Field; DateProvider: IDateProvider;
-      ShowPasswords: Boolean): string;
     function GetHyperLink(const AField: TO2Field): string;
-    function HasEventInWindow(const AField: TO2Field;
-      DateProvider: IDateProvider; StartDate, EndDate: TDateTime;
-      UseParams: Boolean): Boolean; overload;
-    function HasEventInWindow(const AField: TO2Field;
-      DateProvider: IDateProvider): Boolean; overload; inline;
-    function GetFirstEvent(const AField: TO2Field;
-      out FirstDate: TDateTime): Boolean;
-    function GetNextEvent(const AField: TO2Field; DateProvider: IDateProvider;
-      StartDate: TDateTime; out NextDate: TDateTime;
-      UseParams: Boolean = False): Boolean;
 
     property DisplayPasswordStrength: Boolean read GetDisplayPasswordStrength;
   published
@@ -223,6 +207,9 @@ type
     function AddRule(const Name: string): TO2Rule;
   end;
 
+function TryParseDate(const AField: TO2Field; const ARule: TO2Rule;
+  out Value: TDateTime): Boolean;
+
 implementation
 
 uses
@@ -231,6 +218,20 @@ uses
 resourcestring
   SRuleAlreadyExists = 'A rule named "%s" already exists.';
   SParamAlreadyExists = 'A parameter named "%s" already exists.';
+
+function TryParseDate(const AField: TO2Field; const ARule: TO2Rule;
+  out Value: TDateTime): Boolean;
+var
+  FormatSettings: TFormatSettings;
+begin
+  FormatSettings := TFormatSettings.Create;
+  FormatSettings.DateSeparator := ARule.Params.ReadString(
+    DateSeparatorParam, FormatSettings.DateSeparator)[1];
+  FormatSettings.ShortDateFormat := ARule.Params.ReadString(
+    ShortDateFormatParam, FormatSettings.ShortDateFormat);
+
+  Result := TryStrToDate(AField.FieldValue, Value, FormatSettings);
+end;
 
 { TO2Param }
 
@@ -443,74 +444,10 @@ begin
   Result := Matches(AField.FieldName, AField.FieldValue);
 end;
 
-function TO2Rule.GetEventDisplayText(const AField: TO2Field;
-  DateProvider: IDateProvider): string;
-var
-  MacroProcessor: TMacroProcessor;
-  Years, MonthsOfYear, DaysOfMonth: Word;
-  Months, Days: Integer;
-  ADate, EventDate: TDateTime;
-  AMask: string;
-begin
-  ADate := DateProvider.GetDate;
-  if TryStrToDate(AField.FieldValue, EventDate, GetFormatSettings)
-    and ((RuleType = rtExpirationDate) and (EventDate >= ADate)
-    or (RuleType = rtRecurrence) and (EventDate <= ADate)) then
-  begin
-    DateSpan(ADate, EventDate, Years, MonthsOfYear, DaysOfMonth);
-    Months := MonthsBetween(ADate, EventDate);
-    Days := DaysBetween(ADate, EventDate);
-
-    if Params.Values[DisplayMaskParam] <> '' then
-      AMask := Params.Values[DisplayMaskParam]
-    else
-      case RuleType of
-        rtExpirationDate:
-          AMask := DefaultExpirationDateMask;
-        rtRecurrence:
-          AMask := DefaultRecurrenceMask;
-      end;
-
-    MacroProcessor := TMacroProcessor.Create(AMask, MacroStartDelimiter,
-      MacroEndDelimiter);
-    try
-      Result := MacroProcessor
-        .Macro(FieldNameMacro, AField.FieldName)
-        .Macro(FieldValueMacro, AField.FieldValue)
-        .Macro(YearsMacro, Years)
-        .Macro(MonthsOfYearMacro, MonthsOfYear)
-        .Macro(DaysOfMonthMacro, DaysOfMonth)
-        .Macro(MonthsMacro, Months)
-        .Macro(DaysMacro, Days)
-        .ToString;
-    finally
-      MacroProcessor.Free;
-    end;
-  end
-  else
-    Result := AField.FieldValue;
-end;
-
 function TO2Rule.GetDisplayPasswordStrength: Boolean;
 begin
   Result := Params.ReadBoolean(
     DisplayPasswordStrengthParam, DefaultDisplayPasswordStrength);
-end;
-
-function TO2Rule.GetDisplayText(const AField: TO2Field;
-  DateProvider: IDateProvider; ShowPasswords: Boolean): string;
-begin
-  case RuleType of
-    rtPassword:
-      if ShowPasswords then
-        Result := AField.FieldValue
-      else
-        Result := StringOfChar(PasswordChar, Length(AField.FieldValue));
-    rtExpirationDate, rtRecurrence:
-      Result := GetEventDisplayText(AField, DateProvider);
-    else
-      Result := AField.FieldValue;
-  end;
 end;
 
 function TO2Rule.GetHyperLink(const AField: TO2Field): string;
@@ -545,91 +482,6 @@ begin
       LegacyMacroProcessor.Free;
     end;
   end;
-end;
-
-function TO2Rule.HasEventInWindow(const AField: TO2Field;
-  DateProvider: IDateProvider; StartDate, EndDate: TDateTime;
-  UseParams: Boolean): Boolean;
-var
-  ADate, DateValue, MinDate, MaxDate: TDateTime;
-begin
-  if not Active or not (RuleType in EventRules) or not Matches(AField)
-    or not TryStrToDate(AField.FieldValue, DateValue, GetFormatSettings) then
-    Exit(False);
-
-  if UseParams then
-  begin
-    ADate := DateProvider.GetDate;
-    StartDate := ADate - Params.ReadInteger(DaysBeforeParam, DefaultDaysBefore);
-    EndDate := ADate + Params.ReadInteger(DaysAfterParam, DefaultDaysAfter);
-  end;
-
-  case RuleType of
-    rtExpirationDate:
-      Result := (DateValue >= StartDate) and (DateValue <= EndDate);
-
-    rtRecurrence:
-    begin
-      MinDate := SafeRecodeYear(DateValue, YearOf(StartDate));
-      MaxDate := SafeRecodeYear(DateValue, YearOf(EndDate));
-
-      Result := (MinDate >= StartDate) and (MinDate <= EndDate)
-        or (MaxDate >= StartDate) and (MaxDate <= EndDate);
-    end;
-
-    else
-      Result := False;
-  end;
-end;
-
-function TO2Rule.HasEventInWindow(const AField: TO2Field;
-  DateProvider: IDateProvider): Boolean;
-begin
-  Result := HasEventInWindow(AField, DateProvider, 0, 0, True);
-end;
-
-function TO2Rule.GetFirstEvent(const AField: TO2Field;
-  out FirstDate: TDateTime): Boolean;
-begin
-  Result := Active and (RuleType in EventRules) and Matches(AField)
-    and TryStrToDate(AField.FieldValue, FirstDate, GetFormatSettings);
-end;
-
-function TO2Rule.GetNextEvent(const AField: TO2Field;
-  DateProvider: IDateProvider; StartDate: TDateTime; out NextDate: TDateTime;
-  UseParams: Boolean): Boolean;
-var
-  FirstDate: TDateTime;
-begin
-  if not GetFirstEvent(AField, FirstDate) then Exit(False);
-
-  case RuleType of
-    rtExpirationDate:
-      NextDate := FirstDate;
-
-    rtRecurrence:
-    begin
-      if UseParams then
-        StartDate := DateProvider.GetDate - Params.ReadInteger(DaysBeforeParam,
-          DefaultDaysBefore);
-
-      NextDate := SafeRecodeYear(FirstDate, YearOf(StartDate));
-
-      if NextDate < StartDate then
-        NextDate := SafeRecodeYear(FirstDate, YearOf(IncYear(StartDate)));
-    end;
-  end;
-
-  Result := True;
-end;
-
-function TO2Rule.GetFormatSettings: TFormatSettings;
-begin
-  Result := TFormatSettings.Create;
-  Result.DateSeparator := Params.ReadString(DateSeparatorParam,
-    Result.DateSeparator)[1];
-  Result.ShortDateFormat := Params.ReadString(ShortDateFormatParam,
-    Result.ShortDateFormat);
 end;
 
 function TO2Rule.GetFieldNameMask: TMask;
