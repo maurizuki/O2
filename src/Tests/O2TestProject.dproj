@@ -141,7 +141,6 @@
         <DCCReference Include="..\O2\DataModel\uO2Objects.pas"/>
         <DCCReference Include="..\O2\DataModel\uO2Relations.pas"/>
         <DCCReference Include="..\O2\DataModel\uO2Rules.pas"/>
-        <DCCReference Include="..\O2\DataModel\uO2Xml.pas"/>
         <DCCReference Include="..\O2\uServices.pas"/>
         <DCCReference Include="..\O2\uGlobal.pas"/>
         <DCCReference Include="..\O2\Utils\uO2ObjectsUtils.pas"/>
@@ -149,6 +148,7 @@
         <DCCReference Include="..\O2\Utils\uShellUtils.pas"/>
         <DCCReference Include="..\O2\Utils\uUtils.pas"/>
         <DCCReference Include="..\O2\Utils\uHTMLHelper.pas"/>
+        <DCCReference Include="..\O2\Utils\uXmlFiler.pas"/>
         <DCCReference Include="..\O2\Utils\uXmlStorage.pas"/>
         <DCCReference Include="..\O2\ViewModels\uEncryptionPropsModel.pas"/>
         <DCCReference Include="..\O2\ViewModels\uEventFilters.pas"/>

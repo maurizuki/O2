@@ -94,6 +94,9 @@ const
     ohSHA1
   ];
 
+var
+  O2FileSchemaLocation: string;
+
 function CipherToIdent(Cipher: Longint; var Ident: string): Boolean;
 function HashToIdent(Hash: Longint; var Ident: string): Boolean;
 
@@ -144,5 +147,10 @@ function HashToIdent(Hash: Longint; var Ident: string): Boolean;
 begin
   Result := IntToIdent(Hash, Ident, Hashes);
 end;
+
+initialization
+  O2FileSchemaLocation := Format(
+    'https://maurizuki.github.io/O2/xml/O2File/%d%d.xsd',
+    [O2FileVersion.Hi, O2FileVersion.Lo]);
 
 end.

@@ -13,7 +13,7 @@
 {                                                                      }
 { ******************************************************************** }
 
-unit uO2Xml;
+unit uXmlFiler;
 
 interface
 
@@ -21,22 +21,21 @@ uses
   Classes, XMLDoc, XMLIntf, xmldom, msxmldom;
 
 type
-  TO2XmlFiler = class
+  TXmlFiler = class
   protected
     FInstance: TPersistent;
+    FSchemaLocation: string;
 
-    const SchemaLocationFmt =
-      'https://maurizuki.github.io/O2/xml/O2File/%d%d.xsd';
     const ItemIdent = 'item';
 
     function GetPropCount(AInstance: TPersistent): Integer;
     function GetPropName(AInstance: TPersistent; Index: Integer): string;
     function CreateXMLDocument: IXMLDocument;
   public
-    constructor Create(AInstance: TPersistent);
+    constructor Create(AInstance: TPersistent; const SchemaLocation: string);
   end;
 
-  TO2XmlReader = class(TO2XmlFiler)
+  TXmlReader = class(TXmlFiler)
   private
     function ReadValue(const Node: IXMLNode;
       const Default: Variant): Variant;
@@ -56,7 +55,7 @@ type
     procedure LoadFromString(const S: string);
   end;
 
-  TO2XmlWriter = class(TO2XmlFiler)
+  TXmlWriter = class(TXmlFiler)
   private
     procedure WriteValue(const Node: IXMLNode;
       const Value: Variant);
@@ -77,22 +76,24 @@ type
 implementation
 
 uses
-  SysUtils, TypInfo, Variants, uO2Defs;
+  SysUtils, TypInfo, Variants;
 
-{ TO2XmlFiler }
+{ TXmlFiler }
 
-constructor TO2XmlFiler.Create(AInstance: TPersistent);
+constructor TXmlFiler.Create(AInstance: TPersistent;
+  const SchemaLocation: string);
 begin
   inherited Create;
   FInstance := AInstance;
+  FSchemaLocation := SchemaLocation;
 end;
 
-function TO2XmlFiler.GetPropCount(AInstance: TPersistent): Integer;
+function TXmlFiler.GetPropCount(AInstance: TPersistent): Integer;
 begin
   Result := GetTypeData(AInstance.ClassInfo)^.PropCount;
 end;
 
-function TO2XmlFiler.GetPropName(AInstance: TPersistent;
+function TXmlFiler.GetPropName(AInstance: TPersistent;
   Index: Integer): string;
 var
   PropList: PPropList;
@@ -108,7 +109,7 @@ begin
   end;
 end;
 
-function TO2XmlFiler.CreateXMLDocument: IXMLDocument;
+function TXmlFiler.CreateXMLDocument: IXMLDocument;
 begin
   Result := TXMLDocument.Create(nil);
   Result.Active := True;
@@ -118,12 +119,12 @@ begin
   Result.DocumentElement.Attributes['xmlns:xsi'] :=
     'http://www.w3.org/2001/XMLSchema-instance';
   Result.DocumentElement.Attributes['xsi:noNamespaceSchemaLocation'] :=
-    Format(SchemaLocationFmt, [O2FileVersion.Hi, O2FileVersion.Lo]);
+    FSchemaLocation;
 end;
 
-{ TO2XmlReader }
+{ TXmlReader }
 
-function TO2XmlReader.ReadValue(const Node: IXMLNode;
+function TXmlReader.ReadValue(const Node: IXMLNode;
   const Default: Variant): Variant;
 begin
   if Assigned(Node) and not VarIsNull(Node.NodeValue) then
@@ -132,7 +133,7 @@ begin
     Result := Default;
 end;
 
-function TO2XmlReader.ReadEnumeration(const Node: IXMLNode;
+function TXmlReader.ReadEnumeration(const Node: IXMLNode;
   const Default: Variant): Variant;
 var
   IntValue: Integer;
@@ -149,7 +150,7 @@ begin
     Result := Default;
 end;
 
-procedure TO2XmlReader.ReadStringList(const Node: IXMLNode;
+procedure TXmlReader.ReadStringList(const Node: IXMLNode;
   const AStringList: TStrings);
 var
   I: Integer;
@@ -165,7 +166,7 @@ begin
   end;
 end;
 
-procedure TO2XmlReader.ReadCollection(const Node: IXMLNode;
+procedure TXmlReader.ReadCollection(const Node: IXMLNode;
   const ACollection: TCollection);
 var
   I: Integer;
@@ -181,7 +182,7 @@ begin
   end;
 end;
 
-procedure TO2XmlReader.ReadProperty(const Node: IXMLNode;
+procedure TXmlReader.ReadProperty(const Node: IXMLNode;
   const PropName: string; const AInstance: TPersistent);
 var
   AObject: TObject;
@@ -207,7 +208,7 @@ begin
   end;
 end;
 
-procedure TO2XmlReader.ReadPersistent(const Node: IXMLNode;
+procedure TXmlReader.ReadPersistent(const Node: IXMLNode;
   const AInstance: TPersistent);
 var
   PropName: string;
@@ -221,7 +222,7 @@ begin
   end;
 end;
 
-procedure TO2XmlReader.LoadFromStream(Stream: TStream);
+procedure TXmlReader.LoadFromStream(Stream: TStream);
 var
   XML: IXMLDocument;
 begin
@@ -230,7 +231,7 @@ begin
   ReadPersistent(XML.DocumentElement, FInstance);
 end;
 
-procedure TO2XmlReader.LoadFromFile(const FileName: string);
+procedure TXmlReader.LoadFromFile(const FileName: string);
 var
   XML: IXMLDocument;
 begin
@@ -239,7 +240,7 @@ begin
   ReadPersistent(XML.DocumentElement, FInstance);
 end;
 
-procedure TO2XmlReader.LoadFromString(const S: string);
+procedure TXmlReader.LoadFromString(const S: string);
 var
   XML: IXMLDocument;
 begin
@@ -248,14 +249,14 @@ begin
   ReadPersistent(XML.DocumentElement, FInstance);
 end;
 
-{ TO2XmlWriter }
+{ TXmlWriter }
 
-procedure TO2XmlWriter.WriteValue(const Node: IXMLNode; const Value: Variant);
+procedure TXmlWriter.WriteValue(const Node: IXMLNode; const Value: Variant);
 begin
   Node.NodeValue := Value;
 end;
 
-procedure TO2XmlWriter.WriteStringList(const Node: IXMLNode;
+procedure TXmlWriter.WriteStringList(const Node: IXMLNode;
   const AStringList: TStrings);
 var
   I: Integer;
@@ -264,7 +265,7 @@ begin
     WriteValue(Node.AddChild(ItemIdent), AStringList[I]);
 end;
 
-procedure TO2XmlWriter.WriteCollection(const Node: IXMLNode;
+procedure TXmlWriter.WriteCollection(const Node: IXMLNode;
   const ACollection: TCollection);
 var
   I: Integer;
@@ -273,7 +274,7 @@ begin
     WritePersistent(Node.AddChild(ItemIdent), ACollection.Items[I]);
 end;
 
-procedure TO2XmlWriter.WriteProperty(const Node: IXMLNode;
+procedure TXmlWriter.WriteProperty(const Node: IXMLNode;
   const PropName: string; const AInstance: TPersistent);
 var
   AObject: TObject;
@@ -293,7 +294,7 @@ begin
     WriteValue(Node, GetPropValue(AInstance, PropName));
 end;
 
-procedure TO2XmlWriter.WritePersistent(const Node: IXMLNode;
+procedure TXmlWriter.WritePersistent(const Node: IXMLNode;
   const AInstance: TPersistent);
 var
   PropName: string;
@@ -307,7 +308,7 @@ begin
   end;
 end;
 
-procedure TO2XmlWriter.SaveToStream(Stream: TStream);
+procedure TXmlWriter.SaveToStream(Stream: TStream);
 var
   XML: IXMLDocument;
 begin
@@ -316,7 +317,7 @@ begin
   XML.SaveToStream(Stream);
 end;
 
-procedure TO2XmlWriter.SaveToFile(const FileName: string);
+procedure TXmlWriter.SaveToFile(const FileName: string);
 var
   XML: IXMLDocument;
 begin
@@ -325,7 +326,7 @@ begin
   XML.SaveToFile(FileName);
 end;
 
-function TO2XmlWriter.SaveToString: string;
+function TXmlWriter.SaveToString: string;
 var
   XML: IXMLDocument;
 begin

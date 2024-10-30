@@ -102,7 +102,7 @@ uses
   DCPrc6, DCPrijndael, DCPserpent, DCPtea, DCPtwofish,
   DCPhaval, DCPmd4, DCPmd5, DCPripemd128, DCPripemd160,
   DCPsha1, DCPsha256, DCPsha512, DCPtiger,
-  uO2Xml;
+  uXmlFiler;
 
 resourcestring
   SUnsupportedFileType = 'File type not supported.';
@@ -170,7 +170,7 @@ procedure TO2File.Load(PasswordProvider: IPasswordProvider);
 const
   Version2_0: WordRec = (Lo: 0; Hi: 2);
 var
-  XmlReader: TO2XmlReader;
+  XmlReader: TXmlReader;
   XmlStream, RawStream: TMemoryStream;
   InputStream: TFileStream;
   FileVersion: Word;
@@ -208,7 +208,7 @@ begin
       end;
 
       XmlStream.Position := 0;
-      XmlReader := TO2XmlReader.Create(Self);
+      XmlReader := TXmlReader.Create(Self, O2FileSchemaLocation);
       try
         XmlReader.LoadFromStream(XmlStream);
       finally
@@ -225,7 +225,7 @@ end;
 
 procedure TO2File.Save;
 var
-  XmlWriter: TO2XmlWriter;
+  XmlWriter: TXmlWriter;
   XmlStream, RawStream: TMemoryStream;
   OutputStream: TFileStream;
 begin
@@ -235,7 +235,7 @@ begin
     try
       XmlStream := TMemoryStream.Create;
       try
-        XmlWriter := TO2XmlWriter.Create(Self);
+        XmlWriter := TXmlWriter.Create(Self, O2FileSchemaLocation);
         try
           XmlWriter.SaveToStream(XmlStream);
         finally
