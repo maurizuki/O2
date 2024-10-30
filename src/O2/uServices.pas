@@ -22,6 +22,10 @@ uses
   uO2Relations, uO2Rules;
 
 type
+  IDateProvider = interface
+    function GetDate: TDateTime;
+  end;
+
   IAppFiles = interface
     function FileExists(const Name: string): Boolean;
     function GetTotalSize: Int64;

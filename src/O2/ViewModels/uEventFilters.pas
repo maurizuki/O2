@@ -18,7 +18,7 @@ unit uEventFilters;
 interface
 
 uses
-  uO2Rules;
+  uServices;
 
 type
   TEventFilter = class

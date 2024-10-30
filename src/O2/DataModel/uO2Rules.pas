@@ -140,15 +140,6 @@ type
     property Values[Name: string]: string read GetValues write SetValues;
   end;
 
-  IDateProvider = interface
-    function GetDate: TDateTime;
-  end;
-
-  TDateProvider = class(TInterfacedObject, IDateProvider)
-  public
-    function GetDate: TDateTime; inline;
-  end;
-
   TO2Rule = class(TO2CollectionItem)
   private
     FName: string;
@@ -213,7 +204,7 @@ function TryParseDate(const AField: TO2Field; const ARule: TO2Rule;
 implementation
 
 uses
-  DateUtils, uO2Utils;
+  uO2Utils;
 
 resourcestring
   SRuleAlreadyExists = 'A rule named "%s" already exists.';
@@ -382,13 +373,6 @@ begin
   AParam := FindParam(Name);
   if AParam = nil then AParam := AddParam(Name);
   AParam.ParamValue := Value;
-end;
-
-{ TDateProvider }
-
-function TDateProvider.GetDate: TDateTime;
-begin
-  Result := Date;
 end;
 
 { TO2Rule }

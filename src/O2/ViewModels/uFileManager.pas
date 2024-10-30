@@ -98,6 +98,11 @@ type
     property ObjectRules: TList<TO2Rule> read GetObjectRules;
   end;
 
+  TDateProvider = class(TInterfacedObject, IDateProvider)
+  public
+    function GetDate: TDateTime; inline;
+  end;
+
 implementation
 
 uses
@@ -553,6 +558,13 @@ end;
 procedure TFileManager.SetObjectTags(const Value: TStrings);
 begin
   FObjectTags.Assign(Value);
+end;
+
+{ TDateProvider }
+
+function TDateProvider.GetDate: TDateTime;
+begin
+  Result := Date;
 end;
 
 { TO2ObjectFilteredEnumerator }
