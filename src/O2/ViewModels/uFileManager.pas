@@ -106,7 +106,8 @@ type
 implementation
 
 uses
-  Graphics, SysUtils, StrUtils, DateUtils, uGlobal, uO2Utils, uO2ObjectsUtils;
+  Graphics, SysUtils, StrUtils, DateUtils, uGlobal, uUtils, uO2ObjectsUtils,
+  uO2RulesUtils;
 
 type
   TO2ObjectFilteredEnumerator = class(TInterfacedObject,
@@ -368,7 +369,7 @@ var
 begin
   Result := AField.FieldValue;
   ARule := O2File.Rules.FindFirstRule(AField, [rtHyperLink]);
-  if Assigned(ARule) then Result := ARule.GetHyperLink(AField);
+  if Assigned(ARule) then Result := GetHyperLinkAddress(AField, ARule);
 end;
 
 function TFileManager.GetIncludeUntagged: Boolean;

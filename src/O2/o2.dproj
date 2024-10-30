@@ -988,7 +988,6 @@
         <DCCReference Include="DataModel\uO2Objects.pas"/>
         <DCCReference Include="DataModel\uO2Relations.pas"/>
         <DCCReference Include="DataModel\uO2Rules.pas"/>
-        <DCCReference Include="DataModel\uO2Utils.pas"/>
         <DCCReference Include="DataModel\uO2Xml.pas"/>
         <DCCReference Include="Utils\uAppFiles.pas"/>
         <DCCReference Include="Utils\uCtrlHelpers.pas"/>
@@ -1004,6 +1003,7 @@
         <DCCReference Include="FileOps\uO2ImportExport.pas"/>
         <DCCReference Include="FileOps\uXmlImportExport.pas"/>
         <DCCReference Include="Utils\uO2ObjectsUtils.pas"/>
+        <DCCReference Include="Utils\uO2RulesUtils.pas"/>
         <DCCReference Include="ViewModels\uEncryptionPropsModel.pas"/>
         <DCCReference Include="ViewModels\uEventFilters.pas"/>
         <DCCReference Include="ViewModels\uFileManager.pas"/>

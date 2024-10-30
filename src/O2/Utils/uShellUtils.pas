@@ -50,7 +50,7 @@ procedure ShellMailTo(const Recipient: string; const Subject: string = '');
 implementation
 
 uses
-  Windows, Forms, SysUtils, ShellApi, RegStr, uO2Utils;
+  Windows, Forms, SysUtils, ShellApi, RegStr, uUtils;
 
 procedure ShellOpen(const FileName, Parameters: string);
 begin

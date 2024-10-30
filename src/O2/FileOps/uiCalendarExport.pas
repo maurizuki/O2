@@ -52,7 +52,7 @@ type
 implementation
 
 uses
-  SysUtils, uO2Rules, DateUtils;
+  SysUtils, DateUtils, uO2Rules, uO2RulesUtils;
 
 function EscapeText(const Value: string): string;
 begin

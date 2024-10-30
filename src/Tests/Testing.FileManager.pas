@@ -3,7 +3,7 @@ unit Testing.FileManager;
 interface
 
 uses
-  DUnitX.TestFramework, uO2Rules;
+  DUnitX.TestFramework, uServices, uO2Rules;
 
 type
   [TestFixture]
@@ -93,7 +93,7 @@ type
 implementation
 
 uses
-  SysUtils, DateUtils, uServices, uFileManager, uO2Objects;
+  SysUtils, DateUtils, uFileManager, uO2Objects;
 
 { TFileManagerTests }
 

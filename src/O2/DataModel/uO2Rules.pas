@@ -168,7 +168,6 @@ type
 
     function Matches(const AFieldName, AFieldValue: string): Boolean; overload;
     function Matches(const AField: TO2Field): Boolean; overload; inline;
-    function GetHyperLink(const AField: TO2Field): string;
 
     property DisplayPasswordStrength: Boolean read GetDisplayPasswordStrength;
   published
@@ -198,31 +197,11 @@ type
     function AddRule(const Name: string): TO2Rule;
   end;
 
-function TryParseDate(const AField: TO2Field; const ARule: TO2Rule;
-  out Value: TDateTime): Boolean;
-
 implementation
-
-uses
-  uO2Utils;
 
 resourcestring
   SRuleAlreadyExists = 'A rule named "%s" already exists.';
   SParamAlreadyExists = 'A parameter named "%s" already exists.';
-
-function TryParseDate(const AField: TO2Field; const ARule: TO2Rule;
-  out Value: TDateTime): Boolean;
-var
-  FormatSettings: TFormatSettings;
-begin
-  FormatSettings := TFormatSettings.Create;
-  FormatSettings.DateSeparator := ARule.Params.ReadString(
-    DateSeparatorParam, FormatSettings.DateSeparator)[1];
-  FormatSettings.ShortDateFormat := ARule.Params.ReadString(
-    ShortDateFormatParam, FormatSettings.ShortDateFormat);
-
-  Result := TryStrToDate(AField.FieldValue, Value, FormatSettings);
-end;
 
 { TO2Param }
 
@@ -432,40 +411,6 @@ function TO2Rule.GetDisplayPasswordStrength: Boolean;
 begin
   Result := Params.ReadBoolean(
     DisplayPasswordStrengthParam, DefaultDisplayPasswordStrength);
-end;
-
-function TO2Rule.GetHyperLink(const AField: TO2Field): string;
-var
-  EncodedFieldName, EncodedFieldValue: string;
-  LegacyMacroProcessor, MacroProcessor: TMacroProcessor;
-begin
-  if Params.Values[HyperLinkMaskParam] = '' then
-    Result := AField.FieldValue
-  else
-  begin
-    EncodedFieldName := UrlEscape(AField.FieldName);
-    EncodedFieldValue := UrlEscape(AField.FieldValue);
-
-    LegacyMacroProcessor := TMacroProcessor.Create(
-      Params.Values[HyperLinkMaskParam], LegacyMacroStartDelimiter,
-      LegacyMacroEndDelimiter);
-    try
-      MacroProcessor := TMacroProcessor.Create(LegacyMacroProcessor
-        .Macro(LegacyFieldNameMacro, EncodedFieldName)
-        .Macro(LegacyFieldValueMacro, EncodedFieldValue)
-        .ToString, MacroStartDelimiter, MacroEndDelimiter);
-      try
-        Result := MacroProcessor
-          .Macro(FieldNameMacro, EncodedFieldName)
-          .Macro(FieldValueMacro, EncodedFieldValue)
-          .ToString;
-      finally
-        MacroProcessor.Free;
-      end;
-    finally
-      LegacyMacroProcessor.Free;
-    end;
-  end;
 end;
 
 function TO2Rule.GetFieldNameMask: TMask;

@@ -80,7 +80,8 @@ type
 implementation
 
 uses
-  Classes, uGlobal, uHTMLHelper, uO2Relations, uO2Rules, uO2ObjectsUtils;
+  Classes, uGlobal, uHTMLHelper, uO2Relations, uO2Rules, uO2ObjectsUtils,
+  uO2RulesUtils;
 
 { THTMLExportModel }
 
@@ -328,7 +329,7 @@ begin
           case ARule.RuleType of
             rtHyperLink:
               FBuilder.AppendFormat('<a href="%s" target="_blank">',
-                [ARule.GetHyperLink(AField)])
+                [GetHyperLinkAddress(AField, ARule)])
                 .AppendHTML(AField.FieldValue).Append('</a>');
             rtEmail:
               FBuilder.AppendFormat('<a href="mailto:%s">', [AField.FieldValue])
