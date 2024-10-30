@@ -105,7 +105,8 @@ var
 begin
   for ARule in O2File.Rules do
     if ARule.Active and (ARule.RuleType = rtPassword)
-      and ARule.DisplayPasswordStrength then
+      and ARule.Params.ReadBoolean(DisplayPasswordStrengthParam,
+        DefaultDisplayPasswordStrength) then
       for AObject in O2File.Objects do
         for AField in AObject.Fields do
           if ARule.Matches(AField) then

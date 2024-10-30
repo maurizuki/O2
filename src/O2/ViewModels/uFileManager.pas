@@ -268,7 +268,8 @@ var
   PasswordScore: Integer;
 begin
   if ARule.Active and (ARule.RuleType = rtPassword)
-    and ARule.DisplayPasswordStrength and ARule.Matches(AField)
+    and ARule.Params.ReadBoolean(DisplayPasswordStrengthParam,
+      DefaultDisplayPasswordStrength) and ARule.Matches(AField)
     and FPasswordScoreCache.TryGetPasswordScore(AField.FieldValue,
       PasswordScore) then
   begin

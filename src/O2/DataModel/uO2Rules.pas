@@ -153,7 +153,6 @@ type
 
     function GetFieldNameMask: TMask;
     function GetFieldValueMask: TMask;
-    function GetDisplayPasswordStrength: Boolean;
     procedure SetName(const Value: string);
     procedure SetRuleType(const Value: TO2RuleType);
     procedure SetFieldName(const Value: string);
@@ -168,8 +167,6 @@ type
 
     function Matches(const AFieldName, AFieldValue: string): Boolean; overload;
     function Matches(const AField: TO2Field): Boolean; overload; inline;
-
-    property DisplayPasswordStrength: Boolean read GetDisplayPasswordStrength;
   published
     property Name: string read FName write SetName;
     property RuleType: TO2RuleType read FRuleType write SetRuleType;
@@ -405,12 +402,6 @@ end;
 function TO2Rule.Matches(const AField: TO2Field): Boolean;
 begin
   Result := Matches(AField.FieldName, AField.FieldValue);
-end;
-
-function TO2Rule.GetDisplayPasswordStrength: Boolean;
-begin
-  Result := Params.ReadBoolean(
-    DisplayPasswordStrengthParam, DefaultDisplayPasswordStrength);
 end;
 
 function TO2Rule.GetFieldNameMask: TMask;
