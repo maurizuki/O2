@@ -16,27 +16,46 @@ type
     procedure FilterByName;
 
     [Test]
-    [TestCase('All'            , '0,2000,1,1,0,0,')]
-    [TestCase('AllEvents'      , '1,2000,1,1,0,0,2000-01-01')]
-    [TestCase('Custom.Start'   , '2,2000,1,15,5,0,2000-01-10')]
-    [TestCase('Custom.End'     , '2,2000,1,15,0,5,2000-01-20')]
-    [TestCase('Today'          , '3,2000,1,1,0,0,2000-01-01')]
-    [TestCase('Tomorrow'       , '4,2000,1,1,0,0,2000-01-02')]
-    [TestCase('ThisWeek.Start' , '5,2000,1,9,0,0,2000-01-03')]
-    [TestCase('ThisWeek.End'   , '5,2000,1,10,0,0,2000-01-16')]
-    [TestCase('ThisMonth.Start', '6,2000,1,31,0,0,2000-01-01')]
-    [TestCase('ThisMonth.End'  , '6,2000,2,1,0,0,2000-02-29')]
-    [TestCase('ThisYear.Start' , '7,2000,12,31,0,0,2000-01-01')]
-    [TestCase('ThisYear.End'   , '7,2001,1,1,0,0,2001-12-31')]
-    [TestCase('Next7days'      , '8,2000,1,1,0,0,2000-01-07')]
-    [TestCase('Next15days'     , '9,2000,1,1,0,0,2000-01-15')]
-    [TestCase('Next30days'     , '10,2000,1,1,0,0,2000-01-30')]
-    [TestCase('Next60days'     , '11,2000,1,1,0,0,2000-03-01')]
-    [TestCase('Next90days'     , '12,2000,1,1,0,0,2000-03-31')]
-    [TestCase('Next180days'    , '13,2000,1,1,0,0,2000-06-29')]
-    [TestCase('Next365days'    , '14,2000,1,1,0,0,2000-12-31')]
+    [TestCase('All.ExpirationDate'            , '0,2000,1,1,rtExpirationDate,0,0,')]
+    [TestCase('AllEvents.ExpirationDate'      , '1,2000,1,1,rtExpirationDate,0,0,2000-01-01')]
+    [TestCase('Custom.ExpirationDate.Start'   , '2,2000,1,15,rtExpirationDate,5,0,2000-01-10')]
+    [TestCase('Custom.ExpirationDate.End'     , '2,2000,1,15,rtExpirationDate,0,5,2000-01-20')]
+    [TestCase('Today.ExpirationDate'          , '3,2000,1,1,rtExpirationDate,0,0,2000-01-01')]
+    [TestCase('Tomorrow.ExpirationDate'       , '4,2000,1,1,rtExpirationDate,0,0,2000-01-02')]
+    [TestCase('ThisWeek.ExpirationDate.Start' , '5,2000,1,9,rtExpirationDate,0,0,2000-01-03')]
+    [TestCase('ThisWeek.ExpirationDate.End'   , '5,2000,1,10,rtExpirationDate,0,0,2000-01-16')]
+    [TestCase('ThisMonth.ExpirationDate.Start', '6,2000,1,31,rtExpirationDate,0,0,2000-01-01')]
+    [TestCase('ThisMonth.ExpirationDate.End'  , '6,2000,2,1,rtExpirationDate,0,0,2000-02-29')]
+    [TestCase('ThisYear.ExpirationDate.Start' , '7,2000,12,31,rtExpirationDate,0,0,2000-01-01')]
+    [TestCase('ThisYear.ExpirationDate.End'   , '7,2001,1,1,rtExpirationDate,0,0,2001-12-31')]
+    [TestCase('Next7days.ExpirationDate'      , '8,2000,1,1,rtExpirationDate,0,0,2000-01-07')]
+    [TestCase('Next15days.ExpirationDate'     , '9,2000,1,1,rtExpirationDate,0,0,2000-01-15')]
+    [TestCase('Next30days.ExpirationDate'     , '10,2000,1,1,rtExpirationDate,0,0,2000-01-30')]
+    [TestCase('Next60days.ExpirationDate'     , '11,2000,1,1,rtExpirationDate,0,0,2000-03-01')]
+    [TestCase('Next90days.ExpirationDate'     , '12,2000,1,1,rtExpirationDate,0,0,2000-03-31')]
+    [TestCase('Next180days.ExpirationDate'    , '13,2000,1,1,rtExpirationDate,0,0,2000-06-29')]
+    [TestCase('Next365days.ExpirationDate'    , '14,2000,1,1,rtExpirationDate,0,0,2000-12-31')]
+    [TestCase('All.Recurrence'                , '0,2000,1,1,rtRecurrence,0,0,')]
+    [TestCase('AllEvents.Recurrence'          , '1,2001,1,1,rtRecurrence,0,0,2000-01-01')]
+    [TestCase('Custom.Recurrence.Start'       , '2,2001,1,15,rtRecurrence,5,0,2000-01-10')]
+    [TestCase('Custom.Recurrence.End'         , '2,2001,1,15,rtRecurrence,0,5,2000-01-20')]
+    [TestCase('Today.Recurrence'              , '3,2001,1,1,rtRecurrence,0,0,2000-01-01')]
+    [TestCase('Tomorrow.Recurrence'           , '4,2001,1,1,rtRecurrence,0,0,2000-01-02')]
+    [TestCase('ThisWeek.Recurrence.Start'     , '5,2001,1,7,rtRecurrence,0,0,2000-01-01')]
+    [TestCase('ThisWeek.Recurrence.End'       , '5,2001,1,8,rtRecurrence,0,0,2000-01-14')]
+    [TestCase('ThisMonth.Recurrence.Start'    , '6,2001,1,31,rtRecurrence,0,0,2000-01-01')]
+    [TestCase('ThisMonth.Recurrence.End'      , '6,2001,2,1,rtRecurrence,0,0,2000-02-29')]
+    [TestCase('ThisYear.Recurrence.Start'     , '7,2001,12,31,rtRecurrence,0,0,2000-01-01')]
+    [TestCase('ThisYear.Recurrence.End'       , '7,2002,1,1,rtRecurrence,0,0,2001-12-31')]
+    [TestCase('Next7days.Recurrence'          , '8,2001,1,1,rtRecurrence,0,0,2000-01-07')]
+    [TestCase('Next15days.Recurrence'         , '9,2001,1,1,rtRecurrence,0,0,2000-01-15')]
+    [TestCase('Next30days.Recurrence'         , '10,2001,1,1,rtRecurrence,0,0,2000-01-30')]
+    [TestCase('Next60days.Recurrence'         , '11,2001,1,1,rtRecurrence,0,0,2000-03-01')]
+    [TestCase('Next90days.Recurrence'         , '12,2001,1,1,rtRecurrence,0,0,2000-03-31')]
+    [TestCase('Next180days.Recurrence'        , '13,2001,1,1,rtRecurrence,0,0,2000-06-29')]
+    [TestCase('Next365days.Recurrence'        , '14,2001,1,1,rtRecurrence,0,0,2000-12-31')]
     procedure FilterByEvent(EventFilterIndex, AYear, AMonth, ADay: Integer;
-      const DaysBefore, DaysAfter, FieldValue: string);
+      ARuleType: TO2RuleType; const DaysBefore, DaysAfter, FieldValue: string);
 
     [Test]
     procedure FilterByTag;
@@ -50,6 +69,10 @@ type
     { TODO -omaurizuki : Test GetNextEvent }
 
     { TODO -omaurizuki : Test GetHighlight }
+
+    { TODO -omaurizuki : Test GetDisplayText }
+
+    { TODO -omaurizuki : Test GetHyperLink }
 
     [Test]
     [TestCase('None'          , 'rtNone,False')]
@@ -129,7 +152,8 @@ begin
 end;
 
 procedure TFileManagerTests.FilterByEvent(EventFilterIndex, AYear, AMonth,
-  ADay: Integer; const DaysBefore, DaysAfter, FieldValue: string);
+  ADay: Integer; ARuleType: TO2RuleType; const DaysBefore, DaysAfter,
+  FieldValue: string);
 var
   Model: IFileManager;
   AObject: TO2Object;
@@ -143,7 +167,7 @@ begin
   with Model.O2File.Rules.AddRule('Rule 1') do
   begin
     Active := True;
-    RuleType := rtExpirationDate;
+    RuleType := ARuleType;
     FieldName := '*';
     FieldValue := '*';
     Params.AddParam(DateSeparatorParam).ParamValue := '-';
