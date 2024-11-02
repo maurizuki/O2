@@ -988,7 +988,7 @@
         <DCCReference Include="DataModel\uO2Objects.pas"/>
         <DCCReference Include="DataModel\uO2Relations.pas"/>
         <DCCReference Include="DataModel\uO2Rules.pas"/>
-        <DCCReference Include="Utils\uXmlFiler.pas"/>
+        <DCCReference Include="Utils\uXmlSerialization.pas"/>
         <DCCReference Include="Utils\uAppFiles.pas"/>
         <DCCReference Include="Utils\uCtrlHelpers.pas"/>
         <DCCReference Include="Utils\uHTMLHelper.pas"/>

@@ -102,7 +102,7 @@ uses
   DCPrc6, DCPrijndael, DCPserpent, DCPtea, DCPtwofish,
   DCPhaval, DCPmd4, DCPmd5, DCPripemd128, DCPripemd160,
   DCPsha1, DCPsha256, DCPsha512, DCPtiger,
-  uXmlFiler;
+  uXmlSerialization;
 
 resourcestring
   SUnsupportedFileType = 'File type not supported.';
@@ -208,7 +208,7 @@ begin
       end;
 
       XmlStream.Position := 0;
-      XmlReader := TXmlReader.Create(Self, O2FileSchemaLocation);
+      XmlReader := TXmlReader.Create(Self);
       try
         XmlReader.LoadFromStream(XmlStream);
       finally

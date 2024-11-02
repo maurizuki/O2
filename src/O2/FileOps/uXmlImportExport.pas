@@ -34,7 +34,7 @@ type
 implementation
 
 uses
-  uXmlFiler, uO2Defs;
+  uXmlSerialization, uO2Defs;
 
 { TXmlImport }
 
@@ -42,7 +42,7 @@ procedure TXmlImport.Execute(const FileName: string);
 var
   XmlReader: TXmlReader;
 begin
-  XmlReader := TXmlReader.Create(O2File, O2FileSchemaLocation);
+  XmlReader := TXmlReader.Create(O2File);
   try
     XmlReader.LoadFromFile(FileName);
   finally

@@ -13,7 +13,7 @@
 {                                                                      }
 { ******************************************************************** }
 
-unit uXmlFiler;
+unit uXmlSerialization;
 
 interface
 
@@ -21,21 +21,18 @@ uses
   Classes, XMLDoc, XMLIntf, xmldom, msxmldom;
 
 type
-  TXmlFiler = class
+  TXmlSerializer = class
   protected
     FInstance: TPersistent;
-    FSchemaLocation: string;
 
     const ItemIdent = 'item';
 
     function GetPropCount(AInstance: TPersistent): Integer;
     function GetPropName(AInstance: TPersistent; Index: Integer): string;
-    function CreateXMLDocument: IXMLDocument;
-  public
-    constructor Create(AInstance: TPersistent; const SchemaLocation: string);
+    function CreateXMLDocument: IXMLDocument; virtual;
   end;
 
-  TXmlReader = class(TXmlFiler)
+  TXmlReader = class(TXmlSerializer)
   private
     function ReadValue(const Node: IXMLNode;
       const Default: Variant): Variant;
@@ -50,13 +47,17 @@ type
     procedure ReadPersistent(const Node: IXMLNode;
       const AInstance: TPersistent);
   public
+    constructor Create(AInstance: TPersistent);
+
     procedure LoadFromStream(Stream: TStream);
     procedure LoadFromFile(const FileName: string);
     procedure LoadFromString(const S: string);
   end;
 
-  TXmlWriter = class(TXmlFiler)
+  TXmlWriter = class(TXmlSerializer)
   private
+    FSchemaLocation: string;
+
     procedure WriteValue(const Node: IXMLNode;
       const Value: Variant);
     procedure WriteStringList(const Node: IXMLNode;
@@ -67,7 +68,11 @@ type
       const PropName: string; const AInstance: TPersistent);
     procedure WritePersistent(const Node: IXMLNode;
       const AInstance: TPersistent);
+  protected
+    function CreateXMLDocument: IXMLDocument; override;
   public
+    constructor Create(AInstance: TPersistent; const SchemaLocation: string);
+
     procedure SaveToStream(Stream: TStream);
     procedure SaveToFile(const FileName: string);
     function SaveToString: string;
@@ -78,22 +83,14 @@ implementation
 uses
   SysUtils, TypInfo, Variants;
 
-{ TXmlFiler }
+{ TXmlSerializer }
 
-constructor TXmlFiler.Create(AInstance: TPersistent;
-  const SchemaLocation: string);
-begin
-  inherited Create;
-  FInstance := AInstance;
-  FSchemaLocation := SchemaLocation;
-end;
-
-function TXmlFiler.GetPropCount(AInstance: TPersistent): Integer;
+function TXmlSerializer.GetPropCount(AInstance: TPersistent): Integer;
 begin
   Result := GetTypeData(AInstance.ClassInfo)^.PropCount;
 end;
 
-function TXmlFiler.GetPropName(AInstance: TPersistent;
+function TXmlSerializer.GetPropName(AInstance: TPersistent;
   Index: Integer): string;
 var
   PropList: PPropList;
@@ -109,20 +106,21 @@ begin
   end;
 end;
 
-function TXmlFiler.CreateXMLDocument: IXMLDocument;
+function TXmlSerializer.CreateXMLDocument: IXMLDocument;
 begin
   Result := TXMLDocument.Create(nil);
   Result.Active := True;
   Result.Encoding := 'utf-8';
   Result.StandAlone := 'yes';
   Result.DocumentElement := Result.CreateNode(FInstance.ClassName);
-  Result.DocumentElement.Attributes['xmlns:xsi'] :=
-    'http://www.w3.org/2001/XMLSchema-instance';
-  Result.DocumentElement.Attributes['xsi:noNamespaceSchemaLocation'] :=
-    FSchemaLocation;
 end;
 
 { TXmlReader }
+
+constructor TXmlReader.Create(AInstance: TPersistent);
+begin
+  FInstance := AInstance;
+end;
 
 function TXmlReader.ReadValue(const Node: IXMLNode;
   const Default: Variant): Variant;
@@ -251,6 +249,13 @@ end;
 
 { TXmlWriter }
 
+constructor TXmlWriter.Create(AInstance: TPersistent;
+  const SchemaLocation: string);
+begin
+  FInstance := AInstance;
+  FSchemaLocation := SchemaLocation;
+end;
+
 procedure TXmlWriter.WriteValue(const Node: IXMLNode; const Value: Variant);
 begin
   Node.NodeValue := Value;
@@ -306,6 +311,15 @@ begin
     PropName := GetPropName(AInstance, I);
     WriteProperty(Node.AddChild(PropName), PropName, AInstance);
   end;
+end;
+
+function TXmlWriter.CreateXMLDocument: IXMLDocument;
+begin
+  Result := inherited;
+  Result.DocumentElement.Attributes['xmlns:xsi'] :=
+    'http://www.w3.org/2001/XMLSchema-instance';
+  Result.DocumentElement.Attributes['xsi:noNamespaceSchemaLocation'] :=
+    FSchemaLocation;
 end;
 
 procedure TXmlWriter.SaveToStream(Stream: TStream);

@@ -71,7 +71,7 @@ uses
   uO2Objects in 'DataModel\uO2Objects.pas',
   uO2Relations in 'DataModel\uO2Relations.pas',
   uO2Rules in 'DataModel\uO2Rules.pas',
-  uXmlFiler in 'Utils\uXmlFiler.pas',
+  uXmlSerialization in 'Utils\uXmlSerialization.pas',
   uAppFiles in 'Utils\uAppFiles.pas',
   uCtrlHelpers in 'Utils\uCtrlHelpers.pas',
   uHTMLHelper in 'Utils\uHTMLHelper.pas',

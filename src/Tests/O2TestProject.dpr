@@ -74,7 +74,7 @@ uses
   uShellUtils in '..\O2\Utils\uShellUtils.pas',
   uUtils in '..\O2\Utils\uUtils.pas',
   uHTMLHelper in '..\O2\Utils\uHTMLHelper.pas',
-  uXmlFiler in '..\O2\Utils\uXmlFiler.pas',
+  uXmlSerialization in '..\O2\Utils\uXmlSerialization.pas',
   uXmlStorage in '..\O2\Utils\uXmlStorage.pas',
   uEncryptionPropsModel in '..\O2\ViewModels\uEncryptionPropsModel.pas',
   uEventFilters in '..\O2\ViewModels\uEventFilters.pas',
