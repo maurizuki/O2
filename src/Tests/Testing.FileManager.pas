@@ -72,7 +72,15 @@ type
 
     { TODO -omaurizuki : Test GetDisplayText }
 
-    { TODO -omaurizuki : Test GetHyperLink }
+    [Test]
+    [TestCase('None'          , 'rtNone,Value 1')]
+    [TestCase('HyperLink'     , 'rtHyperLink,(Field%201;Value%201)')]
+    [TestCase('Email'         , 'rtEmail,Value 1')]
+    [TestCase('Password'      , 'rtPassword,Value 1')]
+    [TestCase('ExpirationDate', 'rtExpirationDate,Value 1')]
+    [TestCase('Recurrence'    , 'rtRecurrence,Value 1')]
+    [TestCase('Highlight'     , 'rtHighlight,Value 1')]
+    procedure GetHyperLink(ARuleType: TO2RuleType; Expected: string);
 
     [Test]
     [TestCase('None'          , 'rtNone,False')]
@@ -241,6 +249,29 @@ begin
 
   for AObject in Model.GetObjects do
     Assert.AreEqual('Object 2', AObject.Name);
+end;
+
+procedure TFileManagerTests.GetHyperLink(ARuleType: TO2RuleType;
+  Expected: string);
+var
+  Model: IFileManager;
+begin
+  Model := TFileManager.Create(nil, nil, nil);
+
+  Model.O2File.Objects.AddObject('Object 1').Fields.AddField('Field 1')
+    .FieldValue := 'Value 1';
+
+  with Model.O2File.Rules.AddRule('Rule 1') do
+  begin
+    Active := True;
+    RuleType := ARuleType;
+    FieldName := '*';
+    FieldValue := '*';
+    Params.AddParam(HyperLinkMaskParam).ParamValue := '({fn};{fv})';
+  end;
+
+  Assert.AreEqual(Expected,
+    Model.GetHyperLink(Model.O2File.Objects[0].Fields[0]));
 end;
 
 procedure TFileManagerTests.IsHyperlinkOrEmail(ARuleType: TO2RuleType;
