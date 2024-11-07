@@ -1,4 +1,4 @@
-unit Testing.FileManager;
+﻿unit Testing.FileManager;
 
 interface
 
@@ -70,7 +70,17 @@ type
 
     { TODO -omaurizuki : Test GetHighlight }
 
-    { TODO -omaurizuki : Test GetDisplayText }
+    [Test]
+    [TestCase('None'                 , 'rtHyperLink,2000,1,1,False,Value 1,Value 1')]
+    [TestCase('HyperLink'            , 'rtHyperLink,2000,1,1,False,Value 1,Value 1')]
+    [TestCase('Email'                , 'rtEmail,2000,1,1,False,Value 1,Value 1')]
+    [TestCase('Password'             , 'rtPassword,2000,1,1,False,Value 1,●●●●●●●')]
+    [TestCase('Password.ShowPassword', 'rtPassword,2000,1,1,True,Value 1,Value 1')]
+    [TestCase('ExpirationDate'       , 'rtExpirationDate,2000,1,1,False,2001-03-06,(Field 1;2001-03-06;1;2;3;14;430)')]
+    [TestCase('Recurrence'           , 'rtRecurrence,2001,3,6,False,2000-01-01,(Field 1;2000-01-01;1;2;3;14;430)')]
+    [TestCase('Highlight'            , 'rtHighlight,2000,1,1,False,Value 1,Value 1')]
+    procedure GetDisplayText(ARuleType: TO2RuleType; AYear, AMonth,
+      ADay: Integer; ShowPassword: Boolean; const FieldValue, Expected: string);
 
     [Test]
     [TestCase('None'          , 'rtNone,Value 1')]
@@ -249,6 +259,34 @@ begin
 
   for AObject in Model.GetObjects do
     Assert.AreEqual('Object 2', AObject.Name);
+end;
+
+procedure TFileManagerTests.GetDisplayText(ARuleType: TO2RuleType; AYear,
+  AMonth, ADay: Integer; ShowPassword: Boolean; const FieldValue,
+  Expected: string);
+var
+  Model: IFileManager;
+begin
+  Model := TFileManager.Create(TCustomDateProvider.Create(EncodeDate(AYear,
+    AMonth, ADay)), nil, nil);
+
+  Model.O2File.Objects.AddObject('Object 1').Fields.AddField('Field 1')
+    .FieldValue := FieldValue;
+
+  with Model.O2File.Rules.AddRule('Rule 1') do
+  begin
+    Active := True;
+    RuleType := ARuleType;
+    FieldName := '*';
+    FieldValue := '*';
+    Params.AddParam(DateSeparatorParam).ParamValue := '-';
+    Params.AddParam(ShortDateFormatParam).ParamValue := 'yyyy/mm/dd';
+    Params.AddParam(DisplayMaskParam).ParamValue :=
+      '({fn};{fv};{years};{monthsof};{daysof};{months};{days})';
+  end;
+
+  Assert.AreEqual(Expected,
+    Model.GetDisplayText(Model.O2File.Objects[0].Fields[0], ShowPassword));
 end;
 
 procedure TFileManagerTests.GetHyperLink(ARuleType: TO2RuleType;
