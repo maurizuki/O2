@@ -3,7 +3,7 @@
 interface
 
 uses
-  DUnitX.TestFramework, uServices, uO2Rules;
+  DUnitX.TestFramework, Graphics, uServices, uO2Rules;
 
 type
   [TestFixture]
@@ -71,11 +71,24 @@ type
     { TODO -omaurizuki : Test GetHighlight }
 
     [Test]
-    [TestCase('None'                 , 'rtHyperLink,2000,1,1,False,Value 1,Value 1')]
+    [TestCase('None'                            , 'rtNone,2000,1,1,False,Value 1,$1FFFFFFF,$1FFFFFFF')]
+    [TestCase('HyperLink'                       , 'rtHyperLink,2000,1,1,False,Value 1,$1FFFFFFF,$1FFFFFFF')]
+    [TestCase('Email'                           , 'rtEmail,2000,1,1,False,Value 1,$1FFFFFFF,$1FFFFFFF')]
+    [TestCase('Password'                        , 'rtPassword,2000,1,1,False,password,$1FFFFFFF,$1FFFFFFF')]
+    [TestCase('Password.DisplayPasswordStrength', 'rtPassword,2000,1,1,True,password,$00241CED,$00000000')]
+    [TestCase('ExpirationDate'                  , 'rtExpirationDate,2000,1,1,False,2000-01-01,$000000FF,$00FFFFFF')]
+    [TestCase('Recurrence'                      , 'rtRecurrence,2000,1,1,False,2001-01-01,$000000FF,$00FFFFFF')]
+    [TestCase('Highlight'                       , 'rtHighlight,2000,1,1,False,Value 1,$000000FF,$00FFFFFF')]
+    procedure GetHighlightForField(ARuleType: TO2RuleType; AYear, AMonth,
+      ADay: Integer; DisplayPasswordStrength: Boolean; const FieldValue: string;
+      ExpectedColor, ExpectedTextColor: TColor);
+
+    [Test]
+    [TestCase('None'                 , 'rtNone,2000,1,1,False,Value 1,Value 1')]
     [TestCase('HyperLink'            , 'rtHyperLink,2000,1,1,False,Value 1,Value 1')]
     [TestCase('Email'                , 'rtEmail,2000,1,1,False,Value 1,Value 1')]
-    [TestCase('Password'             , 'rtPassword,2000,1,1,False,Value 1,●●●●●●●')]
-    [TestCase('Password.ShowPassword', 'rtPassword,2000,1,1,True,Value 1,Value 1')]
+    [TestCase('Password'             , 'rtPassword,2000,1,1,False,password,●●●●●●●●')]
+    [TestCase('Password.ShowPassword', 'rtPassword,2000,1,1,True,password,password')]
     [TestCase('ExpirationDate'       , 'rtExpirationDate,2000,1,1,False,2001-03-06,(Field 1;2001-03-06;1;2;3;14;430)')]
     [TestCase('Recurrence'           , 'rtRecurrence,2001,3,6,False,2000-01-01,(Field 1;2000-01-01;1;2;3;14;430)')]
     [TestCase('Highlight'            , 'rtHighlight,2000,1,1,False,Value 1,Value 1')]
@@ -134,7 +147,7 @@ type
 implementation
 
 uses
-  SysUtils, DateUtils, uFileManager, uO2Objects;
+  SysUtils, DateUtils, uFileManager, uO2Objects, uPasswordScoreCache;
 
 { TFileManagerTests }
 
@@ -259,6 +272,38 @@ begin
 
   for AObject in Model.GetObjects do
     Assert.AreEqual('Object 2', AObject.Name);
+end;
+
+procedure TFileManagerTests.GetHighlightForField(ARuleType: TO2RuleType; AYear,
+  AMonth, ADay: Integer; DisplayPasswordStrength: Boolean;
+  const FieldValue: string; ExpectedColor, ExpectedTextColor: TColor);
+var
+  Model: IFileManager;
+  ActualHighlight: THighlight;
+begin
+  Model := TFileManager.Create(TCustomDateProvider.Create(EncodeDate(AYear,
+    AMonth, ADay)), nil, TPasswordScoreCache.Create);
+
+  Model.O2File.Objects.AddObject('Object 1').Fields.AddField('Field 1')
+    .FieldValue := FieldValue;
+
+  with Model.O2File.Rules.AddRule('Rule 1') do
+  begin
+    Active := True;
+    RuleType := ARuleType;
+    FieldName := '*';
+    FieldValue := '*';
+    Params.AddParam(DateSeparatorParam).ParamValue := '-';
+    Params.AddParam(ShortDateFormatParam).ParamValue := 'yyyy/mm/dd';
+    Params.AddParam(HighlightColorParam).ParamValue := '$0000FF';
+    Params.AddParam(HighlightTextColorParam).ParamValue := '$FFFFFF';
+    Params.AddParam(DisplayPasswordStrengthParam).ParamValue :=
+      BoolToStr(DisplayPasswordStrength, True);
+  end;
+
+  ActualHighlight := Model.GetHighlight(Model.O2File.Objects[0].Fields[0]);
+  Assert.AreEqual(ExpectedColor, ActualHighlight.Color, 'Color');
+  Assert.AreEqual(ExpectedTextColor, ActualHighlight.TextColor, 'TextColor');
 end;
 
 procedure TFileManagerTests.GetDisplayText(ARuleType: TO2RuleType; AYear,

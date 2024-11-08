@@ -145,6 +145,7 @@
         <DCCReference Include="..\O2\uGlobal.pas"/>
         <DCCReference Include="..\O2\Utils\uO2ObjectsUtils.pas"/>
         <DCCReference Include="..\O2\Utils\uO2RulesUtils.pas"/>
+        <DCCReference Include="..\O2\Utils\uPasswordScoreCache.pas"/>
         <DCCReference Include="..\O2\Utils\uShellUtils.pas"/>
         <DCCReference Include="..\O2\Utils\uUtils.pas"/>
         <DCCReference Include="..\O2\Utils\uHTMLHelper.pas"/>
