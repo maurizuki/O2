@@ -68,7 +68,18 @@ type
 
     { TODO -omaurizuki : Test GetNextEvent }
 
-    { TODO -omaurizuki : Test GetHighlight }
+    [Test]
+    [TestCase('None'                            , 'rtNone,2000,1,1,False,Value 1,$1FFFFFFF,$1FFFFFFF')]
+    [TestCase('HyperLink'                       , 'rtHyperLink,2000,1,1,False,Value 1,$1FFFFFFF,$1FFFFFFF')]
+    [TestCase('Email'                           , 'rtEmail,2000,1,1,False,Value 1,$1FFFFFFF,$1FFFFFFF')]
+    [TestCase('Password'                        , 'rtPassword,2000,1,1,False,password,$1FFFFFFF,$1FFFFFFF')]
+    [TestCase('Password.DisplayPasswordStrength', 'rtPassword,2000,1,1,True,password,$00241CED,$00000000')]
+    [TestCase('ExpirationDate'                  , 'rtExpirationDate,2000,1,1,False,2000-01-01,$000000FF,$00FFFFFF')]
+    [TestCase('Recurrence'                      , 'rtRecurrence,2000,1,1,False,2001-01-01,$000000FF,$00FFFFFF')]
+    [TestCase('Highlight'                       , 'rtHighlight,2000,1,1,False,Value 1,$000000FF,$00FFFFFF')]
+    procedure GetHighlightForObject(ARuleType: TO2RuleType; AYear, AMonth,
+      ADay: Integer; DisplayPasswordStrength: Boolean; const FieldValue: string;
+      ExpectedColor, ExpectedTextColor: TColor);
 
     [Test]
     [TestCase('None'                            , 'rtNone,2000,1,1,False,Value 1,$1FFFFFFF,$1FFFFFFF')]
@@ -272,6 +283,38 @@ begin
 
   for AObject in Model.GetObjects do
     Assert.AreEqual('Object 2', AObject.Name);
+end;
+
+procedure TFileManagerTests.GetHighlightForObject(ARuleType: TO2RuleType; AYear,
+  AMonth, ADay: Integer; DisplayPasswordStrength: Boolean;
+  const FieldValue: string; ExpectedColor, ExpectedTextColor: TColor);
+var
+  Model: IFileManager;
+  ActualHighlight: THighlight;
+begin
+  Model := TFileManager.Create(TCustomDateProvider.Create(EncodeDate(AYear,
+    AMonth, ADay)), nil, TPasswordScoreCache.Create);
+
+  Model.O2File.Objects.AddObject('Object 1').Fields.AddField('Field 1')
+    .FieldValue := FieldValue;
+
+  with Model.O2File.Rules.AddRule('Rule 1') do
+  begin
+    Active := True;
+    RuleType := ARuleType;
+    FieldName := '*';
+    FieldValue := '*';
+    Params.AddParam(DateSeparatorParam).ParamValue := '-';
+    Params.AddParam(ShortDateFormatParam).ParamValue := 'yyyy/mm/dd';
+    Params.AddParam(HighlightColorParam).ParamValue := '$0000FF';
+    Params.AddParam(HighlightTextColorParam).ParamValue := '$FFFFFF';
+    Params.AddParam(DisplayPasswordStrengthParam).ParamValue :=
+      BoolToStr(DisplayPasswordStrength, True);
+  end;
+
+  ActualHighlight := Model.GetHighlight(Model.O2File.Objects[0]);
+  Assert.AreEqual(ExpectedColor, ActualHighlight.Color, 'Color');
+  Assert.AreEqual(ExpectedTextColor, ActualHighlight.TextColor, 'TextColor');
 end;
 
 procedure TFileManagerTests.GetHighlightForField(ARuleType: TO2RuleType; AYear,
