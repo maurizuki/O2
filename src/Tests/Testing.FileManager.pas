@@ -313,8 +313,8 @@ begin
   end;
 
   ActualHighlight := Model.GetHighlight(Model.O2File.Objects[0]);
-  Assert.AreEqual(ExpectedColor, ActualHighlight.Color, 'Color');
-  Assert.AreEqual(ExpectedTextColor, ActualHighlight.TextColor, 'TextColor');
+  Assert.AreEqual(ExpectedColor, ActualHighlight.Color, '(Color)');
+  Assert.AreEqual(ExpectedTextColor, ActualHighlight.TextColor, '(TextColor)');
 end;
 
 procedure TFileManagerTests.GetHighlightForField(ARuleType: TO2RuleType; AYear,
@@ -345,8 +345,8 @@ begin
   end;
 
   ActualHighlight := Model.GetHighlight(Model.O2File.Objects[0].Fields[0]);
-  Assert.AreEqual(ExpectedColor, ActualHighlight.Color, 'Color');
-  Assert.AreEqual(ExpectedTextColor, ActualHighlight.TextColor, 'TextColor');
+  Assert.AreEqual(ExpectedColor, ActualHighlight.Color, '(Color)');
+  Assert.AreEqual(ExpectedTextColor, ActualHighlight.TextColor, '(TextColor)');
 end;
 
 procedure TFileManagerTests.GetDisplayText(ARuleType: TO2RuleType; AYear,
