@@ -66,7 +66,17 @@ type
     [Test]
     procedure FilterByRule;
 
-    { TODO -omaurizuki : Test TryGetNextEvent }
+    [Test]
+    [TestCase('None'          , 'rtNone,2000,1,1,Value 1,False,0,0,0')]
+    [TestCase('HyperLink'     , 'rtHyperLink,2000,1,1,Value 1,False,0,0,0')]
+    [TestCase('Email'         , 'rtEmail,2000,1,1,Value 1,False,0,0,0')]
+    [TestCase('Password'      , 'rtPassword,2000,1,1,Value 1,False,0,0,0')]
+    [TestCase('ExpirationDate', 'rtExpirationDate,2000,1,1,2001-01-01,True,2001,1,1')]
+    [TestCase('Recurrence'    , 'rtRecurrence,2001,1,1,2000-01-01,True,2001,1,1')]
+    [TestCase('Highlight'     , 'rtHighlight,2000,1,1,Value 1,False,0,0,0')]
+    procedure TryGetNextEvent(ARuleType: TO2RuleType; AYear, AMonth,
+      ADay: Integer; const FieldValue: string; ExpectedResult: Boolean;
+      ExpectedYear, ExpectedMonth, ExpectedDay: Integer);
 
     [Test]
     [TestCase('None'                            , 'rtNone,2000,1,1,False,Value 1,False,0,0')]
@@ -285,6 +295,39 @@ begin
 
   for AObject in Model.GetObjects do
     Assert.AreEqual('Object 2', AObject.Name);
+end;
+
+procedure TFileManagerTests.TryGetNextEvent(ARuleType: TO2RuleType; AYear,
+  AMonth, ADay: Integer; const FieldValue: string; ExpectedResult: Boolean;
+  ExpectedYear, ExpectedMonth, ExpectedDay: Integer);
+var
+  Model: IFileManager;
+  NextDate: TDateTime;
+begin
+  Model := TFileManager.Create(TCustomDateProvider.Create(EncodeDate(AYear,
+    AMonth, ADay)), nil, nil);
+
+  Model.O2File.Objects.AddObject('Object 1').Fields.AddField('Field 1')
+    .FieldValue := FieldValue;
+
+  with Model.O2File.Rules.AddRule('Rule 1') do
+  begin
+    Active := True;
+    RuleType := ARuleType;
+    FieldName := '*';
+    FieldValue := '*';
+    Params.AddParam(DateSeparatorParam).ParamValue := '-';
+    Params.AddParam(ShortDateFormatParam).ParamValue := 'yyyy/mm/dd';
+  end;
+
+  if Model.TryGetNextEvent(Model.O2File.Objects[0], NextDate) then
+  begin
+    Assert.IsTrue(ExpectedResult);
+    Assert.AreEqual(EncodeDate(ExpectedYear, ExpectedMonth, ExpectedDay),
+      NextDate);
+  end
+  else
+    Assert.IsFalse(ExpectedResult);
 end;
 
 procedure TFileManagerTests.TryGetHighlightColorsForObject(
