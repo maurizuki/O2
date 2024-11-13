@@ -163,16 +163,16 @@
         <DCCReference Include="..\O2\ViewModels\uReplaceOperations.pas"/>
         <DCCReference Include="..\O2\ViewModels\uRuleModels.pas"/>
         <DCCReference Include="Testing.Cryptography.pas"/>
-        <DCCReference Include="Testing.FilePropsModel.pas"/>
-        <DCCReference Include="Testing.ObjectModels.pas"/>
-        <DCCReference Include="Testing.RelationModels.pas"/>
-        <DCCReference Include="Testing.RuleModels.pas"/>
-        <DCCReference Include="Testing.ReplaceOperations.pas"/>
-        <DCCReference Include="Testing.XmlStorage.pas"/>
-        <DCCReference Include="Testing.PrintModel.pas"/>
-        <DCCReference Include="Testing.HTMLExportModel.pas"/>
         <DCCReference Include="Testing.EncryptionPropsModel.pas"/>
         <DCCReference Include="Testing.FileManager.pas"/>
+        <DCCReference Include="Testing.FilePropsModel.pas"/>
+        <DCCReference Include="Testing.HTMLExportModel.pas"/>
+        <DCCReference Include="Testing.ObjectModels.pas"/>
+        <DCCReference Include="Testing.PrintModel.pas"/>
+        <DCCReference Include="Testing.RelationModels.pas"/>
+        <DCCReference Include="Testing.ReplaceOperations.pas"/>
+        <DCCReference Include="Testing.RuleModels.pas"/>
+        <DCCReference Include="Testing.XmlStorage.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

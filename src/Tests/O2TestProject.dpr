@@ -89,16 +89,16 @@ uses
   uReplaceOperations in '..\O2\ViewModels\uReplaceOperations.pas',
   uRuleModels in '..\O2\ViewModels\uRuleModels.pas',
   Testing.Cryptography in 'Testing.Cryptography.pas',
-  Testing.FilePropsModel in 'Testing.FilePropsModel.pas',
-  Testing.ObjectModels in 'Testing.ObjectModels.pas',
-  Testing.RelationModels in 'Testing.RelationModels.pas',
-  Testing.RuleModels in 'Testing.RuleModels.pas',
-  Testing.ReplaceOperations in 'Testing.ReplaceOperations.pas',
-  Testing.XmlStorage in 'Testing.XmlStorage.pas',
-  Testing.PrintModel in 'Testing.PrintModel.pas',
-  Testing.HTMLExportModel in 'Testing.HTMLExportModel.pas',
   Testing.EncryptionPropsModel in 'Testing.EncryptionPropsModel.pas',
-  Testing.FileManager in 'Testing.FileManager.pas';
+  Testing.FileManager in 'Testing.FileManager.pas',
+  Testing.FilePropsModel in 'Testing.FilePropsModel.pas',
+  Testing.HTMLExportModel in 'Testing.HTMLExportModel.pas',
+  Testing.ObjectModels in 'Testing.ObjectModels.pas',
+  Testing.PrintModel in 'Testing.PrintModel.pas',
+  Testing.RelationModels in 'Testing.RelationModels.pas',
+  Testing.ReplaceOperations in 'Testing.ReplaceOperations.pas',
+  Testing.RuleModels in 'Testing.RuleModels.pas',
+  Testing.XmlStorage in 'Testing.XmlStorage.pas';
 
 {$IFNDEF TESTINSIGHT}
 var
