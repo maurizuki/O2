@@ -66,33 +66,35 @@ type
     [Test]
     procedure FilterByRule;
 
-    { TODO -omaurizuki : Test GetNextEvent }
+    { TODO -omaurizuki : Test TryGetNextEvent }
 
     [Test]
-    [TestCase('None'                            , 'rtNone,2000,1,1,False,Value 1,$1FFFFFFF,$1FFFFFFF')]
-    [TestCase('HyperLink'                       , 'rtHyperLink,2000,1,1,False,Value 1,$1FFFFFFF,$1FFFFFFF')]
-    [TestCase('Email'                           , 'rtEmail,2000,1,1,False,Value 1,$1FFFFFFF,$1FFFFFFF')]
-    [TestCase('Password'                        , 'rtPassword,2000,1,1,False,password,$1FFFFFFF,$1FFFFFFF')]
-    [TestCase('Password.DisplayPasswordStrength', 'rtPassword,2000,1,1,True,password,$00241CED,$00000000')]
-    [TestCase('ExpirationDate'                  , 'rtExpirationDate,2000,1,1,False,2000-01-01,$000000FF,$00FFFFFF')]
-    [TestCase('Recurrence'                      , 'rtRecurrence,2000,1,1,False,2001-01-01,$000000FF,$00FFFFFF')]
-    [TestCase('Highlight'                       , 'rtHighlight,2000,1,1,False,Value 1,$000000FF,$00FFFFFF')]
-    procedure GetHighlightForObject(ARuleType: TO2RuleType; AYear, AMonth,
-      ADay: Integer; DisplayPasswordStrength: Boolean; const FieldValue: string;
-      ExpectedColor, ExpectedTextColor: TColor);
+    [TestCase('None'                            , 'rtNone,2000,1,1,False,Value 1,False,0,0')]
+    [TestCase('HyperLink'                       , 'rtHyperLink,2000,1,1,False,Value 1,False,0,0')]
+    [TestCase('Email'                           , 'rtEmail,2000,1,1,False,Value 1,False,0,0')]
+    [TestCase('Password'                        , 'rtPassword,2000,1,1,False,password,False,0,0')]
+    [TestCase('Password.DisplayPasswordStrength', 'rtPassword,2000,1,1,True,password,True,$241CED,$000000')]
+    [TestCase('ExpirationDate'                  , 'rtExpirationDate,2000,1,1,False,2000-01-01,True,$0000FF,$FFFFFF')]
+    [TestCase('Recurrence'                      , 'rtRecurrence,2000,1,1,False,2001-01-01,True,$0000FF,$FFFFFF')]
+    [TestCase('Highlight'                       , 'rtHighlight,2000,1,1,False,Value 1,True,$0000FF,$FFFFFF')]
+    procedure TryGetHighlightColorsForObject(ARuleType: TO2RuleType; AYear,
+      AMonth, ADay: Integer; DisplayPasswordStrength: Boolean;
+      const FieldValue: string; ExpectedResult: Boolean; ExpectedColor,
+      ExpectedTextColor: TColor);
 
     [Test]
-    [TestCase('None'                            , 'rtNone,2000,1,1,False,Value 1,$1FFFFFFF,$1FFFFFFF')]
-    [TestCase('HyperLink'                       , 'rtHyperLink,2000,1,1,False,Value 1,$1FFFFFFF,$1FFFFFFF')]
-    [TestCase('Email'                           , 'rtEmail,2000,1,1,False,Value 1,$1FFFFFFF,$1FFFFFFF')]
-    [TestCase('Password'                        , 'rtPassword,2000,1,1,False,password,$1FFFFFFF,$1FFFFFFF')]
-    [TestCase('Password.DisplayPasswordStrength', 'rtPassword,2000,1,1,True,password,$00241CED,$00000000')]
-    [TestCase('ExpirationDate'                  , 'rtExpirationDate,2000,1,1,False,2000-01-01,$000000FF,$00FFFFFF')]
-    [TestCase('Recurrence'                      , 'rtRecurrence,2000,1,1,False,2001-01-01,$000000FF,$00FFFFFF')]
-    [TestCase('Highlight'                       , 'rtHighlight,2000,1,1,False,Value 1,$000000FF,$00FFFFFF')]
-    procedure GetHighlightForField(ARuleType: TO2RuleType; AYear, AMonth,
-      ADay: Integer; DisplayPasswordStrength: Boolean; const FieldValue: string;
-      ExpectedColor, ExpectedTextColor: TColor);
+    [TestCase('None'                            , 'rtNone,2000,1,1,False,Value 1,False,0,0')]
+    [TestCase('HyperLink'                       , 'rtHyperLink,2000,1,1,False,Value 1,False,0,0')]
+    [TestCase('Email'                           , 'rtEmail,2000,1,1,False,Value 1,False,0,0')]
+    [TestCase('Password'                        , 'rtPassword,2000,1,1,False,password,False,0,0')]
+    [TestCase('Password.DisplayPasswordStrength', 'rtPassword,2000,1,1,True,password,True,$241CED,$000000')]
+    [TestCase('ExpirationDate'                  , 'rtExpirationDate,2000,1,1,False,2000-01-01,True,$0000FF,$FFFFFF')]
+    [TestCase('Recurrence'                      , 'rtRecurrence,2000,1,1,False,2001-01-01,True,$0000FF,$FFFFFF')]
+    [TestCase('Highlight'                       , 'rtHighlight,2000,1,1,False,Value 1,True,$0000FF,$FFFFFF')]
+    procedure TryGetHighlightColorsForField(ARuleType: TO2RuleType; AYear,
+      AMonth, ADay: Integer; DisplayPasswordStrength: Boolean;
+      const FieldValue: string; ExpectedResult: Boolean; ExpectedColor,
+      ExpectedTextColor: TColor);
 
     [Test]
     [TestCase('None'                 , 'rtNone,2000,1,1,False,Value 1,Value 1')]
@@ -285,12 +287,13 @@ begin
     Assert.AreEqual('Object 2', AObject.Name);
 end;
 
-procedure TFileManagerTests.GetHighlightForObject(ARuleType: TO2RuleType; AYear,
-  AMonth, ADay: Integer; DisplayPasswordStrength: Boolean;
-  const FieldValue: string; ExpectedColor, ExpectedTextColor: TColor);
+procedure TFileManagerTests.TryGetHighlightColorsForObject(
+  ARuleType: TO2RuleType; AYear, AMonth, ADay: Integer;
+  DisplayPasswordStrength: Boolean; const FieldValue: string;
+  ExpectedResult: Boolean; ExpectedColor, ExpectedTextColor: TColor);
 var
   Model: IFileManager;
-  ActualHighlight: THighlight;
+  Color, TextColor: TColor;
 begin
   Model := TFileManager.Create(TCustomDateProvider.Create(EncodeDate(AYear,
     AMonth, ADay)), nil, TPasswordScoreCache.Create);
@@ -312,17 +315,23 @@ begin
       BoolToStr(DisplayPasswordStrength, True);
   end;
 
-  ActualHighlight := Model.GetHighlight(Model.O2File.Objects[0]);
-  Assert.AreEqual(ExpectedColor, ActualHighlight.Color, '(Color)');
-  Assert.AreEqual(ExpectedTextColor, ActualHighlight.TextColor, '(TextColor)');
+  if Model.TryGetHighlightColors(Model.O2File.Objects[0], Color, TextColor) then
+  begin
+    Assert.IsTrue(ExpectedResult);
+    Assert.AreEqual(ExpectedColor, Color, '(Color)');
+    Assert.AreEqual(ExpectedTextColor, TextColor, '(TextColor)');
+  end
+  else
+    Assert.IsFalse(ExpectedResult);
 end;
 
-procedure TFileManagerTests.GetHighlightForField(ARuleType: TO2RuleType; AYear,
-  AMonth, ADay: Integer; DisplayPasswordStrength: Boolean;
-  const FieldValue: string; ExpectedColor, ExpectedTextColor: TColor);
+procedure TFileManagerTests.TryGetHighlightColorsForField(
+  ARuleType: TO2RuleType; AYear, AMonth, ADay: Integer;
+  DisplayPasswordStrength: Boolean; const FieldValue: string;
+  ExpectedResult: Boolean; ExpectedColor, ExpectedTextColor: TColor);
 var
   Model: IFileManager;
-  ActualHighlight: THighlight;
+  Color, TextColor: TColor;
 begin
   Model := TFileManager.Create(TCustomDateProvider.Create(EncodeDate(AYear,
     AMonth, ADay)), nil, TPasswordScoreCache.Create);
@@ -344,9 +353,15 @@ begin
       BoolToStr(DisplayPasswordStrength, True);
   end;
 
-  ActualHighlight := Model.GetHighlight(Model.O2File.Objects[0].Fields[0]);
-  Assert.AreEqual(ExpectedColor, ActualHighlight.Color, '(Color)');
-  Assert.AreEqual(ExpectedTextColor, ActualHighlight.TextColor, '(TextColor)');
+  if Model.TryGetHighlightColors(Model.O2File.Objects[0].Fields[0], Color,
+    TextColor) then
+  begin
+    Assert.IsTrue(ExpectedResult);
+    Assert.AreEqual(ExpectedColor, Color, '(Color)');
+    Assert.AreEqual(ExpectedTextColor, TextColor, '(TextColor)');
+  end
+  else
+    Assert.IsFalse(ExpectedResult);
 end;
 
 procedure TFileManagerTests.GetDisplayText(ARuleType: TO2RuleType; AYear,

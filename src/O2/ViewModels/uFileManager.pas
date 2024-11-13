@@ -18,8 +18,8 @@ unit uFileManager;
 interface
 
 uses
-  Classes, Generics.Collections, uServices, uEventFilters, uO2File, uO2Objects, 
-  uO2Rules;
+  Classes, Generics.Collections, Graphics, uServices, uEventFilters, uO2File,
+  uO2Objects, uO2Rules;
 
 type
   TFileManager = class(TInterfacedObject, IFileManager)
@@ -57,8 +57,8 @@ type
     function TryGetNextEvent(const AField: TO2Field; const ARule: TO2Rule;
       StartDate: TDateTime; out NextDate: TDateTime;
       UseParams: Boolean = False): Boolean; overload;
-    function GetHighlight(const AField: TO2Field;
-      const ARule: TO2Rule): THighlight; overload;
+    function TryGetHighlightColors(const AField: TO2Field;
+      const ARule: TO2Rule; out Color, TextColor: TColor): Boolean; overload;
     function GetDisplayText(const AField: TO2Field; const ARule: TO2Rule;
       ShowPasswords: Boolean): string; overload;
   public
@@ -75,8 +75,10 @@ type
 
     function TryGetNextEvent(const AObject: TO2Object;
       out NextDate: TDateTime): Boolean; overload;
-    function GetHighlight(const AObject: TO2Object): THighlight; overload;
-    function GetHighlight(const AField: TO2Field): THighlight; overload;
+    function TryGetHighlightColors(const AObject: TO2Object; out Color,
+      TextColor: TColor): Boolean; overload;
+    function TryGetHighlightColors(const AField: TO2Field; out Color,
+      TextColor: TColor): Boolean; overload;
     function GetDisplayText(const AField: TO2Field;
       ShowPasswords: Boolean): string; overload;
     function GetHyperLink(const AField: TO2Field): string;
@@ -106,7 +108,7 @@ type
 implementation
 
 uses
-  Graphics, SysUtils, StrUtils, DateUtils, uGlobal, uUtils, uO2ObjectsUtils,
+  SysUtils, StrUtils, DateUtils, uGlobal, uUtils, uO2ObjectsUtils,
   uO2RulesUtils;
 
 type
@@ -226,44 +228,37 @@ begin
   Result := FFile;
 end;
 
-function TFileManager.GetHighlight(const AObject: TO2Object): THighlight;
+function TFileManager.TryGetHighlightColors(const AObject: TO2Object; out Color,
+  TextColor: TColor): Boolean;
 var
-  AHighlight: THighlight;
   RuleIndex: Integer;
   AField: TO2Field;
   ARule: TO2Rule;
 begin
-  Result.Color := clNone;
-  Result.TextColor := clNone;
+  Result := False;
   RuleIndex := O2File.Rules.Count;
   for AField in AObject.Fields do
     for ARule in O2File.Rules do
       if ARule.Index < RuleIndex then
-      begin
-        AHighlight := GetHighlight(AField, ARule);
-        if AHighlight.Color <> clNone then
+        if TryGetHighlightColors(AField, ARule, Color, TextColor) then
         begin
-          Result := AHighlight;
           RuleIndex := ARule.Index;
+          Result := True;
         end;
-      end;
 end;
 
-function TFileManager.GetHighlight(const AField: TO2Field): THighlight;
+function TFileManager.TryGetHighlightColors(const AField: TO2Field; out Color,
+  TextColor: TColor): Boolean;
 var
   ARule: TO2Rule;
 begin
-  Result.Color := clNone;
-  Result.TextColor := clNone;
+  Result := False;
   for ARule in O2File.Rules do
-  begin
-    Result := GetHighlight(AField, ARule);
-    if Result.Color <> clNone then Break;
-  end;
+    if TryGetHighlightColors(AField, ARule, Color, TextColor) then Exit(True);
 end;
 
-function TFileManager.GetHighlight(const AField: TO2Field;
-  const ARule: TO2Rule): THighlight;
+function TFileManager.TryGetHighlightColors(const AField: TO2Field;
+  const ARule: TO2Rule; out Color, TextColor: TColor): Boolean;
 var
   PasswordScore: Integer;
 begin
@@ -273,23 +268,22 @@ begin
     and FPasswordScoreCache.TryGetPasswordScore(AField.FieldValue,
       PasswordScore) then
   begin
-    Result.Color := PasswordScoreColors[PasswordScore];
-    Result.TextColor := clBlack;
-  end
-  else
-    if ARule.Active and (ARule.RuleType = rtHighlight) and ARule.Matches(AField)
-      or HasEventInWindow(AField, ARule, 0, 0, True) then
-    begin
-      Result.Color := ARule.Params.ReadInteger(HighlightColorParam,
-        DefaultHighlightColor);
-      Result.TextColor := ARule.Params.ReadInteger(HighlightTextColorParam,
-        DefaultHighlightTextColor);
-    end
-    else
-    begin
-      Result.Color := clNone;
-      Result.TextColor := clNone;
-    end;
+    Color := PasswordScoreColors[PasswordScore];
+    TextColor := clBlack;
+    Exit(True);
+  end;
+
+  if ARule.Active and (ARule.RuleType = rtHighlight) and ARule.Matches(AField)
+    or HasEventInWindow(AField, ARule, 0, 0, True) then
+  begin
+    Color := ARule.Params.ReadInteger(HighlightColorParam,
+      DefaultHighlightColor);
+    TextColor := ARule.Params.ReadInteger(HighlightTextColorParam,
+      DefaultHighlightTextColor);
+    Exit(True);
+  end;
+
+  Result := False;
 end;
 
 function TFileManager.GetDisplayText(const AField: TO2Field;

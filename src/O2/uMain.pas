@@ -617,15 +617,6 @@ uses
 
 {$R *.dfm}
 
-procedure SetHighlightColors(const Canvas: TCanvas; Highlight: THighlight);
-begin
-  if Highlight.Color <> clNone then
-  begin
-    Canvas.Brush.Color := Highlight.Color;
-    Canvas.Font.Color := Highlight.TextColor;
-  end;
-end;
-
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   FBusy := False;
@@ -831,10 +822,16 @@ end;
 
 procedure TMainForm.ObjectsViewCustomDrawItem(Sender: TCustomListView;
   Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
+var
+  Color, TextColor: TColor;
 begin
-  if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data) then
-    SetHighlightColors(Sender.Canvas,
-      FModel.GetHighlight(TO2Object(Item.Data)));
+  if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data)
+    and FModel.TryGetHighlightColors(TO2Object(Item.Data), Color,
+      TextColor) then
+  begin
+    Sender.Canvas.Brush.Color := Color;
+    Sender.Canvas.Font.Color := TextColor;
+  end;
 end;
 
 procedure TMainForm.FindByEventChange(Sender: TObject);
@@ -2251,20 +2248,33 @@ end;
 
 procedure TMainForm.FieldsViewCustomDrawItem(Sender: TCustomListView;
   Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
+var
+  Color, TextColor: TColor;
 begin
-  if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data) then
-    SetHighlightColors(Sender.Canvas, FModel.GetHighlight(TO2Field(Item.Data)));
+  if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data)
+    and FModel.TryGetHighlightColors(TO2Field(Item.Data), Color,
+      TextColor) then
+  begin
+    Sender.Canvas.Brush.Color := Color;
+    Sender.Canvas.Font.Color := TextColor;
+  end;
 end;
 
 procedure TMainForm.FieldsViewCustomDrawSubItem(Sender: TCustomListView;
   Item: TListItem; SubItem: Integer; State: TCustomDrawState;
   var DefaultDraw: Boolean);
+var
+  Color, TextColor: TColor;
 begin
   if Assigned(Item.Data) then
   begin
-    if (State * [cdsFocused, cdsHot] = []) then
-      SetHighlightColors(Sender.Canvas,
-        FModel.GetHighlight(TO2Field(Item.Data)));
+    if (State * [cdsFocused, cdsHot] = [])
+      and FModel.TryGetHighlightColors(TO2Field(Item.Data), Color,
+        TextColor) then
+    begin
+      Sender.Canvas.Brush.Color := Color;
+      Sender.Canvas.Font.Color := TextColor;
+    end;
 
     if FModel.IsHyperlinkOrEmail(Item.Data) then
       Sender.Canvas.Font.Style := Sender.Canvas.Font.Style + [fsUnderline];

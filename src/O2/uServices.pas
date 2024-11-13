@@ -59,10 +59,6 @@ type
     procedure UpdateCache(const O2File: TO2File);
   end;
 
-  THighlight = record
-    Color, TextColor: TColor;
-  end;
-
   IFileManager = interface
     function GetFile: TO2File;
     property O2File: TO2File read GetFile;
@@ -106,8 +102,10 @@ type
 
     function TryGetNextEvent(const AObject: TO2Object;
       out NextDate: TDateTime): Boolean;
-    function GetHighlight(const AObject: TO2Object): THighlight; overload;
-    function GetHighlight(const AField: TO2Field): THighlight; overload;
+    function TryGetHighlightColors(const AObject: TO2Object; out Color,
+      TextColor: TColor): Boolean; overload;
+    function TryGetHighlightColors(const AField: TO2Field; out Color,
+      TextColor: TColor): Boolean; overload;
     function GetDisplayText(const AField: TO2Field;
       ShowPasswords: Boolean): string;
     function GetHyperLink(const AField: TO2Field): string;
