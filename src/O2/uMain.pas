@@ -1558,7 +1558,7 @@ begin
   Result.Caption := AObject.Name;
   Result.ImageIndex := 0;
   Result.SubItems.Add(AObject.Tag);
-  if FModel.GetNextEvent(AObject, EventDate) then
+  if FModel.TryGetNextEvent(AObject, EventDate) then
     Result.SubItems.Add(DateToStr(EventDate))
   else
     Result.SubItems.Add('');
@@ -1707,16 +1707,16 @@ function TMainForm.CompareObjectsByNextEvent(const Obj1,
 var
   Date1, Date2: TDateTime;
 begin
-  if FModel.GetNextEvent(Obj1, Date1) then
+  if FModel.TryGetNextEvent(Obj1, Date1) then
   begin
-    if FModel.GetNextEvent(Obj2, Date2) then
+    if FModel.TryGetNextEvent(Obj2, Date2) then
       Result := CompareDate(Date1, Date2)
     else
       Result := -1;
   end
   else
   begin
-    if FModel.GetNextEvent(Obj2, Date2) then
+    if FModel.TryGetNextEvent(Obj2, Date2) then
       Result := 1
     else
       Result := 0;

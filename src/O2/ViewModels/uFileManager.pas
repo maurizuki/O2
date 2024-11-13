@@ -54,7 +54,7 @@ type
     function HasEventInWindow(const AField: TO2Field;
       const ARule: TO2Rule; StartDate, EndDate: TDateTime;
       UseParams: Boolean): Boolean;
-    function GetNextEvent(const AField: TO2Field; const ARule: TO2Rule;
+    function TryGetNextEvent(const AField: TO2Field; const ARule: TO2Rule;
       StartDate: TDateTime; out NextDate: TDateTime;
       UseParams: Boolean = False): Boolean; overload;
     function GetHighlight(const AField: TO2Field;
@@ -73,7 +73,7 @@ type
 
     function GetObjects: IEnumerable<TO2Object>;
 
-    function GetNextEvent(const AObject: TO2Object;
+    function TryGetNextEvent(const AObject: TO2Object;
       out NextDate: TDateTime): Boolean; overload;
     function GetHighlight(const AObject: TO2Object): THighlight; overload;
     function GetHighlight(const AField: TO2Field): THighlight; overload;
@@ -416,7 +416,7 @@ begin
   end;
 end;
 
-function TFileManager.GetNextEvent(const AObject: TO2Object;
+function TFileManager.TryGetNextEvent(const AObject: TO2Object;
   out NextDate: TDateTime): Boolean;
 var
   ANextDate: TDateTime;
@@ -426,7 +426,7 @@ begin
   Result := False;
   for AField in AObject.Fields do
     for ARule in O2File.Rules do
-      if GetNextEvent(AField, ARule, FEventFilter.StartDate, ANextDate,
+      if TryGetNextEvent(AField, ARule, FEventFilter.StartDate, ANextDate,
         FEventFilter.UseParamsForNextEvent) then
       begin
         if not Result or (ANextDate < NextDate) then NextDate := ANextDate;
@@ -434,8 +434,9 @@ begin
       end;
 end;
 
-function TFileManager.GetNextEvent(const AField: TO2Field; const ARule: TO2Rule;
-  StartDate: TDateTime; out NextDate: TDateTime; UseParams: Boolean): Boolean;
+function TFileManager.TryGetNextEvent(const AField: TO2Field;
+  const ARule: TO2Rule; StartDate: TDateTime; out NextDate: TDateTime;
+  UseParams: Boolean): Boolean;
 var
   FirstDate: TDateTime;
 begin

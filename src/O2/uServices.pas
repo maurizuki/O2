@@ -104,7 +104,7 @@ type
 
     {$ENDREGION}
 
-    function GetNextEvent(const AObject: TO2Object;
+    function TryGetNextEvent(const AObject: TO2Object;
       out NextDate: TDateTime): Boolean;
     function GetHighlight(const AObject: TO2Object): THighlight; overload;
     function GetHighlight(const AField: TO2Field): THighlight; overload;
