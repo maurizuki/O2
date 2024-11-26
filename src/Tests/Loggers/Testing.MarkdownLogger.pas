@@ -33,7 +33,37 @@ type
 implementation
 
 uses
-  Classes, TypInfo, SysUtils;
+  Classes, Generics.Collections, Generics.Defaults, TypInfo, SysUtils;
+
+function GetSortedFixtureResults(
+  const Collection: IEnumerable<IFixtureResult>): TList<IFixtureResult>;
+var
+  Comparer: IComparer<IFixtureResult>;
+begin
+  Comparer := TDelegatedComparer<IFixtureResult>.Create(
+    function(const Left, Right: IFixtureResult): Integer
+    begin
+      Result := CompareStr(Left.Fixture.Name, Right.Fixture.Name);
+    end);
+  Result := TList<IFixtureResult>.Create(Comparer);
+  Result.AddRange(Collection);
+  Result.Sort;
+end;
+
+function GetSortedTestResults(
+  const Collection: IEnumerable<ITestResult>): TList<ITestResult>;
+var
+  Comparer: IComparer<ITestResult>;
+begin
+  Comparer := TDelegatedComparer<ITestResult>.Create(
+    function(const Left, Right: ITestResult): Integer
+    begin
+      Result := CompareStr(Left.Test.Name, Right.test.Name);
+    end);
+  Result := TList<ITestResult>.Create(Comparer);
+  Result.AddRange(Collection);
+  Result.Sort;
+end;
 
 { TMarkdownLogger }
 
@@ -48,13 +78,16 @@ end;
 procedure TMarkdownLogger.OnTestingEnds(const RunResults: IRunResults);
 var
   StreamWriter: TStreamWriter;
+  SortedFixtureResults: TList<IFixtureResult>;
   FixtureResult: IFixtureResult;
 
 procedure WriteFixtureResult(const FixtureResult : IFixtureResult);
 var
-  Child: IFixtureResult;
+  SortedTestResults: TList<ITestResult>;
   TestResult: ITestResult;
-  ResultType: string;
+  ResultTypeString: string;
+  SortedChildren: TList<IFixtureResult>;
+  Child: IFixtureResult;
 begin
     StreamWriter.WriteLine;
 
@@ -66,20 +99,32 @@ begin
       StreamWriter.WriteLine;
       StreamWriter.WriteLine('Test case|Result|Success');
       StreamWriter.WriteLine('---------|------|-------');
-      for TestResult in FixtureResult.TestResults do
-      begin
-        ResultType := GetEnumName(TypeInfo(TTestResultType),
-          Ord(TestResult.ResultType));
 
-        if TestResult.ResultType = TTestResultType.Pass then
-          StreamWriter.WriteLine('%s|%s|✔', [TestResult.Test.Name, ResultType])
-        else
-          StreamWriter.WriteLine('**%s**|**%s**|❌', [TestResult.Test.Name,
-            ResultType]);
+      SortedTestResults := GetSortedTestResults(FixtureResult.TestResults);
+      try
+        for TestResult in SortedTestResults do
+        begin
+          ResultTypeString := GetEnumName(TypeInfo(TTestResultType),
+            Ord(TestResult.ResultType));
+
+          if TestResult.ResultType = TTestResultType.Pass then
+            StreamWriter.WriteLine('%s|%s|✔', [TestResult.Test.Name,
+              ResultTypeString])
+          else
+            StreamWriter.WriteLine('**%s**|**%s**|❌', [TestResult.Test.Name,
+              ResultTypeString]);
+        end;
+      finally
+        SortedTestResults.Free;
       end;
     end;
 
-    for Child in FixtureResult.Children do WriteFixtureResult(Child);
+    SortedChildren := GetSortedFixtureResults(FixtureResult.Children);
+    try
+      for Child in SortedChildren do WriteFixtureResult(Child);
+    finally
+      SortedChildren.Free;
+    end;
 end;
 
 begin
@@ -93,8 +138,13 @@ begin
       RunResults.FailureCount, RunResults.ErrorCount, RunResults.IgnoredCount,
       FormatDateTime('yyyy"-"mm"-"dd" "hh":"nn":"ss', RunResults.StartTime)]);
 
-    for FixtureResult in RunResults.FixtureResults do
-      WriteFixtureResult(FixtureResult);
+    SortedFixtureResults := GetSortedFixtureResults(RunResults.FixtureResults);
+    try
+      for FixtureResult in SortedFixtureResults do
+        WriteFixtureResult(FixtureResult);
+    finally
+      SortedFixtureResults.Free;
+    end;
   finally
     StreamWriter.Free;
   end;
