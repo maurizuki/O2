@@ -88,6 +88,7 @@ uses
   uRelationModels in '..\O2\ViewModels\uRelationModels.pas',
   uReplaceOperations in '..\O2\ViewModels\uReplaceOperations.pas',
   uRuleModels in '..\O2\ViewModels\uRuleModels.pas',
+  Testing.MarkdownLogger in 'Loggers\Testing.MarkdownLogger.pas',
   Testing.Cryptography in 'Testing.Cryptography.pas',
   Testing.EncryptionPropsModel in 'Testing.EncryptionPropsModel.pas',
   Testing.FileManager in 'Testing.FileManager.pas',
@@ -105,7 +106,7 @@ var
   runner: ITestRunner;
   results: IRunResults;
   logger: ITestLogger;
-  nunitLogger : ITestLogger;
+  //nunitLogger : ITestLogger;
 {$ENDIF}
 begin
 {$IFDEF TESTINSIGHT}
@@ -129,8 +130,9 @@ begin
       runner.AddLogger(logger);
     end;
     //Generate an NUnit compatible XML File
-    nunitLogger := TDUnitXXMLNUnitFileLogger.Create(TDUnitX.Options.XMLOutputFile);
-    runner.AddLogger(nunitLogger);
+    //nunitLogger := TDUnitXXMLNUnitFileLogger.Create(TDUnitX.Options.XMLOutputFile);
+    //runner.AddLogger(nunitLogger);
+    runner.AddLogger(TMarkdownLogger.Create(TDUnitX.Options.XMLOutputFile));
 
     //Run tests
     results := runner.Execute;

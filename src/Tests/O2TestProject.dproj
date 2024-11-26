@@ -162,6 +162,7 @@
         <DCCReference Include="..\O2\ViewModels\uRelationModels.pas"/>
         <DCCReference Include="..\O2\ViewModels\uReplaceOperations.pas"/>
         <DCCReference Include="..\O2\ViewModels\uRuleModels.pas"/>
+        <DCCReference Include="Loggers\Testing.MarkdownLogger.pas"/>
         <DCCReference Include="Testing.Cryptography.pas"/>
         <DCCReference Include="Testing.EncryptionPropsModel.pas"/>
         <DCCReference Include="Testing.FileManager.pas"/>
