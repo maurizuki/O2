@@ -1,6 +1,15 @@
 $AppExeFilePath = ".\src\O2\o2.exe"
 $SetupScriptFilePath = ".\setup\O2.iss"
 $VersionInfoFilePath = ".\sf_net\upd8r.xml"
+$TestResultsFilePath = ".\test-results.md"
+
+# Run the tests
+
+.\src\Tests\Win32\Release\O2TestProject.exe -xml:$TestResultsFilePath
+
+if ($LASTEXITCODE -ne 0) {
+  Exit 1
+}
 
 # Compress the main executable file
 
