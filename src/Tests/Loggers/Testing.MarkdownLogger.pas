@@ -18,12 +18,16 @@ unit Testing.MarkdownLogger;
 interface
 
 uses
+  Generics.Collections, Generics.Defaults,
   DUnitX.TestFramework, DUnitX.Loggers.Null;
 
 type
   TMarkdownLogger = class(TDUnitXNullLogger)
   private
     FFileName: string;
+
+    class function GetSortedList<T>(const ACollection: IEnumerable<T>;
+      const ACompare: TComparison<T>): TList<T>;
   protected
     procedure OnTestingEnds(const RunResults: IRunResults); override;
   public
@@ -33,36 +37,16 @@ type
 implementation
 
 uses
-  Classes, Generics.Collections, Generics.Defaults, TypInfo, SysUtils;
+  Classes, TypInfo, SysUtils, DateUtils;
 
-function GetSortedFixtureResults(
-  const Collection: IEnumerable<IFixtureResult>): TList<IFixtureResult>;
-var
-  Comparer: IComparer<IFixtureResult>;
+function CompareFixtureResults(const Left, Right: IFixtureResult): Integer;
 begin
-  Comparer := TDelegatedComparer<IFixtureResult>.Create(
-    function(const Left, Right: IFixtureResult): Integer
-    begin
-      Result := CompareStr(Left.Fixture.Name, Right.Fixture.Name);
-    end);
-  Result := TList<IFixtureResult>.Create(Comparer);
-  Result.AddRange(Collection);
-  Result.Sort;
+  Result := CompareStr(Left.Fixture.Name, Right.Fixture.Name);
 end;
 
-function GetSortedTestResults(
-  const Collection: IEnumerable<ITestResult>): TList<ITestResult>;
-var
-  Comparer: IComparer<ITestResult>;
+function CompareTestResults(const Left, Right: ITestResult): Integer;
 begin
-  Comparer := TDelegatedComparer<ITestResult>.Create(
-    function(const Left, Right: ITestResult): Integer
-    begin
-      Result := CompareStr(Left.Test.Name, Right.test.Name);
-    end);
-  Result := TList<ITestResult>.Create(Comparer);
-  Result.AddRange(Collection);
-  Result.Sort;
+  Result := CompareStr(Left.Test.Name, Right.Test.Name);
 end;
 
 { TMarkdownLogger }
@@ -73,6 +57,17 @@ begin
     FFileName := ExtractFilePath(ParamStr(0)) + 'test-results.md'
   else
     FFileName := AFileName;
+end;
+
+class function TMarkdownLogger.GetSortedList<T>(
+  const ACollection: IEnumerable<T>; const ACompare: TComparison<T>): TList<T>;
+var
+  AComparer: IComparer<T>;
+begin
+  AComparer := TDelegatedComparer<T>.Create(ACompare);
+  Result := TList<T>.Create(AComparer);
+  Result.AddRange(ACollection);
+  Result.Sort;
 end;
 
 procedure TMarkdownLogger.OnTestingEnds(const RunResults: IRunResults);
@@ -100,7 +95,8 @@ begin
       StreamWriter.WriteLine('Test case|Result|Success');
       StreamWriter.WriteLine('---------|------|-------');
 
-      SortedTestResults := GetSortedTestResults(FixtureResult.TestResults);
+      SortedTestResults := GetSortedList<ITestResult>(FixtureResult.TestResults,
+        CompareTestResults);
       try
         for TestResult in SortedTestResults do
         begin
@@ -119,7 +115,8 @@ begin
       end;
     end;
 
-    SortedChildren := GetSortedFixtureResults(FixtureResult.Children);
+    SortedChildren := GetSortedList<IFixtureResult>(FixtureResult.Children,
+      CompareFixtureResults);
     try
       for Child in SortedChildren do WriteFixtureResult(Child);
     finally
@@ -133,12 +130,13 @@ begin
     StreamWriter.WriteLine('# TEST RESULTS');
     StreamWriter.WriteLine;
     StreamWriter.WriteLine('Total    |Failures |Errors   |Ignored  |Date');
-    StreamWriter.WriteLine('---------|---------|---------|---------|-------------------');
+    StreamWriter.WriteLine('---------|---------|---------|---------|-----------------------------');
     StreamWriter.WriteLine('%-9d|%-9d|%-9d|%-9d|%s', [RunResults.TestCount,
       RunResults.FailureCount, RunResults.ErrorCount, RunResults.IgnoredCount,
-      FormatDateTime('yyyy"-"mm"-"dd" "hh":"nn":"ss', RunResults.StartTime)]);
+      DateToISO8601(RunResults.StartTime, False)]);
 
-    SortedFixtureResults := GetSortedFixtureResults(RunResults.FixtureResults);
+    SortedFixtureResults := GetSortedList<IFixtureResult>(
+      RunResults.FixtureResults, CompareFixtureResults);
     try
       for FixtureResult in SortedFixtureResults do
         WriteFixtureResult(FixtureResult);
