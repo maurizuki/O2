@@ -18,7 +18,7 @@ unit uO2Defs;
 interface
 
 uses
-  Classes, SysUtils;
+  SysUtils;
 
 const
   O2FileGUID: TGUID = '{ABBB4FE2-9C21-450E-80B0-469DFD8A8BFC}';
@@ -27,15 +27,6 @@ const
 type
   TO2Cipher = Byte;
   TO2Hash = Byte;
-
-  TO2FileHeader = packed record
-    ContentType: TGUID;
-    Version: Word;
-    Encrypted: Boolean;
-    Cipher: TO2Cipher;
-    Hash: TO2Hash;
-    CRC32: Longword;
-  end;
 
 const
 
@@ -101,6 +92,9 @@ function CipherToIdent(Cipher: Longint; var Ident: string): Boolean;
 function HashToIdent(Hash: Longint; var Ident: string): Boolean;
 
 implementation
+
+uses
+  Classes;
 
 const
   Ciphers: array[0..19] of TIdentMapEntry = (
