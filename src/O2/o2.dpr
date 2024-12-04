@@ -118,6 +118,7 @@ uses
 {$R *.res}
 
 begin
+  Randomize;
   Application.Initialize;
   Application.Title := 'O2';
   ConfigureServices;

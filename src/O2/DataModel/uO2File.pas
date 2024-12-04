@@ -33,6 +33,7 @@ type
     FEncrypted: Boolean;
     FCipher: TO2Cipher;
     FHash: TO2Hash;
+    FIV: array[0..15] of Byte;
     FCRC32: Longword;
     FPassword: string;
     FModified: Boolean;
@@ -55,12 +56,14 @@ type
     procedure OutputDebugMetadata(const Name, Value: string); inline;
     procedure ReadMetadata(const Stream: TStream);
     procedure WriteMetadata(const Stream: TStream);
-    function GetCipher: TDCP_cipher;
+    function GetCipher(IV: Pointer): TDCP_cipher;
     function GetHashClass: TDCP_hashclass;
     procedure Compress(InputStream, OutputStream: TStream);
     procedure Decompress(InputStream, OutputStream: TStream);
     procedure Encrypt(InputStream, OutputStream: TStream);
     procedure Decrypt(InputStream, OutputStream: TStream);
+    function UseCompression: Boolean;
+    function UseIV: Boolean;
   protected
     procedure NotifyChanges(Item: TO2CollectionItem;
       Action: TO2Notification); override;
@@ -164,8 +167,6 @@ begin
 end;
 
 procedure TO2File.Load(PasswordProvider: IPasswordProvider);
-const
-  Version2_0: WordRec = (Lo: 0; Hi: 2);
 var
   XmlReader: TXmlReader;
   XmlStream, RawStream: TMemoryStream;
@@ -195,10 +196,10 @@ begin
           RawStream.CopyFrom(InputStream,
             InputStream.Size - InputStream.Position);
 
-        if Word(FVersion) < Word(Version2_0) then
-          XmlStream.LoadFromStream(RawStream)
+        if UseCompression then
+          Decompress(RawStream, XmlStream)
         else
-          Decompress(RawStream, XmlStream);
+          XmlStream.LoadFromStream(RawStream);
       finally
         RawStream.Free;
       end;
@@ -224,6 +225,7 @@ var
   XmlWriter: TXmlWriter;
   XmlStream, RawStream: TMemoryStream;
   OutputStream: TFileStream;
+  I: Integer;
 begin
   OutputStream := TFileStream.Create(FFileName, fmCreate);
   try
@@ -237,7 +239,7 @@ begin
         finally
           XmlWriter.Free;
         end;
-        
+
         Compress(XmlStream, RawStream);
       finally
         XmlStream.Free;
@@ -248,6 +250,8 @@ begin
         RawStream.Position := 0;
         FCRC32 := SZCRC32FullStream(RawStream);
       end;
+
+      for I := Low(FIV) to High(FIV) do FIV[I] := Random(256);
 
       WriteMetadata(OutputStream);
       RawStream.Position := 0;
@@ -328,6 +332,8 @@ begin
     Ident := Format('%s%.2x', [HexDisplayPrefix, FHash]);
   OutputDebugMetadata('Hash', Ident);
 
+  if UseIV then Stream.Read(FIV, SizeOf(FIV));
+
   Stream.Read(FCRC32, SizeOf(FCRC32));
   OutputDebugMetadata('CRC32', Format('%s%.8x', [HexDisplayPrefix, FCRC32]));
 end;
@@ -339,10 +345,15 @@ begin
   Stream.Write(FEncrypted, SizeOf(FEncrypted));
   Stream.Write(FCipher, SizeOf(FCipher));
   Stream.Write(FHash, SizeOf(FHash));
+  Stream.Write(FIV, SizeOf(FIV));
   Stream.Write(FCRC32, SizeOf(FCRC32));
 end;
 
-function TO2File.GetCipher: TDCP_cipher;
+function TO2File.GetCipher(IV: Pointer): TDCP_cipher;
+var
+  HashClass: TDCP_hashclass;
+  Hash: TDCP_hash;
+  Digest: Pointer;
 begin
   case FCipher of
     ocBlowfish: Result := TDCP_blowfish.Create;
@@ -367,7 +378,28 @@ begin
     else raise Exception.CreateFmt(SUnsupportedCipher, [Cipher]);
   end;
 
-  Result.InitStr(AnsiString(FPassword), GetHashClass);
+  HashClass := GetHashClass;
+
+  GetMem(Digest, HashClass.GetHashSize div 8);
+  try
+    Hash:= HashClass.Create;
+    try
+      Hash.Init;
+      Hash.UpdateStr(AnsiString(FPassword));
+      Hash.Final(Digest^);
+    finally
+      Hash.Free;
+    end;
+
+    if Result.MaxKeySize < HashClass.GetHashSize then
+      Result.Init(Digest^, Result.MaxKeySize, IV)
+    else
+      Result.Init(Digest^, HashClass.GetHashSize, IV);
+
+    ZeroMemory(Digest, HashClass.GetHashSize div 8);
+  finally
+    FreeMem(Digest);
+  end;
 end;
 
 function TO2File.GetHashClass: TDCP_hashclass;
@@ -422,7 +454,7 @@ procedure TO2File.Encrypt(InputStream, OutputStream: TStream);
 var
   Cipher: TDCP_cipher;
 begin
-  Cipher := GetCipher;
+  Cipher := GetCipher(@FIV);
   try
     Cipher.EncryptStream(InputStream, OutputStream,
       InputStream.Size - InputStream.Position);
@@ -436,7 +468,10 @@ procedure TO2File.Decrypt(InputStream, OutputStream: TStream);
 var
   Cipher: TDCP_cipher;
 begin
-  Cipher := GetCipher;
+  if UseIV then
+    Cipher := GetCipher(@FIV)
+  else
+    Cipher := GetCipher(nil);
   try
     Cipher.DecryptStream(InputStream, OutputStream,
       InputStream.Size - InputStream.Position);
@@ -444,6 +479,20 @@ begin
   finally
     Cipher.Free;
   end;
+end;
+
+function TO2File.UseCompression: Boolean;
+const
+  MinVer: WordRec = (Lo: 0; Hi: 2);
+begin
+  Result := Word(FVersion) >= Word(MinVer);
+end;
+
+function TO2File.UseIV: Boolean;
+const
+  MinVer: WordRec = (Lo: 0; Hi: 3);
+begin
+  Result := Word(FVersion) >= Word(MinVer);
 end;
 
 procedure TO2File.SetTitle(const Value: string);
