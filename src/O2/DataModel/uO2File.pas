@@ -55,7 +55,7 @@ type
     procedure OutputDebugMetadata(const Name, Value: string); inline;
     procedure ReadMetadata(const Stream: TStream);
     procedure WriteMetadata(const Stream: TStream);
-    function GetCipherClass: TDCP_cipherclass;
+    function GetCipher: TDCP_cipher;
     function GetHashClass: TDCP_hashclass;
     procedure Compress(InputStream, OutputStream: TStream);
     procedure Decompress(InputStream, OutputStream: TStream);
@@ -342,30 +342,32 @@ begin
   Stream.Write(FCRC32, SizeOf(FCRC32));
 end;
 
-function TO2File.GetCipherClass: TDCP_cipherclass;
+function TO2File.GetCipher: TDCP_cipher;
 begin
   case FCipher of
-    ocBlowfish: Result := TDCP_blowfish;
-    ocCast128:  Result := TDCP_cast128;
-    ocCast256:  Result := TDCP_cast256;
-    ocDES:      Result := TDCP_des;
-    oc3DES:     Result := TDCP_3des;
-    ocIce:      Result := TDCP_ice;
-    ocThinIce:  Result := TDCP_thinice;
-    ocIce2:     Result := TDCP_ice2;
-    ocIDEA:     Result := TDCP_idea;
-    ocMARS:     Result := TDCP_mars;
-    ocMisty1:   Result := TDCP_misty1;
-    ocRC2:      Result := TDCP_rc2;
-    ocRC4:      Result := TDCP_rc4;
-    ocRC5:      Result := TDCP_rc5;
-    ocRC6:      Result := TDCP_rc6;
-    ocRijndael: Result := TDCP_rijndael;
-    ocSerpent:  Result := TDCP_serpent;
-    ocTEA:      Result := TDCP_tea;
-    ocTwofish:  Result := TDCP_twofish;
+    ocBlowfish: Result := TDCP_blowfish.Create;
+    ocCast128:  Result := TDCP_cast128.Create;
+    ocCast256:  Result := TDCP_cast256.Create;
+    ocDES:      Result := TDCP_des.Create;
+    oc3DES:     Result := TDCP_3des.Create;
+    ocIce:      Result := TDCP_ice.Create;
+    ocThinIce:  Result := TDCP_thinice.Create;
+    ocIce2:     Result := TDCP_ice2.Create;
+    ocIDEA:     Result := TDCP_idea.Create;
+    ocMARS:     Result := TDCP_mars.Create;
+    ocMisty1:   Result := TDCP_misty1.Create;
+    ocRC2:      Result := TDCP_rc2.Create;
+    ocRC4:      Result := TDCP_rc4.Create;
+    ocRC5:      Result := TDCP_rc5.Create;
+    ocRC6:      Result := TDCP_rc6.Create;
+    ocRijndael: Result := TDCP_rijndael.Create;
+    ocSerpent:  Result := TDCP_serpent.Create;
+    ocTEA:      Result := TDCP_tea.Create;
+    ocTwofish:  Result := TDCP_twofish.Create;
     else raise Exception.CreateFmt(SUnsupportedCipher, [Cipher]);
   end;
+
+  Result.InitStr(AnsiString(FPassword), GetHashClass);
 end;
 
 function TO2File.GetHashClass: TDCP_hashclass;
@@ -420,9 +422,8 @@ procedure TO2File.Encrypt(InputStream, OutputStream: TStream);
 var
   Cipher: TDCP_cipher;
 begin
-  Cipher := GetCipherClass.Create;
+  Cipher := GetCipher;
   try
-    Cipher.InitStr(AnsiString(FPassword), GetHashClass);
     Cipher.EncryptStream(InputStream, OutputStream,
       InputStream.Size - InputStream.Position);
     Cipher.Burn;
@@ -435,9 +436,8 @@ procedure TO2File.Decrypt(InputStream, OutputStream: TStream);
 var
   Cipher: TDCP_cipher;
 begin
-  Cipher := GetCipherClass.Create;
+  Cipher := GetCipher;
   try
-    Cipher.InitStr(AnsiString(FPassword), GetHashClass);
     Cipher.DecryptStream(InputStream, OutputStream,
       InputStream.Size - InputStream.Position);
     Cipher.Burn;
