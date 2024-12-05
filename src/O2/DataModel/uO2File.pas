@@ -307,15 +307,18 @@ end;
 procedure TO2File.ReadMetadata(const Stream: TStream);
 var
   ContentType: TGUID;
-  Ident: string;
+  DebugStr: string;
+  I: Integer;
 begin
   Stream.Read(ContentType, SizeOf(ContentType));
   OutputDebugMetadata('Content Type', GUIDToString(ContentType));
+
   if not IsEqualGUID(O2FileGUID, ContentType) then
     raise Exception.Create(SUnsupportedFileType);
 
   Stream.Read(FVersion, SizeOf(FVersion));
   OutputDebugMetadata('Version', Format('%d.%d', [FVersion.Hi, FVersion.Lo]));
+
   if Word(FVersion) > Word(O2FileVersion) then
     raise Exception.CreateFmt(SUnsupportedFileVersion,
       [FVersion.Hi, FVersion.Lo]);
@@ -324,16 +327,24 @@ begin
   OutputDebugMetadata('Encrypted', BoolToStr(FEncrypted, True));
 
   Stream.Read(FCipher, SizeOf(FCipher));
-  if not CipherToIdent(FCipher, Ident) then
-    Ident := Format('%s%.2x', [HexDisplayPrefix, FCipher]);
-  OutputDebugMetadata('Cipher', Ident);
+  if not CipherToIdent(FCipher, DebugStr) then
+    DebugStr := Format('%s%.2x', [HexDisplayPrefix, FCipher]);
+  OutputDebugMetadata('Cipher', DebugStr);
 
   Stream.Read(FHash, SizeOf(FHash));
-  if not HashToIdent(FHash, Ident) then
-    Ident := Format('%s%.2x', [HexDisplayPrefix, FHash]);
-  OutputDebugMetadata('Hash', Ident);
+  if not HashToIdent(FHash, DebugStr) then
+    DebugStr := Format('%s%.2x', [HexDisplayPrefix, FHash]);
+  OutputDebugMetadata('Hash', DebugStr);
 
-  if UseIV then Stream.Read(FIV, SizeOf(FIV));
+  if UseIV then
+  begin
+    Stream.Read(FIV, SizeOf(FIV));
+
+    DebugStr := '';
+    for I := Low(FIV) to High(FIV) do
+      DebugStr := Format('%s %s%.2x', [DebugStr, HexDisplayPrefix, FIV[I]]);
+    OutputDebugMetadata('IV', TrimLeft(DebugStr));
+  end;
 
   Stream.Read(FCRC32, SizeOf(FCRC32));
   OutputDebugMetadata('CRC32', Format('%s%.8x', [HexDisplayPrefix, FCRC32]));
