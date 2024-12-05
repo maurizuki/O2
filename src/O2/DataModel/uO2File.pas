@@ -227,43 +227,44 @@ var
   OutputStream: TFileStream;
   I: Integer;
 begin
-  OutputStream := TFileStream.Create(FFileName, fmCreate);
+  RawStream := TMemoryStream.Create;
   try
-    RawStream := TMemoryStream.Create;
+    XmlStream := TMemoryStream.Create;
     try
-      XmlStream := TMemoryStream.Create;
+      XmlWriter := TXmlWriter.Create(Self, O2FileSchemaLocation);
       try
-        XmlWriter := TXmlWriter.Create(Self, O2FileSchemaLocation);
-        try
-          XmlWriter.SaveToStream(XmlStream);
-        finally
-          XmlWriter.Free;
-        end;
-
-        Compress(XmlStream, RawStream);
+        XmlWriter.SaveToStream(XmlStream);
       finally
-        XmlStream.Free;
+        XmlWriter.Free;
       end;
 
-      if FEncrypted then
-      begin
-        RawStream.Position := 0;
-        FCRC32 := SZCRC32FullStream(RawStream);
-      end;
+      Compress(XmlStream, RawStream);
+    finally
+      XmlStream.Free;
+    end;
 
+    if FEncrypted then
+    begin
       for I := Low(FIV) to High(FIV) do FIV[I] := Random(256);
 
+      RawStream.Position := 0;
+      FCRC32 := SZCRC32FullStream(RawStream);
+    end;
+
+    OutputStream := TFileStream.Create(FFileName, fmCreate);
+    try
       WriteMetadata(OutputStream);
+
       RawStream.Position := 0;
       if FEncrypted then
         Encrypt(RawStream, OutputStream)
       else
         RawStream.SaveToStream(OutputStream);
     finally
-      RawStream.Free;
+      OutputStream.Free;
     end;
   finally
-    OutputStream.Free;
+    RawStream.Free;
   end;
 end;
 
