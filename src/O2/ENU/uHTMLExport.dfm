@@ -155,6 +155,14 @@ object HTMLExport: THTMLExport
       OnExecute = StyleExecute
       OnUpdate = StyleUpdate
     end
+    object DarkStyle: TAction
+      Tag = 3
+      Category = 'Style'
+      Caption = 'Call of the Night'
+      GroupIndex = 1
+      OnExecute = StyleExecute
+      OnUpdate = StyleUpdate
+    end
   end
   object ToolBarImages: TImageList
     Height = 24
@@ -1116,6 +1124,12 @@ object HTMLExport: THTMLExport
     MacroChar = '$'
     Macros = <
       item
+        Name = 'color'
+      end
+      item
+        Name = 'background-color'
+      end
+      item
         Name = 'link-color'
       end
       item
@@ -1130,8 +1144,10 @@ object HTMLExport: THTMLExport
     StrData = (
       ''
       '626f6479207b'
-      '09636f6c6f723a20233030303b'
-      '096261636b67726f756e642d636f6c6f723a20236666663b'
+      '09636f6c6f723a2024636f6c6f723b'
+      
+        '096261636b67726f756e642d636f6c6f723a20246261636b67726f756e642d63' +
+        '6f6c6f723b'
       '09666f6e742d66616d696c793a2073616e732d73657269663b'
       '09666f6e742d73697a653a203172656d3b'
       '7d'
@@ -1274,6 +1290,10 @@ object HTMLExport: THTMLExport
       Action = SakuraStyle
       GroupIndex = 1
       RadioItem = True
+    end
+    object Dark1: TMenuItem
+      Action = DarkStyle
+      GroupIndex = 1
     end
   end
 end
