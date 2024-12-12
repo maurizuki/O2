@@ -1274,6 +1274,7 @@ object HTMLExport: THTMLExport
     Top = 48
   end
   object StyleMenu: TPopupMenu
+    AutoHotkeys = maManual
     Left = 176
     Top = 48
     object BlueWater1: TMenuItem

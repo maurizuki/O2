@@ -19,7 +19,7 @@ interface
 
 uses
   Windows, Generics.Collections, SysUtils, uO2File, uO2Objects, uServices,
-  uUtils;
+  uAppFiles, uUtils;
 
 type
   THTMLExportModel = class(TInterfacedObject, IHTMLExport)
@@ -28,6 +28,7 @@ type
     FO2File: TO2File;
     FSelectedObjects: IEnumerable<TO2Object>;
     FAppVersionInfo: TAppVersionInfo;
+    FAppFiles: IAppFiles;
     FStorage: IStorage;
     FIncludeIndex: Boolean;
     FIncludeTags: Boolean;
@@ -37,6 +38,7 @@ type
     FStyleIndex: Integer;
     FStyles: TList<string>;
     FBuilder: TStringBuilder;
+    function GetAppFiles: IAppFiles;
     function GetIncludeIndex: Boolean;
     function GetIncludeTags: Boolean;
     function GetIncludeNotes: Boolean;
@@ -57,7 +59,7 @@ type
   public
     constructor Create(const O2File: TO2File;
       SelectedObjects: IEnumerable<TO2Object>; AppVersionInfo: TAppVersionInfo;
-      Storage: IStorage);
+      AppFiles: IAppFiles; Storage: IStorage);
     destructor Destroy; override;
 
     procedure StoreSettings;
@@ -67,6 +69,7 @@ type
     function ExportToHTML(Preview: Boolean): string; overload;
     procedure ExportToHTML(const FileName: string); overload;
 
+    property AppFiles: IAppFiles read GetAppFiles;
     property IncludeIndex: Boolean read GetIncludeIndex write SetIncludeIndex;
     property IncludeTags: Boolean read GetIncludeTags write SetIncludeTags;
     property IncludeNotes: Boolean read GetIncludeNotes write SetIncludeNotes;
@@ -87,7 +90,7 @@ uses
 
 constructor THTMLExportModel.Create(const O2File: TO2File;
   SelectedObjects: IEnumerable<TO2Object>; AppVersionInfo: TAppVersionInfo;
-  Storage: IStorage);
+  AppFiles: IAppFiles; Storage: IStorage);
 begin
   if O2File.Title = '' then
     FTitle := ChangeFileExt(ExtractFileName(O2File.FileName), '')
@@ -96,6 +99,7 @@ begin
   FO2File := O2File;
   FSelectedObjects := SelectedObjects;
   FAppVersionInfo := AppVersionInfo;
+  FAppFiles := AppFiles;
   FStorage := Storage;
   FIncludeIndex := FStorage.ReadBoolean(IdHTMLExportIncludeIndex, True);
   FIncludeTags := FStorage.ReadBoolean(IdHTMLExportIncludeTags, True);
@@ -203,6 +207,11 @@ begin
   finally
     Writer.Free;
   end;
+end;
+
+function THTMLExportModel.GetAppFiles: IAppFiles;
+begin
+  Result := FAppFiles;
 end;
 
 function THTMLExportModel.GetIncludeIndex: Boolean;

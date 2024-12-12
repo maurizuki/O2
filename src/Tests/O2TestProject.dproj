@@ -59,6 +59,7 @@
         <Icns_MainIcns>$(BDS)\bin\delphi_PROJECTICNS.icns</Icns_MainIcns>
         <DCC_UnitSearchPath>$(DUnitX);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <SanitizedProjectName>O2TestProject</SanitizedProjectName>
+        <DCC_OutputDRCFile>true</DCC_OutputDRCFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_UsePackage>FireDACIBDriver;vclwinx;fmx;vclie;DbxCommonDriver;bindengine;IndyIPCommon;VCLRESTComponents;FireDACCommonODBC;FireDACCommonDriver;appanalytics;IndyProtocols;vclx;IndyIPClient;dbxcds;vcledge;bindcompvclwinx;bindcompfmx;JvBands;inetdb;JvAppFrm;FireDACSqliteDriver;DbxClientDriver;JclVcl;soapmidas;vclactnband;fmxFireDAC;dbexpress;Jcl;JvManagedThreads;DBXMySQLDriver;VclSmp;inet;JvPascalInterpreter;vcltouch;fmxase;JvPluginSystem;JvDB;JvTimeFramework;dbrtl;fmxdae;FireDACMSAccDriver;JvCustom;CustomIPTransport;JvSystem;JvControls;JclDeveloperTools;vcldsnap;JvCrypt;DBXInterBaseDriver;JvJans;JvMM;IndySystem;JvWizards;JvGlobus;vcldb;JvPageComps;vclFireDAC;JvCore;bindcomp;FireDACCommon;IndyCore;RESTBackendComponents;bindcompdbx;rtl;FireDACMySQLDriver;FireDACADSDriver;RESTComponents;DBXSqliteDriver;vcl;IndyIPServer;dsnapxml;dsnapcon;adortl;JvHMI;JvDotNetCtrls;JvRuntimeDesign;JvXPCtrls;vclimg;FireDACPgDriver;FireDAC;inetdbxpress;JvDlgs;xmlrtl;tethering;JvStdCtrls;JvPrintPreview;JvDocking;bindcompvcl;dsnap;JvCmp;CloudService;fmxobj;bindcompvclsmp;soaprtl;soapserver;JvNet;$(DCC_UsePackage)</DCC_UsePackage>
@@ -154,6 +155,7 @@
         <DCCReference Include="..\O2\DataModel\uO2Rules.pas"/>
         <DCCReference Include="..\O2\uServices.pas"/>
         <DCCReference Include="..\O2\uGlobal.pas"/>
+        <DCCReference Include="..\O2\Utils\uAppFiles.pas"/>
         <DCCReference Include="..\O2\Utils\uO2ObjectsUtils.pas"/>
         <DCCReference Include="..\O2\Utils\uO2RulesUtils.pas"/>
         <DCCReference Include="..\O2\Utils\uPasswordScoreCache.pas"/>

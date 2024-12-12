@@ -69,6 +69,7 @@ uses
   uO2Rules in '..\O2\DataModel\uO2Rules.pas',
   uServices in '..\O2\uServices.pas',
   uGlobal in '..\O2\uGlobal.pas',
+  uAppFiles in '..\O2\Utils\uAppFiles.pas',
   uO2ObjectsUtils in '..\O2\Utils\uO2ObjectsUtils.pas',
   uO2RulesUtils in '..\O2\Utils\uO2RulesUtils.pas',
   uPasswordScoreCache in '..\O2\Utils\uPasswordScoreCache.pas',
