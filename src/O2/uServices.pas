@@ -374,6 +374,9 @@ type
     function ExportToHTML(Preview: Boolean): string; overload;
     procedure ExportToHTML(const FileName: string); overload;
 
+    function GetAppFiles: IAppFiles;
+    property AppFiles: IAppFiles read GetAppFiles;
+
     function GetIncludeIndex: Boolean;
     procedure SetIncludeIndex(Value: Boolean);
     property IncludeIndex: Boolean read GetIncludeIndex write SetIncludeIndex;

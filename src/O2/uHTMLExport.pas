@@ -58,6 +58,8 @@ type
     BlueWater1: TMenuItem;
     Matcha1: TMenuItem;
     Sakura1: TMenuItem;
+    DarkStyle: TAction;
+    Dark1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure ActionUpdate(Sender: TObject);
@@ -93,7 +95,7 @@ var
 implementation
 
 uses
-  uGlobal, uUtils;
+  IOUtils, uGlobal, uUtils;
 
 {$R *.dfm}
 
@@ -113,25 +115,68 @@ begin
 end;
 
 procedure THTMLExport.SetModel(Value: IHTMLExport);
+var
+  AAction: TCustomAction;
+  AMenuItem: TMenuItem;
+  Id: string;
+  I: Integer;
 begin
   if FModel <> Value then
   begin
     FModel := Value;
 
+    DefaultStyle.MacroByName('color').Value := '#000';
+    DefaultStyle.MacroByName('background-color').Value := '#fff';
     DefaultStyle.MacroByName('link-color').Value := '#0d6efd';
     DefaultStyle.MacroByName('border-color').Value := '#9ec5fe';
     DefaultStyle.MacroByName('alt-bg-color').Value := '#f4f8ff';
     BlueWaterStyle.Tag := FModel.AddStyle(DefaultStyle.ExpandMacros);
 
+    DefaultStyle.MacroByName('color').Value := '#000';
+    DefaultStyle.MacroByName('background-color').Value := '#fff';
     DefaultStyle.MacroByName('link-color').Value := '#a1952e';
     DefaultStyle.MacroByName('border-color').Value := '#d5e3c0';
     DefaultStyle.MacroByName('alt-bg-color').Value := '#f1f6ea';
     MatchaStyle.Tag := FModel.AddStyle(DefaultStyle.ExpandMacros);
 
+    DefaultStyle.MacroByName('color').Value := '#000';
+    DefaultStyle.MacroByName('background-color').Value := '#fff';
     DefaultStyle.MacroByName('link-color').Value := '#c3829e';
     DefaultStyle.MacroByName('border-color').Value := '#fcc9b9';
     DefaultStyle.MacroByName('alt-bg-color').Value := '#fff5f2';
     SakuraStyle.Tag := FModel.AddStyle(DefaultStyle.ExpandMacros);
+
+    DefaultStyle.MacroByName('color').Value := '#f0f6fc';
+    DefaultStyle.MacroByName('background-color').Value := '#0d1117';
+    DefaultStyle.MacroByName('link-color').Value := '#aaeeff';
+    DefaultStyle.MacroByName('border-color').Value := '#3d444d';
+    DefaultStyle.MacroByName('alt-bg-color').Value := '#24292f';
+    DarkStyle.Tag := FModel.AddStyle(DefaultStyle.ExpandMacros);
+
+    I := 0;
+    Id := IdHTMLStyle + IntToStr(I);
+    if FModel.AppFiles.FileExists(Id) then
+    repeat
+      begin
+        AAction := TAction.Create(Self);
+        AAction.Caption := ChangeFileExt(ExtractFileName(
+          FModel.AppFiles.FullPaths[Id]), '');
+        AAction.GroupIndex := BlueWaterStyle.GroupIndex;
+        AAction.OnExecute := StyleExecute;
+        AAction.OnUpdate := StyleUpdate;
+        AAction.ActionList := ActionList;
+
+        AMenuItem := TMenuItem.Create(StyleMenu);
+        AMenuItem.Action := AAction;
+        StyleMenu.Items.Add(AMenuItem);
+
+        AAction.Tag := FModel.AddStyle(TFile.ReadAllText(
+          FModel.AppFiles.FullPaths[Id]));
+
+        Inc(I);
+        Id := IdHTMLStyle + IntToStr(I);
+      end;
+    until not FModel.AppFiles.FileExists(Id);
 
     BlueWaterStyle.Execute;
   end;

@@ -5,10 +5,10 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">45419.7774537037</prop>
-        <prop prop-type="OrigDateTime">45419.7774074074</prop>
-        <prop prop-type="XlatDateTime">45296.7456944444</prop>
-        <prop prop-type="Translated">1211</prop>
+        <prop prop-type="SelfDateTime">45638.6840046296</prop>
+        <prop prop-type="OrigDateTime">0</prop>
+        <prop prop-type="XlatDateTime">45420.5561574074</prop>
+        <prop prop-type="Translated">1217</prop>
         <prop prop-type="UnTranslated">0</prop>
       </prop-group>
     </header>
@@ -12215,8 +12215,15 @@
         <source>"The specified path is too long"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">44566.6489074884</prop>
-          <prop prop-type="Status">3</prop>
+          <prop prop-type="Status">1</prop>
         </prop-group>
+        <alt-trans>
+          <source>"The specified path is too long"</source>
+          <target>"The specified path is too long"</target>
+          <prop-group name="ITEFieldProp">
+            <prop prop-type="Modified">45638.6408541898</prop>
+          </prop-group>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="System_SysConst_SAggregateException" resname="System_SysConst_SAggregateException">
         <source>"%d exception(s):"</source>
@@ -12943,6 +12950,41 @@
         <source>"RipeMD-160"</source>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45374.5981858449</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_SEmptyPath" resname="System_RTLConsts_SEmptyPath">
+        <source>"Path is empty"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45638.6825208565</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_SPathNotFound" resname="System_RTLConsts_SPathNotFound">
+        <source>"The specified path was not found"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45638.6825208565</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_SPathFormatNotSupported" resname="System_RTLConsts_SPathFormatNotSupported">
+        <source>"The path format is not supported"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45638.6825208565</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_SSpecifiedFileNotFound" resname="System_RTLConsts_SSpecifiedFileNotFound">
+        <source>"The specified file was not found"</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45638.6825208565</prop>
+          <prop prop-type="Status">1</prop>
+        </prop-group>
+      </trans-unit>
+      <trans-unit id="System_RTLConsts_SFileTooLong" resname="System_RTLConsts_SFileTooLong">
+        <source>"The specified file is too long."</source>
+        <prop-group name="ITEFieldProp">
+          <prop prop-type="Created">45638.6825208565</prop>
           <prop prop-type="Status">1</prop>
         </prop-group>
       </trans-unit>

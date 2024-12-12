@@ -67,6 +67,7 @@ const
 
   LocalSettingsPath = 'O2';
   LocalWebDataPath = 'O2\WebView2';
+  LocalHTMLStylesPath = 'Styles';
 
   PortableLauncherPath = '';
   PortableAppPath = 'App\O2';
@@ -74,6 +75,7 @@ const
   PortableSettingsPath = 'Data\Settings';
   PortableFileTypeIconsPath = 'App\AppInfo\FileTypeIcons';
   PortableWebDataPath = 'Data\WebView2';
+  PortableHTMLStylesPath = 'App\O2\Styles';
 
 { Application file list IDs }
 
@@ -92,6 +94,7 @@ const
   IdReadMe = 'ReadMe';
   IdResourceModule = 'ResourceModule';
   IdWebView2Loader = 'WebView2Loader';
+  IdHTMLStyle = 'IdHTMLStyle';
 
 { Configuration file IDs }
 
