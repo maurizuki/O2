@@ -8,6 +8,7 @@
 #define LicenseDir "setup"
 #define ReadmeDir "setup"
 #define ExamplesDir "setup"
+#define StylesDir "src\O2\Styles"
 
 #define AppExeFile "o2.exe"
 #define LauncherFile "O2Portable.exe"
@@ -46,6 +47,7 @@ Name: custom; Description: Custom installation; Flags: iscustom
 [Components]
 Name: program; Description: {#AppName}; Types: full compact custom; Flags: fixed
 Name: examples; Description: Examples; Types: full
+Name: styles; Description: Styles; Types: full
 Name: languages; Description: Languages; Types: full
 Name: languages\en; Description: English; Types: full compact custom; Flags: fixed
 Name: languages\it; Description: Italian; Types: full
@@ -65,6 +67,7 @@ Source: {#LicenseDir}\{#LicenseFile}; DestDir: {app}; Components: program
 Source: {#ReadmeDir}\{#ReadmeFile}; DestDir: {app}; Components: program
 Source: {#ExamplesDir}\AddressBook.o2; DestDir: {app}\Examples; Components: examples
 Source: {#ExamplesDir}\PasswordWallet.o2; DestDir: {app}\Examples; Components: examples
+Source: {#StylesDir}\Mono.css; DestDir: {app}\Styles; Components: styles
 Source: {#AppExeDir}\o2.ENU; DestDir: {app}; Components: languages\en; Flags: ignoreversion
 Source: {#AppExeDir}\o2.ITA; DestDir: {app}; Components: languages\it; Flags: ignoreversion
 
