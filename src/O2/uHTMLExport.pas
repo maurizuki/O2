@@ -150,7 +150,7 @@ begin
     DefaultStyle.MacroByName('background-color').Value := '#0d1117';
     DefaultStyle.MacroByName('link-color').Value := '#aaeeff';
     DefaultStyle.MacroByName('border-color').Value := '#3d444d';
-    DefaultStyle.MacroByName('alt-bg-color').Value := '#24292f';
+    DefaultStyle.MacroByName('alt-bg-color').Value := '#151b23';
     DarkStyle.Tag := FModel.AddStyle(DefaultStyle.ExpandMacros);
 
     I := 0;
