@@ -341,7 +341,7 @@ object AboutForm: TAboutForm
     Top = 35
     Width = 204
     Height = 13
-    Caption = 'Copyright (C) 2004-2024 Maurizio Basaglia'
+    Caption = 'Copyright (C) 2004-2025 Maurizio Basaglia'
   end
   object Label2: TLabel
     Left = 73
