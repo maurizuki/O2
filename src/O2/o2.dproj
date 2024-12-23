@@ -58,7 +58,7 @@
         <VerInfo_Build>445</VerInfo_Build>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.3.0.445;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.0;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.3.0.445;InternalName=O2;LegalCopyright=(C) 2004-2025 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.0;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_DependencyCheckOutputName>o2.exe</DCC_DependencyCheckOutputName>
@@ -68,7 +68,7 @@
         <UWP_DelphiLogo150>$(BDS)\bin\Artwork\Windows\UWP\delphi_UwpDefault_150.png</UWP_DelphiLogo150>
         <Manifest_File>(None)</Manifest_File>
         <VerInfo_MinorVer>0</VerInfo_MinorVer>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.0.0.445;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.0;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.0.0.445;InternalName=O2;LegalCopyright=(C) 2004-2025 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.0;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
         <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win64)'!=''">
@@ -85,13 +85,13 @@
         <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
         <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
         <VerInfo_MinorVer>0</VerInfo_MinorVer>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.0.0.445;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.0;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.0.0.445;InternalName=O2;LegalCopyright=(C) 2004-2025 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.0;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_DependencyCheckOutputName>o2.exe</DCC_DependencyCheckOutputName>
         <SanitizedProjectName>o2</SanitizedProjectName>
         <VerInfo_Build>555</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.0.0.555;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.0;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.0.0.553;InternalName=O2;LegalCopyright=(C) 2004-2025 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.0;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -99,7 +99,7 @@
         <DCC_Define>DEBUG;$(DCC_Define)</DCC_Define>
         <DCC_OutputDRCFile>True</DCC_OutputDRCFile>
         <VerInfo_MinorVer>0</VerInfo_MinorVer>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.0.0.445;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.0;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.0.0.445;InternalName=O2;LegalCopyright=(C) 2004-2025 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.0;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
         <DCC_DependencyCheckOutputName>o2.exe</DCC_DependencyCheckOutputName>
@@ -107,7 +107,7 @@
         <VerInfo_Debug>true</VerInfo_Debug>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_Build>462</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.0.0.462;InternalName=O2;LegalCopyright=(C) 2004-2024 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.0;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.0.0.462;InternalName=O2;LegalCopyright=(C) 2004-2025 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.0;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
     </PropertyGroup>
     <ProjectExtensions>
         <Borland.Personality>Delphi.Personality.12</Borland.Personality>

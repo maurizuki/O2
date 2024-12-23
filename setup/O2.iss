@@ -1,6 +1,6 @@
 #define AppName "O2"
 #define AppVersion GetFileProductVersion("..\src\O2\O2.exe")
-#define Copyright "(C) 2004-2024 Maurizio Basaglia. All rights reserved."
+#define Copyright "(C) 2004-2025 Maurizio Basaglia. All rights reserved."
 
 #define SetupDir "setup"
 #define AppExeDir "src\O2"
@@ -67,6 +67,7 @@ Source: {#LicenseDir}\{#LicenseFile}; DestDir: {app}; Components: program
 Source: {#ReadmeDir}\{#ReadmeFile}; DestDir: {app}; Components: program
 Source: {#ExamplesDir}\AddressBook.o2; DestDir: {app}\Examples; Components: examples
 Source: {#ExamplesDir}\PasswordWallet.o2; DestDir: {app}\Examples; Components: examples
+Source: {#StylesDir}\Blocks.css; DestDir: {app}\Styles; Components: styles
 Source: {#StylesDir}\Mono.css; DestDir: {app}\Styles; Components: styles
 Source: {#AppExeDir}\o2.ENU; DestDir: {app}; Components: languages\en; Flags: ignoreversion
 Source: {#AppExeDir}\o2.ITA; DestDir: {app}; Components: languages\it; Flags: ignoreversion
