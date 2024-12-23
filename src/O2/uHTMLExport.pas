@@ -118,7 +118,7 @@ procedure THTMLExport.SetModel(Value: IHTMLExport);
 var
   AAction: TCustomAction;
   AMenuItem: TMenuItem;
-  Id: string;
+  FileName: string;
   I: Integer;
 begin
   if FModel <> Value then
@@ -154,29 +154,23 @@ begin
     DarkStyle.Tag := FModel.AddStyle(DefaultStyle.ExpandMacros);
 
     I := 0;
-    Id := IdHTMLStyle + IntToStr(I);
-    if FModel.AppFiles.FileExists(Id) then
-    repeat
-      begin
-        AAction := TAction.Create(Self);
-        AAction.Caption := ChangeFileExt(ExtractFileName(
-          FModel.AppFiles.FullPaths[Id]), '');
-        AAction.GroupIndex := BlueWaterStyle.GroupIndex;
-        AAction.OnExecute := StyleExecute;
-        AAction.OnUpdate := StyleUpdate;
-        AAction.ActionList := ActionList;
+    while FModel.TryGetStyleFileName(I, FileName) do
+    begin
+      AAction := TAction.Create(Self);
+      AAction.Caption := ChangeFileExt(ExtractFileName(FileName), '');
+      AAction.GroupIndex := BlueWaterStyle.GroupIndex;
+      AAction.OnExecute := StyleExecute;
+      AAction.OnUpdate := StyleUpdate;
+      AAction.ActionList := ActionList;
 
-        AMenuItem := TMenuItem.Create(StyleMenu);
-        AMenuItem.Action := AAction;
-        StyleMenu.Items.Add(AMenuItem);
+      AMenuItem := TMenuItem.Create(StyleMenu);
+      AMenuItem.Action := AAction;
+      StyleMenu.Items.Add(AMenuItem);
 
-        AAction.Tag := FModel.AddStyle(TFile.ReadAllText(
-          FModel.AppFiles.FullPaths[Id]));
+      AAction.Tag := FModel.AddStyle(TFile.ReadAllText(FileName));
 
-        Inc(I);
-        Id := IdHTMLStyle + IntToStr(I);
-      end;
-    until not FModel.AppFiles.FileExists(Id);
+      Inc(I);
+    end;
 
     BlueWaterStyle.Execute;
   end;

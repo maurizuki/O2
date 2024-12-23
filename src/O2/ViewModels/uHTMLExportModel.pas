@@ -38,7 +38,6 @@ type
     FStyleIndex: Integer;
     FStyles: TList<string>;
     FBuilder: TStringBuilder;
-    function GetAppFiles: IAppFiles;
     function GetIncludeIndex: Boolean;
     function GetIncludeTags: Boolean;
     function GetIncludeNotes: Boolean;
@@ -64,12 +63,12 @@ type
 
     procedure StoreSettings;
 
+    function TryGetStyleFileName(Index: Integer; out FileName: string): Boolean;
     function AddStyle(const Style: string): Integer;
 
     function ExportToHTML(Preview: Boolean): string; overload;
     procedure ExportToHTML(const FileName: string); overload;
 
-    property AppFiles: IAppFiles read GetAppFiles;
     property IncludeIndex: Boolean read GetIncludeIndex write SetIncludeIndex;
     property IncludeTags: Boolean read GetIncludeTags write SetIncludeTags;
     property IncludeNotes: Boolean read GetIncludeNotes write SetIncludeNotes;
@@ -157,6 +156,16 @@ begin
   FStorage.WriteBoolean(IdHTMLExportIncludePasswords, FIncludePasswords);
 end;
 
+function THTMLExportModel.TryGetStyleFileName(Index: Integer;
+  out FileName: string): Boolean;
+var
+  Id: string;
+begin
+  Id := IdHTMLStyle + IntToStr(Index);
+  Result := FAppFiles.FileExists(Id);
+  if Result then FileName := FAppFiles.FullPaths[Id];
+end;
+
 function THTMLExportModel.AddStyle(const Style: string): Integer;
 begin
   Result := FStyles.Add(Style);
@@ -207,11 +216,6 @@ begin
   finally
     Writer.Free;
   end;
-end;
-
-function THTMLExportModel.GetAppFiles: IAppFiles;
-begin
-  Result := FAppFiles;
 end;
 
 function THTMLExportModel.GetIncludeIndex: Boolean;

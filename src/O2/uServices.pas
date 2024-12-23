@@ -369,13 +369,11 @@ type
   IHTMLExport = interface
     procedure StoreSettings;
 
+    function TryGetStyleFileName(Index: Integer; out FileName: string): Boolean;
     function AddStyle(const Style: string): Integer;
 
     function ExportToHTML(Preview: Boolean): string; overload;
     procedure ExportToHTML(const FileName: string); overload;
-
-    function GetAppFiles: IAppFiles;
-    property AppFiles: IAppFiles read GetAppFiles;
 
     function GetIncludeIndex: Boolean;
     procedure SetIncludeIndex(Value: Boolean);
