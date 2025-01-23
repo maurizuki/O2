@@ -4,9 +4,9 @@
   <AppName>O2</AppName>
   <AppVersion>
     <MajorVersion>3</MajorVersion>
-    <MinorVersion>0</MinorVersion>
+    <MinorVersion>1</MinorVersion>
     <Release>0</Release>
-    <Build>550</Build>
+    <Build>557</Build>
   </AppVersion>
   <DownloadURL>https://github.com/maurizuki/O2/releases/latest</DownloadURL>
 </Update>
