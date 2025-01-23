@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2024 the initial Contributor. All rights reserved.              }
+{ 2004-2025 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -22,6 +22,10 @@ uses
   uO2Relations, uO2Rules;
 
 type
+  IDateProvider = interface
+    function GetDate: TDateTime;
+  end;
+
   IAppFiles = interface
     function FileExists(const Name: string): Boolean;
     function GetTotalSize: Int64;
@@ -44,6 +48,11 @@ type
 
     procedure LoadFromFile(const FileName: string);
     procedure SaveToFile(const FileName: string);
+  end;
+
+  IPasswordScoreProvider = interface
+    function TryGetPasswordScore(const Password: string;
+      var Score: Integer): Boolean;
   end;
 
   IPasswordScoreCache = interface(IPasswordScoreProvider)
@@ -91,10 +100,15 @@ type
 
     {$ENDREGION}
 
-    function GetNextEvent(const AObject: TO2Object;
+    function TryGetNextEvent(const AObject: TO2Object;
       out NextDate: TDateTime): Boolean;
-    function GetHighlight(const AObject: TO2Object): THighlight; overload;
-    function GetHighlight(const AField: TO2Field): THighlight; overload;
+    function TryGetHighlightColors(const AObject: TO2Object; out Color,
+      TextColor: TColor): Boolean; overload;
+    function TryGetHighlightColors(const AField: TO2Field; out Color,
+      TextColor: TColor): Boolean; overload;
+    function GetDisplayText(const AField: TO2Field;
+      ShowPasswords: Boolean): string;
+    function GetHyperLink(const AField: TO2Field): string;
     function IsHyperlinkOrEmail(const AField: TO2Field): Boolean;
     function IsHyperlink(const AField: TO2Field): Boolean;
     function IsEmail(const AField: TO2Field): Boolean;
@@ -355,6 +369,7 @@ type
   IHTMLExport = interface
     procedure StoreSettings;
 
+    function TryGetStyleFileName(Index: Integer; out FileName: string): Boolean;
     function AddStyle(const Style: string): Integer;
 
     function ExportToHTML(Preview: Boolean): string; overload;

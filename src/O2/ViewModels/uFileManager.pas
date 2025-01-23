@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2024 the initial Contributor. All rights reserved.              }
+{ 2004-2025 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -18,12 +18,13 @@ unit uFileManager;
 interface
 
 uses
-  Classes, Generics.Collections, uServices, uEventFilters, uO2File, uO2Objects, 
-  uO2Rules;
+  Classes, Generics.Collections, Graphics, uServices, uEventFilters, uO2File,
+  uO2Objects, uO2Rules;
 
 type
   TFileManager = class(TInterfacedObject, IFileManager)
   private
+    FDateProvider: IDateProvider;
     FPasswordProvider: IPasswordProvider;
     FPasswordScoreCache: IPasswordScoreCache;
 
@@ -49,8 +50,20 @@ type
     procedure SetEventFilterIndex(const Value: Integer);
     procedure SetObjectTags(const Value: TStrings);
     procedure SetIncludeUntagged(const Value: Boolean);
+
+    function HasEventInWindow(const AField: TO2Field;
+      const ARule: TO2Rule; StartDate, EndDate: TDateTime;
+      UseParams: Boolean): Boolean;
+    function TryGetNextEvent(const AField: TO2Field; const ARule: TO2Rule;
+      StartDate: TDateTime; out NextDate: TDateTime;
+      UseParams: Boolean = False): Boolean; overload;
+    function TryGetHighlightColors(const AField: TO2Field;
+      const ARule: TO2Rule; out Color, TextColor: TColor): Boolean; overload;
+    function GetDisplayText(const AField: TO2Field; const ARule: TO2Rule;
+      ShowPasswords: Boolean): string; overload;
   public
-    constructor Create(PasswordProvider: IPasswordProvider; 
+    constructor Create(DateProvider: IDateProvider;
+      PasswordProvider: IPasswordProvider;
       PasswordScoreCache: IPasswordScoreCache);
     destructor Destroy; override;
 
@@ -60,10 +73,15 @@ type
 
     function GetObjects: IEnumerable<TO2Object>;
 
-    function GetNextEvent(const AObject: TO2Object;
-      out NextDate: TDateTime): Boolean;
-    function GetHighlight(const AObject: TO2Object): THighlight; overload;
-    function GetHighlight(const AField: TO2Field): THighlight; overload;
+    function TryGetNextEvent(const AObject: TO2Object;
+      out NextDate: TDateTime): Boolean; overload;
+    function TryGetHighlightColors(const AObject: TO2Object; out Color,
+      TextColor: TColor): Boolean; overload;
+    function TryGetHighlightColors(const AField: TO2Field; out Color,
+      TextColor: TColor): Boolean; overload;
+    function GetDisplayText(const AField: TO2Field;
+      ShowPasswords: Boolean): string; overload;
+    function GetHyperLink(const AField: TO2Field): string;
     function IsHyperlinkOrEmail(const AField: TO2Field): Boolean;
     function IsHyperlink(const AField: TO2Field): Boolean;
     function IsEmail(const AField: TO2Field): Boolean;
@@ -82,10 +100,16 @@ type
     property ObjectRules: TList<TO2Rule> read GetObjectRules;
   end;
 
+  TDateProvider = class(TInterfacedObject, IDateProvider)
+  public
+    function GetDate: TDateTime; inline;
+  end;
+
 implementation
 
 uses
-  SysUtils, StrUtils, uGlobal, uO2ObjectsUtils;
+  SysUtils, StrUtils, DateUtils, uGlobal, uUtils, uO2ObjectsUtils,
+  uO2RulesUtils;
 
 type
   TO2ObjectFilteredEnumerator = class(TInterfacedObject,
@@ -159,16 +183,18 @@ const
 
 { TFileManager }
 
-constructor TFileManager.Create(PasswordProvider: IPasswordProvider; 
+constructor TFileManager.Create(DateProvider: IDateProvider;
+  PasswordProvider: IPasswordProvider;
   PasswordScoreCache: IPasswordScoreCache);
 begin
+  FDateProvider := DateProvider;
   FPasswordProvider := PasswordProvider;
   FPasswordScoreCache := PasswordScoreCache;
 
   FEventFilters := TStringList.Create;
   FEventFilters.AddStrings(EventFilterDescriptions);
 
-  FEventFilter := EventFilterClasses[FEventFilterIndex].Create;
+  FEventFilter := EventFilterClasses[FEventFilterIndex].Create(FDateProvider);
 
   FTags := TStringList.Create;
   FObjectTags := TStringList.Create;
@@ -202,14 +228,143 @@ begin
   Result := FFile;
 end;
 
-function TFileManager.GetHighlight(const AObject: TO2Object): THighlight;
+function TFileManager.TryGetHighlightColors(const AObject: TO2Object; out Color,
+  TextColor: TColor): Boolean;
+var
+  RuleIndex: Integer;
+  AField: TO2Field;
+  ARule: TO2Rule;
 begin
-  Result := O2File.Rules.GetHighlightColors(AObject, FPasswordScoreCache);
+  Result := False;
+  RuleIndex := O2File.Rules.Count;
+  for AField in AObject.Fields do
+    for ARule in O2File.Rules do
+      if ARule.Index < RuleIndex then
+        if TryGetHighlightColors(AField, ARule, Color, TextColor) then
+        begin
+          RuleIndex := ARule.Index;
+          Result := True;
+        end;
 end;
 
-function TFileManager.GetHighlight(const AField: TO2Field): THighlight;
+function TFileManager.TryGetHighlightColors(const AField: TO2Field; out Color,
+  TextColor: TColor): Boolean;
+var
+  ARule: TO2Rule;
 begin
-  Result := O2File.Rules.GetHighlightColors(AField, FPasswordScoreCache);
+  Result := False;
+  for ARule in O2File.Rules do
+    if TryGetHighlightColors(AField, ARule, Color, TextColor) then Exit(True);
+end;
+
+function TFileManager.TryGetHighlightColors(const AField: TO2Field;
+  const ARule: TO2Rule; out Color, TextColor: TColor): Boolean;
+var
+  PasswordScore: Integer;
+begin
+  if ARule.Active and (ARule.RuleType = rtPassword)
+    and ARule.Params.ReadBoolean(DisplayPasswordStrengthParam,
+      DefaultDisplayPasswordStrength) and ARule.Matches(AField)
+    and FPasswordScoreCache.TryGetPasswordScore(AField.FieldValue,
+      PasswordScore) then
+  begin
+    Color := PasswordScoreColors[PasswordScore];
+    TextColor := clBlack;
+    Exit(True);
+  end;
+
+  if ARule.Active and (ARule.RuleType = rtHighlight) and ARule.Matches(AField)
+    or HasEventInWindow(AField, ARule, 0, 0, True) then
+  begin
+    Color := ARule.Params.ReadInteger(HighlightColorParam,
+      DefaultHighlightColor);
+    TextColor := ARule.Params.ReadInteger(HighlightTextColorParam,
+      DefaultHighlightTextColor);
+    Exit(True);
+  end;
+
+  Result := False;
+end;
+
+function TFileManager.GetDisplayText(const AField: TO2Field;
+  ShowPasswords: Boolean): string;
+var
+  ARule: TO2Rule;
+begin
+  Result := AField.FieldValue;
+  for ARule in O2File.Rules do
+    if ARule.Active and ARule.Matches(AField) then
+    begin
+      Result := GetDisplayText(AField, ARule, ShowPasswords);
+      if Result <> AField.FieldValue then Break;
+    end;
+end;
+
+function TFileManager.GetDisplayText(const AField: TO2Field;
+  const ARule: TO2Rule; ShowPasswords: Boolean): string;
+var
+  MacroProcessor: TMacroProcessor;
+  Years, MonthsOfYear, DaysOfMonth: Word;
+  Months, Days: Integer;
+  ADate, EventDate: TDateTime;
+  AMask: string;
+begin
+  Result := AField.FieldValue;
+
+  case ARule.RuleType of
+    rtPassword:
+      if not ShowPasswords then
+        Result := StringOfChar(PasswordChar, Length(AField.FieldValue));
+
+    rtExpirationDate, rtRecurrence:
+    begin
+      ADate := FDateProvider.GetDate;
+
+      if TryParseDate(AField, ARule, EventDate)
+        and ((ARule.RuleType = rtExpirationDate) and (EventDate >= ADate)
+        or (ARule.RuleType = rtRecurrence) and (EventDate <= ADate)) then
+      begin
+        DateSpan(ADate, EventDate, Years, MonthsOfYear, DaysOfMonth);
+        Months := MonthsBetween(ADate, EventDate);
+        Days := DaysBetween(ADate, EventDate);
+
+        if ARule.Params.Values[DisplayMaskParam] <> '' then
+          AMask := ARule.Params.Values[DisplayMaskParam]
+        else
+          case ARule.RuleType of
+            rtExpirationDate:
+              AMask := DefaultExpirationDateMask;
+            rtRecurrence:
+              AMask := DefaultRecurrenceMask;
+          end;
+
+        MacroProcessor := TMacroProcessor.Create(AMask, MacroStartDelimiter,
+          MacroEndDelimiter);
+        try
+          Result := MacroProcessor
+            .Macro(FieldNameMacro, AField.FieldName)
+            .Macro(FieldValueMacro, AField.FieldValue)
+            .Macro(YearsMacro, Years)
+            .Macro(MonthsOfYearMacro, MonthsOfYear)
+            .Macro(DaysOfMonthMacro, DaysOfMonth)
+            .Macro(MonthsMacro, Months)
+            .Macro(DaysMacro, Days)
+            .ToString;
+        finally
+          MacroProcessor.Free;
+        end;
+      end;
+    end;
+  end;
+end;
+
+function TFileManager.GetHyperLink(const AField: TO2Field): string;
+var
+  ARule: TO2Rule;
+begin
+  Result := AField.FieldValue;
+  ARule := O2File.Rules.FindFirstRule(AField, [rtHyperLink]);
+  if Assigned(ARule) then Result := GetHyperLinkAddress(AField, ARule);
 end;
 
 function TFileManager.GetIncludeUntagged: Boolean;
@@ -217,11 +372,90 @@ begin
   Result := FIncludeUntagged;
 end;
 
-function TFileManager.GetNextEvent(const AObject: TO2Object;
-  out NextDate: TDateTime): Boolean;
+function TFileManager.HasEventInWindow(const AField: TO2Field;
+  const ARule: TO2Rule; StartDate, EndDate: TDateTime;
+  UseParams: Boolean): Boolean;
+var
+  ADate, DateValue, MinDate, MaxDate: TDateTime;
 begin
-  Result := O2File.Rules.GetNextEvent(AObject, FEventFilter.StartDate, NextDate,
-    FEventFilter.UseParamsForNextEvent);
+  if not ARule.Active or not (ARule.RuleType in EventRules)
+    or not ARule.Matches(AField)
+    or not TryParseDate(AField, ARule, DateValue) then
+    Exit(False);
+
+  if UseParams then
+  begin
+    ADate := FDateProvider.GetDate;
+    StartDate := ADate - ARule.Params.ReadInteger(DaysBeforeParam,
+      DefaultDaysBefore);
+    EndDate := ADate + ARule.Params.ReadInteger(DaysAfterParam,
+      DefaultDaysAfter);
+  end;
+
+  case ARule.RuleType of
+    rtExpirationDate:
+      Result := (DateValue >= StartDate) and (DateValue <= EndDate);
+
+    rtRecurrence:
+    begin
+      MinDate := SafeRecodeYear(DateValue, YearOf(StartDate));
+      MaxDate := SafeRecodeYear(DateValue, YearOf(EndDate));
+
+      Result := (MinDate >= StartDate) and (MinDate <= EndDate)
+        or (MaxDate >= StartDate) and (MaxDate <= EndDate);
+    end;
+
+    else
+      Result := False;
+  end;
+end;
+
+function TFileManager.TryGetNextEvent(const AObject: TO2Object;
+  out NextDate: TDateTime): Boolean;
+var
+  ANextDate: TDateTime;
+  AField: TO2Field;
+  ARule: TO2Rule;
+begin
+  Result := False;
+  for AField in AObject.Fields do
+    for ARule in O2File.Rules do
+      if TryGetNextEvent(AField, ARule, FEventFilter.StartDate, ANextDate,
+        FEventFilter.UseParamsForNextEvent) then
+      begin
+        if not Result or (ANextDate < NextDate) then NextDate := ANextDate;
+        Result := True;
+      end;
+end;
+
+function TFileManager.TryGetNextEvent(const AField: TO2Field;
+  const ARule: TO2Rule; StartDate: TDateTime; out NextDate: TDateTime;
+  UseParams: Boolean): Boolean;
+var
+  FirstDate: TDateTime;
+begin
+  if not (ARule.Active and (ARule.RuleType in EventRules)
+    and ARule.Matches(AField) and TryParseDate(AField, ARule, FirstDate)) then
+    Exit(False);
+
+  case ARule.RuleType of
+    rtExpirationDate:
+      NextDate := FirstDate;
+
+    rtRecurrence:
+    begin
+      if UseParams then
+        StartDate := FDateProvider.GetDate - ARule.Params.ReadInteger(
+          DaysBeforeParam, DefaultDaysBefore);
+
+      NextDate := SafeRecodeYear(FirstDate, YearOf(StartDate));
+
+      if NextDate < StartDate then
+        NextDate := SafeRecodeYear(FirstDate, YearOf(IncYear(StartDate)));
+    end;
+  end;
+
+  Result := True;
 end;
 
 function TFileManager.GetObjectName: string;
@@ -304,7 +538,7 @@ begin
     FEventFilterIndex := Value;
 
     FEventFilter.Free;
-    FEventFilter := EventFilterClasses[FEventFilterIndex].Create;
+    FEventFilter := EventFilterClasses[FEventFilterIndex].Create(FDateProvider);
   end;
 end;
 
@@ -321,6 +555,13 @@ end;
 procedure TFileManager.SetObjectTags(const Value: TStrings);
 begin
   FObjectTags.Assign(Value);
+end;
+
+{ TDateProvider }
+
+function TDateProvider.GetDate: TDateTime;
+begin
+  Result := Date;
 end;
 
 { TO2ObjectFilteredEnumerator }
@@ -371,12 +612,21 @@ begin
 end;
 
 function TO2ObjectFilteredEnumerator.CheckEvents: Boolean;
+var
+  AField: TO2Field;
+  ARule: TO2Rule;
 begin
-  Result := FFileManager.EventFilter.All
-    or FFileManager.O2File.Rules.HasEventInWindow(
-      FFileManager.O2File.Objects[FIndex],
-      FFileManager.EventFilter.StartDate, FFileManager.EventFilter.EndDate,
-      FFileManager.EventFilter.UseParams);
+  if FFileManager.EventFilter.All then Exit(True);
+
+  for AField in FFileManager.O2File.Objects[FIndex].Fields do
+    for ARule in FFileManager.O2File.Rules do
+      if FFileManager.HasEventInWindow(AField, ARule,
+        FFileManager.EventFilter.StartDate,
+        FFileManager.EventFilter.EndDate,
+        FFileManager.EventFilter.UseParams) then
+        Exit(True);
+
+  Result := False;
 end;
 
 function TO2ObjectFilteredEnumerator.CheckRules: Boolean;
@@ -385,11 +635,12 @@ var
   ARule: TO2Rule;
 begin
   if FFileManager.ObjectRules.Count = 0 then Exit(True);
-  
+
   for ARule in FFileManager.ObjectRules do
     for AField in FFileManager.O2File.Objects[FIndex].Fields do
       if ARule.Active and not (ARule.RuleType in EventRules)
-        and ARule.Matches(AField) or ARule.HasEventInWindow(AField) then
+        and ARule.Matches(AField)
+        or FFileManager.HasEventInWindow(AField, ARule, 0, 0, True) then
         Exit(True);
 
   Result := False;

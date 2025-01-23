@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2024 the initial Contributor. All rights reserved.              }
+{ 2004-2025 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -251,7 +251,8 @@ var
   ARule: TO2Rule;
 begin
   for ARule in FO2File.Rules do
-    if (ARule.RuleType = rtPassword) and ARule.DisplayPasswordStrength
+    if (ARule.RuleType = rtPassword) and ARule.Params.ReadBoolean(
+        DisplayPasswordStrengthParam, DefaultDisplayPasswordStrength)
       and ARule.Matches(FFieldName, FFieldValue) then
     begin
       inherited;

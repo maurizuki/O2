@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2024 the initial Contributor. All rights reserved.              }
+{ 2004-2025 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -188,7 +188,8 @@ begin
     .RegisterType<TAppFiles>(
       function: TAppFiles
       var
-        AppPath, SettingsPath, LauncherPath, LanguageModule: string;
+        AppPath, SettingsPath, StylesPath, LauncherPath, LanguageModule: string;
+        SearchRec: TSearchRec;
         I: Integer;
       begin
         if PortablePath <> '' then
@@ -196,6 +197,7 @@ begin
           AppPath := CombinePath(PortablePath, PortableAppPath);
           if not GetSettingsOverride(Application.ExeName, SettingsPath) then
             SettingsPath := CombinePath(PortablePath, PortableSettingsPath);
+          StylesPath := CombinePath(PortablePath, PortableHTMLStylesPath);
           LauncherPath := CombinePath(PortablePath, PortableLauncherPath);
         end
         else
@@ -204,6 +206,7 @@ begin
           if not GetSettingsOverride(Application.ExeName, SettingsPath) then
             SettingsPath := CombinePath(TShellFolders.AppData,
               LocalSettingsPath);
+          StylesPath := CombinePath(AppPath, LocalHTMLStylesPath);
           LauncherPath := AppPath;
         end;
 
@@ -238,12 +241,31 @@ begin
               ExtractFileName(LanguageModule), ExtractFilePath(LanguageModule),
               PortableAppPath);
         end;
+
+        if FindFirst(IncludeTrailingPathDelimiter(StylesPath) + '*.css',
+          faAnyFile, SearchRec) = 0 then
+        begin
+          I := 0;
+
+          repeat
+            Result.Add(IdHTMLStyle + IntToStr(I), SearchRec.Name, StylesPath,
+              PortableHTMLStylesPath);
+            Inc(I);
+          until FindNext(SearchRec) <> 0;
+
+          FindClose(SearchRec);
+        end;
       end)
     .Implements<IAppFiles>
     .AsSingleton;
 
   ServiceContainer
     .RegisterInstance<IStorage>(TXmlStorage.Create(MigrateConfiguration))
+    .AsSingleton;
+
+  ServiceContainer
+    .RegisterType<TDateProvider>
+    .Implements<IDateProvider>
     .AsSingleton;
 
   ServiceContainer

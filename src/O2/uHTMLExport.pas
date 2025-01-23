@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2024 the initial Contributor. All rights reserved.              }
+{ 2004-2025 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -58,6 +58,8 @@ type
     BlueWater1: TMenuItem;
     Matcha1: TMenuItem;
     Sakura1: TMenuItem;
+    DarkStyle: TAction;
+    Dark1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure ActionUpdate(Sender: TObject);
@@ -93,7 +95,7 @@ var
 implementation
 
 uses
-  uGlobal, uUtils;
+  IOUtils, uGlobal, uUtils;
 
 {$R *.dfm}
 
@@ -113,25 +115,62 @@ begin
 end;
 
 procedure THTMLExport.SetModel(Value: IHTMLExport);
+var
+  AAction: TCustomAction;
+  AMenuItem: TMenuItem;
+  FileName: string;
+  I: Integer;
 begin
   if FModel <> Value then
   begin
     FModel := Value;
 
+    DefaultStyle.MacroByName('color').Value := '#000';
+    DefaultStyle.MacroByName('background-color').Value := '#fff';
     DefaultStyle.MacroByName('link-color').Value := '#0d6efd';
     DefaultStyle.MacroByName('border-color').Value := '#9ec5fe';
     DefaultStyle.MacroByName('alt-bg-color').Value := '#f4f8ff';
     BlueWaterStyle.Tag := FModel.AddStyle(DefaultStyle.ExpandMacros);
 
+    DefaultStyle.MacroByName('color').Value := '#000';
+    DefaultStyle.MacroByName('background-color').Value := '#fff';
     DefaultStyle.MacroByName('link-color').Value := '#a1952e';
     DefaultStyle.MacroByName('border-color').Value := '#d5e3c0';
     DefaultStyle.MacroByName('alt-bg-color').Value := '#f1f6ea';
     MatchaStyle.Tag := FModel.AddStyle(DefaultStyle.ExpandMacros);
 
+    DefaultStyle.MacroByName('color').Value := '#000';
+    DefaultStyle.MacroByName('background-color').Value := '#fff';
     DefaultStyle.MacroByName('link-color').Value := '#c3829e';
     DefaultStyle.MacroByName('border-color').Value := '#fcc9b9';
     DefaultStyle.MacroByName('alt-bg-color').Value := '#fff5f2';
     SakuraStyle.Tag := FModel.AddStyle(DefaultStyle.ExpandMacros);
+
+    DefaultStyle.MacroByName('color').Value := '#f0f6fc';
+    DefaultStyle.MacroByName('background-color').Value := '#0d1117';
+    DefaultStyle.MacroByName('link-color').Value := '#aaeeff';
+    DefaultStyle.MacroByName('border-color').Value := '#3d444d';
+    DefaultStyle.MacroByName('alt-bg-color').Value := '#151b23';
+    DarkStyle.Tag := FModel.AddStyle(DefaultStyle.ExpandMacros);
+
+    I := 0;
+    while FModel.TryGetStyleFileName(I, FileName) do
+    begin
+      AAction := TAction.Create(Self);
+      AAction.Caption := ChangeFileExt(ExtractFileName(FileName), '');
+      AAction.GroupIndex := BlueWaterStyle.GroupIndex;
+      AAction.OnExecute := StyleExecute;
+      AAction.OnUpdate := StyleUpdate;
+      AAction.ActionList := ActionList;
+
+      AMenuItem := TMenuItem.Create(StyleMenu);
+      AMenuItem.Action := AAction;
+      StyleMenu.Items.Add(AMenuItem);
+
+      AAction.Tag := FModel.AddStyle(TFile.ReadAllText(FileName));
+
+      Inc(I);
+    end;
 
     BlueWaterStyle.Execute;
   end;

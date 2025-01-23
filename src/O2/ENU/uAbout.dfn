@@ -5,9 +5,9 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">45407.6224537037</prop>
-        <prop prop-type="OrigDateTime">45404.4925</prop>
-        <prop prop-type="XlatDateTime">45296.7456944444</prop>
+        <prop prop-type="SelfDateTime">45649.4159027778</prop>
+        <prop prop-type="OrigDateTime">45649.4131481481</prop>
+        <prop prop-type="XlatDateTime">45649.4131481481</prop>
         <prop prop-type="Translated">145</prop>
         <prop prop-type="UnTranslated">0</prop>
       </prop-group>
@@ -195,7 +195,7 @@
         <prop prop-type="Created">40178.7447665278</prop><prop prop-type="Status">1</prop><prop prop-type="Order">32</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       </trans-unit>
       <trans-unit id="O:AboutForm.O:Label1.Caption" resname="O:AboutForm.O:Label1.Caption">
-        <source>'Copyright (C) 2004-2024 Maurizio Basaglia'</source>
+        <source>'Copyright (C) 2004-2025 Maurizio Basaglia'</source>
         <prop-group name="ITEFieldProp">
         <prop prop-type="Created">40178.7447665278</prop><prop prop-type="Status">1</prop><prop prop-type="Order">33</prop><prop prop-type="Type">TLabel</prop><prop prop-type="Localize">1</prop></prop-group>
       <alt-trans>  <source>'Copyright (C) 2004-2023 Maurizio Basaglia'</source>

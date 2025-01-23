@@ -72,7 +72,7 @@ type
 implementation
 
 uses
-  uServices, uXmlStorage, uHTMLExportModel;
+  uServices, uAppFiles, uXmlStorage, uHTMLExportModel;
 
 { THTMLExportModelTests }
 
@@ -95,7 +95,7 @@ begin
   Storage.WriteBoolean('ExportToHTML.Include.Index', Value);
 
   Model := THTMLExportModel.Create(FO2File, FO2File.Objects.ToEnumerable,
-    FAppVersionInfo, Storage);
+    FAppVersionInfo, TAppFiles.Create, Storage);
 
   Assert.AreEqual(Value, Model.IncludeIndex);
 end;
@@ -109,7 +109,7 @@ begin
   Storage.WriteBoolean('ExportToHTML.Include.Tags', Value);
 
   Model := THTMLExportModel.Create(FO2File, FO2File.Objects.ToEnumerable,
-    FAppVersionInfo, Storage);
+    FAppVersionInfo, TAppFiles.Create, Storage);
 
   Assert.AreEqual(Value, Model.IncludeTags);
 end;
@@ -123,7 +123,7 @@ begin
   Storage.WriteBoolean('ExportToHTML.Include.Notes', Value);
 
   Model := THTMLExportModel.Create(FO2File, FO2File.Objects.ToEnumerable,
-    FAppVersionInfo, Storage);
+    FAppVersionInfo, TAppFiles.Create, Storage);
 
   Assert.AreEqual(Value, Model.IncludeNotes);
 end;
@@ -137,7 +137,7 @@ begin
   Storage.WriteBoolean('ExportToHTML.Include.Relations', Value);
 
   Model := THTMLExportModel.Create(FO2File, FO2File.Objects.ToEnumerable,
-    FAppVersionInfo, Storage);
+    FAppVersionInfo, TAppFiles.Create, Storage);
 
   Assert.AreEqual(Value, Model.IncludeRelations);
 end;
@@ -151,7 +151,7 @@ begin
   Storage.WriteBoolean('ExportToHTML.Include.Passwords', Value);
 
   Model := THTMLExportModel.Create(FO2File, FO2File.Objects.ToEnumerable,
-    FAppVersionInfo, Storage);
+    FAppVersionInfo, TAppFiles.Create, Storage);
 
   Assert.AreEqual(Value, Model.IncludePasswords);
 end;
@@ -164,7 +164,7 @@ begin
   Storage := TXmlStorage.Create;
 
   Model := THTMLExportModel.Create(FO2File, FO2File.Objects.ToEnumerable,
-    FAppVersionInfo, Storage);
+    FAppVersionInfo, TAppFiles.Create, Storage);
 
   Model.IncludeIndex := Value;
   Model.StoreSettings;
@@ -180,7 +180,7 @@ begin
   Storage := TXmlStorage.Create;
 
   Model := THTMLExportModel.Create(FO2File, FO2File.Objects.ToEnumerable,
-    FAppVersionInfo, Storage);
+    FAppVersionInfo, TAppFiles.Create, Storage);
 
   Model.IncludeTags := Value;
   Model.StoreSettings;
@@ -196,7 +196,7 @@ begin
   Storage := TXmlStorage.Create;
 
   Model := THTMLExportModel.Create(FO2File, FO2File.Objects.ToEnumerable,
-    FAppVersionInfo, Storage);
+    FAppVersionInfo, TAppFiles.Create, Storage);
 
   Model.IncludeNotes := Value;
   Model.StoreSettings;
@@ -212,7 +212,7 @@ begin
   Storage := TXmlStorage.Create;
 
   Model := THTMLExportModel.Create(FO2File, FO2File.Objects.ToEnumerable,
-    FAppVersionInfo, Storage);
+    FAppVersionInfo, TAppFiles.Create, Storage);
 
   Model.IncludeRelations := Value;
   Model.StoreSettings;
@@ -228,7 +228,7 @@ begin
   Storage := TXmlStorage.Create;
 
   Model := THTMLExportModel.Create(FO2File, FO2File.Objects.ToEnumerable,
-    FAppVersionInfo, Storage);
+    FAppVersionInfo, TAppFiles.Create, Storage);
 
   Model.IncludePasswords := Value;
   Model.StoreSettings;

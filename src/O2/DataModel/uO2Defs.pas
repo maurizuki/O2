@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2024 the initial Contributor. All rights reserved.              }
+{ 2004-2025 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -18,24 +18,15 @@ unit uO2Defs;
 interface
 
 uses
-  Classes, SysUtils;
+  SysUtils;
 
 const
   O2FileGUID: TGUID = '{ABBB4FE2-9C21-450E-80B0-469DFD8A8BFC}';
-  O2FileVersion: WordRec = (Lo: 3; Hi: 2); // 2.3
+  O2FileVersion: WordRec = (Lo: 0; Hi: 3); // 3.0
 
 type
   TO2Cipher = Byte;
   TO2Hash = Byte;
-
-  TO2FileHeader = packed record
-    ContentType: TGUID;
-    Version: Word;
-    Encrypted: Boolean;
-    Cipher: TO2Cipher;
-    Hash: TO2Hash;
-    CRC32: Longword;
-  end;
 
 const
 
@@ -94,10 +85,16 @@ const
     ohSHA1
   ];
 
+var
+  O2FileSchemaLocation: string;
+
 function CipherToIdent(Cipher: Longint; var Ident: string): Boolean;
 function HashToIdent(Hash: Longint; var Ident: string): Boolean;
 
 implementation
+
+uses
+  Classes;
 
 const
   Ciphers: array[0..19] of TIdentMapEntry = (
@@ -144,5 +141,10 @@ function HashToIdent(Hash: Longint; var Ident: string): Boolean;
 begin
   Result := IntToIdent(Hash, Ident, Hashes);
 end;
+
+initialization
+  O2FileSchemaLocation := Format(
+    'https://maurizuki.github.io/O2/xml/O2File/%d%d.xsd',
+    [O2FileVersion.Hi, O2FileVersion.Lo]);
 
 end.

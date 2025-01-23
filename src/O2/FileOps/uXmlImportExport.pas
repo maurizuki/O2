@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2024 the initial Contributor. All rights reserved.              }
+{ 2004-2025 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -34,15 +34,15 @@ type
 implementation
 
 uses
-  uO2Xml;
+  uXmlSerialization, uO2Defs;
 
 { TXmlImport }
 
 procedure TXmlImport.Execute(const FileName: string);
 var
-  XmlReader: TO2XmlReader;
+  XmlReader: TXmlReader;
 begin
-  XmlReader := TO2XmlReader.Create(O2File);
+  XmlReader := TXmlReader.Create(O2File);
   try
     XmlReader.LoadFromFile(FileName);
   finally
@@ -54,9 +54,9 @@ end;
 
 procedure TXmlExport.Execute(const FileName: string);
 var
-  XmlWriter: TO2XmlWriter;
+  XmlWriter: TXmlWriter;
 begin
-  XmlWriter := TO2XmlWriter.Create(O2File);
+  XmlWriter := TXmlWriter.Create(O2File, O2FileSchemaLocation);
   try
     XmlWriter.SaveToFile(FileName);
   finally

@@ -77,4 +77,5 @@ src/O2/Dictionaries.res
 src/O2/Icons.res
 
 # DUnitX output
-dunitx-results.xml
+src/Tests/Win32/**/dunitx-results.xml
+src/Tests/Win32/**/test-results.md

@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2024 the initial Contributor. All rights reserved.              }
+{ 2004-2025 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -617,22 +617,6 @@ uses
 
 {$R *.dfm}
 
-procedure SetHighlightColors(const Canvas: TCanvas; Highlight: THighlight);
-begin
-  case Highlight.Highlight of
-    htCustom:
-    begin
-      Canvas.Brush.Color := Highlight.Color;
-      Canvas.Font.Color := Highlight.TextColor;
-    end;
-    htPasswordScore:
-    begin
-      Canvas.Brush.Color := PasswordScoreColors[Highlight.PasswordScore];
-      Canvas.Font.Color := clBlack;
-    end;
-  end;
-end;
-
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   FBusy := False;
@@ -838,10 +822,16 @@ end;
 
 procedure TMainForm.ObjectsViewCustomDrawItem(Sender: TCustomListView;
   Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
+var
+  Color, TextColor: TColor;
 begin
-  if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data) then
-    SetHighlightColors(Sender.Canvas,
-      FModel.GetHighlight(TO2Object(Item.Data)));
+  if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data)
+    and FModel.TryGetHighlightColors(TO2Object(Item.Data), Color,
+      TextColor) then
+  begin
+    Sender.Canvas.Brush.Color := Color;
+    Sender.Canvas.Font.Color := TextColor;
+  end;
 end;
 
 procedure TMainForm.FindByEventChange(Sender: TObject);
@@ -1565,7 +1555,7 @@ begin
   Result.Caption := AObject.Name;
   Result.ImageIndex := 0;
   Result.SubItems.Add(AObject.Tag);
-  if FModel.GetNextEvent(AObject, EventDate) then
+  if FModel.TryGetNextEvent(AObject, EventDate) then
     Result.SubItems.Add(DateToStr(EventDate))
   else
     Result.SubItems.Add('');
@@ -1581,8 +1571,7 @@ begin
     Result := FieldsView.Items.Add;
   Result.Caption := AField.FieldName;
   Result.SubItems.Clear;
-  Result.SubItems.Add(FModel.O2File.Rules.GetDisplayText(
-    AField, FShowPasswords));
+  Result.SubItems.Add(FModel.GetDisplayText(AField, FShowPasswords));
   Result.Data := AField;
 end;
 
@@ -1715,16 +1704,16 @@ function TMainForm.CompareObjectsByNextEvent(const Obj1,
 var
   Date1, Date2: TDateTime;
 begin
-  if FModel.GetNextEvent(Obj1, Date1) then
+  if FModel.TryGetNextEvent(Obj1, Date1) then
   begin
-    if FModel.GetNextEvent(Obj2, Date2) then
+    if FModel.TryGetNextEvent(Obj2, Date2) then
       Result := CompareDate(Date1, Date2)
     else
       Result := -1;
   end
   else
   begin
-    if FModel.GetNextEvent(Obj2, Date2) then
+    if FModel.TryGetNextEvent(Obj2, Date2) then
       Result := 1
     else
       Result := 0;
@@ -2259,20 +2248,33 @@ end;
 
 procedure TMainForm.FieldsViewCustomDrawItem(Sender: TCustomListView;
   Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
+var
+  Color, TextColor: TColor;
 begin
-  if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data) then
-    SetHighlightColors(Sender.Canvas, FModel.GetHighlight(TO2Field(Item.Data)));
+  if (State * [cdsFocused, cdsHot] = []) and Assigned(Item.Data)
+    and FModel.TryGetHighlightColors(TO2Field(Item.Data), Color,
+      TextColor) then
+  begin
+    Sender.Canvas.Brush.Color := Color;
+    Sender.Canvas.Font.Color := TextColor;
+  end;
 end;
 
 procedure TMainForm.FieldsViewCustomDrawSubItem(Sender: TCustomListView;
   Item: TListItem; SubItem: Integer; State: TCustomDrawState;
   var DefaultDraw: Boolean);
+var
+  Color, TextColor: TColor;
 begin
   if Assigned(Item.Data) then
   begin
-    if (State * [cdsFocused, cdsHot] = []) then
-      SetHighlightColors(Sender.Canvas,
-        FModel.GetHighlight(TO2Field(Item.Data)));
+    if (State * [cdsFocused, cdsHot] = [])
+      and FModel.TryGetHighlightColors(TO2Field(Item.Data), Color,
+        TextColor) then
+    begin
+      Sender.Canvas.Brush.Color := Color;
+      Sender.Canvas.Font.Color := TextColor;
+    end;
 
     if FModel.IsHyperlinkOrEmail(Item.Data) then
       Sender.Canvas.Font.Style := Sender.Canvas.Font.Style + [fsUnderline];
@@ -2365,7 +2367,7 @@ end;
 
 procedure TMainForm.OpenLinkExecute(Sender: TObject);
 begin
-  ShellOpen(FModel.O2File.Rules.GetHyperLink(SelectedField));
+  ShellOpen(FModel.GetHyperLink(SelectedField));
 end;
 
 procedure TMainForm.OpenLinkUpdate(Sender: TObject);

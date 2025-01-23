@@ -1,0 +1,117 @@
+/*
+
+Style: MONO|
+           |CHROME
+           |SPACE
+
+Author: https://github.com/maurizuki
+
+*/
+
+body {
+	color: #00cc00;
+	background-color: #000;
+	font-family: monospace;
+	font-size: 1rem;
+}
+
+body a:link,
+a:visited,
+a:hover {
+	color: #00ff00;
+}
+
+body h2 {
+	display: inline;
+}
+
+body ul {
+	list-style-type: square;
+}
+
+body li {
+	padding: .125rem;
+}
+
+.container {
+	max-width: 960px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.object-index {
+	display: inline-block;
+	border: 3px double #00ff00;
+	padding-right: 1rem;
+}
+
+.object-item {
+	border: 2px solid #00ff00;
+	margin-top: 1.5rem;
+	padding: .5rem;
+}
+
+.tag-list {
+	border-top: 1px solid #00ff00;
+	margin-top: .5rem;
+	padding-top: .125rem;
+}
+
+.tag-item {
+	color: #000;
+	background-color: #00cc00;
+	display: inline-block;
+	margin: .125rem;
+}
+
+.field-list {
+	display: table;
+	border-top: 1px solid #00ff00;
+	margin-top: .5rem;
+	width: 100%;
+}
+
+.field-item {
+	display: table-row;
+}
+
+.field-name {
+	display: table-cell;
+	padding: .125rem;
+	width: 30%;
+}
+
+.field-value {
+	display: table-cell;
+	padding: .125rem;
+	width: 70%;
+}
+
+.relation-list {
+	display: table;
+	border-top: 1px solid #00ff00;
+	margin-top: .5rem;
+	width: 100%;
+}
+
+.relation-item {
+	display: table-row;
+}
+
+.relation-object {
+	display: table-cell;
+	padding: .125rem;
+	width: 70%;
+}
+
+.relation-role {
+	display: table-cell;
+	padding: .125rem;
+	width: 30%;
+}
+
+.notes {
+	border-top: 1px solid #00ff00;
+	margin-top: .5rem;
+	padding: .125rem;
+}

@@ -19,7 +19,7 @@ type
 
     [Test]
     [TestCase('NotEncrypted', 'False,0,0')]
-    [TestCase('None        ', 'True,0,0')]
+    [TestCase('None'        , 'True,0,0')]
     [TestCase('Blowfish'    , 'True,1,1')]
     [TestCase('CAST128'     , 'True,2,2')]
     [TestCase('CAST256'     , 'True,3,3')]

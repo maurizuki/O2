@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2024 the initial Contributor. All rights reserved.              }
+{ 2004-2025 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -19,7 +19,7 @@ interface
 
 uses
   Windows, Generics.Collections, SysUtils, uO2File, uO2Objects, uServices,
-  uUtils;
+  uAppFiles, uUtils;
 
 type
   THTMLExportModel = class(TInterfacedObject, IHTMLExport)
@@ -28,6 +28,7 @@ type
     FO2File: TO2File;
     FSelectedObjects: IEnumerable<TO2Object>;
     FAppVersionInfo: TAppVersionInfo;
+    FAppFiles: IAppFiles;
     FStorage: IStorage;
     FIncludeIndex: Boolean;
     FIncludeTags: Boolean;
@@ -57,11 +58,12 @@ type
   public
     constructor Create(const O2File: TO2File;
       SelectedObjects: IEnumerable<TO2Object>; AppVersionInfo: TAppVersionInfo;
-      Storage: IStorage);
+      AppFiles: IAppFiles; Storage: IStorage);
     destructor Destroy; override;
 
     procedure StoreSettings;
 
+    function TryGetStyleFileName(Index: Integer; out FileName: string): Boolean;
     function AddStyle(const Style: string): Integer;
 
     function ExportToHTML(Preview: Boolean): string; overload;
@@ -80,13 +82,14 @@ type
 implementation
 
 uses
-  Classes, uGlobal, uHTMLHelper, uO2Relations, uO2Rules, uO2ObjectsUtils;
+  Classes, uGlobal, uHTMLHelper, uO2Relations, uO2Rules, uO2ObjectsUtils,
+  uO2RulesUtils;
 
 { THTMLExportModel }
 
 constructor THTMLExportModel.Create(const O2File: TO2File;
   SelectedObjects: IEnumerable<TO2Object>; AppVersionInfo: TAppVersionInfo;
-  Storage: IStorage);
+  AppFiles: IAppFiles; Storage: IStorage);
 begin
   if O2File.Title = '' then
     FTitle := ChangeFileExt(ExtractFileName(O2File.FileName), '')
@@ -95,6 +98,7 @@ begin
   FO2File := O2File;
   FSelectedObjects := SelectedObjects;
   FAppVersionInfo := AppVersionInfo;
+  FAppFiles := AppFiles;
   FStorage := Storage;
   FIncludeIndex := FStorage.ReadBoolean(IdHTMLExportIncludeIndex, True);
   FIncludeTags := FStorage.ReadBoolean(IdHTMLExportIncludeTags, True);
@@ -150,6 +154,16 @@ begin
   FStorage.WriteBoolean(IdHTMLExportIncludeNotes, FIncludeNotes);
   FStorage.WriteBoolean(IdHTMLExportIncludeRelations, FIncludeRelations);
   FStorage.WriteBoolean(IdHTMLExportIncludePasswords, FIncludePasswords);
+end;
+
+function THTMLExportModel.TryGetStyleFileName(Index: Integer;
+  out FileName: string): Boolean;
+var
+  Id: string;
+begin
+  Id := IdHTMLStyle + IntToStr(Index);
+  Result := FAppFiles.FileExists(Id);
+  if Result then FileName := FAppFiles.FullPaths[Id];
 end;
 
 function THTMLExportModel.AddStyle(const Style: string): Integer;
@@ -328,7 +342,7 @@ begin
           case ARule.RuleType of
             rtHyperLink:
               FBuilder.AppendFormat('<a href="%s" target="_blank">',
-                [ARule.GetHyperLink(AField)])
+                [GetHyperLinkAddress(AField, ARule)])
                 .AppendHTML(AField.FieldValue).Append('</a>');
             rtEmail:
               FBuilder.AppendFormat('<a href="mailto:%s">', [AField.FieldValue])

@@ -5,9 +5,9 @@
     <header>
       <prop-group name="ITEHeaderProp">
         <prop prop-type="Version">9.0</prop>
-        <prop prop-type="SelfDateTime">45407.6239351852</prop>
-        <prop prop-type="OrigDateTime">45407.6095138889</prop>
-        <prop prop-type="XlatDateTime">45296.7456944444</prop>
+        <prop prop-type="SelfDateTime">45649.4161111111</prop>
+        <prop prop-type="OrigDateTime">45407.5678472222</prop>
+        <prop prop-type="XlatDateTime">45296.7040277778</prop>
         <prop prop-type="Translated">297</prop>
         <prop prop-type="UnTranslated">0</prop>
       </prop-group>
@@ -935,6 +935,7 @@
       </trans-unit>
       <trans-unit id="O:ObjPropsDlg.O:PageControl.O:TabSheet1.O:GroupBox1.O:edTag.TextHint" resname="O:ObjPropsDlg.O:PageControl.O:TabSheet1.O:GroupBox1.O:edTag.TextHint">
         <source>'New tag'</source>
+        <target>'Nuova etichetta'</target>
         <prop-group name="ITEFieldProp">
           <prop prop-type="Created">45407.6225515856</prop>
           <prop prop-type="Status">1</prop>
@@ -942,7 +943,6 @@
           <prop prop-type="Type">TEdit</prop>
           <prop prop-type="Localize">1</prop>
         </prop-group>
-        <target>'Nuova etichetta'</target>
       </trans-unit>
       <trans-unit id="O:ObjPropsDlg.O:PageControl.O:TabSheet1.O:GroupBox1.O:edTag.ExplicitWidth" resname="O:ObjPropsDlg.O:PageControl.O:TabSheet1.O:GroupBox1.O:edTag.ExplicitWidth">
         <source>262</source>

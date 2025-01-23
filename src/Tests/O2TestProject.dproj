@@ -4,7 +4,7 @@
         <ProjectVersion>19.5</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Console</AppType>
@@ -39,6 +39,12 @@
         <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
+    <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Cfg_2)'=='true') or '$(Cfg_2_Win32)'!=''">
+        <Cfg_2_Win32>true</Cfg_2_Win32>
+        <CfgParent>Cfg_2</CfgParent>
+        <Cfg_2>true</Cfg_2>
+        <Base>true</Base>
+    </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
         <DCC_DcuOutput>.\$(Platform)\$(Config)</DCC_DcuOutput>
         <DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
@@ -53,6 +59,7 @@
         <Icns_MainIcns>$(BDS)\bin\delphi_PROJECTICNS.icns</Icns_MainIcns>
         <DCC_UnitSearchPath>$(DUnitX);$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <SanitizedProjectName>O2TestProject</SanitizedProjectName>
+        <DCC_OutputDRCFile>true</DCC_OutputDRCFile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_UsePackage>FireDACIBDriver;vclwinx;fmx;vclie;DbxCommonDriver;bindengine;IndyIPCommon;VCLRESTComponents;FireDACCommonODBC;FireDACCommonDriver;appanalytics;IndyProtocols;vclx;IndyIPClient;dbxcds;vcledge;bindcompvclwinx;bindcompfmx;JvBands;inetdb;JvAppFrm;FireDACSqliteDriver;DbxClientDriver;JclVcl;soapmidas;vclactnband;fmxFireDAC;dbexpress;Jcl;JvManagedThreads;DBXMySQLDriver;VclSmp;inet;JvPascalInterpreter;vcltouch;fmxase;JvPluginSystem;JvDB;JvTimeFramework;dbrtl;fmxdae;FireDACMSAccDriver;JvCustom;CustomIPTransport;JvSystem;JvControls;JclDeveloperTools;vcldsnap;JvCrypt;DBXInterBaseDriver;JvJans;JvMM;IndySystem;JvWizards;JvGlobus;vcldb;JvPageComps;vclFireDAC;JvCore;bindcomp;FireDACCommon;IndyCore;RESTBackendComponents;bindcompdbx;rtl;FireDACMySQLDriver;FireDACADSDriver;RESTComponents;DBXSqliteDriver;vcl;IndyIPServer;dsnapxml;dsnapcon;adortl;JvHMI;JvDotNetCtrls;JvRuntimeDesign;JvXPCtrls;vclimg;FireDACPgDriver;FireDAC;inetdbxpress;JvDlgs;xmlrtl;tethering;JvStdCtrls;JvPrintPreview;JvDocking;bindcompvcl;dsnap;JvCmp;CloudService;fmxobj;bindcompvclsmp;soaprtl;soapserver;JvNet;$(DCC_UsePackage)</DCC_UsePackage>
@@ -79,9 +86,14 @@
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
-        <DCC_Define>RELEASE;$(DCC_Define)</DCC_Define>
+        <DCC_Define>RELEASE;CI;$(DCC_Define)</DCC_Define>
         <DCC_SymbolReferenceInfo>0</DCC_SymbolReferenceInfo>
         <DCC_DebugInformation>0</DCC_DebugInformation>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
+        <VerInfo_Locale>1033</VerInfo_Locale>
+        <Manifest_File>(None)</Manifest_File>
+        <AppDPIAwarenessMode>none</AppDPIAwarenessMode>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -141,14 +153,16 @@
         <DCCReference Include="..\O2\DataModel\uO2Objects.pas"/>
         <DCCReference Include="..\O2\DataModel\uO2Relations.pas"/>
         <DCCReference Include="..\O2\DataModel\uO2Rules.pas"/>
-        <DCCReference Include="..\O2\DataModel\uO2Utils.pas"/>
-        <DCCReference Include="..\O2\DataModel\uO2Xml.pas"/>
         <DCCReference Include="..\O2\uServices.pas"/>
         <DCCReference Include="..\O2\uGlobal.pas"/>
+        <DCCReference Include="..\O2\Utils\uAppFiles.pas"/>
         <DCCReference Include="..\O2\Utils\uO2ObjectsUtils.pas"/>
+        <DCCReference Include="..\O2\Utils\uO2RulesUtils.pas"/>
+        <DCCReference Include="..\O2\Utils\uPasswordScoreCache.pas"/>
         <DCCReference Include="..\O2\Utils\uShellUtils.pas"/>
         <DCCReference Include="..\O2\Utils\uUtils.pas"/>
         <DCCReference Include="..\O2\Utils\uHTMLHelper.pas"/>
+        <DCCReference Include="..\O2\Utils\uXmlSerialization.pas"/>
         <DCCReference Include="..\O2\Utils\uXmlStorage.pas"/>
         <DCCReference Include="..\O2\ViewModels\uEncryptionPropsModel.pas"/>
         <DCCReference Include="..\O2\ViewModels\uEventFilters.pas"/>
@@ -161,17 +175,18 @@
         <DCCReference Include="..\O2\ViewModels\uRelationModels.pas"/>
         <DCCReference Include="..\O2\ViewModels\uReplaceOperations.pas"/>
         <DCCReference Include="..\O2\ViewModels\uRuleModels.pas"/>
+        <DCCReference Include="Loggers\Testing.MarkdownLogger.pas"/>
         <DCCReference Include="Testing.Cryptography.pas"/>
-        <DCCReference Include="Testing.FilePropsModel.pas"/>
-        <DCCReference Include="Testing.ObjectModels.pas"/>
-        <DCCReference Include="Testing.RelationModels.pas"/>
-        <DCCReference Include="Testing.RuleModels.pas"/>
-        <DCCReference Include="Testing.ReplaceOperations.pas"/>
-        <DCCReference Include="Testing.XmlStorage.pas"/>
-        <DCCReference Include="Testing.PrintModel.pas"/>
-        <DCCReference Include="Testing.HTMLExportModel.pas"/>
         <DCCReference Include="Testing.EncryptionPropsModel.pas"/>
         <DCCReference Include="Testing.FileManager.pas"/>
+        <DCCReference Include="Testing.FilePropsModel.pas"/>
+        <DCCReference Include="Testing.HTMLExportModel.pas"/>
+        <DCCReference Include="Testing.ObjectModels.pas"/>
+        <DCCReference Include="Testing.PrintModel.pas"/>
+        <DCCReference Include="Testing.RelationModels.pas"/>
+        <DCCReference Include="Testing.ReplaceOperations.pas"/>
+        <DCCReference Include="Testing.RuleModels.pas"/>
+        <DCCReference Include="Testing.XmlStorage.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -192,6 +207,17 @@
                 <Source>
                     <Source Name="MainSource">O2TestProject.dpr</Source>
                 </Source>
+                <Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k280.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp280.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\JclBaseExpert280.bpl">JCL Package containing common units for JCL Experts</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\JclDebugExpert280.bpl">JCL Debug IDE extension</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\JclProjectAnalysisExpert280.bpl">JCL Project Analyzer</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\JclFavoriteFoldersExpert280.bpl">JCL Open and Save IDE dialogs with favorite folders</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\JclRepositoryExpert280.bpl">JCL Package containing repository wizards</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\JclSIMDViewExpert280.bpl">JCL Debug Window of XMM registers</Excluded_Packages>
+                    <Excluded_Packages Name="C:\Users\Public\Documents\Embarcadero\Studio\22.0\Bpl\JclStackTraceViewerExpert280.bpl">JCL Stack Trace Viewer</Excluded_Packages>
+                </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="4">
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule">

@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2024 the initial Contributor. All rights reserved.              }
+{ 2004-2025 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -52,7 +52,7 @@ type
 implementation
 
 uses
-  SysUtils, uO2Rules, DateUtils;
+  SysUtils, DateUtils, uO2Rules, uO2RulesUtils;
 
 function EscapeText(const Value: string): string;
 begin
@@ -95,10 +95,9 @@ begin
         begin
           ARule := O2File.Rules.FindFirstRule(AField, EventRules);
 
-          if Assigned(ARule) then
+          if Assigned(ARule) and TryParseDate(AField, ARule, EventDate) then
           begin
             CreateGUID(UID);
-            ARule.GetFirstEvent(AField, EventDate);
 
             Writer.WriteLines('BEGIN:VEVENT');
             Writer.WriteLines(Format(

@@ -30,6 +30,11 @@ winget install --id=maurizuki.O2 -e
 
 ## Change log
 
+### Version 3.1
+-	Cryptography enhancement: the cipher algorithm initialization vector is now randomly generated.
+-	New feature: custom style sheets for *Export to HTML*. Each *.css* file found in the *Styles* folder can be selected in the *Style* menu of the preview window.
+-	*Export to HTML*: new dark theme added.
+
 ### Version 3.0
 - Extensive source code rewrite in order to upgrade it to much modern coding techniques. This may or may not cause some bugs 🙂
 - *Object notes* view: note text is now displayed using an Edge-based control instead of an Internet Explorer-based one.
@@ -46,42 +51,6 @@ winget install --id=maurizuki.O2 -e
 - *Object properties* dialog: added an option to enable a color based indication of the strength of the password typed in the field value, with some useful suggestions on how to strengthen it displayed hovering the indicator.
 - Main window, objects view and fields view: objects and fields highlight indicates the strength of the passwords if the fields match rules of type *Password* with the new option *Display password strength*.
 - Developed with Embarcadero® Delphi 11.
-
-### Version 2.2.7
-- New feature: export events (fields that match rules of type *Expiration date* and *Recurrence*) in *iCalendar* format, compatible with Microsoft Outlook, Google Calendar, Apple Calendar, etc.
-- In the *Rule properties* dialog, *Date format* tab, the text field *Date format* has been replaced with a more friendly drop-down list.
-- *Help* menu rationalization.
-
-### Version 2.2.6
-- Fixed: multiple consecutive white spaces in notes are not preserved during export to HTML.
-- Minor improvements.
-
-### Version 2.2.5
-- Export to HTML: new page style in three flavors.
-- Check for updates: integration with the GitHub REST API.
-- Minor improvements.
-- Developed with Embarcadero® Delphi 10.4.
-
-### Version 2.2.4
-- Fixed: the selections of the search options *Find by tag* and *Find by rule* aren't initialized opening another file.
-
-### Version 2.2.3
-- Deprecated cipher and hash algorithms: the cipher algorithms Blowfish, DES, Ice, Thin Ice, Misty1, RC2, RC4, TEA and the hash algorithms MD5 and SHA-1 have been deprecated due to evidences of their lack of security. It's still possible to open files encrypted using the deprecated algorithms, but it's no longer possible to save files encrypted with them.
-
-### Version 2.2.2
-- Main window, fields view: added the menu item *Show passwords* to the context menu.
-- Developed with Embarcadero® Delphi 10.3.
-- Compiled with Jedi VCL 3.50.
-
-### Version 2.2.1
-- Some aesthetic retouches to the main window, print preview window and HTML export preview window.
-- New style sheet for the HTML export.
-- Added the menu item *Documentation* to the *Help* menu: links to the wiki page of the project.
-
-### Version 2.2
-- New portable release that installs directly on removable media.
-- Added the new feature *Replace role* to the objects menu: replaces the role of the selected objects in their relations.
-- Minor bug fixes and improvements.
 
 ## Acknowledgements
 

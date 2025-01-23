@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2024 the initial Contributor. All rights reserved.              }
+{ 2004-2025 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -50,7 +50,7 @@ procedure ShellMailTo(const Recipient: string; const Subject: string = '');
 implementation
 
 uses
-  Windows, Forms, SysUtils, ShellApi, RegStr, uO2Utils;
+  Windows, Forms, SysUtils, ShellApi, RegStr, uUtils;
 
 procedure ShellOpen(const FileName, Parameters: string);
 begin

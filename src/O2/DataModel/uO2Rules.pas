@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2024 the initial Contributor. All rights reserved.              }
+{ 2004-2025 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -140,20 +140,6 @@ type
     property Values[Name: string]: string read GetValues write SetValues;
   end;
 
-  THighlightType = (htNone, htCustom, htPasswordScore);
-
-  THighlight = record
-    case Highlight: THighlightType of
-      htNone: ();
-      htCustom: (Color, TextColor: TColor);
-      htPasswordScore: (PasswordScore: Integer);
-  end;
-
-  IPasswordScoreProvider = interface
-    function TryGetPasswordScore(const Password: string;
-      var Score: Integer): Boolean;
-  end;
-
   TO2Rule = class(TO2CollectionItem)
   private
     FName: string;
@@ -167,18 +153,12 @@ type
 
     function GetFieldNameMask: TMask;
     function GetFieldValueMask: TMask;
-    function GetDisplayPasswordStrength: Boolean;
     procedure SetName(const Value: string);
     procedure SetRuleType(const Value: TO2RuleType);
     procedure SetFieldName(const Value: string);
     procedure SetFieldValue(const Value: string);
     procedure SetParams(const Value: TO2Params);
     procedure SetActive(const Value: Boolean);
-
-    function GetFormatSettings: TFormatSettings;
-    function GetEventDisplayText(const AField: TO2Field): string;
-    function HasEventInWindow(const AField: TO2Field; StartDate,
-      EndDate: TDateTime; UseParams: Boolean): Boolean; overload;
   public
     constructor Create(Collection: TCollection); override;
     destructor Destroy; override;
@@ -187,19 +167,6 @@ type
 
     function Matches(const AFieldName, AFieldValue: string): Boolean; overload;
     function Matches(const AField: TO2Field): Boolean; overload; inline;
-    function GetDisplayText(const AField: TO2Field;
-      ShowPasswords: Boolean): string;
-    function GetHyperLink(const AField: TO2Field): string;
-    function HasEventInWindow(const AField: TO2Field): Boolean; overload;
-      inline;
-    function GetFirstEvent(const AField: TO2Field;
-      out FirstDate: TDateTime): Boolean;
-    function GetNextEvent(const AField: TO2Field; StartDate: TDateTime;
-      out NextDate: TDateTime; UseParams: Boolean = False): Boolean;
-    function GetHighlightColors(const AField: TO2Field;
-      PasswordScoreProvider: IPasswordScoreProvider): THighlight;
-
-    property DisplayPasswordStrength: Boolean read GetDisplayPasswordStrength;
   published
     property Name: string read FName write SetName;
     property RuleType: TO2RuleType read FRuleType write SetRuleType;
@@ -225,24 +192,9 @@ type
     function FindFirstRule(const AField: TO2Field;
       RuleTypes: TO2RuleTypes): TO2Rule;
     function AddRule(const Name: string): TO2Rule;
-
-    function GetDisplayText(const AField: TO2Field;
-      ShowPasswords: Boolean): string;
-    function GetHyperLink(const AField: TO2Field): string;
-    function HasEventInWindow(const AObject: TO2Object; StartDate,
-      EndDate: TDateTime; UseParams: Boolean): Boolean;
-    function GetNextEvent(const AObject: TO2Object; StartDate: TDateTime;
-      out NextDate: TDateTime; UseParams: Boolean = False): Boolean;
-    function GetHighlightColors(const AField: TO2Field;
-      PasswordScoreProvider: IPasswordScoreProvider): THighlight; overload;
-    function GetHighlightColors(const AObject: TO2Object;
-      PasswordScoreProvider: IPasswordScoreProvider): THighlight; overload;
   end;
 
 implementation
-
-uses
-  DateUtils, uO2Utils;
 
 resourcestring
   SRuleAlreadyExists = 'A rule named "%s" already exists.';
@@ -452,215 +404,6 @@ begin
   Result := Matches(AField.FieldName, AField.FieldValue);
 end;
 
-function TO2Rule.GetEventDisplayText(const AField: TO2Field): string;
-var
-  MacroProcessor: TMacroProcessor;
-  Years, MonthsOfYear, DaysOfMonth: Word;
-  Months, Days: Integer;
-  ADate: TDateTime;
-  AMask: string;
-begin
-  if TryStrToDate(AField.FieldValue, ADate, GetFormatSettings)
-    and ((RuleType = rtExpirationDate) and (ADate >= Date)
-    or (RuleType = rtRecurrence) and (ADate <= Date)) then
-  begin
-    DateSpan(Date, ADate, Years, MonthsOfYear, DaysOfMonth);
-    Months := MonthsBetween(Date, ADate);
-    Days := DaysBetween(Date, ADate);
-
-    if Params.Values[DisplayMaskParam] <> '' then
-      AMask := Params.Values[DisplayMaskParam]
-    else
-      case RuleType of
-        rtExpirationDate:
-          AMask := DefaultExpirationDateMask;
-        rtRecurrence:
-          AMask := DefaultRecurrenceMask;
-      end;
-
-    MacroProcessor := TMacroProcessor.Create(AMask, MacroStartDelimiter,
-      MacroEndDelimiter);
-    try
-      Result := MacroProcessor
-        .Macro(FieldNameMacro, AField.FieldName)
-        .Macro(FieldValueMacro, AField.FieldValue)
-        .Macro(YearsMacro, Years)
-        .Macro(MonthsOfYearMacro, MonthsOfYear)
-        .Macro(DaysOfMonthMacro, DaysOfMonth)
-        .Macro(MonthsMacro, Months)
-        .Macro(DaysMacro, Days)
-        .ToString;
-    finally
-      MacroProcessor.Free;
-    end;
-  end
-  else
-    Result := AField.FieldValue;
-end;
-
-function TO2Rule.GetDisplayPasswordStrength: Boolean;
-begin
-  Result := Params.ReadBoolean(
-    DisplayPasswordStrengthParam, DefaultDisplayPasswordStrength);
-end;
-
-function TO2Rule.GetDisplayText(const AField: TO2Field;
-  ShowPasswords: Boolean): string;
-begin
-  case RuleType of
-    rtPassword:
-      if ShowPasswords then
-        Result := AField.FieldValue
-      else
-        Result := StringOfChar(PasswordChar, Length(AField.FieldValue));
-    rtExpirationDate, rtRecurrence:
-      Result := GetEventDisplayText(AField);
-    else
-      Result := AField.FieldValue;
-  end;
-end;
-
-function TO2Rule.GetHyperLink(const AField: TO2Field): string;
-var
-  EncodedFieldName, EncodedFieldValue: string;
-  LegacyMacroProcessor, MacroProcessor: TMacroProcessor;
-begin
-  if Params.Values[HyperLinkMaskParam] = '' then
-    Result := AField.FieldValue
-  else
-  begin
-    EncodedFieldName := UrlEscape(AField.FieldName);
-    EncodedFieldValue := UrlEscape(AField.FieldValue);
-
-    LegacyMacroProcessor := TMacroProcessor.Create(
-      Params.Values[HyperLinkMaskParam], LegacyMacroStartDelimiter,
-      LegacyMacroEndDelimiter);
-    try
-      MacroProcessor := TMacroProcessor.Create(LegacyMacroProcessor
-        .Macro(LegacyFieldNameMacro, EncodedFieldName)
-        .Macro(LegacyFieldValueMacro, EncodedFieldValue)
-        .ToString, MacroStartDelimiter, MacroEndDelimiter);
-      try
-        Result := MacroProcessor
-          .Macro(FieldNameMacro, EncodedFieldName)
-          .Macro(FieldValueMacro, EncodedFieldValue)
-          .ToString;
-      finally
-        MacroProcessor.Free;
-      end;
-    finally
-      LegacyMacroProcessor.Free;
-    end;
-  end;
-end;
-
-function TO2Rule.HasEventInWindow(const AField: TO2Field; StartDate,
-  EndDate: TDateTime; UseParams: Boolean): Boolean;
-var
-  DateValue, MinDate, MaxDate: TDateTime;
-begin
-  if not Active or not (RuleType in EventRules) or not Matches(AField)
-    or not TryStrToDate(AField.FieldValue, DateValue, GetFormatSettings) then
-    Exit(False);
-
-  if UseParams then
-  begin
-    StartDate := Date - Params.ReadInteger(DaysBeforeParam, DefaultDaysBefore);
-    EndDate := Date + Params.ReadInteger(DaysAfterParam, DefaultDaysAfter);
-  end;
-
-  case RuleType of
-    rtExpirationDate:
-      Result := (DateValue >= StartDate) and (DateValue <= EndDate);
-
-    rtRecurrence:
-    begin
-      MinDate := SafeRecodeYear(DateValue, YearOf(StartDate));
-      MaxDate := SafeRecodeYear(DateValue, YearOf(EndDate));
-
-      Result := (MinDate >= StartDate) and (MinDate <= EndDate)
-        or (MaxDate >= StartDate) and (MaxDate <= EndDate);
-    end;
-
-    else
-      Result := False;
-  end;
-end;
-
-function TO2Rule.HasEventInWindow(const AField: TO2Field): Boolean;
-begin
-  Result := HasEventInWindow(AField, 0, 0, True);
-end;
-
-function TO2Rule.GetFirstEvent(const AField: TO2Field;
-  out FirstDate: TDateTime): Boolean;
-begin
-  Result := Active and (RuleType in EventRules) and Matches(AField)
-    and TryStrToDate(AField.FieldValue, FirstDate, GetFormatSettings);
-end;
-
-function TO2Rule.GetNextEvent(const AField: TO2Field; StartDate: TDateTime;
-  out NextDate: TDateTime; UseParams: Boolean): Boolean;
-var
-  FirstDate: TDateTime;
-begin
-  if not GetFirstEvent(AField, FirstDate) then Exit(False);
-
-  case RuleType of
-    rtExpirationDate:
-      NextDate := FirstDate;
-
-    rtRecurrence:
-    begin
-      if UseParams then
-        StartDate := Date - Params.ReadInteger(DaysBeforeParam,
-          DefaultDaysBefore);
-
-      NextDate := SafeRecodeYear(FirstDate, YearOf(StartDate));
-
-      if NextDate < StartDate then
-        NextDate := SafeRecodeYear(FirstDate, YearOf(IncYear(StartDate)));
-    end;
-  end;
-
-  Result := True;
-end;
-
-function TO2Rule.GetHighlightColors(const AField: TO2Field;
-  PasswordScoreProvider: IPasswordScoreProvider): THighlight;
-var
-  PasswordScore: Integer;
-begin
-  if Active and (RuleType = rtPassword) and DisplayPasswordStrength
-    and Matches(AField) and PasswordScoreProvider.TryGetPasswordScore(
-      AField.FieldValue, PasswordScore) then
-  begin
-    Result.Highlight := htPasswordScore;
-    Result.PasswordScore := PasswordScore;
-  end
-  else
-    if Active and (RuleType = rtHighlight) and Matches(AField)
-      or HasEventInWindow(AField, 0, 0, True) then
-    begin
-      Result.Highlight := htCustom;
-      Result.Color := Params.ReadInteger(HighlightColorParam,
-        DefaultHighlightColor);
-      Result.TextColor := Params.ReadInteger(HighlightTextColorParam,
-        DefaultHighlightTextColor);
-    end
-    else
-      Result.Highlight := htNone;
-end;
-
-function TO2Rule.GetFormatSettings: TFormatSettings;
-begin
-  Result := TFormatSettings.Create;
-  Result.DateSeparator := Params.ReadString(DateSeparatorParam,
-    Result.DateSeparator)[1];
-  Result.ShortDateFormat := Params.ReadString(ShortDateFormatParam,
-    Result.ShortDateFormat);
-end;
-
 function TO2Rule.GetFieldNameMask: TMask;
 begin
   if FFieldNameMask = nil then
@@ -780,96 +523,6 @@ begin
     Delete(Result.Index);
     raise;
   end;
-end;
-
-function TO2Rules.GetDisplayText(const AField: TO2Field;
-  ShowPasswords: Boolean): string;
-var
-  ARule: TO2Rule;
-begin
-  Result := AField.FieldValue;
-  for ARule in Self do
-    if ARule.Active and ARule.Matches(AField) then
-    begin
-      Result := ARule.GetDisplayText(AField, ShowPasswords);
-      if Result <> AField.FieldValue then Break;
-    end;
-end;
-
-function TO2Rules.GetHyperLink(const AField: TO2Field): string;
-var
-  ARule: TO2Rule;
-begin
-  Result := AField.FieldValue;
-  ARule := FindFirstRule(AField, [rtHyperLink]);
-  if Assigned(ARule) then
-    Result := ARule.GetHyperLink(AField);
-end;
-
-function TO2Rules.HasEventInWindow(const AObject: TO2Object; StartDate,
-  EndDate: TDateTime; UseParams: Boolean): Boolean;
-var
-  AField: TO2Field;
-  ARule: TO2Rule;
-begin
-  Result := False;
-  for AField in AObject.Fields do
-    for ARule in Self do
-      if ARule.HasEventInWindow(AField, StartDate, EndDate, UseParams) then
-        Exit(True);
-end;
-
-function TO2Rules.GetNextEvent(const AObject: TO2Object; StartDate: TDateTime;
-  out NextDate: TDateTime; UseParams: Boolean): Boolean;
-var
-  ANextDate: TDateTime;
-  AField: TO2Field;
-  ARule: TO2Rule;
-begin
-  Result := False;
-  for AField in AObject.Fields do
-    for ARule in Self do
-      if ARule.GetNextEvent(AField, StartDate, ANextDate, UseParams) then
-      begin
-        if not Result or (ANextDate < NextDate) then NextDate := ANextDate;
-        Result := True;
-      end;
-end;
-
-function TO2Rules.GetHighlightColors(const AField: TO2Field;
-  PasswordScoreProvider: IPasswordScoreProvider): THighlight;
-var
-  ARule: TO2Rule;
-begin
-  Result.Highlight := htNone;
-  for ARule in Self do
-  begin
-    Result := ARule.GetHighlightColors(AField, PasswordScoreProvider);
-    if Result.Highlight <> htNone then Break;
-  end;
-end;
-
-function TO2Rules.GetHighlightColors(const AObject: TO2Object;
-  PasswordScoreProvider: IPasswordScoreProvider): THighlight;
-var
-  AHighlight: THighlight;
-  RuleIndex: Integer;
-  AField: TO2Field;
-  ARule: TO2Rule;
-begin
-  Result.Highlight := htNone;
-  RuleIndex := Count;
-  for AField in AObject.Fields do
-    for ARule in Self do
-      if ARule.Index < RuleIndex then
-      begin
-        AHighlight := ARule.GetHighlightColors(AField, PasswordScoreProvider);
-        if AHighlight.Highlight <> htNone then
-        begin
-          Result := AHighlight;
-          RuleIndex := ARule.Index;
-        end;
-      end;
 end;
 
 end.

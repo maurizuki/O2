@@ -67,14 +67,16 @@ uses
   uO2Objects in '..\O2\DataModel\uO2Objects.pas',
   uO2Relations in '..\O2\DataModel\uO2Relations.pas',
   uO2Rules in '..\O2\DataModel\uO2Rules.pas',
-  uO2Utils in '..\O2\DataModel\uO2Utils.pas',
-  uO2Xml in '..\O2\DataModel\uO2Xml.pas',
   uServices in '..\O2\uServices.pas',
   uGlobal in '..\O2\uGlobal.pas',
+  uAppFiles in '..\O2\Utils\uAppFiles.pas',
   uO2ObjectsUtils in '..\O2\Utils\uO2ObjectsUtils.pas',
+  uO2RulesUtils in '..\O2\Utils\uO2RulesUtils.pas',
+  uPasswordScoreCache in '..\O2\Utils\uPasswordScoreCache.pas',
   uShellUtils in '..\O2\Utils\uShellUtils.pas',
   uUtils in '..\O2\Utils\uUtils.pas',
   uHTMLHelper in '..\O2\Utils\uHTMLHelper.pas',
+  uXmlSerialization in '..\O2\Utils\uXmlSerialization.pas',
   uXmlStorage in '..\O2\Utils\uXmlStorage.pas',
   uEncryptionPropsModel in '..\O2\ViewModels\uEncryptionPropsModel.pas',
   uEventFilters in '..\O2\ViewModels\uEventFilters.pas',
@@ -87,24 +89,25 @@ uses
   uRelationModels in '..\O2\ViewModels\uRelationModels.pas',
   uReplaceOperations in '..\O2\ViewModels\uReplaceOperations.pas',
   uRuleModels in '..\O2\ViewModels\uRuleModels.pas',
+  Testing.MarkdownLogger in 'Loggers\Testing.MarkdownLogger.pas',
   Testing.Cryptography in 'Testing.Cryptography.pas',
-  Testing.FilePropsModel in 'Testing.FilePropsModel.pas',
-  Testing.ObjectModels in 'Testing.ObjectModels.pas',
-  Testing.RelationModels in 'Testing.RelationModels.pas',
-  Testing.RuleModels in 'Testing.RuleModels.pas',
-  Testing.ReplaceOperations in 'Testing.ReplaceOperations.pas',
-  Testing.XmlStorage in 'Testing.XmlStorage.pas',
-  Testing.PrintModel in 'Testing.PrintModel.pas',
-  Testing.HTMLExportModel in 'Testing.HTMLExportModel.pas',
   Testing.EncryptionPropsModel in 'Testing.EncryptionPropsModel.pas',
-  Testing.FileManager in 'Testing.FileManager.pas';
+  Testing.FileManager in 'Testing.FileManager.pas',
+  Testing.FilePropsModel in 'Testing.FilePropsModel.pas',
+  Testing.HTMLExportModel in 'Testing.HTMLExportModel.pas',
+  Testing.ObjectModels in 'Testing.ObjectModels.pas',
+  Testing.PrintModel in 'Testing.PrintModel.pas',
+  Testing.RelationModels in 'Testing.RelationModels.pas',
+  Testing.ReplaceOperations in 'Testing.ReplaceOperations.pas',
+  Testing.RuleModels in 'Testing.RuleModels.pas',
+  Testing.XmlStorage in 'Testing.XmlStorage.pas';
 
 {$IFNDEF TESTINSIGHT}
 var
   runner: ITestRunner;
   results: IRunResults;
   logger: ITestLogger;
-  nunitLogger : ITestLogger;
+  //nunitLogger : ITestLogger;
 {$ENDIF}
 begin
 {$IFDEF TESTINSIGHT}
@@ -128,8 +131,9 @@ begin
       runner.AddLogger(logger);
     end;
     //Generate an NUnit compatible XML File
-    nunitLogger := TDUnitXXMLNUnitFileLogger.Create(TDUnitX.Options.XMLOutputFile);
-    runner.AddLogger(nunitLogger);
+    //nunitLogger := TDUnitXXMLNUnitFileLogger.Create(TDUnitX.Options.XMLOutputFile);
+    //runner.AddLogger(nunitLogger);
+    runner.AddLogger(TMarkdownLogger.Create(TDUnitX.Options.XMLOutputFile));
 
     //Run tests
     results := runner.Execute;

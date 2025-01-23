@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2024 the initial Contributor. All rights reserved.              }
+{ 2004-2025 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -105,7 +105,8 @@ var
 begin
   for ARule in O2File.Rules do
     if ARule.Active and (ARule.RuleType = rtPassword)
-      and ARule.DisplayPasswordStrength then
+      and ARule.Params.ReadBoolean(DisplayPasswordStrengthParam,
+        DefaultDisplayPasswordStrength) then
       for AObject in O2File.Objects do
         for AField in AObject.Fields do
           if ARule.Matches(AField) then

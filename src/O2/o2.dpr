@@ -7,7 +7,7 @@
 { The initial Contributor is Maurizio Basaglia.                        }
 {                                                                      }
 { Portions created by the initial Contributor are Copyright (C)        }
-{ 2004-2024 the initial Contributor. All rights reserved.              }
+{ 2004-2025 the initial Contributor. All rights reserved.              }
 {                                                                      }
 { Contributor(s):                                                      }
 {                                                                      }
@@ -71,8 +71,7 @@ uses
   uO2Objects in 'DataModel\uO2Objects.pas',
   uO2Relations in 'DataModel\uO2Relations.pas',
   uO2Rules in 'DataModel\uO2Rules.pas',
-  uO2Utils in 'DataModel\uO2Utils.pas',
-  uO2Xml in 'DataModel\uO2Xml.pas',
+  uXmlSerialization in 'Utils\uXmlSerialization.pas',
   uAppFiles in 'Utils\uAppFiles.pas',
   uCtrlHelpers in 'Utils\uCtrlHelpers.pas',
   uHTMLHelper in 'Utils\uHTMLHelper.pas',
@@ -87,6 +86,7 @@ uses
   uO2ImportExport in 'FileOps\uO2ImportExport.pas',
   uXmlImportExport in 'FileOps\uXmlImportExport.pas',
   uO2ObjectsUtils in 'Utils\uO2ObjectsUtils.pas',
+  uO2RulesUtils in 'Utils\uO2RulesUtils.pas',
   uEncryptionPropsModel in 'ViewModels\uEncryptionPropsModel.pas',
   uEventFilters in 'ViewModels\uEventFilters.pas',
   uFileManager in 'ViewModels\uFileManager.pas',
@@ -118,6 +118,7 @@ uses
 {$R *.res}
 
 begin
+  Randomize;
   Application.Initialize;
   Application.Title := 'O2';
   ConfigureServices;
