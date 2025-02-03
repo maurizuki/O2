@@ -264,14 +264,14 @@ end;
 procedure THTMLExportModel.AppendObjectList;
 var
   AObject: TO2Object;
+  TextTypeClass: string;
 begin
     FBuilder.Append('<div class="object-list">');
 
     for AObject in FSelectedObjects do
     begin
-      FBuilder.AppendFormat('<a name="%d"></a>', [AObject.Index])
-        .Append('<div class="object-item"><h2>')
-        .AppendHTML(AObject.Name).Append('</h2>');
+      FBuilder.AppendFormat('<div id="%d" class="object-item"><h2>',
+        [AObject.Index]).AppendHTML(AObject.Name).Append('</h2>');
 
       if FIncludeTags then AppendTagList(AObject);
 
@@ -280,9 +280,15 @@ begin
       if FIncludeRelations then AppendRelationList(AObject);
 
       if FIncludeNotes and (AObject.Text.Count > 0) then
-        FBuilder.Append('<div class="notes">')
-          .AppendHTML(AObject.Text, AObject.TextType)
-          .Append('</div>');
+      begin
+        if AObject.TextType = ttCommonMark then
+          TextTypeClass := 'notes-commonmark'
+        else
+          TextTypeClass := 'notes-plaintext';
+
+        FBuilder.AppendFormat('<div class="notes %s">', [TextTypeClass])
+          .AppendHTML(AObject.Text, AObject.TextType).Append('</div>');
+      end;
 
       FBuilder.Append('</div>');
     end;
