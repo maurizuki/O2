@@ -25,14 +25,6 @@ body h2 {
 	display: inline;
 }
 
-body ul {
-	list-style-type: square;
-}
-
-body li {
-	padding: .125rem;
-}
-
 .container {
 	max-width: 960px;
 	margin-left: auto;
@@ -45,6 +37,14 @@ body li {
 	padding-right: 1rem;
 }
 
+.object-index ul {
+	list-style-type: square;
+}
+
+.object-index li {
+	padding: .125rem;
+}
+
 .object-item {
 	border: 2px solid #00ff00;
 	margin-top: 1.5rem;
@@ -55,13 +55,18 @@ body li {
 	border-top: 1px solid #00ff00;
 	margin-top: .5rem;
 	padding-top: .125rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: .125rem;
 }
 
 .tag-item {
 	color: #000;
 	background-color: #00cc00;
-	display: inline-block;
-	margin: .125rem;
+	max-width: 20rem;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .field-list {
@@ -113,5 +118,5 @@ body li {
 .notes {
 	border-top: 1px solid #00ff00;
 	margin-top: .5rem;
-	padding: .125rem;
+	padding-top: .125rem;
 }
