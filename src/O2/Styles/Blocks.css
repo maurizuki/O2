@@ -21,15 +21,6 @@ a:hover {
 
 body h2 {
 	display: inline;
-	margin: .25rem;
-}
-
-body ul {
-	list-style-type: square;
-}
-
-body li {
-	padding: .125rem;
 }
 
 .container {
@@ -43,9 +34,19 @@ body li {
 	border-left: .5rem solid #747474;
 }
 
+.object-index ul {
+	margin: 0;
+	padding: 0 1.5rem;
+	list-style-type: square;
+}
+
+.object-index li {
+	padding: .125rem;
+}
+
 .object-item {
 	border-left: .5rem solid #01a6f0;
-	padding-left: .25rem;
+	padding-left: .5rem;
 	margin-top: 1rem;
 }
 
@@ -63,23 +64,29 @@ body li {
 
 .tag-list {
 	margin-top: .5rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: .5rem;
 }
 
 .tag-item {
-	display: inline-block;
 	background-color: #f0f0f0;
-	margin: .25rem;
 	padding: .25rem;
+	max-width: 20rem;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
 }
 
 .field-list {
 	margin-top: .5rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: .5rem;
 }
 
 .field-item {
-	display: inline-block;
 	background-color: #f0f0f0;
-	margin: .25rem;
 }
 
 .field-name {
@@ -94,12 +101,13 @@ body li {
 
 .relation-list {
 	margin-top: .5rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: .5rem;
 }
 
 .relation-item {
-	display: inline-block;
 	background-color: #f0f0f0;
-	margin: .25rem;
 }
 
 .relation-object {
@@ -114,5 +122,8 @@ body li {
 
 .notes {
 	margin-top: .5rem;
-	padding: .25rem;
+}
+
+.notes-plaintext {
+	font-family: monospace;
 }

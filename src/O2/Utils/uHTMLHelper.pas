@@ -70,13 +70,10 @@ var
   S: string;
 begin
   if TextType = ttCommonMark then
-    Result := Self.Append(ProcessMarkdown(Lines.Text))
-  else
-  begin
-    Self.Append('<pre>');
-    for S in Lines do Self.Append(EncodeHTML(S)).Append('<br />');
-    Result := Self.Append('</pre>');
-  end;
+    Exit(Self.Append(ProcessMarkdown(Lines.Text)));
+
+  for S in Lines do Self.Append(EncodeHTML(S)).Append('<br />');
+  Result := Self;
 end;
 
 end.
