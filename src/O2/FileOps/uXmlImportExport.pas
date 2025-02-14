@@ -18,15 +18,15 @@ unit uXmlImportExport;
 interface
 
 uses
-  uFileOperation;
+  uO2ImportExport;
 
 type
-  TXmlImport = class(TFileOperation)
+  TXmlImport = class(TO2CustomImport)
   public
     procedure Execute(const FileName: string); override;
   end;
 
-  TXmlExport = class(TFileOperation)
+  TXmlExport = class(TO2CustomExport)
   public
     procedure Execute(const FileName: string); override;
   end;
@@ -34,19 +34,26 @@ type
 implementation
 
 uses
-  uXmlSerialization, uO2Defs;
+  uXmlSerialization, uO2Defs, uO2File;
 
 { TXmlImport }
 
 procedure TXmlImport.Execute(const FileName: string);
 var
+  InputFile: TO2File;
   XmlReader: TXmlReader;
 begin
-  XmlReader := TXmlReader.Create(O2File);
+  InputFile := TO2File.Create;
   try
-    XmlReader.LoadFromFile(FileName);
+    XmlReader := TXmlReader.Create(InputFile);
+    try
+      XmlReader.LoadFromFile(FileName);
+    finally
+      XmlReader.Free;
+    end;
+    ImportFrom(InputFile);
   finally
-    XmlReader.Free;
+    InputFile.Free;
   end;
 end;
 
@@ -54,13 +61,20 @@ end;
 
 procedure TXmlExport.Execute(const FileName: string);
 var
+  OutputFile: TO2File;
   XmlWriter: TXmlWriter;
 begin
-  XmlWriter := TXmlWriter.Create(O2File, O2FileSchemaLocation);
+  OutputFile := TO2File.Create;
   try
-    XmlWriter.SaveToFile(FileName);
+    ExportTo(OutputFile);
+    XmlWriter := TXmlWriter.Create(OutputFile, O2FileSchemaLocation);
+    try
+      XmlWriter.SaveToFile(FileName);
+    finally
+      XmlWriter.Free;
+    end;
   finally
-    XmlWriter.Free;
+    OutputFile.Free;
   end;
 end;
 

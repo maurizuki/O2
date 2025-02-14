@@ -93,7 +93,7 @@ begin
       for AObject in FSelectedObjects do
         for AField in AObject.Fields do
         begin
-          ARule := O2File.Rules.FindFirstRule(AField, EventRules);
+          ARule := FO2File.Rules.FindFirstRule(AField, EventRules);
 
           if Assigned(ARule) and TryParseDate(AField, ARule, EventDate) then
           begin
