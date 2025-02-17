@@ -1819,15 +1819,19 @@ var
 begin
   SB := TStringBuilder.Create;
   try
-    SB.AppendLine('<!DOCTYPE html>')
-      .AppendLine('<html>')
-      .AppendLine('<script type="text/javascript">document.addEventListener("contextmenu", (event) => { event.preventDefault(); }, true);</script>')
-      .Append('<body style="color: #000; background-color: #fff; font-family: sans-serif; font-size: 1rem;">');
+    SB.Append('<!DOCTYPE html><html>')
+      .AppendContextMenuBlockerScript
+      .Append('<body style="color: #000; background-color: #fff; font-size: 1rem; font-family: ');
+
+    if HasSelectedObject and (SelectedObject.TextType = ttCommonMark) then
+      SB.Append('sans-serif;">')
+    else
+      SB.Append('monospace;">');
 
     if HasSelectedObject then
       SB.AppendHTML(SelectedObject.Text, SelectedObject.TextType);
 
-    SB.AppendLine('</body>').Append('</html>');
+    SB.Append('</body></html>');
 
     NotesView.NavigateToString(SB.ToString);
   finally

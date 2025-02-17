@@ -179,8 +179,7 @@ begin
     .AppendLine('<!DOCTYPE html>')
     .AppendLine('<html>');
 
-  if Preview then
-    FBuilder.AppendLine('<script type="text/javascript">document.addEventListener("contextmenu", (event) => { event.preventDefault(); }, true);</script>');
+  if Preview then FBuilder.AppendContextMenuBlockerScript;
 
   FBuilder
     .AppendLine('<head>')
@@ -262,9 +261,11 @@ begin
 end;
 
 procedure THTMLExportModel.AppendObjectList;
+const
+  TextTypeClasses: array [TO2TextType] of string = (
+    'notes-plaintext', 'notes-commonmark');
 var
   AObject: TO2Object;
-  TextTypeClass: string;
 begin
     FBuilder.Append('<div class="object-list">');
 
@@ -280,15 +281,9 @@ begin
       if FIncludeRelations then AppendRelationList(AObject);
 
       if FIncludeNotes and (AObject.Text.Count > 0) then
-      begin
-        if AObject.TextType = ttCommonMark then
-          TextTypeClass := 'notes-commonmark'
-        else
-          TextTypeClass := 'notes-plaintext';
-
-        FBuilder.AppendFormat('<div class="notes %s">', [TextTypeClass])
+        FBuilder.Append('<div class="notes ')
+          .Append(TextTypeClasses[AObject.TextType]).Append('">')
           .AppendHTML(AObject.Text, AObject.TextType).Append('</div>');
-      end;
 
       FBuilder.Append('</div>');
     end;
