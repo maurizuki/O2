@@ -8,8 +8,13 @@ Author: https://github.com/maurizuki
 
 */
 
+:root {
+	--green-80: #00cc00;
+	--green-100: #00ff00;
+}
+
 body {
-	color: #00cc00;
+	color: var(--green-80);
 	background-color: #000;
 	font-family: monospace;
 	font-size: 1rem;
@@ -18,7 +23,7 @@ body {
 body a:link,
 a:visited,
 a:hover {
-	color: #00ff00;
+	color: var(--green-100);
 }
 
 body h2 {
@@ -33,7 +38,7 @@ body h2 {
 
 .object-index {
 	display: inline-block;
-	border: 3px double #00ff00;
+	border: 3px double var(--green-100);
 	padding-right: 1rem;
 }
 
@@ -46,13 +51,13 @@ body h2 {
 }
 
 .object-item {
-	border: 2px solid #00ff00;
+	border: 2px solid var(--green-100);
 	margin-top: 1.5rem;
 	padding: .5rem;
 }
 
 .tag-list {
-	border-top: 1px solid #00ff00;
+	border-top: 1px solid var(--green-100);
 	margin-top: .5rem;
 	padding-top: .125rem;
 	display: flex;
@@ -62,7 +67,7 @@ body h2 {
 
 .tag-item {
 	color: #000;
-	background-color: #00cc00;
+	background-color: var(--green-80);
 	max-width: 20rem;
 	overflow: hidden;
 	white-space: nowrap;
@@ -71,7 +76,7 @@ body h2 {
 
 .field-list {
 	display: table;
-	border-top: 1px solid #00ff00;
+	border-top: 1px solid var(--green-100);
 	margin-top: .5rem;
 	width: 100%;
 }
@@ -94,7 +99,7 @@ body h2 {
 
 .relation-list {
 	display: table;
-	border-top: 1px solid #00ff00;
+	border-top: 1px solid var(--green-100);
 	margin-top: .5rem;
 	width: 100%;
 }
@@ -116,7 +121,7 @@ body h2 {
 }
 
 .notes {
-	border-top: 1px solid #00ff00;
+	border-top: 1px solid var(--green-100);
 	margin-top: .5rem;
 	padding-top: .125rem;
 }
