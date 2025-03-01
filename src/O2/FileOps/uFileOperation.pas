@@ -22,10 +22,8 @@ uses
 
 type
   TFileOperation = class(TInterfacedObject, IFileOperation)
-  private
-    FO2File: TO2File;
   protected
-    property O2File: TO2File read FO2File;
+    FO2File: TO2File;
   public
     constructor Create(const O2File: TO2File);
     procedure Execute(const FileName: string); virtual; abstract;
