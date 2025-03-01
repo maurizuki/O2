@@ -29,6 +29,7 @@ type
     function AppendHTML(const S: string): TStringBuilder; overload;
     function AppendHTML(const Lines: TStrings;
       TextType: TO2TextType): TStringBuilder; overload;
+    function AppendContextMenuBlockerScript: TStringBuilder;
   end;
 
 implementation
@@ -74,6 +75,11 @@ begin
 
   for S in Lines do Self.Append(EncodeHTML(S)).Append('<br />');
   Result := Self;
+end;
+
+function THTMLHelper.AppendContextMenuBlockerScript: TStringBuilder;
+begin
+  Result := Self.Append('<script type="text/javascript">document.addEventListener("contextmenu", event => event.preventDefault(), true)</script>');
 end;
 
 end.
