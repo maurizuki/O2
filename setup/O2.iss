@@ -69,6 +69,7 @@ Source: {#ExamplesDir}\AddressBook.o2; DestDir: {app}\Examples; Components: exam
 Source: {#ExamplesDir}\PasswordWallet.o2; DestDir: {app}\Examples; Components: examples
 Source: {#StylesDir}\Blocks.css; DestDir: {app}\Styles; Components: styles
 Source: {#StylesDir}\Mono.css; DestDir: {app}\Styles; Components: styles
+Source: {#StylesDir}\Sticky Notes.css; DestDir: {app}\Styles; Components: styles
 Source: {#AppExeDir}\o2.ENU; DestDir: {app}; Components: languages\en; Flags: ignoreversion
 Source: {#AppExeDir}\o2.ITA; DestDir: {app}; Components: languages\it; Flags: ignoreversion
 

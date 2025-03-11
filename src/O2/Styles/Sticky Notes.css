@@ -1,0 +1,144 @@
+/*
+
+Style: Sticky Notes
+
+Author: https://github.com/maurizuki
+
+*/
+
+:root {
+	--sonic-silver: #747474;
+	--anti-flash-white: #f0f0f0;
+	--very-pale-yellow: #fff8b8;
+	--azureish-white: #d4e4ed;
+	--pale-pink: #f6e2dd;
+	--nyanza: #e2f6d3;
+}
+
+body {
+	color: #000;
+	background-color: #fff;
+	font-family: sans-serif;
+	font-size: 1rem;
+}
+
+body a:link,
+a:visited,
+a:hover {
+	color: var(--sonic-silver);
+}
+
+body h2 {
+	display: inline;
+}
+
+.container {
+	max-width: 960px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.object-index {
+	background-color: var(--anti-flash-white);
+	border-radius: 1rem;
+	padding: .5rem;
+}
+
+.object-index ul {
+	margin: 0;
+	padding: .5rem 1.5rem;
+}
+
+.object-index li {
+	padding: .125rem;
+}
+
+.object-item {
+	background-color: var(--nyanza);
+	border-radius: 1rem;
+	margin-top: 1rem;
+	padding: 1rem;
+}
+
+.object-item:nth-of-type(4n+1) {
+	background-color: var(--very-pale-yellow);
+}
+
+.object-item:nth-of-type(4n+2) {
+	background-color: var(--azureish-white);
+}
+
+.object-item:nth-of-type(4n+3) {
+	background-color: var(--pale-pink);
+}
+
+.tag-list {
+	margin-top: .75rem;
+	padding-top: .125rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: .25rem;
+}
+
+.tag-item {
+	background-color: #fff;
+	border-radius: .25rem;
+	padding: .25rem;
+	max-width: 20rem;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.field-list {
+	display: table;
+	margin-top: .75rem;
+	width: 100%;
+}
+
+.field-item {
+	display: table-row;
+}
+
+.field-name {
+	display: table-cell;
+	padding: .25rem;
+	width: 30%;
+}
+
+.field-value {
+	display: table-cell;
+	padding: .25rem;
+	width: 70%;
+}
+
+.relation-list {
+	display: table;
+	margin-top: .75rem;
+	width: 100%;
+}
+
+.relation-item {
+	display: table-row;
+}
+
+.relation-object {
+	display: table-cell;
+	padding: .25rem;
+	width: 70%;
+}
+
+.relation-role {
+	display: table-cell;
+	padding: .25rem;
+	width: 30%;
+}
+
+.notes {
+	margin-top: .75rem;
+	padding-top: .125rem;
+}
+
+.notes-plaintext {
+	font-family: monospace;
+}
