@@ -125,3 +125,7 @@ body h2 {
 	margin-top: .5rem;
 	padding-top: .125rem;
 }
+
+.notes-plaintext {
+	white-space: pre-wrap;
+}

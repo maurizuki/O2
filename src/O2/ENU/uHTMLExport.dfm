@@ -1275,6 +1275,7 @@ object HTMLExport: THTMLExport
       '7d'
       '2e6e6f7465732d706c61696e74657874207b'
       '09666f6e742d66616d696c793a206d6f6e6f73706163653b'
+      '0977686974652d73706163653a207072652d777261703b'
       '7d')
   end
   object ExportDialog: TSaveDialog

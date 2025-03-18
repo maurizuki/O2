@@ -135,4 +135,5 @@ body h2 {
 
 .notes-plaintext {
 	font-family: monospace;
+	white-space: pre-wrap;
 }
