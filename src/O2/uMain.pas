@@ -249,10 +249,6 @@ type
     RelationGoToObj: TAction;
     N24: TMenuItem;
     Gotoobject1: TMenuItem;
-    LanguageMenu: TMenuItem;
-    N25: TMenuItem;
-    DefaultLanguage: TAction;
-    Systemdefault1: TMenuItem;
     SelectAllRules: TAction;
     DeselectRules: TAction;
     InvertRulesSelection: TAction;
@@ -370,7 +366,6 @@ type
     procedure FindByRuleDeselectExecute(Sender: TObject);
     procedure FindByRuleInvertSelectionExecute(Sender: TObject);
     procedure MRUItemClick(Sender: TObject);
-    procedure LanguageClick(Sender: TObject);
     procedure ActionUpdate(Sender: TObject);
     procedure NewFileExecute(Sender: TObject);
     procedure NewWindowExecute(Sender: TObject);
@@ -392,7 +387,6 @@ type
     procedure FilePropsExecute(Sender: TObject);
     procedure ImportSettingsExecute(Sender: TObject);
     procedure ExportSettingsExecute(Sender: TObject);
-    procedure DefaultLanguageExecute(Sender: TObject);
     procedure InstallOnRemovableMediaExecute(Sender: TObject);
     procedure CheckForUpdatesNowExecute(Sender: TObject);
     procedure CheckForUpdatesPeriodicallyExecute(Sender: TObject);
@@ -549,7 +543,6 @@ type
     function TryGetPassword(var Password: string): Boolean;
     procedure Initialize;
     procedure InitializeSearch;
-    procedure LoadLanguageMenu;
     procedure OpenNewInstance(const AFileName: string = '');
     procedure LoadFromFile(const AFileName: string);
     procedure SaveToFile(const AFileName: string; Copy: Boolean = False);
@@ -672,7 +665,6 @@ end;
 
 procedure TMainForm.FormShow(Sender: TObject);
 begin
-  LoadLanguageMenu;
   InstallOnRemovableMedia.Visible := FAppFiles.FileExists(IdLauncher);
   LoadSettings(FAppFiles.FullPaths[IdSettings]);
 end;
@@ -943,13 +935,6 @@ begin
       end;
 end;
 
-procedure TMainForm.LanguageClick(Sender: TObject);
-begin
-  SetLocaleOverride(FAppFiles.FullPaths[IdAppExe],
-    Languages[TComponent(Sender).Tag].Language);
-  InfoBox(SApplyAtNextStartup);
-end;
-
 procedure TMainForm.ActionUpdate(Sender: TObject);
 begin
   TAction(Sender).Enabled := not FBusy;
@@ -1104,12 +1089,6 @@ begin
   ExportSettingsDlg.FileName := '';
   if ExportSettingsDlg.Execute then
     SaveSettings(ExportSettingsDlg.FileName);
-end;
-
-procedure TMainForm.DefaultLanguageExecute(Sender: TObject);
-begin
-  DeleteLocaleOverride(FAppFiles.FullPaths[IdAppExe]);
-  InfoBox(SApplyAtNextStartup);
 end;
 
 procedure TMainForm.InstallOnRemovableMediaExecute(Sender: TObject);
@@ -1480,22 +1459,6 @@ begin
   FindByEvent.ItemIndex := 0;
   FindByTag.ClearSelection;
   FindByRule.ClearSelection;
-end;
-
-procedure TMainForm.LoadLanguageMenu;
-var
-  Item: TMenuItem;
-  I: Integer;
-begin
-  for I := Low(Languages) to High(Languages) do
-    if FAppFiles.FileExists(IdResourceModule + Languages[I].Language) then
-    begin
-      Item := TMenuItem.Create(LanguageMenu);
-      Item.Caption := GetLanguageName(Languages[I].LangId);
-      Item.Tag := I;
-      Item.OnClick := LanguageClick;
-      LanguageMenu.Add(Item);
-    end;
 end;
 
 procedure TMainForm.OpenNewInstance(const AFileName: string);

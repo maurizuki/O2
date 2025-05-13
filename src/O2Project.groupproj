@@ -9,12 +9,6 @@
         <Projects Include="Launcher\O2Portable.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="O2\ENU\o2_ENU.bdsproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="O2\ITA\o2_ITA.bdsproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="Tests\O2TestProject.dproj">
             <Dependencies/>
         </Projects>
@@ -44,24 +38,6 @@
     <Target Name="O2Portable:Make">
         <MSBuild Projects="Launcher\O2Portable.dproj" Targets="Make"/>
     </Target>
-    <Target Name="o2_ENU">
-        <MSBuild Projects="O2\ENU\o2_ENU.bdsproj"/>
-    </Target>
-    <Target Name="o2_ENU:Clean">
-        <MSBuild Projects="O2\ENU\o2_ENU.bdsproj" Targets="Clean"/>
-    </Target>
-    <Target Name="o2_ENU:Make">
-        <MSBuild Projects="O2\ENU\o2_ENU.bdsproj" Targets="Make"/>
-    </Target>
-    <Target Name="o2_ITA">
-        <MSBuild Projects="O2\ITA\o2_ITA.bdsproj"/>
-    </Target>
-    <Target Name="o2_ITA:Clean">
-        <MSBuild Projects="O2\ITA\o2_ITA.bdsproj" Targets="Clean"/>
-    </Target>
-    <Target Name="o2_ITA:Make">
-        <MSBuild Projects="O2\ITA\o2_ITA.bdsproj" Targets="Make"/>
-    </Target>
     <Target Name="O2TestProject">
         <MSBuild Projects="Tests\O2TestProject.dproj"/>
     </Target>
@@ -72,13 +48,13 @@
         <MSBuild Projects="Tests\O2TestProject.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="o2;O2Portable;o2_ENU;o2_ITA;O2TestProject"/>
+        <CallTarget Targets="o2;O2Portable;O2TestProject"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="o2:Clean;O2Portable:Clean;o2_ENU:Clean;o2_ITA:Clean;O2TestProject:Clean"/>
+        <CallTarget Targets="o2:Clean;O2Portable:Clean;O2TestProject:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="o2:Make;O2Portable:Make;o2_ENU:Make;o2_ITA:Make;O2TestProject:Make"/>
+        <CallTarget Targets="o2:Make;O2Portable:Make;O2TestProject:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

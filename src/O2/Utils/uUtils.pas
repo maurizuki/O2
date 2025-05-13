@@ -68,9 +68,6 @@ function UrlEscape(const S: string): string;
 procedure DateSpan(ANow, AThen: TDateTime; var Years, Months, Days: Word);
 function SafeRecodeYear(const AValue: TDateTime; const AYear: Word): TDateTime;
 
-function GetLanguageName(LangId: Word): string;
-
-procedure SetLocaleOverride(const FileName, LocaleId: string);
 procedure DeleteLocaleOverride(const FileName: string);
 
 function GetSettingsOverride(const FileName: string; out Path: string): Boolean;
@@ -166,30 +163,6 @@ begin
   DecodeDateTime(AValue, Year, Month, Day, Hour, Min, Sec, MSec);
   if (Month = 2) and (Day = 29) and not IsLeapYear(AYear) then Day := 28;
   Result := EncodeDateTime(AYear, Month, Day, Hour, Min, Sec, MSec);
-end;
-
-function GetLanguageName(LangId: Word): string;
-var
-  Size: DWORD;
-begin
-  SetLength(Result, MAX_PATH);
-  Size := VerLanguageName(LangId, PChar(Result), MAX_PATH);
-  SetLength(Result, Size);
-end;
-
-procedure SetLocaleOverride(const FileName, LocaleId: string);
-var
-  Key: HKEY;
-  Disposition: DWORD;
-begin
-  if RegCreateKeyEx(HKEY_CURRENT_USER, LocaleOverrideKey, 0, nil,
-    REG_OPTION_NON_VOLATILE, KEY_WRITE, nil, Key, @Disposition) = 0 then
-  try
-    RegSetValueEx(Key, PChar(FileName), 0, REG_SZ,
-      PChar(LocaleId), (Length(LocaleId) + 1) * SizeOf(Char));
-  finally
-    RegCloseKey(Key);
-  end;
 end;
 
 procedure DeleteLocaleOverride(const FileName: string);

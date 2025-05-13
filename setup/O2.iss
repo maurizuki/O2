@@ -35,10 +35,6 @@ ChangesAssociations=true
 WizardStyle=modern
 UninstallDisplayIcon={app}\{#AppExeFile},0
 
-[Languages]
-Name: en; MessagesFile: compiler:Default.isl
-Name: it; MessagesFile: compiler:Languages\Italian.isl
-
 [Types]
 Name: full; Description: Full installation
 Name: compact; Description: Compact installation
@@ -48,9 +44,6 @@ Name: custom; Description: Custom installation; Flags: iscustom
 Name: program; Description: {#AppName}; Types: full compact custom; Flags: fixed
 Name: examples; Description: Examples; Types: full
 Name: styles; Description: Styles; Types: full
-Name: languages; Description: Languages; Types: full
-Name: languages\en; Description: English; Types: full compact custom; Flags: fixed
-Name: languages\it; Description: Italian; Types: full
 
 [Files]
 Source: {#AppExeDir}\{#AppExeFile}; DestDir: {app}; Components: program; Flags: replacesameversion
@@ -70,8 +63,6 @@ Source: {#ExamplesDir}\PasswordWallet.o2; DestDir: {app}\Examples; Components: e
 Source: {#StylesDir}\Blocks.css; DestDir: {app}\Styles; Components: styles
 Source: {#StylesDir}\Mono.css; DestDir: {app}\Styles; Components: styles
 Source: {#StylesDir}\Sticky Notes.css; DestDir: {app}\Styles; Components: styles
-Source: {#AppExeDir}\o2.ENU; DestDir: {app}; Components: languages\en; Flags: ignoreversion
-Source: {#AppExeDir}\o2.ITA; DestDir: {app}; Components: languages\it; Flags: ignoreversion
 
 [Icons]
 Name: {group}\{#AppName}; Filename: {app}\{#AppExeFile}; WorkingDir: {app}; IconFilename: {app}\{#AppExeFile}; IconIndex: 0; Comment: Start {#AppName}
@@ -87,6 +78,7 @@ Root: HKCR; Subkey: .o2; ValueType: string; ValueData: o2project.o2; Flags: unin
 Root: HKCR; Subkey: .o2; ValueType: string; ValueName: "Content Type"; ValueData: application/o2project.o2
 Root: HKCR; Subkey: .o2\DefaultIcon; ValueType: none; Flags: deletekey
 Root: HKCR; Subkey: .o2\shell\open; ValueType: none; Flags: deletekey
+Root: HKCU; Subkey: SOFTWARE\Embarcadero\Locales; ValueType: none; ValueName: "{app}\{#AppExeFile}"; Flags: deletevalue
 
 [Tasks]
 Name: desktopicon; Description: {cm:CreateDesktopIcon}
@@ -101,4 +93,6 @@ Name: {app}\License.txt; Type: files
 Name: {app}\MPL-1.1.txt; Type: files
 Name: {app}\upd8r.exe; Type: files
 Name: {app}\upd8r.xml; Type: files
+Name: {app}\o2.ENU; Type: files
+Name: {app}\o2.ITA; Type: files
 Name: {group}\Update.lnk; Type: files
