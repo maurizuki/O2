@@ -27,9 +27,6 @@ type
     lbVersion: TLabel;
     Label1: TLabel;
     Label2: TLabel;
-    GroupBox1: TGroupBox;
-    Label3: TLabel;
-    Label4: TLabel;
     GroupBox2: TGroupBox;
     btOk: TButton;
     btReadMe: TButton;

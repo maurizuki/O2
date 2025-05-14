@@ -365,18 +365,18 @@ object AboutForm: TAboutForm
     Left = 8
     Top = 87
     Width = 279
-    Height = 196
+    Height = 282
     Anchors = [akLeft, akTop, akRight]
     Caption = 'Acknowledgements'
     TabOrder = 0
     DesignSize = (
       279
-      196)
+      282)
     object Memo1: TMemo
       Left = 8
       Top = 24
       Width = 265
-      Height = 161
+      Height = 247
       TabStop = False
       Anchors = [akLeft, akTop, akRight, akBottom]
       BorderStyle = bsNone
@@ -388,21 +388,21 @@ object AboutForm: TAboutForm
         'Copyright (C) 2011+ Health Intersections Pty Ltd.'
         ''
         'Inno Setup'
-        'Copyright (C) 1997-2024 Jordan Russell.'
-        'Portions Copyright (C) 2000-2023 Martijn Laan.'
+        'Copyright (C) 1997-2025 Jordan Russell.'
+        'Portions Copyright (C) 2000-2025 Martijn Laan.'
         ''
         'JEDI Visual Component Library'
-        'Copyright (C) 1999-2024 the Project JEDI '
+        'Copyright (C) 1999-2025 the Project JEDI'
         'community.'
         ''
         'Spring4D'
-        'Copyright (C) 2009-2023 Spring4D Team.'
+        'Copyright (C) 2009-2025 Spring4D Team.'
         ''
         'SZCRC32 unit'
         'Copyright (C) 2004 Sasa Zeman.'
         ''
         'UPX - The Ultimate Packer for eXecutables'
-        'Copyright (C) 1996-2024 Markus Oberhumer, '
+        'Copyright (C) 1996-2025 Markus Oberhumer,'
         'Laszlo Molnar, John Reiser.'
         ''
         'zxcvbn'
@@ -413,7 +413,7 @@ object AboutForm: TAboutForm
       ReadOnly = True
       ScrollBars = ssVertical
       TabOrder = 0
-      ExplicitWidth = 257
+      ExplicitHeight = 161
     end
   end
   object btOk: TButton
@@ -426,7 +426,7 @@ object AboutForm: TAboutForm
     Caption = 'OK'
     Default = True
     ModalResult = 1
-    TabOrder = 2
+    TabOrder = 1
   end
   object btReadMe: TButton
     Left = 8
@@ -435,41 +435,7 @@ object AboutForm: TAboutForm
     Height = 25
     Anchors = [akLeft, akBottom]
     Caption = 'Release notes...'
-    TabOrder = 3
+    TabOrder = 2
     OnClick = btReadMeClick
-    ExplicitTop = 384
-  end
-  object GroupBox1: TGroupBox
-    Left = 8
-    Top = 295
-    Width = 279
-    Height = 68
-    Anchors = [akLeft, akTop, akRight]
-    Caption = 'Translation'
-    TabOrder = 1
-    object Label3: TLabel
-      Left = 8
-      Top = 26
-      Width = 130
-      Height = 13
-      Caption = 'English (US) translation by:'
-      Color = clBtnFace
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clBlack
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      ParentColor = False
-      ParentFont = False
-      ParentShowHint = False
-      ShowHint = False
-    end
-    object Label4: TLabel
-      Left = 8
-      Top = 45
-      Width = 81
-      Height = 13
-      Caption = 'Maurizio Basaglia'
-    end
   end
 end
