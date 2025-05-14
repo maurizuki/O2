@@ -86,6 +86,7 @@ type
 
     function FileExists(const Name: string): Boolean;
     function GetTotalSize: Int64;
+    function GetFullPortablePath(const Name, Path: string): string;
     procedure InstallPortable(const Path: string);
 
     property Count: Integer read GetCount;
@@ -257,6 +258,17 @@ var
 begin
   Result := 0;
   for I := 0 to Count - 1 do Inc(Result, Files[I].Size);
+end;
+
+function TAppFiles.GetFullPortablePath(const Name, Path: string): string;
+var
+  AppFile: TAppFile;
+begin
+  Result := '';
+  AppFile := Files[Name];
+  if AppFile <> nil then
+    Result := IncludeTrailingPathDelimiter(Path)
+      + IncludeTrailingPathDelimiter(AppFile.FPortablePath) + AppFile.FFileName;
 end;
 
 procedure TAppFiles.InstallPortable(const Path: string);

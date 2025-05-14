@@ -43,8 +43,6 @@ object MainForm: TMainForm
       item
         Width = 100
       end>
-    ExplicitTop = 546
-    ExplicitWidth = 788
   end
   object pnClient: TPanel
     Left = 0
@@ -56,8 +54,6 @@ object MainForm: TMainForm
     ParentBackground = False
     ParentColor = True
     TabOrder = 1
-    ExplicitWidth = 592
-    ExplicitHeight = 508
     object HSplitter: TSplitter
       Left = 0
       Top = 300
@@ -107,8 +103,6 @@ object MainForm: TMainForm
       OnEdited = ObjectsViewEdited
       OnKeyDown = ObjectsViewKeyDown
       OnResize = ObjectsViewResize
-      ExplicitWidth = 592
-      ExplicitHeight = 299
     end
     object PageControl: TPageControl
       AlignWithMargins = True
@@ -120,8 +114,6 @@ object MainForm: TMainForm
       Align = alBottom
       MultiLine = True
       TabOrder = 1
-      ExplicitTop = 305
-      ExplicitWidth = 586
       object tsFields: TTabSheet
         Caption = 'Fields'
         object FieldsView: TListView
@@ -167,6 +159,8 @@ object MainForm: TMainForm
           Height = 172
           Align = alClient
           TabOrder = 0
+          AllowSingleSignOnUsingOSPrimaryAccount = False
+          TargetCompatibleBrowserVersion = '117.0.2045.28'
         end
       end
       object tsRelations: TTabSheet
@@ -262,8 +256,6 @@ object MainForm: TMainForm
     ParentColor = False
     TabOrder = 2
     Visible = False
-    ExplicitLeft = 595
-    ExplicitHeight = 508
     DesignSize = (
       193
       509)
@@ -365,7 +357,6 @@ object MainForm: TMainForm
     TabOrder = 3
     Transparent = True
     Wrapable = False
-    ExplicitWidth = 788
     object ToolButton1: TToolButton
       Left = 0
       Top = 0
@@ -873,13 +864,6 @@ object MainForm: TMainForm
       Caption = 'Export settings...'
       Hint = 'Export settings'
       OnExecute = ExportSettingsExecute
-      OnUpdate = ActionUpdate
-    end
-    object DefaultLanguage: TAction
-      Category = 'Tools'
-      Caption = 'System default'
-      Hint = 'System default'
-      OnExecute = DefaultLanguageExecute
       OnUpdate = ActionUpdate
     end
     object Transparency0: TAction
@@ -4762,15 +4746,6 @@ object MainForm: TMainForm
     end
     object N16: TMenuItem
       Caption = '-'
-    end
-    object LanguageMenu: TMenuItem
-      Caption = 'Language'
-      object Systemdefault1: TMenuItem
-        Action = DefaultLanguage
-      end
-      object N25: TMenuItem
-        Caption = '-'
-      end
     end
     object Transparency1: TMenuItem
       Caption = 'Transparency'

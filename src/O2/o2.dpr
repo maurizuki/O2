@@ -119,6 +119,7 @@ uses
 
 begin
   Randomize;
+  DeleteLocaleOverride(Application.ExeName);
   Application.Initialize;
   Application.Title := 'O2';
   ConfigureServices;

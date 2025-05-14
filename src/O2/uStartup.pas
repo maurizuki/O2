@@ -188,7 +188,7 @@ begin
     .RegisterType<TAppFiles>(
       function: TAppFiles
       var
-        AppPath, SettingsPath, StylesPath, LauncherPath, LanguageModule: string;
+        AppPath, SettingsPath, StylesPath, LauncherPath: string;
         SearchRec: TSearchRec;
         I: Integer;
       begin
@@ -231,16 +231,6 @@ begin
           .Add(IdLicense, LicenseFile, AppPath, PortableAppPath)
           .Add(IdReadMe, ReadMeFile, AppPath, PortableAppPath)
           .Add(IdWebView2Loader, WebView2LoaderFile, AppPath, PortableAppPath);
-
-        for I := Low(Languages) to High(Languages) do
-        begin
-          LanguageModule := ChangeFileExt(Result.FullPaths[IdAppExe],
-            '.' + Languages[I].Language);
-          if FileExists(LanguageModule) then
-            Result.Add(IdResourceModule + Languages[I].Language,
-              ExtractFileName(LanguageModule), ExtractFilePath(LanguageModule),
-              PortableAppPath);
-        end;
 
         if FindFirst(IncludeTrailingPathDelimiter(StylesPath) + '*.css',
           faAnyFile, SearchRec) = 0 then

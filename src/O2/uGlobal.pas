@@ -124,19 +124,6 @@ const
   PasswordScoreColors: array [0..4] of TColor = (
     $00241CED, $00277FFF, $000EC9FF, $00E8A200, $004CB122);
 
-{ UI localization languages }
-
-type
-  TLanguageMapEntry = record
-    LangId: Word;
-    Language: string;
-  end;
-
-const
-  Languages: array[1..2] of TLanguageMapEntry = (
-    (LangId: (SUBLANG_ENGLISH_US shl 10) or LANG_ENGLISH; Language: 'ENU'),
-    (LangId: (SUBLANG_ITALIAN shl 10) or LANG_ITALIAN;    Language: 'ITA'));
-
 resourcestring
   STags = 'Tags';
   STagsNone = '(none)';
@@ -180,7 +167,6 @@ resourcestring
   SCannotCheckForUpdates = 'Cannot check for updates.';
   SNoAvailableUpdates = 'No available updates.';
   SDownloadUpdatesQuery = 'Version %d.%d.%d is available. Download?';
-  SApplyAtNextStartup = 'Change will take effect at next application startup.';
   SPrintPreviewZoom = 'Zoom';
   SHTMLExportStyle = 'Style';
 
