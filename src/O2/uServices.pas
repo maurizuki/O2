@@ -29,6 +29,7 @@ type
   IAppFiles = interface
     function FileExists(const Name: string): Boolean;
     function GetTotalSize: Int64;
+    function GetFullPortablePath(const Name, Path: string): string;
     procedure InstallPortable(const Path: string);
 
     function GetFullPaths(IndexOrName: Variant): string;

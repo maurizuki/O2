@@ -1093,7 +1093,7 @@ end;
 
 procedure TMainForm.InstallOnRemovableMediaExecute(Sender: TObject);
 var
-  Dir: string;
+  Dir, AppExe: string;
 begin
   Dir := '';
   if SelectDirectory(Format(SInstallOnRemovableMediaPrompt +
@@ -1104,6 +1104,10 @@ begin
     BeginBatchOperation;
     try
       FAppFiles.InstallPortable(Dir);
+
+      AppExe := FAppFiles.GetFullPortablePath(IdAppExe, Dir);
+      DeleteFile(ChangeFileExt(AppExe, '.ENU'));
+      DeleteFile(ChangeFileExt(AppExe, '.ITA'));
     finally
       EndBatchOperation;
     end;
