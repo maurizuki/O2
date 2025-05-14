@@ -63,20 +63,20 @@ __delphi-markdown__
 Copyright (C) 2011+ Health Intersections Pty Ltd.  
 
 __Inno Setup__  
-Copyright (C) 1997-2023 Jordan Russell.  
-Portions Copyright (C) 2000-2023 Martijn Laan.  
+Copyright (C) 1997-2025 Jordan Russell.  
+Portions Copyright (C) 2000-2025 Martijn Laan.  
 
 __JEDI Visual Component Library__  
-Copyright (C) 1999-2023 the Project JEDI community.  
+Copyright (C) 1999-2025 the Project JEDI community.  
 
 __Spring4D__  
-Copyright (C) 2009-2023 Spring4D Team.  
+Copyright (C) 2009-2025 Spring4D Team.  
 
 __SZCRC32 unit__  
 Copyright (C) 2004 Sasa Zeman.  
 
 __UPX - The Ultimate Packer for eXecutables__  
-Copyright (C) 1996-2023 Markus Oberhumer, Laszlo Molnar, John Reiser.  
+Copyright (C) 1996-2025 Markus Oberhumer, Laszlo Molnar, John Reiser.  
 
 __zxcvbn__  
 Copyright (C) 2012-2016 Dan Wheeler and Dropbox, Inc.  
