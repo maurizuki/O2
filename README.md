@@ -30,6 +30,14 @@ winget install --id=maurizuki.O2 -e
 
 ## Change log
 
+### Version 3.2
+- Multi-language support (a.k.a. Italian translation) removed. The feature is deprecated and no longer supported in Delphi 12.
+- Import improvement: title, description and author are now imported.
+- *Import from XML* improvement: the file is no longer completely overwritten, as it is for the other imports.
+- *Export to XML* improvement: the export can now be limited to the selection, as it is for the other exports.
+- *Export to HTML*: new style sheet *"Sticky Notes"*.
+- *Export to HTML*: small improvements to the HTML code and CSS classes.
+
 ### Version 3.1
 -	Cryptography enhancement: the cipher algorithm initialization vector is now randomly generated.
 -	New feature: custom style sheets for *Export to HTML*. Each *.css* file found in the *Styles* folder can be selected in the *Style* menu of the preview window.
