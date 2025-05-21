@@ -30,6 +30,14 @@ winget install --id=maurizuki.O2 -e
 
 ## Change log
 
+### Version 3.2
+- Multi-language support (a.k.a. Italian translation) removed. The feature is deprecated and no longer supported in Delphi 12.
+- Import improvement: title, description and author are now imported.
+- *Import from XML* improvement: the file is no longer completely overwritten, as it is for the other imports.
+- *Export to XML* improvement: the export can now be limited to the selection, as it is for the other exports.
+- *Export to HTML*: new style sheet *"Sticky Notes"*.
+- *Export to HTML*: small improvements to the HTML code and CSS classes.
+
 ### Version 3.1
 -	Cryptography enhancement: the cipher algorithm initialization vector is now randomly generated.
 -	New feature: custom style sheets for *Export to HTML*. Each *.css* file found in the *Styles* folder can be selected in the *Style* menu of the preview window.
@@ -63,20 +71,20 @@ __delphi-markdown__
 Copyright (C) 2011+ Health Intersections Pty Ltd.  
 
 __Inno Setup__  
-Copyright (C) 1997-2023 Jordan Russell.  
-Portions Copyright (C) 2000-2023 Martijn Laan.  
+Copyright (C) 1997-2025 Jordan Russell.  
+Portions Copyright (C) 2000-2025 Martijn Laan.  
 
 __JEDI Visual Component Library__  
-Copyright (C) 1999-2023 the Project JEDI community.  
+Copyright (C) 1999-2025 the Project JEDI community.  
 
 __Spring4D__  
-Copyright (C) 2009-2023 Spring4D Team.  
+Copyright (C) 2009-2025 Spring4D Team.  
 
 __SZCRC32 unit__  
 Copyright (C) 2004 Sasa Zeman.  
 
 __UPX - The Ultimate Packer for eXecutables__  
-Copyright (C) 1996-2023 Markus Oberhumer, Laszlo Molnar, John Reiser.  
+Copyright (C) 1996-2025 Markus Oberhumer, Laszlo Molnar, John Reiser.  
 
 __zxcvbn__  
 Copyright (C) 2012-2016 Dan Wheeler and Dropbox, Inc.  
