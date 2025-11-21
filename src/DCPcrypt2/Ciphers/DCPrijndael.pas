@@ -26,7 +26,7 @@ unit DCPrijndael;
 
 interface
 uses
-  Classes, Sysutils, DCPcrypt2, DCPconst, DCPblockciphers;
+  Classes, Sysutils, DCPcrypt2, DCPblockciphers;
 
 const
   BC= 4;
@@ -39,7 +39,6 @@ type
     rk, drk: array[0..MAXROUNDS,0..7] of DWord;
     procedure InitKey(const Key; Size: longword); override;
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
     class function SelfTest: boolean; override;
@@ -58,11 +57,6 @@ implementation
 class function TDCP_rijndael.GetMaxKeySize: integer;
 begin
   Result:= 256;
-end;
-
-class function TDCP_rijndael.GetID: integer;
-begin
-  Result:= DCP_rijndael;
 end;
 
 class function TDCP_rijndael.GetAlgorithm: string;

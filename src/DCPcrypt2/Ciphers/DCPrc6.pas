@@ -26,7 +26,7 @@ unit DCPrc6;
 
 interface
 uses
-  Classes, Sysutils, DCPcrypt2, DCPconst, DCPblockciphers;
+  Classes, Sysutils, DCPcrypt2, DCPblockciphers;
 
 const
   NUMROUNDS= 20; { number of rounds must be between 16-24 }
@@ -37,7 +37,6 @@ type
     KeyData: array[0..((NUMROUNDS*2)+3)] of DWord;
     procedure InitKey(const Key; Size: longword); override;
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
     class function SelfTest: boolean; override;
@@ -73,11 +72,6 @@ end;
 function RRot32(X: DWord; c: longword): DWord;
 begin
   RRot32:= (X shr c) or (X shl (32 - c));
-end;
-
-class function TDCP_rc6.GetID: integer;
-begin
-  Result:= DCP_rc6;
 end;
 
 class function TDCP_rc6.GetAlgorithm: string;

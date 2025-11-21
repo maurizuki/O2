@@ -26,14 +26,13 @@ unit DCPrc4;
 
 interface
 uses
-  Classes, Sysutils, DCPcrypt2, DCPconst;
+  Classes, Sysutils, DCPcrypt2;
 
 type
   TDCP_rc4= class(TDCP_cipher)
   protected
     KeyData, KeyOrg: array[0..255] of byte;
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
     class function SelfTest: boolean; override;
@@ -48,11 +47,6 @@ type
 {******************************************************************************}
 implementation
 {$R-}{$Q-}
-
-class function TDCP_rc4.GetID: integer;
-begin
-  Result:= DCP_rc4;
-end;
 
 class function TDCP_rc4.GetAlgorithm: string;
 begin

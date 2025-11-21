@@ -55,7 +55,6 @@ type
     fInitialized: boolean;  { Whether or not the algorithm has been initialized }
 
   private
-    function _GetId: integer;
     function _GetAlgorithm: string;
     function _GetHashSize: integer; 
 
@@ -63,8 +62,6 @@ type
     property Initialized: boolean
       read fInitialized;
 
-    class function GetId: integer; virtual;
-      { Get the algorithm id }
     class function GetAlgorithm: string; virtual;
       { Get the algorithm name }
     class function GetHashSize: integer; virtual;
@@ -94,7 +91,6 @@ type
     
     destructor Destroy; override;
 
-    property Id: integer read _GetId;
     property Algorithm: string read _GetAlgorithm;
     property HashSize: integer read _GetHashSize;
   end;
@@ -113,7 +109,6 @@ type
     fInitialized: boolean;  { Whether or not the key setup has been done yet }
 
   private
-    function _GetId: integer;
     function _GetAlgorithm: string;
     function _GetMaxKeySize: integer; 
 
@@ -121,8 +116,6 @@ type
     property Initialized: boolean
       read fInitialized;
 
-    class function GetId: integer; virtual;
-      { Get the algorithm id }
     class function GetAlgorithm: string; virtual;
       { Get the algorithm name }
     class function GetMaxKeySize: integer; virtual;
@@ -164,7 +157,6 @@ type
     constructor Create; virtual;
     destructor Destroy; override;
 
-    property Id: integer read _GetId;
     property Algorithm: string read _GetAlgorithm;
     property MaxKeySize: integer read _GetMaxKeySize;
   end;
@@ -256,11 +248,6 @@ implementation
 
 {** TDCP_hash *****************************************************************}
 
-function TDCP_hash._GetId: integer;
-begin
-  Result:= GetId;
-end;
-
 function TDCP_hash._GetAlgorithm: string;
 begin
   Result:= GetAlgorithm;
@@ -269,11 +256,6 @@ end;
 function TDCP_hash._GetHashSize: integer;
 begin
   Result:= GetHashSize;
-end; 
-
-class function TDCP_hash.GetId: integer;
-begin
-  Result:= -1;
 end;
 
 class function TDCP_hash.GetAlgorithm: string;
@@ -346,11 +328,6 @@ end;
 
 {** TDCP_cipher ***************************************************************}
 
-function TDCP_cipher._GetId: integer;
-begin
-  Result:= GetId;
-end;
-
 function TDCP_cipher._GetAlgorithm: string;
 begin
   Result:= GetAlgorithm;
@@ -360,11 +337,6 @@ function TDCP_cipher._GetMaxKeySize: integer;
 begin
   Result:= GetMaxKeySize;
 end; 
-
-class function TDCP_cipher.GetId: integer;
-begin
-  Result:= -1;
-end;
 
 class function TDCP_cipher.GetAlgorithm: string;
 begin

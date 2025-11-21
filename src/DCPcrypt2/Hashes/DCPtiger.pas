@@ -26,7 +26,7 @@ unit DCPtiger;
 
 interface
 uses
-  Classes, Sysutils, DCPcrypt2, DCPconst;
+  Classes, Sysutils, DCPcrypt2;
 
 type
   TDCP_tiger= class(TDCP_hash)
@@ -37,7 +37,6 @@ type
     HashBuffer: array[0..63] of byte;
     procedure Compress;
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetHashSize: integer; override;
     class function SelfTest: boolean; override;
@@ -204,11 +203,6 @@ end;
 class function TDCP_tiger.GetHashSize: integer;
 begin
   Result:= 192;
-end;
-
-class function TDCP_tiger.GetId: integer;
-begin
-  Result:= DCP_tiger;
 end;
 
 class function TDCP_tiger.GetAlgorithm: string;

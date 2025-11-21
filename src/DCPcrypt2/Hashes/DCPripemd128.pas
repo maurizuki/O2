@@ -26,7 +26,7 @@ unit DCPripemd128;
 
 interface
 uses
-  Classes, Sysutils, DCPcrypt2, DCPconst;
+  Classes, Sysutils, DCPcrypt2;
 
 type
   TDCP_ripemd128= class(TDCP_hash)
@@ -37,7 +37,6 @@ type
     HashBuffer: array[0..63] of byte;
     procedure Compress;
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetHashSize: integer; override;
     class function SelfTest: boolean; override;
@@ -215,11 +214,6 @@ end;
 class function TDCP_ripemd128.GetHashSize: integer;
 begin
   Result:= 128;
-end;
-
-class function TDCP_ripemd128.GetId: integer;
-begin
-  Result:= DCP_ripemd128;
 end;
 
 class function TDCP_ripemd128.GetAlgorithm: string;

@@ -26,7 +26,7 @@ unit DCPhaval;
 
 interface
 uses
-  Classes, Sysutils, DCPcrypt2, DCPconst;
+  Classes, Sysutils, DCPcrypt2;
 
 type
   TDCP_haval= class(TDCP_hash)
@@ -37,7 +37,6 @@ type
     HashBuffer: array[0..127] of byte;
     procedure Compress;
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetHashSize: integer; override;
     class function SelfTest: boolean; override;
@@ -88,11 +87,6 @@ end;
 class function TDCP_haval.GetHashSize: integer;
 begin
   Result:= 256;
-end;
-
-class function TDCP_haval.GetId: integer;
-begin
-  Result:= DCP_haval;
 end;
 
 class function TDCP_haval.GetAlgorithm: string;

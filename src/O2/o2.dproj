@@ -1058,7 +1058,6 @@
         </DelphiCompile>
         <DCCReference Include="..\DCPcrypt2\DCPbase64.pas"/>
         <DCCReference Include="..\DCPcrypt2\DCPblockciphers.pas"/>
-        <DCCReference Include="..\DCPcrypt2\DCPconst.pas"/>
         <DCCReference Include="..\DCPcrypt2\DCPcrypt2.pas"/>
         <DCCReference Include="..\DCPcrypt2\Ciphers\DCPblowfish.pas"/>
         <DCCReference Include="..\DCPcrypt2\Ciphers\DCPcast128.pas"/>

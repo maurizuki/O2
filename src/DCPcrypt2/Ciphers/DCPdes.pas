@@ -35,7 +35,7 @@ unit DCPdes;
 
 interface
 uses
-  Classes, Sysutils, DCPcrypt2, DCPconst, DCPblockciphers;
+  Classes, Sysutils, DCPcrypt2, DCPblockciphers;
 
 type
   TDCP_customdes= class(TDCP_blockcipher64)
@@ -51,7 +51,6 @@ type
     KeyData: array[0..31] of dword;
     procedure InitKey(const Key; Size: longword); override;
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
     class function SelfTest: boolean; override;
@@ -65,7 +64,6 @@ type
     KeyData: array[0..2,0..31] of dword;
     procedure InitKey(const Key; Size: longword); override;
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
     class function SelfTest: boolean; override;
@@ -331,11 +329,6 @@ begin
   Result:= 64;
 end;
 
-class function TDCP_des.GetID: integer;
-begin
-  Result:= DCP_des;
-end;
-
 class function TDCP_des.GetAlgorithm: string;
 begin
   Result:= 'DES';
@@ -408,11 +401,6 @@ end;
 class function TDCP_3des.GetMaxKeySize: integer;
 begin
   Result:= 192;
-end;
-
-class function TDCP_3des.GetID: integer;
-begin
-  Result:= DCP_3des;
 end;
 
 class function TDCP_3des.GetAlgorithm: string;

@@ -26,7 +26,7 @@ unit DCPmars;
 
 interface
 uses
-  Classes, Sysutils, DCPcrypt2, DCPconst, DCPblockciphers;
+  Classes, Sysutils, DCPcrypt2, DCPblockciphers;
 
 type
   TDCP_mars= class(TDCP_blockcipher128)
@@ -34,7 +34,6 @@ type
     KeyData: array[0..39] of DWord;
     procedure InitKey(const Key; Size: longword); override;
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
     class function SelfTest: boolean; override;
@@ -58,11 +57,6 @@ end;
 function RRot32(X: DWord; c: longword): DWord;
 begin
   RRot32:= (X shr c) or (X shl (32 - c));
-end;
-
-class function TDCP_mars.GetID: integer;
-begin
-  Result:= DCP_mars;
 end;
 
 class function TDCP_mars.GetAlgorithm: string;

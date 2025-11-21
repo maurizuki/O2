@@ -26,7 +26,7 @@ unit DCPice;
 
 interface
 uses
-  Classes, Sysutils, DCPcrypt2, DCPconst, DCPblockciphers;
+  Classes, Sysutils, DCPcrypt2, DCPblockciphers;
 
 type
   TDCP_customice= class(TDCP_blockcipher64)
@@ -47,7 +47,6 @@ type
   protected
     procedure InitKey(const Key; Size: longword); override;
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
     class function SelfTest: boolean; override;
@@ -57,7 +56,6 @@ type
   protected
     procedure InitKey(const Key; Size: longword); override;
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
     class function SelfTest: boolean; override;
@@ -67,7 +65,6 @@ type
   protected
     procedure InitKey(const Key; Size: longword); override;
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
     class function SelfTest: boolean; override;
@@ -318,11 +315,6 @@ begin
   Result:= 64;
 end;
 
-class function TDCP_ice.GetID: integer;
-begin
-  Result:= DCP_ice;
-end;
-
 class function TDCP_ice.GetAlgorithm: string;
 begin
   Result:= 'Ice';
@@ -359,11 +351,6 @@ begin
   Result:= 64;
 end;
 
-class function TDCP_thinice.GetID: integer;
-begin
-  Result:= DCP_thinice;
-end;
-
 class function TDCP_thinice.GetAlgorithm: string;
 begin
   Result:= 'Thin Ice';
@@ -398,11 +385,6 @@ end;
 class function TDCP_ice2.GetMaxKeySize: integer;
 begin
   Result:= 128;
-end;
-
-class function TDCP_ice2.GetID: integer;
-begin
-  Result:= DCP_ice2;
 end;
 
 class function TDCP_ice2.GetAlgorithm: string;

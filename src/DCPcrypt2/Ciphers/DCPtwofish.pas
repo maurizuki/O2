@@ -26,7 +26,7 @@ unit DCPtwofish;
 
 interface
 uses
-  Classes, Sysutils, DCPcrypt2, DCPconst, DCPblockciphers;
+  Classes, Sysutils, DCPcrypt2, DCPblockciphers;
 
 const
   INPUTWHITEN= 0;
@@ -47,7 +47,6 @@ type
     sbox: array[0..3,0..255] of DWord;
     procedure InitKey(const Key; Size: longword); override;
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
     class function SelfTest: boolean; override;
@@ -67,11 +66,6 @@ implementation
 var
   MDS: array[0..3,0..255] of dword;
   MDSDone: boolean;
-
-class function TDCP_twofish.GetID: integer;
-begin
-  Result:= DCP_twofish;
-end;
 
 class function TDCP_twofish.GetAlgorithm: string;
 begin

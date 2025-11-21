@@ -28,7 +28,7 @@ unit DCPserpent;
 
 interface
 uses
-  Classes, Sysutils, DCPcrypt2, DCPconst, DCPblockciphers;
+  Classes, Sysutils, DCPcrypt2, DCPblockciphers;
 
 type
   TDCP_serpent= class(TDCP_blockcipher128)
@@ -36,7 +36,6 @@ type
     l_key: array[0..131] of dword;
     procedure InitKey(const Key; Size: longword); override;
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
     class function SelfTest: boolean; override;
@@ -50,11 +49,6 @@ type
 {******************************************************************************}
 implementation
 {$R-}{$Q-}
-
-class function TDCP_serpent.GetID: integer;
-begin
-  Result:= DCP_serpent;
-end;
 
 class function TDCP_serpent.GetAlgorithm: string;
 begin

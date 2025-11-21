@@ -26,7 +26,7 @@ unit DCPidea;
 
 interface
 uses
-  Classes, Sysutils, DCPcrypt2, DCPconst, DCPblockciphers;
+  Classes, Sysutils, DCPcrypt2, DCPblockciphers;
 
 type
   TDCP_idea= class(TDCP_blockcipher64)
@@ -34,7 +34,6 @@ type
     EK, DK: array[0..51] of word;
     procedure InitKey(const Key; Size: longword); override;
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
     class function SelfTest: boolean; override;
@@ -52,11 +51,6 @@ implementation
 class function TDCP_idea.GetMaxKeySize: integer;
 begin
   Result:= 128;
-end;
-
-class function TDCP_idea.GetID: integer;
-begin
-  Result:= DCP_idea;
 end;
 
 class function TDCP_idea.GetAlgorithm: string;

@@ -19,7 +19,6 @@ uses
   Forms,
   DCPbase64 in '..\DCPcrypt2\DCPbase64.pas',
   DCPblockciphers in '..\DCPcrypt2\DCPblockciphers.pas',
-  DCPconst in '..\DCPcrypt2\DCPconst.pas',
   DCPcrypt2 in '..\DCPcrypt2\DCPcrypt2.pas',
   DCPblowfish in '..\DCPcrypt2\Ciphers\DCPblowfish.pas',
   DCPcast128 in '..\DCPcrypt2\Ciphers\DCPcast128.pas',

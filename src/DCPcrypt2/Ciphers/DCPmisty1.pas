@@ -26,7 +26,7 @@ unit DCPmisty1;
 
 interface
 uses
-  Classes, Sysutils, DCPcrypt2, DCPconst, DCPblockciphers;
+  Classes, Sysutils, DCPcrypt2, DCPblockciphers;
 
 const
   NUMROUNDS= 8;
@@ -41,7 +41,6 @@ type
     function FLINV(const FL_IN: DWord; const k: longword): DWord;
     procedure InitKey(const Key; Size: longword); override;
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
     class function SelfTest: boolean; override;
@@ -61,11 +60,6 @@ implementation
 function SwapDword(a: dword): dword;
 begin
   Result:= ((a and $FF) shl 24) or ((a and $FF00) shl 8) or ((a and $FF0000) shr 8) or ((a and $FF000000) shr 24);
-end;
-
-class function TDCP_misty1.GetID: integer;
-begin
-  Result:= DCP_misty1;
 end;
 
 class function TDCP_misty1.GetAlgorithm: string;

@@ -26,7 +26,7 @@ unit DCPrc2;
 
 interface
 uses
-  Classes, Sysutils, DCPcrypt2, DCPconst, DCPblockciphers;
+  Classes, Sysutils, DCPcrypt2, DCPblockciphers;
 
 type
   TDCP_rc2= class(TDCP_blockcipher64)
@@ -34,7 +34,6 @@ type
     KeyData: array[0..63] of word;
     procedure InitKey(const Key; Size: longword); override;
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
     class function SelfTest: boolean; override;
@@ -64,11 +63,6 @@ end;
 class function TDCP_rc2.GetMaxKeySize: integer;
 begin
   Result:= 1024;
-end;
-
-class function TDCP_rc2.GetID: integer;
-begin
-  Result:= DCP_rc2;
 end;
 
 class function TDCP_rc2.GetAlgorithm: string;

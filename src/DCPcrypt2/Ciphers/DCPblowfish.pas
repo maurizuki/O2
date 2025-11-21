@@ -26,7 +26,7 @@ unit DCPblowfish;
 
 interface
 uses
-  Classes, Sysutils, DCPcrypt2, DCPconst, DCPblockciphers;
+  Classes, Sysutils, DCPcrypt2, DCPblockciphers;
 
 type
   TDCP_blowfish= class(TDCP_blockcipher64)
@@ -35,7 +35,6 @@ type
     PBox: array[0..17] of DWord;
     procedure InitKey(const Key; Size: longword); override;
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
     class function SelfTest: boolean; override;
@@ -50,11 +49,6 @@ type
 implementation
 {$R-}{$Q-}
 {$I DCPblowfish.inc}
-
-class function TDCP_blowfish.GetID: integer;
-begin
-  Result:= DCP_blowfish;
-end;
 
 class function TDCP_blowfish.GetAlgorithm: string;
 begin

@@ -26,7 +26,7 @@ unit DCPsha512;
 
 interface
 uses
-  Classes, Sysutils, DCPcrypt2, DCPconst;
+  Classes, Sysutils, DCPcrypt2;
 
 type
   TDCP_sha512base= class(TDCP_hash)
@@ -43,7 +43,6 @@ type
 
   TDCP_sha384= class(TDCP_sha512base)
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetHashSize: integer; override;
     class function SelfTest: boolean; override;
@@ -53,7 +52,6 @@ type
 
   TDCP_sha512= class(TDCP_sha512base)
   public
-    class function GetId: integer; override;
     class function GetAlgorithm: string; override;
     class function GetHashSize: integer; override;
     class function SelfTest: boolean; override;
@@ -241,11 +239,6 @@ begin
   Result:= 'SHA384';
 end;
 
-class function TDCP_sha384.GetId: integer;
-begin
-  Result:= DCP_sha384;
-end;
-
 class function TDCP_sha384.GetHashSize: integer;
 begin
   Result:= 384;
@@ -317,11 +310,6 @@ end;
 class function TDCP_sha512.GetAlgorithm: string;
 begin
   Result:= 'SHA512';
-end;
-
-class function TDCP_sha512.GetId: integer;
-begin
-  Result:= DCP_sha512;
 end;
 
 class function TDCP_sha512.GetHashSize: integer;
