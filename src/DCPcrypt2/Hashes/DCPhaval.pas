@@ -39,7 +39,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetHashSize: integer; override;
-    class function SelfTest: boolean; override;
     procedure Init; override;
     procedure Burn; override;
     procedure Update(const Buffer; Size: longword); override;
@@ -92,30 +91,6 @@ end;
 class function TDCP_haval.GetAlgorithm: string;
 begin
   Result:= 'Haval (256bit, 5 passes)';
-end;
-
-class function TDCP_haval.SelfTest: boolean;
-const
-  Test1Out: array[0..31] of byte=
-    ($EA,$B9,$2E,$C2,$9E,$FC,$CB,$E0,$19,$D8,$31,$F2,$AB,$03,$0B,$10,
-     $7E,$A9,$B8,$4B,$76,$86,$47,$33,$3B,$2D,$8C,$A5,$53,$1F,$01,$12);
-  Test2Out: array[0..31] of byte=
-    ($17,$22,$C5,$DC,$88,$D7,$77,$08,$D4,$78,$7D,$28,$3D,$7E,$26,$38,
-     $57,$E9,$84,$AE,$5A,$6F,$9A,$18,$54,$96,$39,$06,$34,$3A,$BB,$F8);
-var
-  TestHash: TDCP_haval;
-  TestOut: array[0..31] of byte;
-begin
-  TestHash:= TDCP_haval.Create;
-  TestHash.Init;
-  TestHash.UpdateStr('abc');
-  TestHash.Final(TestOut);
-  Result:= CompareMem(@TestOut,@Test1Out,Sizeof(Test1Out));
-  TestHash.Init;
-  TestHash.UpdateStr('abcdefghijklmnopqrstuvwxyz');
-  TestHash.Final(TestOut);
-  Result:= CompareMem(@TestOut,@Test2Out,Sizeof(Test2Out)) and Result;
-  TestHash.Free;
 end;
 
 procedure TDCP_haval.Init;

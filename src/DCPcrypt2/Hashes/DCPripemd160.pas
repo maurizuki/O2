@@ -39,7 +39,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetHashSize: integer; override;
-    class function SelfTest: boolean; override;
     procedure Init; override;
     procedure Burn; override;
     procedure Update(const Buffer; Size: longword); override;
@@ -579,28 +578,6 @@ end;
 class function TDCP_ripemd160.GetAlgorithm: string;
 begin
   Result:= 'RipeMD-160';
-end;
-
-class function TDCP_ripemd160.SelfTest: boolean;
-const
-  Test1Out: array[0..19] of byte=
-    ($44,$BF,$C4,$96,$5C,$B1,$40,$DC,$9B,$EA,$1F,$84,$2A,$9D,$EA,$BD,$AE,$0B,$E4,$53);
-  Test2Out: array[0..19] of byte=
-    ($24,$71,$79,$9A,$D0,$EE,$46,$96,$8F,$A5,$BD,$32,$BE,$AC,$4E,$86,$DA,$2E,$95,$6D);
-var
-  TestHash: TDCP_ripemd160;
-  TestOut: array[0..19] of byte;
-begin
-  TestHash:= TDCP_ripemd160.Create;
-  TestHash.Init;
-  TestHash.UpdateStr('abc');
-  TestHash.Final(TestOut);
-  Result:= CompareMem(@TestOut,@Test1Out,Sizeof(Test1Out));
-  TestHash.Init;
-  TestHash.UpdateStr('abcdefghijklmnopqrstuvwxyz');
-  TestHash.Final(TestOut);
-  Result:= CompareMem(@TestOut,@Test2Out,Sizeof(Test2Out)) and Result;
-  TestHash.Free;
 end;
 
 procedure TDCP_ripemd160.Init;

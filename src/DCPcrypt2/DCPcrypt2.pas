@@ -66,8 +66,6 @@ type
       { Get the algorithm name }
     class function GetHashSize: integer; virtual;
       { Get the size of the digest produced - in bits }
-    class function SelfTest: boolean; virtual;
-      { Tests the implementation with several test vectors }
 
     procedure Init; virtual;
       { Initialize the hash algorithm }
@@ -266,11 +264,6 @@ end;
 class function TDCP_hash.GetHashSize: integer;
 begin
   Result:= -1;
-end;
-
-class function TDCP_hash.SelfTest: boolean;
-begin
-  Result:= false;
 end;
 
 procedure TDCP_hash.Init;

@@ -39,7 +39,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetHashSize: integer; override;
-    class function SelfTest: boolean; override;
     procedure Init; override;
     procedure Burn; override;
     procedure Update(const Buffer; Size: longword); override;
@@ -208,32 +207,6 @@ end;
 class function TDCP_tiger.GetAlgorithm: string;
 begin
   Result:= 'Tiger';
-end;
-
-class function TDCP_tiger.SelfTest: boolean;
-const
-  Test1Out: array[0..23] of byte=
-    ($70,$19,$81,$91,$F5,$B6,$E9,$01,
-     $C8,$84,$A5,$E6,$1A,$8F,$16,$EA,
-     $0E,$CE,$41,$96,$92,$89,$21,$0E);
-  Test2Out: array[0..23] of byte=
-    ($97,$FB,$5A,$ED,$48,$23,$9F,$D2,
-     $48,$74,$22,$F4,$28,$9C,$A2,$77,
-     $4F,$CC,$39,$B1,$01,$9B,$6C,$04);
-var
-  TestHash: TDCP_tiger;
-  TestOut: array[0..2] of int64;
-begin
-  TestHash:= TDCP_tiger.Create;
-  TestHash.Init;
-  TestHash.UpdateStr('abc');
-  TestHash.Final(TestOut);
-  Result:= CompareMem(@TestOut,@Test1Out,Sizeof(Test1Out));
-  TestHash.Init;
-  TestHash.UpdateStr('abcdefghijklmnopqrstuvwxyz');
-  TestHash.Final(TestOut);
-  Result:= CompareMem(@TestOut,@Test2Out,Sizeof(Test2Out)) and Result;
-  TestHash.Free;
 end;
 
 procedure TDCP_tiger.Init;

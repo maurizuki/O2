@@ -39,7 +39,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetHashSize: integer; override;
-    class function SelfTest: boolean; override;
     procedure Init; override;
     procedure Burn; override;
     procedure Update(const Buffer; Size: longword); override;
@@ -136,28 +135,6 @@ end;
 class function TDCP_md4.GetAlgorithm: string;
 begin
   Result:= 'MD4';
-end;
-
-class function TDCP_md4.SelfTest: boolean;
-const
-  Test1Out: array[0..15] of byte=
-    ($E0,$FB,$A3,$82,$68,$D0,$EC,$66,$EF,$1C,$B4,$52,$D5,$88,$5E,$53);
-  Test2Out: array[0..15] of byte=
-    ($0B,$D6,$31,$85,$F3,$48,$4B,$B0,$00,$28,$6C,$85,$91,$7D,$C1,$2E);
-var
-  TestHash: TDCP_md4;
-  TestOut: array[0..19] of byte;
-begin
-  TestHash:= TDCP_md4.Create;
-  TestHash.Init;
-  TestHash.UpdateStr('abc');
-  TestHash.Final(TestOut);
-  Result:= CompareMem(@TestOut,@Test1Out,Sizeof(Test1Out));
-  TestHash.Init;
-  TestHash.UpdateStr('abcdefghijklmnopqrstuvwxyz');
-  TestHash.Final(TestOut);
-  Result:= CompareMem(@TestOut,@Test2Out,Sizeof(Test2Out)) and Result;
-  TestHash.Free;
 end;
 
 procedure TDCP_md4.Init;

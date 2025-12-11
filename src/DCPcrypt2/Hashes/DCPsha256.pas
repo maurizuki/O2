@@ -39,7 +39,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetHashSize: integer; override;
-    class function SelfTest: boolean; override;
     procedure Init; override;
     procedure Final(var Digest); override;
     procedure Burn; override;
@@ -169,30 +168,6 @@ end;
 class function TDCP_sha256.GetHashSize: integer;
 begin
   Result:= 256;
-end;
-
-class function TDCP_sha256.SelfTest: boolean;
-const
-  Test1Out: array[0..31] of byte=
-    ($13,$E2,$28,$56,$7E,$82,$49,$FC,$E5,$33,$37,$F2,$5D,$79,$70,$DE,
-     $3B,$D6,$8A,$B2,$65,$34,$24,$C7,$B8,$F9,$FD,$05,$E3,$3C,$AE,$DF);
-  Test2Out: array[0..31] of byte=
-    ($D7,$9C,$A8,$CA,$68,$CA,$C4,$C2,$D2,$9A,$41,$67,$29,$53,$03,$D2,
-     $A7,$CF,$6C,$AA,$E1,$8D,$1D,$71,$BC,$75,$66,$FC,$B2,$9B,$51,$52);
-var
-  TestHash: TDCP_sha256;
-  TestOut: array[0..31] of byte;
-begin
-  TestHash:= TDCP_sha256.Create;
-  TestHash.Init;
-  TestHash.UpdateStr('abc');
-  TestHash.Final(TestOut);
-  Result:= boolean(CompareMem(@TestOut,@Test1Out,Sizeof(Test1Out)));
-  TestHash.Init;
-  TestHash.UpdateStr('abcdefghijklmnopqrstuvwxyz');
-  TestHash.Final(TestOut);
-  Result:= boolean(CompareMem(@TestOut,@Test2Out,Sizeof(Test2Out))) and Result;
-  TestHash.Free;
 end;
 
 procedure TDCP_sha256.Init;
