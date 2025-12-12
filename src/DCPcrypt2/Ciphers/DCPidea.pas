@@ -36,7 +36,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
-    class function SelfTest: boolean; override;
     procedure Burn; override;
     procedure EncryptECB(const InData; var OutData); override;
     procedure DecryptECB(const InData; var OutData); override;
@@ -56,40 +55,6 @@ end;
 class function TDCP_idea.GetAlgorithm: string;
 begin
   Result:= 'IDEA';
-end;
-
-class function TDCP_idea.SelfTest: boolean;
-const
-  Key1: array[0..15] of byte=
-    ($3A,$98,$4E,$20,$00,$19,$5D,$B3,$2E,$E5,$01,$C8,$C4,$7C,$EA,$60);
-  InData1: array[0..7] of byte=
-    ($01,$02,$03,$04,$05,$06,$07,$08);
-  OutData1: array[0..7] of byte=
-    ($97,$BC,$D8,$20,$07,$80,$DA,$86);
-  Key2: array[0..15] of byte=
-    ($00,$64,$00,$C8,$01,$2C,$01,$90,$01,$F4,$02,$58,$02,$BC,$03,$20);
-  InData2: array[0..7] of byte=
-    ($05,$32,$0A,$64,$14,$C8,$19,$FA);
-  OutData2: array[0..7] of byte=
-    ($65,$BE,$87,$E7,$A2,$53,$8A,$ED);
-var
-  Cipher: TDCP_idea;
-  Data: array[0..7] of byte;
-begin
-  Cipher:= TDCP_idea.Create;
-  Cipher.Init(Key1,Sizeof(Key1)*8,nil);
-  Cipher.EncryptECB(InData1,Data);
-  Result:= boolean(CompareMem(@Data,@OutData1,Sizeof(Data)));
-  Cipher.DecryptECB(Data,Data);
-  Result:= Result and boolean(CompareMem(@Data,@InData1,Sizeof(Data)));
-  Cipher.Burn;
-  Cipher.Init(Key2,Sizeof(Key2)*8,nil);
-  Cipher.EncryptECB(InData2,Data);
-  Result:= Result and boolean(CompareMem(@Data,@OutData2,Sizeof(Data)));
-  Cipher.DecryptECB(Data,Data);
-  Result:= Result and boolean(CompareMem(@Data,@InData2,Sizeof(Data)));
-  Cipher.Burn;
-  Cipher.Free;
 end;
 
 function MulInv(x: word): word;

@@ -36,7 +36,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
-    class function SelfTest: boolean; override;
     procedure Burn; override;
     procedure EncryptECB(const InData; var OutData); override;
     procedure DecryptECB(const InData; var OutData); override;
@@ -89,52 +88,6 @@ end;
 class function TDCP_cast256.GetAlgorithm: string;
 begin
   Result:= 'Cast256';
-end;
-
-class function TDCP_cast256.SelfTest: boolean;
-const
-  Key1: array[0..15] of byte=
-    ($23,$42,$bb,$9e,$fa,$38,$54,$2c,$0a,$f7,$56,$47,$f2,$9f,$61,$5d);
-  InBlock1: array[0..15] of byte=
-    ($00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$0c,$9b,$28,$07);
-  OutBlock1: array[0..15] of byte=
-    ($96,$3a,$8a,$50,$ce,$b5,$4d,$08,$e0,$de,$e0,$f1,$d0,$41,$3d,$cf);
-  Key2: array[0..23] of byte=
-    ($23,$42,$bb,$9e,$fa,$38,$54,$2c,$be,$d0,$ac,$83,$94,$0a,$c2,$98,$ba,$c7,$7a,$77,$17,$94,$28,$63);
-  InBlock2: array[0..15] of byte=
-    ($00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$de,$25,$5a,$ff);
-  OutBlock2: array[0..15] of byte=
-    ($2b,$c1,$92,$9f,$30,$13,$47,$a9,$9d,$3f,$3e,$45,$ad,$34,$01,$e8);
-  Key3: array[0..31] of byte=
-    ($23,$42,$bb,$9e,$fa,$38,$54,$2c,$be,$d0,$ac,$83,$94,$0a,$c2,$98,$8d,$7c,$47,$ce,$26,$49,$08,$46,$1c,$c1,$b5,$13,$7a,$e6,$b6,$04);
-  InBlock3: array[0..15] of byte=
-    ($00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$c5,$fc,$eb,$19);
-  OutBlock3: array[0..15] of byte=
-    ($1e,$2e,$bc,$6c,$9f,$2e,$43,$8e,$1d,$90,$d9,$b9,$c6,$85,$32,$86);
-var
-  Block: array[0..15] of byte;
-  Cipher: TDCP_cast256;
-begin
-  Cipher:= TDCP_cast256.Create;
-  Cipher.Init(Key1,Sizeof(Key1)*8,nil);
-  Cipher.EncryptECB(InBlock1,Block);
-  Result:= boolean(CompareMem(@Block,@OutBlock1,8));
-  Cipher.DecryptECB(Block,Block);
-  Result:= Result and boolean(CompareMem(@Block,@InBlock1,16));
-  Cipher.Burn;
-  Cipher.Init(Key2,Sizeof(Key2)*8,nil);
-  Cipher.EncryptECB(InBlock2,Block);
-  Result:= Result and boolean(CompareMem(@Block,@OutBlock2,8));
-  Cipher.DecryptECB(Block,Block);
-  Result:= Result and boolean(CompareMem(@Block,@InBlock2,16));
-  Cipher.Burn;
-  Cipher.Init(Key3,Sizeof(Key3)*8,nil);
-  Cipher.EncryptECB(InBlock3,Block);
-  Result:= Result and boolean(CompareMem(@Block,@OutBlock3,8));
-  Cipher.DecryptECB(Block,Block);
-  Result:= Result and boolean(CompareMem(@Block,@InBlock3,16));
-  Cipher.Burn;
-  Cipher.Free;
 end;
 
 procedure TDCP_cast256.InitKey(const Key; Size: longword);

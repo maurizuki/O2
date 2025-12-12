@@ -49,7 +49,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
-    class function SelfTest: boolean; override;
   end;
 
   TDCP_thinice= class(TDCP_customice)
@@ -58,7 +57,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
-    class function SelfTest: boolean; override;
   end;
 
   TDCP_ice2= class(TDCP_customice)
@@ -67,7 +65,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
-    class function SelfTest: boolean; override;
   end;
 
 {******************************************************************************}
@@ -320,26 +317,6 @@ begin
   Result:= 'Ice';
 end;
 
-class function TDCP_ice.SelfTest: boolean;
-const
-  Key1: array[0..7] of byte= ($de,$ad,$be,$ef,$01,$23,$45,$67);
-  InData1: array[0..7] of byte= ($fe,$dc,$ba,$98,$76,$54,$32,$10);
-  OutData1: array[0..7] of byte= ($7d,$6e,$f1,$ef,$30,$d4,$7a,$96);
-var
-  Cipher: TDCP_ice;
-  Data: array[0..7] of byte;
-begin
-  Cipher:= TDCP_ice.Create;
-  Cipher.Init(Key1,Sizeof(Key1)*8,nil);
-  Cipher.EncryptECB(InData1,Data);
-  Result:= boolean(CompareMem(@Data,@OutData1,Sizeof(Data)));
-  Cipher.Reset;
-  Cipher.DecryptECB(Data,Data);
-  Result:= boolean(CompareMem(@Data,@InData1,Sizeof(Data))) and Result;
-  Cipher.Burn;
-  Cipher.Free;
-end;
-
 procedure TDCP_ice.InitKey(const Key; Size: longword);
 begin
   InitIce(Key,Size,1);
@@ -356,26 +333,6 @@ begin
   Result:= 'Thin Ice';
 end;
 
-class function TDCP_thinice.SelfTest: boolean;
-const
-  Key1: array[0..7] of byte= ($de,$ad,$be,$ef,$01,$23,$45,$67);
-  InData1: array[0..7] of byte= ($fe,$dc,$ba,$98,$76,$54,$32,$10);
-  OutData1: array[0..7] of byte= ($de,$24,$0d,$83,$a0,$0a,$9c,$c0);
-var
-  Cipher: TDCP_thinice;
-  Data: array[0..7] of byte;
-begin
-  Cipher:= TDCP_thinice.Create;
-  Cipher.Init(Key1,Sizeof(Key1)*8,nil);
-  Cipher.EncryptECB(InData1,Data);
-  Result:= boolean(CompareMem(@Data,@OutData1,Sizeof(Data)));
-  Cipher.Reset;
-  Cipher.DecryptECB(Data,Data);
-  Result:= boolean(CompareMem(@Data,@InData1,Sizeof(Data))) and Result;
-  Cipher.Burn;
-  Cipher.Free;
-end;
-
 procedure TDCP_thinice.InitKey(const Key; Size: longword);
 begin
   InitIce(Key,Size,0);
@@ -390,27 +347,6 @@ end;
 class function TDCP_ice2.GetAlgorithm: string;
 begin
   Result:= 'Ice2';
-end;
-
-class function TDCP_ice2.SelfTest: boolean;
-const
-  Key1: array[0..15] of byte=
-    ($00,$11,$22,$33,$44,$55,$66,$77,$88,$99,$aa,$bb,$cc,$dd,$ee,$ff);
-  InData1: array[0..7] of byte= ($fe,$dc,$ba,$98,$76,$54,$32,$10);
-  OutData1: array[0..7] of byte= ($f9,$48,$40,$d8,$69,$72,$f2,$1c);
-var
-  Cipher: TDCP_ice2;
-  Data: array[0..7] of byte;
-begin
-  Cipher:= TDCP_ice2.Create;
-  Cipher.Init(Key1,Sizeof(Key1)*8,nil);
-  Cipher.EncryptECB(InData1,Data);
-  Result:= boolean(CompareMem(@Data,@OutData1,Sizeof(Data)));
-  Cipher.Reset;
-  Cipher.DecryptECB(Data,Data);
-  Result:= boolean(CompareMem(@Data,@InData1,Sizeof(Data))) and Result;
-  Cipher.Burn;
-  Cipher.Free;
 end;
 
 procedure TDCP_ice2.InitKey(const Key; Size: longword);

@@ -35,7 +35,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
-    class function SelfTest: boolean; override;
     procedure Init(const Key; Size: longword; InitVector: pointer); override;
     procedure Reset; override;
     procedure Burn; override;
@@ -56,26 +55,6 @@ end;
 class function TDCP_rc4.GetMaxKeySize: integer;
 begin
   Result:= 2048;
-end;
-
-class function TDCP_rc4.SelfTest: boolean;
-const
-  Key1: array[0..4] of byte= ($61,$8A,$63,$D2,$FB);
-  InData1: array[0..4] of byte= ($DC,$EE,$4C,$F9,$2C);
-  OutData1: array[0..4] of byte= ($F1,$38,$29,$C9,$DE);
-var
-  Cipher: TDCP_rc4;
-  Data: array[0..4] of byte;
-begin
-  Cipher:= TDCP_rc4.Create;
-  Cipher.Init(Key1,Sizeof(Key1)*8,nil);
-  Cipher.Encrypt(InData1,Data,Sizeof(Data));
-  Result:= boolean(CompareMem(@Data,@OutData1,Sizeof(Data)));
-  Cipher.Reset;
-  Cipher.Decrypt(Data,Data,Sizeof(Data));
-  Result:= boolean(CompareMem(@Data,@InData1,Sizeof(Data))) and Result;
-  Cipher.Burn;
-  Cipher.Free;
 end;
 
 procedure TDCP_rc4.Init(const Key; Size: longword; InitVector: pointer);

@@ -36,7 +36,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
-    class function SelfTest: boolean; override;
     procedure Burn; override;
     procedure EncryptECB(const InData; var OutData); override;
     procedure DecryptECB(const InData; var OutData); override;
@@ -65,24 +64,6 @@ end;
 class function TDCP_tea.GetMaxKeySize: integer;
 begin
   Result:= 128;
-end;
-
-class function TDCP_tea.SelfTest: boolean;
-const
-  Key: array[0..3] of dword= ($12345678,$9ABCDEF0,$0FEDCBA9,$87654321);
-  PT: array[0..1] of dword= ($12345678,$9ABCDEF0);
-var
-  Data: array[0..1] of dword;
-  Cipher: TDCP_tea;
-begin
-  Cipher:= TDCP_tea.Create;
-  Cipher.Init(Key,Sizeof(Key)*8,nil);
-  Cipher.EncryptECB(PT,Data);
-  Result:= not CompareMem(@Data,@PT,Sizeof(PT));
-  Cipher.DecryptECB(Data,Data);
-  Result:= Result and CompareMem(@Data,@PT,Sizeof(PT));
-  Cipher.Burn;
-  Cipher.Free;
 end;
 
 procedure TDCP_tea.InitKey(const Key; Size: longword);

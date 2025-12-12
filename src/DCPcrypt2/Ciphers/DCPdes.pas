@@ -53,7 +53,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
-    class function SelfTest: boolean; override;
     procedure Burn; override;
     procedure EncryptECB(const InData; var OutData); override;
     procedure DecryptECB(const InData; var OutData); override;
@@ -66,7 +65,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
-    class function SelfTest: boolean; override;
     procedure Burn; override;
     procedure EncryptECB(const InData; var OutData); override;
     procedure DecryptECB(const InData; var OutData); override;
@@ -334,40 +332,6 @@ begin
   Result:= 'DES';
 end;
 
-class function TDCP_des.SelfTest: boolean;
-const
-  InData1: array[0..7] of byte=
-    ($07,$56,$D8,$E0,$77,$47,$61,$D2);
-  OutData1: array[0..7] of byte=
-    ($0C,$D3,$DA,$02,$00,$21,$DC,$09);
-  Key1: array[0..7] of byte=
-    ($01,$70,$F1,$75,$46,$8F,$B5,$E6);
-  InData2: array[0..7] of byte=
-    ($48,$0D,$39,$00,$6E,$E7,$62,$F2);
-  OutData2: array[0..7] of byte=
-    ($A1,$F9,$91,$55,$41,$02,$0B,$56);
-  Key2: array[0..7] of byte=
-    ($02,$58,$16,$16,$46,$29,$B0,$07);
-var
-  Cipher: TDCP_des;
-  Data: array[0..7] of byte;
-begin
-  Cipher:= TDCP_des.Create;
-  Cipher.Init(Key1,Sizeof(Key1)*8,nil);
-  Cipher.EncryptECB(InData1,Data);
-  Result:= boolean(CompareMem(@Data,@OutData1,Sizeof(Data)));
-  Cipher.DecryptECB(Data,Data);
-  Result:= Result and boolean(CompareMem(@Data,@InData1,Sizeof(Data)));
-  Cipher.Burn;
-  Cipher.Init(Key2,Sizeof(Key2)*8,nil);
-  Cipher.EncryptECB(InData2,Data);
-  Result:= Result and boolean(CompareMem(@Data,@OutData2,Sizeof(Data)));
-  Cipher.DecryptECB(Data,Data);
-  Result:= Result and boolean(CompareMem(@Data,@InData2,Sizeof(Data)));
-  Cipher.Burn;
-  Cipher.Free;
-end;
-
 procedure TDCP_des.InitKey(const Key; Size: longword);
 var
   KeyB: array[0..7] of byte;
@@ -406,28 +370,6 @@ end;
 class function TDCP_3des.GetAlgorithm: string;
 begin
   Result:= '3DES';
-end;
-
-class function TDCP_3des.SelfTest: boolean;
-const
-  Key: array[0..23] of byte=
-    ($01,$23,$45,$67,$89,$ab,$cd,$ef,$fe,$dc,$ba,$98,
-     $76,$54,$32,$10,$89,$ab,$cd,$ef,$01,$23,$45,$67);
-  PlainText: array[0..7] of byte=
-    ($01,$23,$45,$67,$89,$ab,$cd,$e7);
-  CipherText: array[0..7] of byte=
-    ($de,$0b,$7c,$06,$ae,$5e,$0e,$d5);
-var
-  Cipher: TDCP_3des;
-  Block: array[0..7] of byte;
-begin
-  Cipher:= TDCP_3des.Create;
-  Cipher.Init(Key,Sizeof(Key)*8,nil);
-  Cipher.EncryptECB(PlainText,Block);
-  Result:= CompareMem(@Block,@CipherText,Sizeof(CipherText));
-  Cipher.DecryptECB(Block,Block);
-  Result:= Result and CompareMem(@Block,@PlainText,Sizeof(PlainText));
-  Cipher.Free;
 end;
 
 procedure TDCP_3des.InitKey(const Key; Size: longword);

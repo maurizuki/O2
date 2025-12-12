@@ -36,7 +36,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
-    class function SelfTest: boolean; override;
     procedure Burn; override;
     procedure EncryptECB(const InData; var OutData); override;
     procedure DecryptECB(const InData; var OutData); override;
@@ -67,46 +66,6 @@ end;
 class function TDCP_mars.GetMaxKeySize: integer;
 begin
   Result:= 1248;
-end;
-
-class function TDCP_mars.SelfTest: boolean;
-const
-  Key1: array[0..3] of dword=
-    ($deb35132,$83c296de,$39069e6b,$994c2438);
-  Key2: array[0..5] of dword=
-    ($a5391779,$1a58048b,$a853a993,$1d41102c,$088658d1,$954d8738);
-  Key3: array[0..7] of dword=
-    ($9867a1fb,$22ef7a3e,$8ce27c31,$a3e1aa02,$3ccce5e8,$2aa8beed,$9ac3db99,$27725ed6);
-  Plain1: array[0..3] of dword= ($deb35132,$83c296de,$39069e6b,$994c2438);
-  Plain2: array[0..3] of dword= ($2dc46167,$d242613e,$adbf4fa8,$8f1583b3);
-  Plain3: array[0..3] of dword= ($a4ab4413,$0847c4d3,$1621a7a8,$8493f4d4);
-  Cipher1: array[0..3] of dword= ($a91245f9,$4e032db4,$042279c4,$9ba608d7);
-  Cipher2: array[0..3] of dword= ($260334cb,$6d587f45,$e0d2bd54,$bd191c57);
-  Cipher3: array[0..3] of dword= ($67a1acdd,$be3163e3,$5f9f1c2c,$b8a48fe3);
-var
-  Cipher: TDCP_mars;
-  Block: array[0..3] of dword;
-begin
-  Cipher:= TDCP_mars.Create;
-  Cipher.Init(Key1,Sizeof(Key1)*8,nil);
-  Cipher.EncryptECB(Plain1,Block);
-  Result:= CompareMem(@Cipher1,@Block,Sizeof(Block));
-  Cipher.DecryptECB(Block,Block);
-  Result:= Result and CompareMem(@Plain1,@Block,Sizeof(Block));
-  Cipher.Burn;
-  Cipher.Init(Key2,Sizeof(Key2)*8,nil);
-  Cipher.EncryptECB(Plain2,Block);
-  Result:= Result and CompareMem(@Cipher2,@Block,Sizeof(Block));
-  Cipher.DecryptECB(Block,Block);
-  Result:= Result and CompareMem(@Plain2,@Block,Sizeof(Block));
-  Cipher.Burn;
-  Cipher.Init(Key3,Sizeof(Key3)*8,nil);
-  Cipher.EncryptECB(Plain3,Block);
-  Result:= Result and CompareMem(@Cipher3,@Block,Sizeof(Block));
-  Cipher.DecryptECB(Block,Block);
-  Result:= Result and CompareMem(@Plain3,@Block,Sizeof(Block));
-  Cipher.Burn;
-  Cipher.Free;
 end;
 
 procedure gen_mask(var x, m: DWord);

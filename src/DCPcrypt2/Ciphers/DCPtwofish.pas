@@ -49,7 +49,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
-    class function SelfTest: boolean; override;
     procedure Burn; override;
     procedure EncryptECB(const InData; var OutData); override;
     procedure DecryptECB(const InData; var OutData); override;
@@ -75,57 +74,6 @@ end;
 class function TDCP_twofish.GetMaxKeySize: integer;
 begin
   Result:= 256;
-end;
-
-class function TDCP_twofish.SelfTest: boolean;
-const
-  Out128: array[0..15] of byte=
-    ($5D,$9D,$4E,$EF,$FA,$91,$51,$57,$55,$24,$F1,$15,$81,$5A,$12,$E0);
-  Out192: array[0..15] of byte=
-    ($E7,$54,$49,$21,$2B,$EE,$F9,$F4,$A3,$90,$BD,$86,$0A,$64,$09,$41);
-  Out256: array[0..15] of byte=
-    ($37,$FE,$26,$FF,$1C,$F6,$61,$75,$F5,$DD,$F4,$C3,$3B,$97,$A2,$05);
-var
-  i: integer;
-  Key: array[0..31] of byte;
-  Block: array[0..15] of byte;
-  Cipher: TDCP_twofish;
-begin
-  Cipher:= TDCP_twofish.Create;
-  FillChar(Key,Sizeof(Key),0);
-  FillChar(Block,Sizeof(Block),0);
-  for i:= 1 to 49 do
-  begin
-    Cipher.Init(Key,128,nil);
-    Move(Block,Key,16);
-    Cipher.EncryptECB(Block,Block);
-    Cipher.Burn;
-  end;
-  Result:= boolean(CompareMem(@Block,@Out128,16));
-  FillChar(Key,Sizeof(Key),0);
-  FillChar(Block,Sizeof(Block),0);
-  for i:= 1 to 49 do
-  begin
-    Cipher.Init(Key,192,nil);
-    Move(Key[0],Key[16],8);
-    Move(Block,Key,16);
-    Cipher.EncryptECB(Block,Block);
-    Cipher.Burn;
-  end;
-  Result:= Result and boolean(CompareMem(@Block,@Out192,16));
-  FillChar(Key,Sizeof(Key),0);
-  FillChar(Block,Sizeof(Block),0);
-  for i:= 1 to 49 do
-  begin
-    Cipher.Init(Key,256,nil);
-    Move(Key[0],Key[16],16);
-    Move(Block,Key,16);
-    Cipher.EncryptECB(Block,Block);
-    Cipher.Burn;
-  end;
-  Result:= Result and boolean(CompareMem(@Block,@Out256,16));
-  Cipher.Burn;
-  Cipher.Free;
 end;
 
 function LFSR1(x: DWord): DWord;

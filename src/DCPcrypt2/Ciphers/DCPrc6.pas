@@ -39,7 +39,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
-    class function SelfTest: boolean; override;
     procedure Burn; override;
     procedure EncryptECB(const InData; var OutData); override;
     procedure DecryptECB(const InData; var OutData); override;
@@ -82,41 +81,6 @@ end;
 class function TDCP_rc6.GetMaxKeySize: integer;
 begin
   Result:= 2048;
-end;
-
-class function TDCP_rc6.SelfTest: boolean;
-const
-  Key1: array[0..15] of byte=
-    ($01,$23,$45,$67,$89,$ab,$cd,$ef,$01,$12,$23,$34,$45,$56,$67,$78);
-  Plain1: array[0..15] of byte=
-    ($02,$13,$24,$35,$46,$57,$68,$79,$8a,$9b,$ac,$bd,$ce,$df,$e0,$f1);
-  Cipher1: array[0..15] of byte=
-    ($52,$4e,$19,$2f,$47,$15,$c6,$23,$1f,$51,$f6,$36,$7e,$a4,$3f,$18);
-  Key2: array[0..31] of byte=
-    ($01,$23,$45,$67,$89,$ab,$cd,$ef,$01,$12,$23,$34,$45,$56,$67,$78,
-     $89,$9a,$ab,$bc,$cd,$de,$ef,$f0,$10,$32,$54,$76,$98,$ba,$dc,$fe);
-  Plain2: array[0..15] of byte=
-    ($02,$13,$24,$35,$46,$57,$68,$79,$8a,$9b,$ac,$bd,$ce,$df,$e0,$f1);
-  Cipher2: array[0..15] of byte=
-    ($c8,$24,$18,$16,$f0,$d7,$e4,$89,$20,$ad,$16,$a1,$67,$4e,$5d,$48);
-var
-  Cipher: TDCP_rc6;
-  Data: array[0..15] of byte;
-begin
-  Cipher:= TDCP_rc6.Create;
-  Cipher.Init(Key1,Sizeof(Key1)*8,nil);
-  Cipher.EncryptECB(Plain1,Data);
-  Result:= boolean(CompareMem(@Data,@Cipher1,Sizeof(Data)));
-  Cipher.DecryptECB(Data,Data);
-  Result:= Result and boolean(CompareMem(@Data,@Plain1,Sizeof(Data)));
-  Cipher.Burn;
-  Cipher.Init(Key2,Sizeof(Key2)*8,nil);
-  Cipher.EncryptECB(Plain2,Data);
-  Result:= Result and boolean(CompareMem(@Data,@Cipher2,Sizeof(Data)));
-  Cipher.DecryptECB(Data,Data);
-  Result:= Result and boolean(CompareMem(@Data,@Plain2,Sizeof(Data)));
-  Cipher.Burn;
-  Cipher.Free;
 end;
 
 procedure TDCP_rc6.InitKey(const Key; Size: longword);

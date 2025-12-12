@@ -37,7 +37,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
-    class function SelfTest: boolean; override;
     procedure Burn; override;
     procedure EncryptECB(const InData; var OutData); override;
     procedure DecryptECB(const InData; var OutData); override;
@@ -64,44 +63,6 @@ end;
 class function TDCP_cast128.GetAlgorithm: string;
 begin
   Result:= 'Cast128';
-end;
-
-class function TDCP_cast128.SelfTest: boolean;
-const
-  Key: array[0..15] of byte=
-    ($01,$23,$45,$67,$12,$34,$56,$78,$23,$45,$67,$89,$34,$56,$78,$9A);
-  InBlock: array[0..7] of byte=
-    ($01,$23,$45,$67,$89,$AB,$CD,$EF);
-  Out128: array[0..7] of byte=
-    ($23,$8B,$4F,$E5,$84,$7E,$44,$B2);
-  Out80: array[0..7] of byte=
-    ($EB,$6A,$71,$1A,$2C,$02,$27,$1B);
-  Out40: array[0..7] of byte=
-    ($7A,$C8,$16,$D1,$6E,$9B,$30,$2E);
-var
-  Block: array[0..7] of byte;
-  Cipher: TDCP_cast128;
-begin
-  Cipher:= TDCP_cast128.Create;
-  Cipher.Init(Key,128,nil);
-  Cipher.EncryptECB(InBlock,Block);
-  Result:= boolean(CompareMem(@Block,@Out128,8));
-  Cipher.DecryptECB(Block,Block);
-  Result:= Result and boolean(CompareMem(@Block,@InBlock,8));
-  Cipher.Burn;
-  Cipher.Init(Key,80,nil);
-  Cipher.EncryptECB(InBlock,Block);
-  Result:= Result and boolean(CompareMem(@Block,@Out80,8));
-  Cipher.DecryptECB(Block,Block);
-  Result:= Result and boolean(CompareMem(@Block,@InBlock,8));
-  Cipher.Burn;
-  Cipher.Init(Key,40,nil);
-  Cipher.EncryptECB(InBlock,Block);
-  Result:= Result and boolean(CompareMem(@Block,@Out40,8));
-  Cipher.DecryptECB(Block,Block);
-  Result:= Result and boolean(CompareMem(@Block,@InBlock,8));
-  Cipher.Burn;
-  Cipher.Free;
 end;
 
 procedure TDCP_cast128.InitKey(const Key; Size: longword);

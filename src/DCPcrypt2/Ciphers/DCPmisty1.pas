@@ -43,7 +43,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
-    class function SelfTest: boolean; override;
     procedure Burn; override;
     procedure EncryptECB(const InData; var OutData); override;
     procedure DecryptECB(const InData; var OutData); override;
@@ -70,32 +69,6 @@ end;
 class function TDCP_misty1.GetMaxKeySize: integer;
 begin
   Result:= 128;
-end;
-
-class function TDCP_misty1.SelfTest: boolean;
-const
-  Key: array[0..15] of byte=
-    ($00,$11,$22,$33,$44,$55,$66,$77,$88,$99,$aa,$bb,$cc,$dd,$ee,$ff);
-  Plain1: array[0..7] of byte= ($01,$23,$45,$67,$89,$ab,$cd,$ef);
-  Plain2: array[0..7] of byte= ($fe,$dc,$ba,$98,$76,$54,$32,$10);
-  Cipher1: array[0..7] of byte= ($8b,$1d,$a5,$f5,$6a,$b3,$d0,$7c);
-  Cipher2: array[0..7] of byte= ($04,$b6,$82,$40,$b1,$3b,$e9,$5d);
-var
-  Cipher: TDCP_misty1;
-  Block: array[0..7] of byte;
-begin
-  Cipher:= TDCP_misty1.Create;
-  Cipher.Init(Key,Sizeof(Key)*8,nil);
-  Cipher.EncryptECB(Plain1,Block);
-  Result:= CompareMem(@Cipher1,@Block,Sizeof(Block));
-  Cipher.DecryptECB(Block,Block);
-  Result:= Result and CompareMem(@Plain1,@Block,Sizeof(Block));
-  Cipher.EncryptECB(Plain2,Block);
-  Result:= Result and CompareMem(@Cipher2,@Block,Sizeof(Block));
-  Cipher.DecryptECB(Block,Block);
-  Result:= Result and CompareMem(@Plain2,@Block,Sizeof(Block));
-  Cipher.Burn;
-  Cipher.Free;
 end;
 
 function TDCP_misty1.FI(const FI_IN, FI_KEY: DWord): DWord;

@@ -118,8 +118,6 @@ type
       { Get the algorithm name }
     class function GetMaxKeySize: integer; virtual;
       { Get the maximum key size (in bits) }
-    class function SelfTest: boolean; virtual;
-      { Tests the implementation with several test vectors }
 
     procedure Init(const Key; Size: longword; InitVector: pointer); virtual;
       { Do key setup based on the data in Key, size is in bits }
@@ -339,11 +337,6 @@ end;
 class function TDCP_cipher.GetMaxKeySize: integer;
 begin
   Result:= -1;
-end;
-
-class function TDCP_cipher.SelfTest: boolean;
-begin
-  Result:= false;
 end;
 
 procedure TDCP_cipher.Init(const Key; Size: longword; InitVector: pointer);

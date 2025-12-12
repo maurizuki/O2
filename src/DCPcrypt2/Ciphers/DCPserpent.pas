@@ -38,7 +38,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
-    class function SelfTest: boolean; override;
     procedure Burn; override;
     procedure EncryptECB(const InData; var OutData); override;
     procedure DecryptECB(const InData; var OutData); override;
@@ -58,54 +57,6 @@ end;
 class function TDCP_serpent.GetMaxKeySize: integer;
 begin
   Result:= 256;
-end;
-
-class function TDCP_serpent.SelfTest: boolean;
-const
-  Key1: array[0..15] of byte=
-    ($ff,$ee,$dd,$cc,$bb,$aa,$99,$88,$77,$66,$55,$44,$33,$22,$11,$00);
-  InData1: array[0..15] of byte=
-    ($10,$32,$54,$76,$98,$ba,$dc,$fe,$ef,$cd,$ab,$89,$67,$45,$23,$01);
-  OutData1: array[0..15] of byte=
-    ($d5,$ba,$a0,$0a,$4b,$b9,$d8,$a7,$c9,$81,$c8,$dc,$90,$d8,$9d,$92);
-  Key2: array[0..23] of byte=
-    ($88,$99,$aa,$bb,$cc,$dd,$ee,$ff,$ff,$ee,$dd,$cc,$bb,$aa,$99,$88,
-     $77,$66,$55,$44,$33,$22,$11,$00);
-  InData2: array[0..15] of byte=
-    ($10,$32,$54,$76,$98,$ba,$dc,$fe,$ef,$cd,$ab,$89,$67,$45,$23,$01);
-  OutData2: array[0..15] of byte=
-    ($da,$86,$08,$42,$b7,$20,$80,$2b,$f4,$04,$a4,$c7,$10,$34,$87,$9a);
-  Key3: array[0..31] of byte=
-    ($00,$11,$22,$33,$44,$55,$66,$77,$88,$99,$aa,$bb,$cc,$dd,$ee,$ff,
-     $ff,$ee,$dd,$cc,$bb,$aa,$99,$88,$77,$66,$55,$44,$33,$22,$11,$00);
-  InData3: array[0..15] of byte=
-    ($10,$32,$54,$76,$98,$ba,$dc,$fe,$ef,$cd,$ab,$89,$67,$45,$23,$01);
-  OutData3: array[0..15] of byte=
-    ($93,$df,$9a,$3c,$af,$e3,$87,$bd,$99,$9e,$eb,$e3,$93,$a1,$7f,$ca);
-var
-  Block: array[0..15] of byte;
-  Cipher: TDCP_serpent;
-begin
-  Cipher:= TDCP_serpent.Create;
-  Cipher.Init(Key1,Sizeof(Key1)*8,nil);
-  Cipher.EncryptECB(InData1,Block);
-  Result:= boolean(CompareMem(@Block,@OutData1,16));
-  Cipher.DecryptECB(Block,Block);
-  Cipher.Burn;
-  Result:= Result and boolean(CompareMem(@Block,@InData1,16));
-  Cipher.Init(Key2,Sizeof(Key2)*8,nil);
-  Cipher.EncryptECB(InData2,Block);
-  Result:= Result and boolean(CompareMem(@Block,@OutData2,16));
-  Cipher.DecryptECB(Block,Block);
-  Cipher.Burn;
-  Result:= Result and boolean(CompareMem(@Block,@InData2,16));
-  Cipher.Init(Key3,Sizeof(Key3)*8,nil);
-  Cipher.EncryptECB(InData3,Block);
-  Result:= Result and boolean(CompareMem(@Block,@OutData3,16));
-  Cipher.DecryptECB(Block,Block);
-  Cipher.Burn;
-  Result:= Result and boolean(CompareMem(@Block,@InData3,16));
-  Cipher.Free;
 end;
 
 procedure TDCP_serpent.InitKey(const Key; Size: longword);

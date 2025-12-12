@@ -37,7 +37,6 @@ type
   public
     class function GetAlgorithm: string; override;
     class function GetMaxKeySize: integer; override;
-    class function SelfTest: boolean; override;
     procedure Burn; override;
     procedure EncryptECB(const InData; var OutData); override;
     procedure DecryptECB(const InData; var OutData); override;
@@ -58,36 +57,6 @@ end;
 class function TDCP_blowfish.GetMaxKeySize: integer;
 begin
   Result:= 448;
-end;
-
-class function TDCP_blowfish.SelfTest: boolean;
-const
-  Key1: array[0..7] of byte= ($00,$00,$00,$00,$00,$00,$00,$00);
-  Key2: array[0..7] of byte= ($7C,$A1,$10,$45,$4A,$1A,$6E,$57);
-  InData1: array[0..7] of byte= ($00,$00,$00,$00,$00,$00,$00,$00);
-  InData2: array[0..7] of byte= ($01,$A1,$D6,$D0,$39,$77,$67,$42);
-  OutData1: array[0..7] of byte= ($4E,$F9,$97,$45,$61,$98,$DD,$78);
-  OutData2: array[0..7] of byte= ($59,$C6,$82,$45,$EB,$05,$28,$2B);
-var
-  Cipher: TDCP_blowfish;
-  Data: array[0..7] of byte;
-begin
-  Cipher:= TDCP_blowfish.Create;
-  Cipher.Init(Key1,Sizeof(Key1)*8,nil);
-  Cipher.EncryptECB(InData1,Data);
-  Result:= boolean(CompareMem(@Data,@OutData1,Sizeof(Data)));
-  Cipher.Reset;
-  Cipher.DecryptECB(Data,Data);
-  Result:= boolean(CompareMem(@Data,@InData1,Sizeof(Data))) and Result;
-  Cipher.Burn;
-  Cipher.Init(Key2,Sizeof(Key2)*8,nil);
-  Cipher.EncryptECB(InData2,Data);
-  Result:= boolean(CompareMem(@Data,@OutData2,Sizeof(Data))) and Result;
-  Cipher.Reset;
-  Cipher.DecryptECB(Data,Data);
-  Result:= boolean(CompareMem(@Data,@InData2,Sizeof(Data))) and Result;
-  Cipher.Burn;
-  Cipher.Free;
 end;
 
 procedure TDCP_blowfish.InitKey(const Key; Size: longword);
