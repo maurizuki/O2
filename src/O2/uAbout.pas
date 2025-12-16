@@ -78,19 +78,23 @@ begin
       + DateToISO8601(PImageNtHeaders(HInstance
       + Cardinal(PImageDosHeader(HInstance)^._lfanew))^.FileHeader.TimeDateStamp
       / SecsPerDay + UnixDateDelta));
+    Memo1.Lines.Add('');
     Memo1.Lines.Add(Format('Compiler version: %d.%d', [Trunc(CompilerVersion),
       Trunc(Frac(CompilerVersion) * 10)]));
     Memo1.Lines.Add('');
     Memo1.Lines.Add(Format('JCL version: %d.%d.%d.%d', [JclVersionMajor,
       JclVersionMinor, JclVersionRelease, JclVersionBuild]));
+    Memo1.Lines.Add('');
     Memo1.Lines.Add(Format('JVCL version: %d.%d.%d.%d', [JVCLVersionMajor,
       JVCLVersionMinor, JVCLVersionRelease, JVCLVersionBuild]));
     Memo1.Lines.Add('');
     Memo1.Lines.Add(Format('O2 file version: %d.%d', [O2FileVersion.Hi,
       O2FileVersion.Lo]));
+    Memo1.Lines.Add('');
     Memo1.Lines.Add('O2 file identifier: ' + GUIDToString(O2FileGUID));
     Memo1.Lines.Add('');
     Memo1.Lines.Add('EXE path: ' + Application.ExeName);
+    Memo1.Lines.Add('');
     Memo1.Lines.Add('Settings path: ' + FAppFiles.FullPaths[IdSettings]);
     Memo1.Lines.EndUpdate;
   end;
