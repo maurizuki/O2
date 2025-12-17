@@ -61,7 +61,7 @@ const
   LauncherFile = 'O2Portable.exe';
   SettingsFile = 'O2.xml';
   HTMLHelpFile = 'help.html';
-  LicenseFile = 'License.rtf';
+  LicenseFile = 'License.txt';
   ReadMeFile = 'ReadMe.rtf';
   WebView2LoaderFile = 'WebView2Loader.dll';
 

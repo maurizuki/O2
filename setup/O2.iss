@@ -12,7 +12,7 @@
 
 #define AppExeFile "o2.exe"
 #define LauncherFile "O2Portable.exe"
-#define LicenseFile "License.rtf"
+#define LicenseFile "License.txt"
 #define ReadmeFile "ReadMe.rtf"
 #define WebView2LoaderFile "WebView2Loader.dll"
 
@@ -90,7 +90,7 @@ Filename: {app}\{#AppExeFile}; WorkingDir: {app}; Tasks: launchprogram; Flags: n
 
 [InstallDelete]
 Name: {app}\ReadMe.txt; Type: files
-Name: {app}\License.txt; Type: files
+Name: {app}\License.rtf; Type: files
 Name: {app}\MPL-1.1.txt; Type: files
 Name: {app}\upd8r.exe; Type: files
 Name: {app}\upd8r.xml; Type: files
