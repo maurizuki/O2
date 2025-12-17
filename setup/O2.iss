@@ -34,6 +34,7 @@ WizardSmallImageFile={#SetupDir}\WizardSmallImage.bmp
 ChangesAssociations=true
 WizardStyle=modern
 UninstallDisplayIcon={app}\{#AppExeFile},0
+UsedUserAreasWarning=no
 
 [Types]
 Name: full; Description: Full installation
