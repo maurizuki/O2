@@ -62,7 +62,7 @@ const
   SettingsFile = 'O2.xml';
   HTMLHelpFile = 'help.html';
   LicenseFile = 'License.txt';
-  ReadMeFile = 'ReadMe.rtf';
+  ReadMeFile = 'ReadMe.txt';
   WebView2LoaderFile = 'WebView2Loader.dll';
 
   LocalSettingsPath = 'O2';

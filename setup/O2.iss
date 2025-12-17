@@ -6,14 +6,14 @@
 #define AppExeDir "src\O2"
 #define LauncherDir "src\Launcher"
 #define LicenseDir "setup"
-#define ReadmeDir "setup"
+#define ReadmeDir "src\O2"
 #define ExamplesDir "setup"
 #define StylesDir "src\O2\Styles"
 
 #define AppExeFile "o2.exe"
 #define LauncherFile "O2Portable.exe"
 #define LicenseFile "License.txt"
-#define ReadmeFile "ReadMe.rtf"
+#define ReadmeFile "ReadMe.txt"
 #define WebView2LoaderFile "WebView2Loader.dll"
 
 [Setup]
@@ -89,7 +89,7 @@ Name: launchprogram; Description: {cm:LaunchProgram,{#AppName}}
 Filename: {app}\{#AppExeFile}; WorkingDir: {app}; Tasks: launchprogram; Flags: nowait
 
 [InstallDelete]
-Name: {app}\ReadMe.txt; Type: files
+Name: {app}\ReadMe.rtf; Type: files
 Name: {app}\License.rtf; Type: files
 Name: {app}\MPL-1.1.txt; Type: files
 Name: {app}\upd8r.exe; Type: files

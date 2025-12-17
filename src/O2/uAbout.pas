@@ -46,7 +46,7 @@ var
 implementation
 
 uses
-  DateUtils, JclBase, JVCLVer, uGlobal, uShellUtils, uRTFViewer, uO2Defs;
+  DateUtils, JclBase, JVCLVer, uGlobal, uShellUtils, uO2Defs;
 
 {$R *.dfm}
 
@@ -107,7 +107,7 @@ end;
 
 procedure TAboutForm.btReadMeClick(Sender: TObject);
 begin
-  TRTFViewer.Execute(Application, FAppFiles.FullPaths[IdReadMe]);
+  ShellOpen(FAppFiles.FullPaths[IdReadMe]);
 end;
 
 end.
