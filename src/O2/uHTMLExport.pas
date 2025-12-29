@@ -130,7 +130,8 @@ begin
     DefaultStyle.MacroByName('link-color').Value := '#0d6efd';
     DefaultStyle.MacroByName('border-color').Value := '#9ec5fe';
     DefaultStyle.MacroByName('alt-bg-color').Value := '#f4f8ff';
-    BlueWaterStyle.Tag := FModel.AddStyle('BlueWater', DefaultStyle.ExpandMacros);
+    BlueWaterStyle.Tag := FModel.AddStyle('BlueWater',
+      DefaultStyle.ExpandMacros);
 
     DefaultStyle.MacroByName('color').Value := '#000';
     DefaultStyle.MacroByName('background-color').Value := '#fff';
@@ -158,6 +159,7 @@ begin
     begin
       AAction := TAction.Create(Self);
       AAction.Caption := ChangeFileExt(ExtractFileName(FileName), '');
+      AAction.Category := BlueWaterStyle.Category;
       AAction.GroupIndex := BlueWaterStyle.GroupIndex;
       AAction.OnExecute := StyleExecute;
       AAction.OnUpdate := StyleUpdate;
@@ -173,7 +175,13 @@ begin
       Inc(I);
     end;
 
-    BlueWaterStyle.Execute;
+    if not ActionList.EnumByCategory(
+      procedure(const Action: TContainedAction; var Done: boolean)
+      begin
+        Done := Action.Tag = FModel.StyleIndex;
+        if Done then Action.Execute;
+      end, BlueWaterStyle.Category, False) then
+      BlueWaterStyle.Execute;
   end;
 end;
 

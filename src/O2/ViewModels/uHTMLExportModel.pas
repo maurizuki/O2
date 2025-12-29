@@ -179,6 +179,9 @@ begin
   StyleRec.Name := Name;
   StyleRec.Style := Style;
   Result := FStyles.Add(StyleRec);
+
+  if FStorage.ReadString(IdHTMLExportStyle) = Name then
+    FStyleIndex := Result;
 end;
 
 function THTMLExportModel.ExportToHTML(Preview: Boolean): string;
