@@ -22,6 +22,11 @@ uses
   uAppFiles, uUtils;
 
 type
+  TStyleRec = record
+    Name: string;
+    Style: string;
+  end;
+
   THTMLExportModel = class(TInterfacedObject, IHTMLExport)
   private
     FTitle: string;
@@ -36,7 +41,7 @@ type
     FIncludeRelations: Boolean;
     FIncludePasswords: Boolean;
     FStyleIndex: Integer;
-    FStyles: TList<string>;
+    FStyles: TList<TStyleRec>;
     FBuilder: TStringBuilder;
     function GetIncludeIndex: Boolean;
     function GetIncludeTags: Boolean;
@@ -64,7 +69,7 @@ type
     procedure StoreSettings;
 
     function TryGetStyleFileName(Index: Integer; out FileName: string): Boolean;
-    function AddStyle(const Style: string): Integer;
+    function AddStyle(const Name, Style: string): Integer;
 
     function ExportToHTML(Preview: Boolean): string; overload;
     procedure ExportToHTML(const FileName: string); overload;
@@ -106,7 +111,7 @@ begin
   FIncludeRelations := FStorage.ReadBoolean(IdHTMLExportIncludeRelations, True);
   FIncludePasswords := FStorage.ReadBoolean(IdHTMLExportIncludePasswords, True);
   FStyleIndex := 0;
-  FStyles := TList<string>.Create;
+  FStyles := TList<TStyleRec>.Create;
   FBuilder := TStringBuilder.Create;
 end;
 
@@ -154,6 +159,7 @@ begin
   FStorage.WriteBoolean(IdHTMLExportIncludeNotes, FIncludeNotes);
   FStorage.WriteBoolean(IdHTMLExportIncludeRelations, FIncludeRelations);
   FStorage.WriteBoolean(IdHTMLExportIncludePasswords, FIncludePasswords);
+  FStorage.WriteString(IdHTMLExportStyle, FStyles[FStyleIndex].Name);
 end;
 
 function THTMLExportModel.TryGetStyleFileName(Index: Integer;
@@ -166,9 +172,13 @@ begin
   if Result then FileName := FAppFiles.FullPaths[Id];
 end;
 
-function THTMLExportModel.AddStyle(const Style: string): Integer;
+function THTMLExportModel.AddStyle(const Name, Style: string): Integer;
+var
+  StyleRec: TStyleRec;
 begin
-  Result := FStyles.Add(Style);
+  StyleRec.Name := Name;
+  StyleRec.Style := Style;
+  Result := FStyles.Add(StyleRec);
 end;
 
 function THTMLExportModel.ExportToHTML(Preview: Boolean): string;
@@ -189,7 +199,7 @@ begin
       [FO2File.Description])
     .AppendFormat('<meta name="author" content="%s" />', [FO2File.Author])
     .AppendLine('<style>')
-    .AppendLine(FStyles[FStyleIndex])
+    .AppendLine(FStyles[FStyleIndex].Style)
     .AppendLine('</style>')
     .Append('<title>').AppendHTML(FTitle).AppendLine('</title>')
     .AppendLine('</head>')

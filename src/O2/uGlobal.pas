@@ -114,6 +114,7 @@ const
   IdHTMLExportIncludeNotes = 'ExportToHTML.Include.Notes';
   IdHTMLExportIncludeRelations = 'ExportToHTML.Include.Relations';
   IdHTMLExportIncludePasswords = 'ExportToHTML.Include.Passwords';
+  IdHTMLExportStyle = 'ExportToHTML.Style';
   IdPrintIncludeTags = 'Print.Include.Tags';
   IdPrintIncludeNotes = 'Print.Include.Notes';
   IdPrintIncludeRelations = 'Print.Include.Relations';

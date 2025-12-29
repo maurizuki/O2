@@ -130,28 +130,28 @@ begin
     DefaultStyle.MacroByName('link-color').Value := '#0d6efd';
     DefaultStyle.MacroByName('border-color').Value := '#9ec5fe';
     DefaultStyle.MacroByName('alt-bg-color').Value := '#f4f8ff';
-    BlueWaterStyle.Tag := FModel.AddStyle(DefaultStyle.ExpandMacros);
+    BlueWaterStyle.Tag := FModel.AddStyle('BlueWater', DefaultStyle.ExpandMacros);
 
     DefaultStyle.MacroByName('color').Value := '#000';
     DefaultStyle.MacroByName('background-color').Value := '#fff';
     DefaultStyle.MacroByName('link-color').Value := '#a1952e';
     DefaultStyle.MacroByName('border-color').Value := '#d5e3c0';
     DefaultStyle.MacroByName('alt-bg-color').Value := '#f1f6ea';
-    MatchaStyle.Tag := FModel.AddStyle(DefaultStyle.ExpandMacros);
+    MatchaStyle.Tag := FModel.AddStyle('Matcha', DefaultStyle.ExpandMacros);
 
     DefaultStyle.MacroByName('color').Value := '#000';
     DefaultStyle.MacroByName('background-color').Value := '#fff';
     DefaultStyle.MacroByName('link-color').Value := '#c3829e';
     DefaultStyle.MacroByName('border-color').Value := '#fcc9b9';
     DefaultStyle.MacroByName('alt-bg-color').Value := '#fff5f2';
-    SakuraStyle.Tag := FModel.AddStyle(DefaultStyle.ExpandMacros);
+    SakuraStyle.Tag := FModel.AddStyle('Sakura', DefaultStyle.ExpandMacros);
 
     DefaultStyle.MacroByName('color').Value := '#f0f6fc';
     DefaultStyle.MacroByName('background-color').Value := '#0d1117';
     DefaultStyle.MacroByName('link-color').Value := '#aaeeff';
     DefaultStyle.MacroByName('border-color').Value := '#3d444d';
     DefaultStyle.MacroByName('alt-bg-color').Value := '#151b23';
-    DarkStyle.Tag := FModel.AddStyle(DefaultStyle.ExpandMacros);
+    DarkStyle.Tag := FModel.AddStyle('Dark', DefaultStyle.ExpandMacros);
 
     I := 0;
     while FModel.TryGetStyleFileName(I, FileName) do
@@ -167,7 +167,8 @@ begin
       AMenuItem.Action := AAction;
       StyleMenu.Items.Add(AMenuItem);
 
-      AAction.Tag := FModel.AddStyle(TFile.ReadAllText(FileName));
+      AAction.Tag := FModel.AddStyle(ExtractFileName(FileName),
+        TFile.ReadAllText(FileName));
 
       Inc(I);
     end;

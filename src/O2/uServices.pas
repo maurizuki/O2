@@ -371,7 +371,7 @@ type
     procedure StoreSettings;
 
     function TryGetStyleFileName(Index: Integer; out FileName: string): Boolean;
-    function AddStyle(const Style: string): Integer;
+    function AddStyle(const Name, Style: string): Integer;
 
     function ExportToHTML(Preview: Boolean): string; overload;
     procedure ExportToHTML(const FileName: string); overload;
