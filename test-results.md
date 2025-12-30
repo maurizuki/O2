@@ -2,7 +2,7 @@
 
 Total    |Failures |Errors   |Ignored  |Date
 ---------|---------|---------|---------|-----------------------------
-819      |0        |0        |0        |2025-12-17T11:52:54.552+01:00
+825      |0        |0        |0        |2025-12-30T10:21:43.739+01:00
 
 ## Namespace Testing
 
@@ -361,6 +361,9 @@ LoadIncludeRelations.False|Pass|✔
 LoadIncludeRelations.True|Pass|✔
 LoadIncludeTags.False|Pass|✔
 LoadIncludeTags.True|Pass|✔
+LoadStyle.First|Pass|✔
+LoadStyle.Second|Pass|✔
+LoadStyle.Third|Pass|✔
 SaveIncludeIndex.False|Pass|✔
 SaveIncludeIndex.True|Pass|✔
 SaveIncludeNotes.False|Pass|✔
@@ -371,6 +374,9 @@ SaveIncludeRelations.False|Pass|✔
 SaveIncludeRelations.True|Pass|✔
 SaveIncludeTags.False|Pass|✔
 SaveIncludeTags.True|Pass|✔
+SaveStyle.First|Pass|✔
+SaveStyle.Second|Pass|✔
+SaveStyle.Third|Pass|✔
 
 ## Namespace ObjectModels
 
