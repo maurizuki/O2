@@ -159,7 +159,9 @@ begin
   FStorage.WriteBoolean(IdHTMLExportIncludeNotes, FIncludeNotes);
   FStorage.WriteBoolean(IdHTMLExportIncludeRelations, FIncludeRelations);
   FStorage.WriteBoolean(IdHTMLExportIncludePasswords, FIncludePasswords);
-  FStorage.WriteString(IdHTMLExportStyle, FStyles[FStyleIndex].Name);
+
+  if FStyles.Count > 0 then
+    FStorage.WriteString(IdHTMLExportStyle, FStyles[FStyleIndex].Name);
 end;
 
 function THTMLExportModel.TryGetStyleFileName(Index: Integer;
