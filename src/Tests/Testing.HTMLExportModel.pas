@@ -44,6 +44,12 @@ type
     procedure LoadIncludePasswords(Value: Boolean);
 
     [Test]
+    [TestCase('First' , 'First,0')]
+    [TestCase('Second', 'Second,1')]
+    [TestCase('Third' , 'Third,2')]
+    procedure LoadStyle(Value: string; StyleIndex: Integer);
+
+    [Test]
     [TestCase('False', 'False')]
     [TestCase('True' , 'True')]
     procedure SaveIncludeIndex(Value: Boolean);
@@ -67,6 +73,12 @@ type
     [TestCase('False', 'False')]
     [TestCase('True' , 'True')]
     procedure SaveIncludePasswords(Value: Boolean);
+
+    [Test]
+    [TestCase('First' , '0,First')]
+    [TestCase('Second', '1,Second')]
+    [TestCase('Third' , '2,Third')]
+    procedure SaveStyle(StyleIndex: Integer; Value: string);
   end;
 
 implementation
@@ -156,6 +168,24 @@ begin
   Assert.AreEqual(Value, Model.IncludePasswords);
 end;
 
+procedure THTMLExportModelTests.LoadStyle(Value: string; StyleIndex: Integer);
+var
+  Storage: IStorage;
+  Model: IHTMLExport;
+begin
+  Storage := TXmlStorage.Create;
+  Storage.WriteString('ExportToHTML.Style', Value);
+
+  Model := THTMLExportModel.Create(FO2File, FO2File.Objects.ToEnumerable,
+    FAppVersionInfo, TAppFiles.Create, Storage);
+
+  Model.AddStyle('First', '');
+  Model.AddStyle('Second', '');
+  Model.AddStyle('Third', '');
+
+  Assert.AreEqual(StyleIndex, Model.StyleIndex);
+end;
+
 procedure THTMLExportModelTests.SaveIncludeIndex(Value: Boolean);
 var
   Storage: IStorage;
@@ -234,6 +264,26 @@ begin
   Model.StoreSettings;
 
   Assert.AreEqual(Value, Storage.ReadBoolean('ExportToHTML.Include.Passwords'));
+end;
+
+procedure THTMLExportModelTests.SaveStyle(StyleIndex: Integer; Value: string);
+var
+  Storage: IStorage;
+  Model: IHTMLExport;
+begin
+  Storage := TXmlStorage.Create;
+
+  Model := THTMLExportModel.Create(FO2File, FO2File.Objects.ToEnumerable,
+    FAppVersionInfo, TAppFiles.Create, Storage);
+
+  Model.AddStyle('First', '');
+  Model.AddStyle('Second', '');
+  Model.AddStyle('Third', '');
+
+  Model.StyleIndex := StyleIndex;
+  Model.StoreSettings;
+
+  Assert.AreEqual(Value, Storage.ReadString('ExportToHTML.Style'));
 end;
 
 end.

@@ -27,8 +27,6 @@ object HTMLExport: THTMLExport
     Align = alClient
     TabOrder = 0
     OnCreateWebViewCompleted = WebBrowserCreateWebViewCompleted
-    ExplicitWidth = 410
-    ExplicitHeight = 242
   end
   object ToolBar: TToolBar
     Left = 0
@@ -51,7 +49,6 @@ object HTMLExport: THTMLExport
     TabOrder = 1
     Transparent = True
     Wrapable = False
-    ExplicitWidth = 418
     object ToolButton1: TToolButton
       Left = 0
       Top = 0
@@ -91,35 +88,35 @@ object HTMLExport: THTMLExport
       OnUpdate = ActionUpdate
     end
     object IncludeIndex: TAction
-      Category = 'Options'
+      Category = 'Options.Item'
       Caption = 'Include index'
       Hint = 'Include index'
       OnExecute = IncludeIndexExecute
       OnUpdate = IncludeIndexUpdate
     end
     object IncludeTags: TAction
-      Category = 'Options'
+      Category = 'Options.Item'
       Caption = 'Include tags'
       Hint = 'Include tags'
       OnExecute = IncludeTagsExecute
       OnUpdate = IncludeTagsUpdate
     end
     object IncludeNotes: TAction
-      Category = 'Options'
+      Category = 'Options.Item'
       Caption = 'Include notes'
       Hint = 'Include notes'
       OnExecute = IncludeNotesExecute
       OnUpdate = IncludeNotesUpdate
     end
     object IncludeRelations: TAction
-      Category = 'Options'
+      Category = 'Options.Item'
       Caption = 'Include relations'
       Hint = 'Include relations'
       OnExecute = IncludeRelationsExecute
       OnUpdate = IncludeRelationsUpdate
     end
     object IncludePasswords: TAction
-      Category = 'Options'
+      Category = 'Options.Item'
       Caption = 'Include passwords'
       Hint = 'Include passwords'
       OnExecute = IncludePasswordsExecute
@@ -133,7 +130,7 @@ object HTMLExport: THTMLExport
       OnUpdate = ActionUpdate
     end
     object BlueWaterStyle: TAction
-      Category = 'Style'
+      Category = 'Style.Item'
       Caption = 'Blue Water'
       GroupIndex = 1
       OnExecute = StyleExecute
@@ -141,7 +138,7 @@ object HTMLExport: THTMLExport
     end
     object MatchaStyle: TAction
       Tag = 1
-      Category = 'Style'
+      Category = 'Style.Item'
       Caption = 'Matcha'
       GroupIndex = 1
       OnExecute = StyleExecute
@@ -149,7 +146,7 @@ object HTMLExport: THTMLExport
     end
     object SakuraStyle: TAction
       Tag = 2
-      Category = 'Style'
+      Category = 'Style.Item'
       Caption = 'Sakura'
       GroupIndex = 1
       OnExecute = StyleExecute
@@ -157,7 +154,7 @@ object HTMLExport: THTMLExport
     end
     object DarkStyle: TAction
       Tag = 3
-      Category = 'Style'
+      Category = 'Style.Item'
       Caption = 'Call of the Night'
       GroupIndex = 1
       OnExecute = StyleExecute
