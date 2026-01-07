@@ -1786,14 +1786,13 @@ var
 begin
   SB := TStringBuilder.Create;
   try
-    SB.Append('<!DOCTYPE html><html>')
-      .AppendContextMenuBlockerScript
-      .Append('<body style="color: #000; background-color: #fff; font-size: 1rem; font-family: ');
+    SB.Append('<!DOCTYPE html><html>').AppendContextMenuBlockerScript.Append(
+      '<body style="color: #000; background-color: #fff; font-size: 1rem;');
 
     if HasSelectedObject and (SelectedObject.TextType = ttCommonMark) then
-      SB.Append('sans-serif;">')
+      SB.Append('font-family: sans-serif;">')
     else
-      SB.Append('monospace;">');
+      SB.Append('font-family: monospace; white-space: pre-wrap;">');
 
     if HasSelectedObject then
       SB.AppendHTML(SelectedObject.Text, SelectedObject.TextType);
