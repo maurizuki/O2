@@ -30,6 +30,10 @@ winget install --id=maurizuki.O2 -e
 
 ## Change log
 
+### Version 3.3
+- *Export to HTML*: the style selection is now stored in the settings and restored every time the preview is opened.
+- Rich Text Format files (License.rtf, ReadMe.rtf) replaced with plain text versions.
+
 ### Version 3.2
 - Multi-language support (a.k.a. Italian translation) removed. The feature is deprecated and no longer supported in Delphi 12.
 - Import improvement: title, description and author are now imported.
@@ -49,16 +53,6 @@ winget install --id=maurizuki.O2 -e
 - *Export to HTML*: export preview is now displayed using an Edge-based control instead of an Internet Explorer-based one.
 - *Object properties* dialog: simplified tags management.
 - *Object properties* dialog: the password strength indicator is now automatically displayed for fields that matches rules of type *Password*.
-
-### Version 2.4
-- New feature: support for [Markdown syntax](https://commonmark.org/) in notes text. Text and paragraph styles are applied to objects notes in the notes view and in the HTML export.
-- *About* box: the release notes are now displayed through an internal viewer.
-
-### Version 2.3
-- *Encryption* dialog: added a color-based indication of the strength of the password typed, with some useful suggestions on how to strengthen it.
-- *Object properties* dialog: added an option to enable a color based indication of the strength of the password typed in the field value, with some useful suggestions on how to strengthen it displayed hovering the indicator.
-- Main window, objects view and fields view: objects and fields highlight indicates the strength of the passwords if the fields match rules of type *Password* with the new option *Display password strength*.
-- Developed with Embarcadero® Delphi 11.
 
 ## Acknowledgements
 
