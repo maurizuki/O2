@@ -14,12 +14,11 @@ O2 is open source software, released under the [Mozilla Public License Version 2
 
 In order to start to use O2 - after installing it on your computer - see the examples in the *Examples* directory:
 
-- __AddressBook.o2__ shows how to use the *rules* of type *E-mail address*, *Highlight*, *Internet link*, *Recurrence* to organize contact informations and recurrences of your relatives, friends, co-workers. The example also shows how to use the *relations* to connect husbands with wives, brothers with sisters, companies with employees.
-- __PasswordWallet.o2__ shows how to use the *rule* of type *Password* to create a safe place to store the credentials of your accounts. The password to open the file is *password*.
+- **AddressBook.o2** shows how to use the *rules* of type *E-mail address*, *Highlight*, *Internet link*, *Recurrence* to organize contact informations and recurrences of your relatives, friends, co-workers. The example also shows how to use the *relations* to connect husbands with wives, brothers with sisters, companies with employees.
+- **PasswordWallet.o2** shows how to use the *rule* of type *Password* to create a safe place to store the credentials of your accounts. The password to open the file is *password*.
 
-### System requirements
-
-To work properly, O2 needs Microsoft Edge WebView2 Runtime. If it is not already installed, download it from the official [webpage](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) (the evergreen version is recommended).
+> [!IMPORTANT]
+> To work properly, O2 needs *Microsoft Edge WebView2 Runtime*. If it is not already installed, download it from the official [webpage](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) (the evergreen version is recommended).
 
 ### Install with Windows Package Manager
 
@@ -58,28 +57,28 @@ winget install --id=maurizuki.O2 -e
 
 The development and deployment of O2 were made possible thanks to the following tools:  
 
-__DCPCrypt Cryptographic Component Library__  
+**DCPCrypt Cryptographic Component Library**  
 Copyright (C) 1999-2009 David Barton.  
 
-__delphi-markdown__  
+**delphi-markdown**  
 Copyright (C) 2011+ Health Intersections Pty Ltd.  
 
-__Inno Setup__  
+**Inno Setup**  
 Copyright (C) 1997-2025 Jordan Russell.  
 Portions Copyright (C) 2000-2025 Martijn Laan.  
 
-__JEDI Visual Component Library__  
+**JEDI Visual Component Library**  
 Copyright (C) 1999-2025 the Project JEDI community.  
 
-__Spring4D__  
+**Spring4D**  
 Copyright (C) 2009-2025 Spring4D Team.  
 
-__SZCRC32 unit__  
+**SZCRC32 unit**  
 Copyright (C) 2004 Sasa Zeman.  
 
-__UPX - The Ultimate Packer for eXecutables__  
+**UPX - The Ultimate Packer for eXecutables**  
 Copyright (C) 1996-2025 Markus Oberhumer, Laszlo Molnar, John Reiser.  
 
-__zxcvbn__  
+**zxcvbn**  
 Copyright (C) 2012-2016 Dan Wheeler and Dropbox, Inc.  
 Delphi porting by TCardinal.
