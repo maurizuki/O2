@@ -12,13 +12,13 @@ O2 is open source software, released under the [Mozilla Public License Version 2
 
 ## Getting started
 
-In order to start to use O2 - after installing it on your computer - see the examples in the *Examples* directory:
+> [!IMPORTANT]
+> To work properly, O2 needs *Microsoft Edge WebView2 Runtime*. If it is not already installed, download it from the official [webpage](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) (the evergreen version is recommended).
+
+In order to start to use O2 - after installing it on your computer - see the example files in the *Examples* directory:
 
 - **AddressBook.o2** shows how to use the *rules* of type *E-mail address*, *Highlight*, *Internet link*, *Recurrence* to organize contact informations and recurrences of your relatives, friends, co-workers. The example also shows how to use the *relations* to connect husbands with wives, brothers with sisters, companies with employees.
 - **PasswordWallet.o2** shows how to use the *rule* of type *Password* to create a safe place to store the credentials of your accounts. The password to open the file is *password*.
-
-> [!IMPORTANT]
-> To work properly, O2 needs *Microsoft Edge WebView2 Runtime*. If it is not already installed, download it from the official [webpage](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) (the evergreen version is recommended).
 
 ### Install with Windows Package Manager
 
