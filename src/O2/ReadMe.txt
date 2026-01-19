@@ -30,6 +30,9 @@ For further informations see: https://github.com/maurizuki/O2
 
 2. CHANGE LOG
 
+Version 3.3.1
+- Fix missing leading white-spaces in object notes view.
+
 Version 3.3
 - Export to HTML: the style selection is now stored in the settings and
   restored every time the preview is opened.

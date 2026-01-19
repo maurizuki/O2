@@ -29,6 +29,9 @@ winget install --id=maurizuki.O2 -e
 
 ## Change log
 
+### Version 3.3.1
+- Fix missing leading white-spaces in *object notes* view.
+
 ### Version 3.3
 - *Export to HTML*: the style selection is now stored in the settings and restored every time the preview is opened.
 - Rich Text Format files (License.rtf, ReadMe.rtf) replaced with plain text versions.

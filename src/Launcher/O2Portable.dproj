@@ -55,9 +55,10 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_MajorVer>3</VerInfo_MajorVer>
         <VerInfo_Locale>1033</VerInfo_Locale>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2 Portable;FileVersion=3.3.0.0;InternalName=AppLauncher;LegalCopyright=(C) 2004-2026 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=O2Portable.exe;ProductName=O2;ProductVersion=3.3;Comments=</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2 Portable;FileVersion=3.3.1.0;InternalName=AppLauncher;LegalCopyright=(C) 2004-2026 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=O2Portable.exe;ProductName=O2;ProductVersion=3.3.1;Comments=</VerInfo_Keys>
         <DCC_OutputDRCFile>true</DCC_OutputDRCFile>
         <VerInfo_MinorVer>3</VerInfo_MinorVer>
+        <VerInfo_Release>1</VerInfo_Release>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_DependencyCheckOutputName>O2Portable.exe</DCC_DependencyCheckOutputName>
