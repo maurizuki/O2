@@ -235,6 +235,7 @@ end;
 procedure TRulePropsDlg.OKExecute(Sender: TObject);
 begin
   FModel.ApplyChanges;
+  ModalResult := mrOk;
 end;
 
 procedure TRulePropsDlg.OKUpdate(Sender: TObject);

@@ -99,7 +99,6 @@ object RelationPropsDlg: TRelationPropsDlg
     Anchors = [akRight, akBottom]
     Caption = 'OK'
     Default = True
-    ModalResult = 1
     TabOrder = 4
     OnClick = btOkClick
   end

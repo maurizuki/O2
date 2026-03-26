@@ -111,7 +111,6 @@ object FilePropsDlg: TFilePropsDlg
     Anchors = [akRight, akBottom]
     Caption = 'OK'
     Default = True
-    ModalResult = 1
     TabOrder = 5
     OnClick = btOkClick
   end

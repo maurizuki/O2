@@ -73,6 +73,7 @@ end;
 procedure TSetPasswordDlg.btOkClick(Sender: TObject);
 begin
   FModel.ApplyChanges;
+  ModalResult := mrOk;
 end;
 
 procedure TSetPasswordDlg.cbEncryptionChange(Sender: TObject);

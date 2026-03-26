@@ -314,6 +314,7 @@ begin
   FModel.ObjectNotes := Memo.Lines;
 
   FModel.ApplyChanges;
+  ModalResult := mrOk;
 end;
 
 procedure TObjPropsDlg.OKUpdate(Sender: TObject);

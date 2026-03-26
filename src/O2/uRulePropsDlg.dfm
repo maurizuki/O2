@@ -25,7 +25,6 @@ object RulePropsDlg: TRulePropsDlg
     Action = OK
     Anchors = [akRight, akBottom]
     Default = True
-    ModalResult = 1
     TabOrder = 1
   end
   object btCancel: TButton

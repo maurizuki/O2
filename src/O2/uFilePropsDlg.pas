@@ -99,6 +99,7 @@ end;
 procedure TFilePropsDlg.btOkClick(Sender: TObject);
 begin
   FModel.ApplyChanges;
+  ModalResult := mrOk;
 end;
 
 end.

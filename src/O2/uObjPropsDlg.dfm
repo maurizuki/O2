@@ -297,7 +297,6 @@ object ObjPropsDlg: TObjPropsDlg
     Action = OK
     Anchors = [akRight, akBottom]
     Default = True
-    ModalResult = 1
     TabOrder = 1
     ExplicitLeft = 220
     ExplicitTop = 408
