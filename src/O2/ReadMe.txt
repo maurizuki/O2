@@ -30,6 +30,10 @@ For further informations see: https://github.com/maurizuki/O2
 
 2. CHANGE LOG
 
+Version 3.3.2
+- Fix issue that allows dialogs to be confirmed even if a validation
+  error occurred.
+
 Version 3.3.1
 - Fix missing leading white-spaces in object notes view.
 

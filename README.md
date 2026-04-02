@@ -26,6 +26,9 @@ winget install --id=maurizuki.O2 -e
 
 ## Change log
 
+### Version 3.3.2
+- Fix issue that allows dialogs to be confirmed even if a validation error occurred.
+
 ### Version 3.3.1
 - Fix missing leading white-spaces in *object notes* view.
 
