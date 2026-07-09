@@ -116,21 +116,52 @@ body h2 {
 }
 
 .relation-item {
+	display: flex;
+	flex-direction: column-reverse;
 	background-color: var(--anti-flash-white);
 }
 
 .relation-object {
-	padding: .25rem;
-}
-
-.relation-role {
 	background-color: #fff;
 	margin-left: 2rem;
 	padding: .25rem;
 }
 
+.relation-role {
+	padding: .25rem;
+}
+
 .notes {
 	margin-top: .5rem;
+}
+
+.notes-commonmark h2 {
+	display: block;
+}
+
+.notes-commonmark table {
+	border-collapse: collapse;
+}
+
+.notes-commonmark thead {
+	background-color: var(--anti-flash-white);
+}
+
+.notes-commonmark th, td {
+	padding: .25rem;
+}
+
+.notes-commonmark tr:nth-child(even) {
+	background-color: var(--anti-flash-white);
+}
+
+.notes-commonmark hr {
+	border-style: solid;
+	color: var(--sonic-silver);
+}
+
+.notes-commonmark ul {
+	list-style-type: square;
 }
 
 .notes-plaintext {
