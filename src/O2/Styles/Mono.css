@@ -126,6 +126,32 @@ body h2 {
 	padding-top: .125rem;
 }
 
+.notes-commonmark h2 {
+	display: block;
+}
+
+.notes-commonmark table {
+	border-collapse: collapse;
+	border: 1px solid var(--green-100);
+}
+
+.notes-commonmark thead {
+	border-bottom: 1px solid var(--green-100);
+}
+
+.notes-commonmark th, td {
+	padding: .125rem;
+}
+
+.notes-commonmark hr {
+	border-style: solid;
+	color: var(--green-100);
+}
+
+.notes-commonmark ul {
+	list-style-type: square;
+}
+
 .notes-plaintext {
 	white-space: pre-wrap;
 }
