@@ -139,6 +139,27 @@ body h2 {
 	padding-top: .125rem;
 }
 
+.notes-commonmark h2 {
+	display: block;
+}
+
+.notes-commonmark table {
+	border-collapse: collapse;
+}
+
+.notes-commonmark thead {
+	border-bottom: 1px solid var(--sonic-silver);
+}
+
+.notes-commonmark th, td {
+	padding: .25rem;
+}
+
+.notes-commonmark hr {
+	border-style: solid;
+	color: var(--sonic-silver);
+}
+
 .notes-plaintext {
 	font-family: monospace;
 	white-space: pre-wrap;
