@@ -1781,21 +1781,29 @@ begin
 end;
 
 procedure TMainForm.UpdateNotesView;
+const
+  Styles: array [TO2TextType] of string = (
+    'body { color: #000; background-color: #fff; font-size: 1rem; font-family: monospace; white-space: pre-wrap; }',
+    'body { color: #000; background-color: #fff; font-size: 1rem; font-family: sans-serif; } hr { border-style: solid; color: silver; } table { border-collapse: collapse; } thead { border-bottom: 1px solid silver; } th, td { padding: .125rem; } tr:nth-child(even) { background-color: lightgrey; }');
 var
+  TextType: TO2TextType;
   SB: TStringBuilder;
 begin
+  if HasSelectedObject then
+    TextType := SelectedObject.TextType
+  else
+    TextType := ttPlainText;
+
   SB := TStringBuilder.Create;
   try
-    SB.Append('<!DOCTYPE html><html>').AppendContextMenuBlockerScript.Append(
-      '<body style="color: #000; background-color: #fff; font-size: 1rem;');
-
-    if HasSelectedObject and (SelectedObject.TextType = ttCommonMark) then
-      SB.Append('font-family: sans-serif;">')
-    else
-      SB.Append('font-family: monospace; white-space: pre-wrap;">');
+    SB.Append('<!DOCTYPE html><html><head>')
+      .AppendContextMenuBlockerScript
+      .Append('<style>')
+      .Append(Styles[TextType])
+      .Append('</style></head><body>');
 
     if HasSelectedObject then
-      SB.AppendHTML(SelectedObject.Text, SelectedObject.TextType);
+      SB.AppendHTML(SelectedObject.Text, TextType);
 
     SB.Append('</body></html>');
 
