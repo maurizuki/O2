@@ -26,6 +26,11 @@ winget install --id=maurizuki.O2 -e
 
 ## Change log
 
+### Version 3.4
+- *Object notes* view: improved display of Markdown notes (tables, horizontal separators).
+- *Export to HTML*: improved display of Markdown notes (tables, horizontal separators, bulleted lists).
+- *Export to HTML*, *"BLOCKS"* style sheet: inverted the display order of relation object and role.
+
 ### Version 3.3.2
 - Fix issue that allows dialogs to be confirmed even if a validation error occurred.
 
