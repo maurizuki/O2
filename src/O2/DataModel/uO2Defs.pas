@@ -52,11 +52,13 @@ const
   ocSerpent  = TO2Cipher($11);
   ocTEA      = TO2Cipher($12);
   ocTwofish  = TO2Cipher($13);
-  ocDefault  = ocBlowfish;
+  ocDefault  = ocRijndael;
 
   DeprecatedCiphers: set of TO2Cipher = [
     ocBlowfish,
+    ocCast128,
     ocDES,
+    oc3DES,
     ocIce,
     ocThinIce,
     ocMisty1,
@@ -81,8 +83,13 @@ const
   ohDefault   = ohSHA256;
 
   DeprecatedHashes: set of TO2Hash = [
+    ohHaval,
+    ohMD4,
     ohMD5,
-    ohSHA1
+    ohRipeMD128,
+    ohRipeMD160,
+    ohSHA1,
+    ohTiger
   ];
 
 var
