@@ -1,5 +1,5 @@
 #define AppName "O2"
-#define AppVersion GetFileProductVersion("..\src\O2\O2.exe")
+#define AppVersion GetFileProductVersionString("..\src\O2\O2.exe")
 #define Copyright "(C) 2004-2026 Maurizio Basaglia. All rights reserved."
 
 #define SetupDir "setup"
