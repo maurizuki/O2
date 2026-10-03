@@ -170,28 +170,29 @@ resourcestring
   SDownloadUpdatesQuery = 'Version %d.%d.%d is available. Download?';
   SPrintPreviewZoom = 'Zoom';
   SHTMLExportStyle = 'Style';
+  SDeprecated = 'deprecated';
 
 { Ciphers }
 
   SCipherNone     = '(none)';
-  SCipherBlowfish = 'Blowfish [deprecated]';
+  SCipherBlowfish = 'Blowfish';
   SCipherCast128  = 'Cast-128';
   SCipherCast256  = 'Cast-256';
-  SCipherDES      = 'DES [deprecated]';
+  SCipherDES      = 'DES';
   SCipher3DES     = '3DES';
-  SCipherIce      = 'Ice [deprecated]';
-  SCipherThinIce  = 'Thin Ice [deprecated]';
+  SCipherIce      = 'Ice';
+  SCipherThinIce  = 'Thin Ice';
   SCipherIce2     = 'Ice 2';
   SCipherIDEA     = 'IDEA';
   SCipherMARS     = 'MARS';
-  SCipherMisty1   = 'Misty1 [deprecated]';
-  SCipherRC2      = 'RC2 [deprecated]';
-  SCipherRC4      = 'RC4 [deprecated]';
+  SCipherMisty1   = 'Misty1';
+  SCipherRC2      = 'RC2';
+  SCipherRC4      = 'RC4';
   SCipherRC5      = 'RC5';
   SCipherRC6      = 'RC6';
   SCipherRijndael = 'Rijndael (AES)';
   SCipherSerpent  = 'Serpent';
-  SCipherTEA      = 'TEA [deprecated]';
+  SCipherTEA      = 'TEA';
   SCipherTwofish  = 'Twofish';
 
 { Hash algorithms }
@@ -199,10 +200,10 @@ resourcestring
   SHashNone      = '(none)';
   SHashHaval     = 'Haval';
   SHashMD4       = 'MD4';
-  SHashMD5       = 'MD5 [deprecated]';
+  SHashMD5       = 'MD5';
   SHashRipeMD128 = 'RipeMD-128';
   SHashRipeMD160 = 'RipeMD-160';
-  SHashSHA1      = 'SHA-1 [deprecated]';
+  SHashSHA1      = 'SHA-1';
   SHashSHA256    = 'SHA-256';
   SHashSHA384    = 'SHA-384';
   SHashSHA512    = 'SHA-512';

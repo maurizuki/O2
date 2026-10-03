@@ -68,7 +68,7 @@ type
 implementation
 
 uses
-  uGlobal, uO2Defs;
+  SysUtils, uGlobal, uO2Defs;
 
 type
   TCipherRange = 0..19;
@@ -150,6 +150,8 @@ const
 { TEncryptionPropsModel }
 
 constructor TEncryptionPropsModel.Create(const O2File: TO2File);
+var
+  I: Integer;
 begin
   inherited Create;
   FO2File := O2File;
@@ -170,10 +172,28 @@ begin
     Dec(FHashIndex);
 
   FCiphers := TStringList.Create;
-  FCiphers.AddStrings(CipherDescriptions);
+  FCiphers.BeginUpdate;
+  try
+    for I := Low(TCipherRange) to High(TCipherRange) do
+      if CipherValues[I] in DeprecatedCiphers then
+        FCiphers.Add(Format('%s [%s]', [CipherDescriptions[I], SDeprecated]))
+      else
+        FCiphers.Add(CipherDescriptions[I]);
+  finally
+    FCiphers.EndUpdate;
+  end;
 
   FHashes := TStringList.Create;
-  FHashes.AddStrings(HashDescriptions);
+  FHashes.BeginUpdate;
+  try
+    for I := Low(THashRange) to High(THashRange) do
+      if HashValues[I] in DeprecatedHashes then
+        FHashes.Add(Format('%s [%s]', [HashDescriptions[I], SDeprecated]))
+      else
+        FHashes.Add(HashDescriptions[I]);
+  finally
+    FHashes.EndUpdate;
+  end;
 
   FPassword := FO2File.Password;
   FPasswordConfirmation := FO2File.Password;
