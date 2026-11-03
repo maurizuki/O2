@@ -59,7 +59,8 @@
         <VerInfo_Build>445</VerInfo_Build>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.4.0.445;InternalName=O2;LegalCopyright=(C) 2004-2026 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.4;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.4.1.445;InternalName=O2;LegalCopyright=(C) 2004-2026 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.4.1;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
+        <VerInfo_Release>1</VerInfo_Release>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_DependencyCheckOutputName>o2.exe</DCC_DependencyCheckOutputName>
@@ -87,8 +88,8 @@
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
         <DCC_DependencyCheckOutputName>o2.exe</DCC_DependencyCheckOutputName>
         <SanitizedProjectName>o2</SanitizedProjectName>
-        <VerInfo_Build>578</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.4.0.578;InternalName=O2;LegalCopyright=(C) 2004-2026 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.4;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
+        <VerInfo_Build>579</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.4.1.579;InternalName=O2;LegalCopyright=(C) 2004-2026 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.4.1;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
         <BT_BuildType>Debug</BT_BuildType>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -102,7 +103,7 @@
         <VerInfo_Debug>true</VerInfo_Debug>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_Build>462</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.4.0.462;InternalName=O2;LegalCopyright=(C) 2004-2026 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.4;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
+        <VerInfo_Keys>CompanyName=The O2 Project;FileDescription=O2;FileVersion=3.4.1.462;InternalName=O2;LegalCopyright=(C) 2004-2026 Maurizio Basaglia. All rights reserved.;LegalTrademarks=;OriginalFilename=o2.exe;ProductName=O2;ProductVersion=3.4.1;Comments=A safe storage for your personal data.;Homepage=https://maurizuki.github.io/O2</VerInfo_Keys>
     </PropertyGroup>
     <ProjectExtensions>
         <Borland.Personality>Delphi.Personality.12</Borland.Personality>

@@ -5,8 +5,8 @@
   <AppVersion>
     <MajorVersion>3</MajorVersion>
     <MinorVersion>4</MinorVersion>
-    <Release>0</Release>
-    <Build>576</Build>
+    <Release>1</Release>
+    <Build>579</Build>
   </AppVersion>
   <DownloadURL>https://github.com/maurizuki/O2/releases/latest</DownloadURL>
 </Update>
