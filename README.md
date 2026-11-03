@@ -26,6 +26,9 @@ winget install --id=maurizuki.O2 -e
 
 ## Change log
 
+### Version 3.4.1
+- Deprecated cipher and hash algorithms: the cipher algorithms CAST-128, Triple DES and the hash algorithms HAVAL, MD4, RIPEMD-128, RIPEMD-160, Tiger have been deprecated due to evidences of their lack of security. It's still possible to open files encrypted using the deprecated algorithms, but it's no longer possible to save files encrypted with them.
+
 ### Version 3.4
 - *Object notes* view: improved display of Markdown notes (tables, horizontal separators).
 - *Export to HTML*: improved display of Markdown notes (tables, horizontal separators, bulleted lists).
