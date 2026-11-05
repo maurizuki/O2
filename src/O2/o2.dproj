@@ -1112,6 +1112,7 @@
         <DCCReference Include="DataModel\uO2Rules.pas"/>
         <DCCReference Include="Utils\uXmlSerialization.pas"/>
         <DCCReference Include="Utils\uAppFiles.pas"/>
+        <DCCReference Include="Utils\uClipbrdUtils.pas"/>
         <DCCReference Include="Utils\uCtrlHelpers.pas"/>
         <DCCReference Include="Utils\uHTMLHelper.pas"/>
         <DCCReference Include="Utils\uMRUList.pas"/>
