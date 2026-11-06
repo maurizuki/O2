@@ -27,53 +27,165 @@ procedure CopyToClipboardAsTable(HeaderSelector: TFunc<Integer, string>;
 implementation
 
 uses
-  Clipbrd;
+  Windows, Clipbrd, uHTMLHelper;
 
-function EscapePipe(const S: string): string;
+var
+  HTMLFormat: UINT;
+
+  function EscapePipe(const S: string): string;
 begin
   Result := StringReplace(S, '|', '&#124;', [rfReplaceAll]);
+end;
+
+function ToPipeTable(HeaderSelector: TFunc<Integer, string>;
+  CellSelector: TFunc<Integer, Integer, string>;
+  RowCount, ColumnCount: Integer): string;
+var
+  Row, Column: Integer;
+  SB: TStringBuilder;
+begin
+  if ColumnCount <= 0 then Exit('');
+
+  SB := TStringBuilder.Create;
+  try
+    SB.Append('|');
+    for Column := 0 to ColumnCount - 1 do
+    begin
+      SB.Append(' ')
+        .Append(EscapePipe(HeaderSelector(Column)))
+        .Append(' |');
+    end;
+    SB.AppendLine;
+
+    SB.Append('|');
+    for Column := 0 to ColumnCount - 1 do SB.Append(' --- |');
+    SB.AppendLine;
+
+    for Row := 0 to RowCount - 1 do
+    begin
+      SB.Append('|');
+      for Column := 0 to ColumnCount - 1 do
+      begin
+        SB.Append(' ')
+          .Append(EscapePipe(CellSelector(Row, Column)))
+          .Append(' |');
+      end;
+      SB.AppendLine;
+    end;
+
+    Result := SB.ToString;
+  finally
+    SB.Free;
+  end;
+end;
+
+function ToHTMLTable(HeaderSelector: TFunc<Integer, string>;
+
+  CellSelector: TFunc<Integer, Integer, string>;
+  RowCount, ColumnCount: Integer): string;
+var
+  Row, Column: Integer;
+  SB: TStringBuilder;
+begin
+  SB := TStringBuilder.Create('<table><thead><tr>');
+  try
+    for Column := 0 to ColumnCount - 1 do
+      SB.Append('<th>')
+        .AppendHTML(HeaderSelector(Column))
+        .Append('</th>');
+
+    SB.Append('</tr></thead><tbody>');
+
+    for Row := 0 to RowCount - 1 do
+    begin
+      SB.Append('<tr>');
+
+      for Column := 0 to ColumnCount - 1 do
+        SB.Append('<td>')
+          .AppendHTML(CellSelector(Row, Column))
+          .Append('</td>');
+
+      SB.Append('</tr>');
+    end;
+
+    SB.Append('</tbody></table>');
+
+    Result := SB.ToString;
+  finally
+    SB.Free;
+  end;
+end;
+
+function ToTextFormat(const S: string): HGLOBAL;
+var
+  Ptr: Pointer;
+begin
+  Result := GlobalAlloc(GMEM_MOVEABLE or GMEM_ZEROINIT,
+    (Length(S) + 1) * SizeOf(Char));
+  if Result <> 0 then
+  begin
+    Ptr := GlobalLock(Result);
+    Move(S[1], Ptr^, Length(S) * SizeOf(Char));
+    GlobalUnlock(Result);
+  end;
+end;
+
+function ToHTMLFormat(const S: string): HGLOBAL;
+var
+  Ptr: Pointer;
+  HTMLStr: string;
+  HTMLUTF8Str: UTF8String;
+begin
+  HTMLStr :=
+    'Version:0.9'#13#10 +
+    'StartHTML:0000000105'#13#10 +
+    'EndHTML:XXXXXXXXXX'#13#10 +
+    'StartFragment:0000000125'#13#10 +
+    'EndFragment:YYYYYYYYYY'#13#10 +
+    '<html><body><!--StartFragment-->' + S + '<!--EndFragment--></body></html>';
+
+  HTMLStr := StringReplace(HTMLStr, 'XXXXXXXXXX',
+    Format('%.10d', [Length(HTMLStr)]), []);
+  HTMLStr := StringReplace(HTMLStr, 'YYYYYYYYYY',
+    Format('%.10d', [Length(HTMLStr) - 36]), []);
+  HTMLUTF8Str := UTF8String(HTMLStr);
+
+  Result := GlobalAlloc(GMEM_MOVEABLE or GMEM_ZEROINIT,
+    Length(HTMLUTF8Str) + 1);
+  if Result <> 0 then
+  begin
+    Ptr := GlobalLock(Result);
+    Move(HTMLUTF8Str[1], Ptr^, Length(HTMLUTF8Str));
+    GlobalUnlock(Result);
+  end;
 end;
 
 procedure CopyToClipboardAsTable(HeaderSelector: TFunc<Integer, string>;
   CellSelector: TFunc<Integer, Integer, string>;
   RowCount, ColumnCount: Integer);
 var
-  Row, Column: Integer;
-  SB: TStringBuilder;
+  HtmlHandle, TextHandle: HGLOBAL;
 begin
-  SB := TStringBuilder.Create;
+  TextHandle := ToTextFormat(ToPipeTable(HeaderSelector, CellSelector,
+    RowCount, ColumnCount));
+
+  HtmlHandle := ToHTMLFormat(ToHTMLTable(HeaderSelector, CellSelector,
+    RowCount, ColumnCount));
+
+  Clipboard.Clear;
+  Clipboard.Open;
   try
-    for Column := 0 to ColumnCount - 1 do
-    begin
-      SB.Append(EscapePipe(HeaderSelector(Column)));
-      if Column < ColumnCount - 1 then SB.Append('|');
-    end;
+    if HtmlHandle <> 0 then
+      Clipboard.SetAsHandle(HTMLFormat, HtmlHandle);
 
-    SB.AppendLine;
-
-    for Column := 0 to ColumnCount - 1 do
-    begin
-      SB.Append('---');
-      if Column < ColumnCount - 1 then SB.Append('|');
-    end;
-
-    SB.AppendLine;
-
-    for Row := 0 to RowCount - 1 do
-    begin
-      for Column := 0 to ColumnCount - 1 do
-      begin
-        SB.Append(EscapePipe(CellSelector(Row, Column)));
-        if Column < ColumnCount - 1 then SB.Append('|');
-      end;
-
-      SB.AppendLine;
-    end;
-
-    Clipboard.AsText := SB.ToString;
+    if TextHandle <> 0 then
+      Clipboard.SetAsHandle(CF_UNICODETEXT, TextHandle);
   finally
-    SB.Free;
+    Clipboard.Close;
   end;
 end;
+
+initialization
+  HTMLFormat := RegisterClipboardFormat('HTML Format');
 
 end.
