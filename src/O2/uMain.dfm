@@ -677,55 +677,55 @@ object MainForm: TMainForm
       OnExecute = ObjectPropsExecute
       OnUpdate = ObjectActionUpdate
     end
-    object CopyValue: TAction
+    object CopyFieldValue: TAction
       Category = 'Field'
       Caption = 'Copy field value'
       Hint = 'Copy field value'
-      OnExecute = CopyValueExecute
-      OnUpdate = CopyNameValueUpdate
+      OnExecute = CopyFieldValueExecute
+      OnUpdate = CopyFieldUpdate
     end
-    object CopyNameValueAsRow: TAction
+    object CopyFieldNameValueRow: TAction
       Category = 'Field'
-      Caption = 'Copy field name and value as row'
-      Hint = 'Copy field name and value as row'
-      OnExecute = CopyNameValueAsRowExecute
-      OnUpdate = CopyNameValueUpdate
+      Caption = 'One row'
+      Hint = 'One row'
+      OnExecute = CopyFieldNameValueRowExecute
+      OnUpdate = CopyFieldUpdate
     end
-    object CopyNameValueAsColumn: TAction
+    object CopyFieldNameValueColumn: TAction
       Category = 'Field'
-      Caption = 'Copy field name and value as column'
-      Hint = 'Copy field name and value as column'
-      OnExecute = CopyNameValueAsColumnExecute
-      OnUpdate = CopyNameValueUpdate
+      Caption = 'One column'
+      Hint = 'One column'
+      OnExecute = CopyFieldNameValueColumnExecute
+      OnUpdate = CopyFieldUpdate
     end
-    object CopyValuesAsRows: TAction
+    object CopyFieldValuesRows: TAction
       Category = 'Field'
-      Caption = 'Copy field values as rows'
-      Hint = 'Copy field values as rows'
-      OnExecute = CopyValuesAsRowsExecute
-      OnUpdate = CopyUpdate
+      Caption = 'One value per row'
+      Hint = 'One value per row'
+      OnExecute = CopyFieldValuesRowsExecute
+      OnUpdate = CopyFieldsUpdate
     end
-    object CopyValuesAsColumns: TAction
+    object CopyFieldValuesColumns: TAction
       Category = 'Field'
-      Caption = 'Copy field values as columns'
-      Hint = 'Copy field values as columns'
-      OnExecute = CopyValuesAsColumnsExecute
-      OnUpdate = CopyUpdate
+      Caption = 'One value per column'
+      Hint = 'One value per column'
+      OnExecute = CopyFieldValuesColumnsExecute
+      OnUpdate = CopyFieldsUpdate
     end
-    object CopyAsRows: TAction
+    object CopyFieldsRows: TAction
       Category = 'Field'
-      Caption = 'Copy as rows'
-      Hint = 'Copy as rows'
-      OnExecute = CopyAsRowsExecute
-      OnUpdate = CopyUpdate
+      Caption = 'One field per row'
+      Hint = 'One field per row'
+      OnExecute = CopyFieldsRowsExecute
+      OnUpdate = CopyFieldsUpdate
     end
-    object CopyAsColumns: TAction
+    object CopyFieldsColumns: TAction
       Tag = 1
       Category = 'Field'
-      Caption = 'Copy as columns'
-      Hint = 'Copy as columns'
-      OnExecute = CopyAsColumnsExecute
-      OnUpdate = CopyUpdate
+      Caption = 'One field per column'
+      Hint = 'One field per column'
+      OnExecute = CopyFieldsColumnsExecute
+      OnUpdate = CopyFieldsUpdate
     end
     object ViewReport: TAction
       Category = 'View'
@@ -753,6 +753,20 @@ object MainForm: TMainForm
       Hint = 'Sort by next event'
       OnExecute = SortByNextEventExecute
       OnUpdate = SortByNextEventUpdate
+    end
+    object CopyFieldsTableRows: TAction
+      Category = 'Field'
+      Caption = 'One field per row'
+      Hint = 'One field per row'
+      OnExecute = CopyFieldsTableRowsExecute
+      OnUpdate = CopyFieldsUpdate
+    end
+    object CopyFieldsTableColumns: TAction
+      Category = 'Field'
+      Caption = 'One field per column'
+      Hint = 'One field per column'
+      OnExecute = CopyFieldsTableColumnsExecute
+      OnUpdate = CopyFieldsUpdate
     end
     object OpenLink: TAction
       Category = 'Field'
@@ -4824,35 +4838,44 @@ object MainForm: TMainForm
     Left = 104
     Top = 72
     object Copyvaluetoclipboard1: TMenuItem
-      Action = CopyValue
+      Action = CopyFieldValue
       Default = True
     end
-    object N4: TMenuItem
-      Caption = '-'
+    object Copyfieldnameandvalue1: TMenuItem
+      Caption = 'Copy field name and value'
+      object CopyFieldNameValueRow1: TMenuItem
+        Action = CopyFieldNameValueRow
+      end
+      object CopyFieldNameValueColumn1: TMenuItem
+        Action = CopyFieldNameValueColumn
+      end
     end
-    object CopykeyandvaluetoclipboardWYSIWYG1: TMenuItem
-      Action = CopyNameValueAsRow
+    object Copyfieldvalues1: TMenuItem
+      Caption = 'Copy field values'
+      object CopyFieldValuesRows1: TMenuItem
+        Action = CopyFieldValuesRows
+      end
+      object CopyFieldValuesColumns1: TMenuItem
+        Action = CopyFieldValuesColumns
+      end
     end
-    object Copykeyandvaluetoclipboardtable1: TMenuItem
-      Action = CopyNameValueAsColumn
+    object Copyfields1: TMenuItem
+      Caption = 'Copy fields'
+      object CopyFieldsRows1: TMenuItem
+        Action = CopyFieldsRows
+      end
+      object CopyFieldsColumns1: TMenuItem
+        Action = CopyFieldsColumns
+      end
     end
-    object N6: TMenuItem
-      Caption = '-'
-    end
-    object Copyfieldvaluesasrows1: TMenuItem
-      Action = CopyValuesAsRows
-    end
-    object Copyfieldvaluesascolumns1: TMenuItem
-      Action = CopyValuesAsColumns
-    end
-    object N9: TMenuItem
-      Caption = '-'
-    end
-    object CopytoclipboardWYSIWYG1: TMenuItem
-      Action = CopyAsRows
-    end
-    object Copytoclipboardtable1: TMenuItem
-      Action = CopyAsColumns
+    object Copyastable1: TMenuItem
+      Caption = 'Copy as table'
+      object CopyFieldsTableRows1: TMenuItem
+        Action = CopyFieldsTableRows
+      end
+      object CopyFieldsTableColumns1: TMenuItem
+        Action = CopyFieldsTableColumns
+      end
     end
     object N15: TMenuItem
       Caption = '-'

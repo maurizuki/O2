@@ -111,18 +111,16 @@ type
     ToolsMenu: TPopupMenu;
     PrintDialog: TPrintDialog;
     FieldMenu: TPopupMenu;
-    CopyValue: TAction;
-    CopyNameValueAsColumn: TAction;
-    CopyNameValueAsRow: TAction;
-    CopyAsRows: TAction;
-    CopyAsColumns: TAction;
+    CopyFieldValue: TAction;
+    CopyFieldNameValueColumn: TAction;
+    CopyFieldNameValueRow: TAction;
+    CopyFieldsRows: TAction;
+    CopyFieldsColumns: TAction;
     Copyvaluetoclipboard1: TMenuItem;
-    CopykeyandvaluetoclipboardWYSIWYG1: TMenuItem;
-    Copykeyandvaluetoclipboardtable1: TMenuItem;
-    CopytoclipboardWYSIWYG1: TMenuItem;
-    Copytoclipboardtable1: TMenuItem;
-    N4: TMenuItem;
-    N6: TMenuItem;
+    CopyFieldNameValueRow1: TMenuItem;
+    CopyFieldNameValueColumn1: TMenuItem;
+    CopyFieldsRows1: TMenuItem;
+    CopyFieldsColumns1: TMenuItem;
     N7: TMenuItem;
     ViewReport: TAction;
     Report1: TMenuItem;
@@ -138,7 +136,6 @@ type
     OpenLink: TAction;
     SendEmail: TAction;
     ShowPasswords: TAction;
-    N9: TMenuItem;
     Browse1: TMenuItem;
     Sendemail1: TMenuItem;
     RefreshViews: TAction;
@@ -198,10 +195,10 @@ type
     N701: TMenuItem;
     N801: TMenuItem;
     N901: TMenuItem;
-    CopyValuesAsRows: TAction;
-    CopyValuesAsColumns: TAction;
-    Copyfieldvaluesasrows1: TMenuItem;
-    Copyfieldvaluesascolumns1: TMenuItem;
+    CopyFieldValuesRows: TAction;
+    CopyFieldValuesColumns: TAction;
+    CopyFieldValuesRows1: TMenuItem;
+    CopyFieldValuesColumns1: TMenuItem;
     N15: TMenuItem;
     InstallOnRemovableMedia: TAction;
     N16: TMenuItem;
@@ -334,6 +331,14 @@ type
     CheckForUpdatesRESTClient: TRESTClient;
     CheckForUpdatesRequest: TRESTRequest;
     CheckForUpdatesResponse: TRESTResponse;
+    CopyFieldsTableRows: TAction;
+    CopyFieldsTableRows1: TMenuItem;
+    CopyFieldsTableColumns: TAction;
+    CopyFieldsTableColumns1: TMenuItem;
+    Copyfieldnameandvalue1: TMenuItem;
+    Copyfieldvalues1: TMenuItem;
+    Copyfields1: TMenuItem;
+    Copyastable1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -446,15 +451,15 @@ type
       var DefaultDraw: Boolean);
     procedure FieldsViewResize(Sender: TObject);
     procedure FieldMenuPopup(Sender: TObject);
-    procedure CopyValueExecute(Sender: TObject);
-    procedure CopyNameValueAsRowExecute(Sender: TObject);
-    procedure CopyNameValueAsColumnExecute(Sender: TObject);
-    procedure CopyNameValueUpdate(Sender: TObject);
-    procedure CopyValuesAsRowsExecute(Sender: TObject);
-    procedure CopyValuesAsColumnsExecute(Sender: TObject);
-    procedure CopyAsRowsExecute(Sender: TObject);
-    procedure CopyAsColumnsExecute(Sender: TObject);
-    procedure CopyUpdate(Sender: TObject);
+    procedure CopyFieldValueExecute(Sender: TObject);
+    procedure CopyFieldNameValueRowExecute(Sender: TObject);
+    procedure CopyFieldNameValueColumnExecute(Sender: TObject);
+    procedure CopyFieldUpdate(Sender: TObject);
+    procedure CopyFieldValuesRowsExecute(Sender: TObject);
+    procedure CopyFieldValuesColumnsExecute(Sender: TObject);
+    procedure CopyFieldsRowsExecute(Sender: TObject);
+    procedure CopyFieldsColumnsExecute(Sender: TObject);
+    procedure CopyFieldsUpdate(Sender: TObject);
     procedure OpenLinkExecute(Sender: TObject);
     procedure OpenLinkUpdate(Sender: TObject);
     procedure SendEmailExecute(Sender: TObject);
@@ -501,6 +506,8 @@ type
       var CanClose: Boolean);
     procedure DragDropDrop(Sender: TObject; Pos: TPoint;
       Value: TStrings);
+    procedure CopyFieldsTableRowsExecute(Sender: TObject);
+    procedure CopyFieldsTableColumnsExecute(Sender: TObject);
   private
     FServiceContainer: TContainer;
     FModel: IFileManager;
@@ -606,7 +613,8 @@ uses
   StrUtils, DateUtils, Contnrs, ShellApi, Clipbrd, JSON, UITypes,
   uShellUtils, uStorageUtils, uAbout, uGetPassword, uSetPassword, uFilePropsDlg,
   uObjPropsDlg, uRelationPropsDlg, uRulePropsDlg, uReplaceDlg, uPrintPreview,
-  uHTMLExport, uO2Defs, uCtrlHelpers, uHTMLHelper, uO2ObjectsUtils, uUtils;
+  uHTMLExport, uO2Defs, uCtrlHelpers, uHTMLHelper, uO2ObjectsUtils, uUtils,
+  uClipbrdUtils;
 
 {$R *.dfm}
 
@@ -2200,13 +2208,13 @@ end;
 
 procedure TMainForm.FieldsViewDblClick(Sender: TObject);
 begin
-  CopyValue.Execute;
+  CopyFieldValue.Execute;
 end;
 
 procedure TMainForm.FieldsViewKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if (Key = VK_RETURN) and (Shift = []) then CopyValue.Execute;
+  if (Key = VK_RETURN) and (Shift = []) then CopyFieldValue.Execute;
 end;
 
 procedure TMainForm.FieldsViewMouseDown(Sender: TObject; Button: TMouseButton;
@@ -2264,81 +2272,120 @@ begin
   UpdateAllActions;
 end;
 
-procedure TMainForm.CopyValueExecute(Sender: TObject);
+procedure TMainForm.CopyFieldValueExecute(Sender: TObject);
 begin
   Clipboard.AsText := SelectedField.FieldValue;
 end;
 
-procedure TMainForm.CopyNameValueAsRowExecute(Sender: TObject);
+procedure TMainForm.CopyFieldNameValueRowExecute(Sender: TObject);
 begin
-  Clipboard.AsText := SelectedField.FieldName + #9 + SelectedField.FieldValue;
+  CopyToClipboardAsTSV(
+    function (Row, Column: Integer): string
+    begin
+      if Column = 0 then
+        Result := SelectedField.FieldName
+      else
+        Result := SelectedField.FieldValue;
+    end,
+    1, 2);
 end;
 
-procedure TMainForm.CopyNameValueAsColumnExecute(Sender: TObject);
+procedure TMainForm.CopyFieldNameValueColumnExecute(Sender: TObject);
 begin
-  Clipboard.AsText := SelectedField.FieldName + #13#10
-    + SelectedField.FieldValue;
+  CopyToClipboardAsTSV(
+    function (Row, Column: Integer): string
+    begin
+      if Row = 0 then
+        Result := SelectedField.FieldName
+      else
+        Result := SelectedField.FieldValue;
+    end,
+    2, 1);
 end;
 
-procedure TMainForm.CopyNameValueUpdate(Sender: TObject);
+procedure TMainForm.CopyFieldUpdate(Sender: TObject);
 begin
   TAction(Sender).Enabled := not FBusy and HasSelectedField;
 end;
 
-procedure TMainForm.CopyValuesAsRowsExecute(Sender: TObject);
-var
-  AItem: TListItem;
-  S: string;
+procedure TMainForm.CopyFieldValuesRowsExecute(Sender: TObject);
 begin
-  S := '';
-  for AItem in FieldsView.Items do
-    S := S + TO2Field(AItem.Data).FieldValue + #13#10;
-
-  Clipboard.AsText := TrimRight(S);
+  CopyToClipboardAsTSV(
+    function (Row, Column: Integer): string
+    begin
+      Result := TO2Field(FieldsView.Items[Row].Data).FieldValue;
+    end,
+    FieldsView.Items.Count, 1);
 end;
 
-procedure TMainForm.CopyValuesAsColumnsExecute(Sender: TObject);
-var
-  AItem: TListItem;
-  S: string;
+procedure TMainForm.CopyFieldValuesColumnsExecute(Sender: TObject);
 begin
-  S := '';
-  for AItem in FieldsView.Items do
-    S := S + TO2Field(AItem.Data).FieldValue + #9;
-
-  Clipboard.AsText := TrimRight(S);
+  CopyToClipboardAsTSV(
+    function (Row, Column: Integer): string
+    begin
+      Result := TO2Field(FieldsView.Items[Column].Data).FieldValue;
+    end,
+    1, FieldsView.Items.Count);
 end;
 
-procedure TMainForm.CopyAsRowsExecute(Sender: TObject);
-var
-  AItem: TListItem;
-  S: string;
+procedure TMainForm.CopyFieldsRowsExecute(Sender: TObject);
 begin
-  S := '';
-  for AItem in FieldsView.Items do
-    S := S + TO2Field(AItem.Data).FieldName + #9
-      + TO2Field(AItem.Data).FieldValue + #13#10;
-
-  Clipboard.AsText := TrimRight(S);
+  CopyToClipboardAsTSV(
+    function (Row, Column: Integer): string
+    begin
+      if Column = 0 then
+        Result := TO2Field(FieldsView.Items[Row].Data).FieldName
+      else
+        Result := TO2Field(FieldsView.Items[Row].Data).FieldValue;
+    end,
+    FieldsView.Items.Count, 2);
 end;
 
-procedure TMainForm.CopyAsColumnsExecute(Sender: TObject);
-var
-  AItem: TListItem;
-  S1, S2: string;
+procedure TMainForm.CopyFieldsColumnsExecute(Sender: TObject);
 begin
-  S1 := '';
-  S2 := '';
-  for AItem in FieldsView.Items do
-  begin
-    S1 := S1 + TO2Field(AItem.Data).FieldName + #9;
-    S2 := S2 + TO2Field(AItem.Data).FieldValue + #9;
-  end;
-
-  Clipboard.AsText := TrimRight(S1) + #13#10 + TrimRight(S2);
+  CopyToClipboardAsTSV(
+    function (Row, Column: Integer): string
+    begin
+      if Row = 0 then
+        Result := TO2Field(FieldsView.Items[Column].Data).FieldName
+      else
+        Result := TO2Field(FieldsView.Items[Column].Data).FieldValue;
+    end,
+    2, FieldsView.Items.Count);
 end;
 
-procedure TMainForm.CopyUpdate(Sender: TObject);
+procedure TMainForm.CopyFieldsTableRowsExecute(Sender: TObject);
+begin
+  CopyToClipboardAsTable(
+    function (Column: Integer): string
+    begin
+      Result := FieldsView.Columns[Column].Caption;
+    end,
+    function (Row, Column: Integer): string
+    begin
+      if Column = 0 then
+        Result := TO2Field(FieldsView.Items[Row].Data).FieldName
+      else
+        Result := TO2Field(FieldsView.Items[Row].Data).FieldValue;
+    end,
+    FieldsView.Items.Count, 2);
+end;
+
+procedure TMainForm.CopyFieldsTableColumnsExecute(Sender: TObject);
+begin
+  CopyToClipboardAsTable(
+    function (Column: Integer): string
+    begin
+      Result := TO2Field(FieldsView.Items[Column].Data).FieldName
+    end,
+    function (Row, Column: Integer): string
+    begin
+      Result := TO2Field(FieldsView.Items[Column].Data).FieldValue;
+    end,
+    1, FieldsView.Items.Count);
+end;
+
+procedure TMainForm.CopyFieldsUpdate(Sender: TObject);
 begin
   TAction(Sender).Enabled := not FBusy and (FieldsView.Items.Count > 0);
 end;

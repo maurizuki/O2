@@ -24,6 +24,9 @@ procedure CopyToClipboardAsTable(HeaderSelector: TFunc<Integer, string>;
   CellSelector: TFunc<Integer, Integer, string>;
   RowCount, ColumnCount: Integer);
 
+procedure CopyToClipboardAsTSV(Selector: TFunc<Integer, Integer, string>;
+  RowCount, ColumnCount: Integer);
+
 implementation
 
 uses
@@ -80,7 +83,6 @@ begin
 end;
 
 function ToHTMLTable(HeaderSelector: TFunc<Integer, string>;
-
   CellSelector: TFunc<Integer, Integer, string>;
   RowCount, ColumnCount: Integer): string;
 var
@@ -183,6 +185,24 @@ begin
   finally
     Clipboard.Close;
   end;
+end;
+
+procedure CopyToClipboardAsTSV(Selector: TFunc<Integer, Integer, string>;
+  RowCount, ColumnCount: Integer);
+var
+  Row, Column: Integer;
+  S: string;
+begin
+  S := '';
+  for Row := 0 to RowCount - 1 do
+  begin
+    for Column := 0 to ColumnCount - 1 do
+      S := S + Selector(Row, Column) + #9;
+
+    S := TrimRight(S) + #13#10;
+  end;
+
+  Clipboard.AsText := S;
 end;
 
 initialization
