@@ -72,6 +72,7 @@ uses
   uO2Rules in 'DataModel\uO2Rules.pas',
   uXmlSerialization in 'Utils\uXmlSerialization.pas',
   uAppFiles in 'Utils\uAppFiles.pas',
+  uClipbrdUtils in 'Utils\uClipbrdUtils.pas',
   uCtrlHelpers in 'Utils\uCtrlHelpers.pas',
   uHTMLHelper in 'Utils\uHTMLHelper.pas',
   uMRUList in 'Utils\uMRUList.pas',
