@@ -339,6 +339,9 @@ type
     Copyfieldvalues1: TMenuItem;
     Copyfields1: TMenuItem;
     Copyastable1: TMenuItem;
+    WebUserManual: TAction;
+    N4: TMenuItem;
+    Onlineusermanual1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormDestroy(Sender: TObject);

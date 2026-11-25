@@ -1036,6 +1036,13 @@ object MainForm: TMainForm
       OnExecute = WebExecute
       OnUpdate = ActionUpdate
     end
+    object WebUserManual: TAction
+      Category = 'Help'
+      Caption = 'Online user manual'
+      Hint = 'https://maurizuki.github.io/O2-user-manual/'
+      OnExecute = WebExecute
+      OnUpdate = ActionUpdate
+    end
     object WebSupportRequests: TAction
       Category = 'Help'
       Caption = 'Support requests'
@@ -5022,6 +5029,12 @@ object MainForm: TMainForm
     end
     object Projectinfo1: TMenuItem
       Action = WebProject
+    end
+    object N4: TMenuItem
+      Caption = '-'
+    end
+    object Onlineusermanual1: TMenuItem
+      Action = WebUserManual
     end
     object N27: TMenuItem
       Caption = '-'
