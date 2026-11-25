@@ -26,8 +26,6 @@ object ObjPropsDlg: TObjPropsDlg
     ActivePage = TabSheet1
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 0
-    ExplicitWidth = 368
-    ExplicitHeight = 395
     object TabSheet1: TTabSheet
       Caption = 'General'
       DesignSize = (
@@ -49,7 +47,6 @@ object ObjPropsDlg: TObjPropsDlg
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         OnChange = edNameChange
-        ExplicitWidth = 354
       end
       object GroupBox1: TGroupBox
         Left = 3
@@ -59,8 +56,6 @@ object ObjPropsDlg: TObjPropsDlg
         Anchors = [akLeft, akTop, akRight, akBottom]
         Caption = '&Tags'
         TabOrder = 1
-        ExplicitWidth = 354
-        ExplicitHeight = 251
         DesignSize = (
           358
           252)
@@ -72,7 +67,6 @@ object ObjPropsDlg: TObjPropsDlg
           Anchors = [akLeft, akTop, akRight]
           TabOrder = 0
           TextHint = 'New tag'
-          ExplicitWidth = 262
         end
         object lbxTags: TListBox
           Left = 3
@@ -87,8 +81,6 @@ object ObjPropsDlg: TObjPropsDlg
           Sorted = True
           TabOrder = 2
           OnClick = lbxTagsClick
-          ExplicitWidth = 348
-          ExplicitHeight = 203
         end
         object Button4: TButton
           Left = 275
@@ -100,7 +92,6 @@ object ObjPropsDlg: TObjPropsDlg
           ParentShowHint = False
           ShowHint = True
           TabOrder = 1
-          ExplicitLeft = 271
         end
       end
     end
@@ -239,28 +230,6 @@ object ObjPropsDlg: TObjPropsDlg
       DesignSize = (
         364
         368)
-      object Label3: TLabel
-        Left = 253
-        Top = 349
-        Width = 108
-        Height = 13
-        Cursor = crHandPoint
-        Hint = 'https://commonmark.org/help/'
-        Alignment = taRightJustify
-        Anchors = [akRight, akBottom]
-        Caption = 'Markdown syntax help'
-        Font.Charset = ANSI_CHARSET
-        Font.Color = clBlue
-        Font.Height = -11
-        Font.Name = 'Tahoma'
-        Font.Style = [fsUnderline]
-        ParentFont = False
-        ParentShowHint = False
-        ShowHint = True
-        OnClick = LinkClick
-        ExplicitLeft = 222
-        ExplicitTop = 323
-      end
       object Memo: TMemo
         Left = 3
         Top = 3
@@ -297,9 +266,7 @@ object ObjPropsDlg: TObjPropsDlg
     Action = OK
     Anchors = [akRight, akBottom]
     Default = True
-    TabOrder = 1
-    ExplicitLeft = 220
-    ExplicitTop = 408
+    TabOrder = 2
   end
   object btCancel: TButton
     Left = 305
@@ -310,9 +277,16 @@ object ObjPropsDlg: TObjPropsDlg
     Cancel = True
     Caption = 'Cancel'
     ModalResult = 2
-    TabOrder = 2
-    ExplicitLeft = 301
-    ExplicitTop = 408
+    TabOrder = 3
+  end
+  object btHelp: TButton
+    Left = 8
+    Top = 409
+    Width = 75
+    Height = 25
+    Action = Help
+    Anchors = [akLeft, akBottom]
+    TabOrder = 1
   end
   object ActionList: TActionList
     Left = 8
@@ -369,6 +343,11 @@ object ObjPropsDlg: TObjPropsDlg
       ShortCut = 8237
       OnExecute = AddTagExecute
       OnUpdate = AddTagUpdate
+    end
+    object Help: TAction
+      Caption = 'Help'
+      Hint = 'https://maurizuki.github.io/O2-user-manual/docs/objects.html'
+      OnExecute = HelpExecute
     end
   end
 end

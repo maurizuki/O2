@@ -52,12 +52,13 @@ type
     Button6: TButton;
     Button7: TButton;
     ckMarkdown: TCheckBox;
-    Label3: TLabel;
     PasswordStrengthIndicator: TPasswordStrengthIndicator;
     GroupBox1: TGroupBox;
     edTag: TEdit;
     lbxTags: TListBox;
     Button4: TButton;
+    Help: TAction;
+    btHelp: TButton;
     procedure edNameChange(Sender: TObject);
     procedure lbxTagsClick(Sender: TObject);
     procedure AddTagExecute(Sender: TObject);
@@ -79,7 +80,7 @@ type
     procedure cbFieldValueEnter(Sender: TObject);
     procedure cbFieldValueChange(Sender: TObject);
     procedure ckMarkdownClick(Sender: TObject);
-    procedure LinkClick(Sender: TObject);
+    procedure HelpExecute(Sender: TObject);
     procedure OKExecute(Sender: TObject);
     procedure OKUpdate(Sender: TObject);
   private
@@ -303,9 +304,9 @@ begin
   FModel.Markdown := ckMarkdown.Checked;
 end;
 
-procedure TObjPropsDlg.LinkClick(Sender: TObject);
+procedure TObjPropsDlg.HelpExecute(Sender: TObject);
 begin
-  ShellOpen(TControl(Sender).Hint);
+  ShellOpen(TAction(Sender).Hint);
 end;
 
 procedure TObjPropsDlg.OKExecute(Sender: TObject);
