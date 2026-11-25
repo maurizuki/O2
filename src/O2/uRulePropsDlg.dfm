@@ -2,7 +2,7 @@ object RulePropsDlg: TRulePropsDlg
   Left = 192
   Top = 107
   Caption = 'Rule properties'
-  ClientHeight = 427
+  ClientHeight = 243
   ClientWidth = 357
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -11,46 +11,48 @@ object RulePropsDlg: TRulePropsDlg
   Font.Name = 'Tahoma'
   Font.Style = []
   Position = poMainFormCenter
-  OnCreate = FormCreate
   OnShow = FormShow
   DesignSize = (
     357
-    427)
+    243)
   TextHeight = 13
   object btOk: TButton
     Left = 193
-    Top = 394
+    Top = 210
     Width = 75
     Height = 25
     Action = OK
     Anchors = [akRight, akBottom]
     Default = True
-    TabOrder = 1
+    TabOrder = 2
+    ExplicitTop = 394
   end
   object btCancel: TButton
     Left = 274
-    Top = 394
+    Top = 210
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
     Cancel = True
     Caption = 'Cancel'
     ModalResult = 2
-    TabOrder = 2
+    TabOrder = 3
+    ExplicitTop = 394
   end
   object PageControl1: TPageControl
     Left = 8
     Top = 8
     Width = 341
-    Height = 380
+    Height = 196
     ActivePage = tsGeneral
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 0
+    ExplicitHeight = 380
     object tsGeneral: TTabSheet
       Caption = 'General'
       DesignSize = (
         333
-        352)
+        168)
       object Label1: TLabel
         Left = 3
         Top = 12
@@ -93,7 +95,6 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         OnChange = edNameChange
-        ExplicitWidth = 152
       end
       object cbType: TComboBox
         Left = 169
@@ -104,7 +105,6 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akTop, akRight]
         TabOrder = 1
         OnChange = cbTypeChange
-        ExplicitLeft = 161
       end
       object edFieldName: TEdit
         Left = 3
@@ -114,7 +114,6 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 2
         OnChange = edFieldNameChange
-        ExplicitWidth = 152
       end
       object edFieldValue: TEdit
         Left = 169
@@ -124,21 +123,6 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akTop, akRight]
         TabOrder = 3
         OnChange = edFieldValueChange
-        ExplicitLeft = 161
-      end
-      object MaskHelpMemo: TMemo
-        Left = 3
-        Top = 128
-        Width = 327
-        Height = 221
-        TabStop = False
-        Anchors = [akLeft, akTop, akRight, akBottom]
-        ParentColor = True
-        ReadOnly = True
-        ScrollBars = ssVertical
-        TabOrder = 4
-        ExplicitWidth = 319
-        ExplicitHeight = 220
       end
     end
     object tsDisplay: TTabSheet
@@ -146,7 +130,7 @@ object RulePropsDlg: TRulePropsDlg
       ImageIndex = 5
       DesignSize = (
         333
-        352)
+        168)
       object Label12: TLabel
         Left = 3
         Top = 12
@@ -164,7 +148,6 @@ object RulePropsDlg: TRulePropsDlg
         HideSelection = False
         TabOrder = 0
         OnChange = edDisplayMaskChange
-        ExplicitWidth = 323
       end
       object btDisplayMacros: TButton
         Left = 255
@@ -175,7 +158,6 @@ object RulePropsDlg: TRulePropsDlg
         Caption = 'Macros'
         TabOrder = 1
         OnClick = btDisplayMacrosClick
-        ExplicitLeft = 251
       end
     end
     object tsHyperLink: TTabSheet
@@ -183,7 +165,7 @@ object RulePropsDlg: TRulePropsDlg
       ImageIndex = 2
       DesignSize = (
         333
-        352)
+        168)
       object Label7: TLabel
         Left = 3
         Top = 12
@@ -201,7 +183,6 @@ object RulePropsDlg: TRulePropsDlg
         HideSelection = False
         TabOrder = 0
         OnChange = edMaskChange
-        ExplicitWidth = 323
       end
       object btHyperLinkMacros: TButton
         Left = 255
@@ -212,7 +193,6 @@ object RulePropsDlg: TRulePropsDlg
         Caption = 'Macros'
         TabOrder = 1
         OnClick = btHyperLinkMacrosClick
-        ExplicitLeft = 251
       end
     end
     object tsDateFormat: TTabSheet
@@ -220,7 +200,7 @@ object RulePropsDlg: TRulePropsDlg
       ImageIndex = 3
       DesignSize = (
         333
-        352)
+        168)
       object Label8: TLabel
         Left = 3
         Top = 12
@@ -247,7 +227,6 @@ object RulePropsDlg: TRulePropsDlg
         MaxLength = 1
         TabOrder = 1
         OnChange = edDateSeparatorChange
-        ExplicitLeft = 165
       end
       object cbDateFormat: TComboBox
         Left = 3
@@ -258,7 +237,6 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         OnChange = cbDateFormatChange
-        ExplicitWidth = 156
       end
     end
     object tsCustomFilter: TTabSheet
@@ -266,7 +244,7 @@ object RulePropsDlg: TRulePropsDlg
       ImageIndex = 4
       DesignSize = (
         333
-        352)
+        168)
       object Label10: TLabel
         Left = 3
         Top = 12
@@ -294,7 +272,6 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         OnChange = edDaysBeforeChange
-        ExplicitWidth = 156
       end
       object edDaysAfter: TJvSpinEdit
         Left = 169
@@ -306,7 +283,6 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akTop, akRight]
         TabOrder = 1
         OnChange = edDaysAfterChange
-        ExplicitLeft = 165
       end
     end
     object tsHighlight: TTabSheet
@@ -314,7 +290,7 @@ object RulePropsDlg: TRulePropsDlg
       ImageIndex = 1
       DesignSize = (
         333
-        352)
+        168)
       object Label5: TLabel
         Left = 3
         Top = 12
@@ -341,7 +317,6 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
         OnChange = cbHighlightColorChange
-        ExplicitWidth = 156
       end
       object cbHighlightTextColor: TColorBox
         Left = 169
@@ -352,7 +327,6 @@ object RulePropsDlg: TRulePropsDlg
         Anchors = [akTop, akRight]
         TabOrder = 1
         OnChange = cbHighlightTextColorChange
-        ExplicitLeft = 165
       end
     end
     object tsPassword: TTabSheet
@@ -360,7 +334,7 @@ object RulePropsDlg: TRulePropsDlg
       ImageIndex = 6
       DesignSize = (
         333
-        352)
+        168)
       object ckDisplayPasswordStrength: TCheckBox
         Left = 3
         Top = 11
@@ -370,13 +344,22 @@ object RulePropsDlg: TRulePropsDlg
         Caption = 'Display password strength'
         TabOrder = 0
         OnClick = ckDisplayPasswordStrengthClick
-        ExplicitWidth = 323
       end
     end
   end
-  object ActionList: TActionList
+  object btHelp: TButton
     Left = 8
-    Top = 392
+    Top = 210
+    Width = 75
+    Height = 25
+    Action = Help
+    Anchors = [akLeft, akBottom]
+    TabOrder = 1
+    ExplicitTop = 394
+  end
+  object ActionList: TActionList
+    Left = 24
+    Top = 152
     object OK: TAction
       Caption = 'OK'
       OnExecute = OKExecute
@@ -427,10 +410,15 @@ object RulePropsDlg: TRulePropsDlg
       Caption = 'Days'
       OnExecute = DisplayDaysMacroExecute
     end
+    object Help: TAction
+      Caption = 'Help'
+      Hint = 'https://maurizuki.github.io/O2-user-manual/docs/rules/'
+      OnExecute = HelpExecute
+    end
   end
   object HyperLinkMacrosMenu: TPopupMenu
-    Left = 72
-    Top = 392
+    Left = 248
+    Top = 152
     object Fieldname1: TMenuItem
       Action = HyperLinkFieldNameMacro
     end
@@ -439,8 +427,8 @@ object RulePropsDlg: TRulePropsDlg
     end
   end
   object DisplayMacrosMenu: TPopupMenu
-    Left = 40
-    Top = 392
+    Left = 120
+    Top = 152
     object Fieldname2: TMenuItem
       Action = DisplayFieldNameMacro
     end

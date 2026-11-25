@@ -81,12 +81,13 @@ type
     Daysofmonth1: TMenuItem;
     Months1: TMenuItem;
     Days1: TMenuItem;
-    MaskHelpMemo: TMemo;
     cbDateFormat: TComboBox;
     tsPassword: TTabSheet;
     ckDisplayPasswordStrength: TCheckBox;
-    procedure FormCreate(Sender: TObject);
+    Help: TAction;
+    btHelp: TButton;
     procedure FormShow(Sender: TObject);
+    procedure HelpExecute(Sender: TObject);
     procedure OKExecute(Sender: TObject);
     procedure OKUpdate(Sender: TObject);
     procedure edNameChange(Sender: TObject);
@@ -129,27 +130,9 @@ var
 implementation
 
 uses
-  uGlobal, uCtrlHelpers, uO2Rules;
+  uGlobal, uCtrlHelpers, uShellUtils, uO2Rules;
 
 {$R *.dfm}
-
-resourcestring
-  SMaskHelp01 = 'Valid field name mask and field value mask consist of literal characters, sets, and wildcards.';
-  SMaskHelp02 = 'Each literal character must match a single character in the field name or value.';
-  SMaskHelp03 = 'The comparison to literal characters is case-insensitive.';
-  SMaskHelp04 = 'Each set begins with an opening bracket ([) and ends with a closing bracket (]).';
-  SMaskHelp05 = 'Between the brackets are the elements of the set.';
-  SMaskHelp06 = 'Each element is a literal character or a range.';
-  SMaskHelp07 = 'Ranges are specified by an initial value, a dash (-), and a final value.';
-  SMaskHelp08 = 'Do not use spaces or commas to separate the elements of the set.';
-  SMaskHelp09 = 'A set must match a single character in the field name or value.';
-  SMaskHelp10 = 'The character matches the set if it is the same as one of the literal characters in the set, or if it is in one of the ranges in the set.';
-  SMaskHelp11 = 'A character is in a range if it matches the initial value, the final value, or falls between the two values.';
-  SMaskHelp12 = 'All comparisons are case-insensitive.';
-  SMaskHelp13 = 'If the first character after the opening bracket of a set is an exclamation point (!), then the set matches any character that is not in the set.';
-  SMaskHelp14 = 'Wildcards are asterisks (*) or question marks (?).';
-  SMaskHelp15 = 'An asterisk matches any number of characters.';
-  SMaskHelp16 = 'A question mark matches a single arbitrary character.';
 
 class function TRulePropsDlg.Execute(Model: IRuleProps): Boolean;
 var
@@ -206,30 +189,15 @@ begin
   tsPassword.TabVisible := FModel.IsPassword;
 end;
 
-procedure TRulePropsDlg.FormCreate(Sender: TObject);
-begin
-  MaskHelpMemo.Lines.BeginUpdate;
-  try
-    MaskHelpMemo.Lines.Clear;
-    MaskHelpMemo.Lines.Add(SMaskHelp01);
-    MaskHelpMemo.Lines.Add('');
-    MaskHelpMemo.Lines.Add(SMaskHelp02 + ' ' + SMaskHelp03);
-    MaskHelpMemo.Lines.Add('');
-    MaskHelpMemo.Lines.Add(SMaskHelp04 + ' ' + SMaskHelp05
-      + ' ' + SMaskHelp06 + ' ' + SMaskHelp07 + ' ' + SMaskHelp08
-      + ' ' + SMaskHelp09 + ' ' + SMaskHelp10 + ' ' + SMaskHelp11
-      + ' ' + SMaskHelp12 + ' ' + SMaskHelp13);
-    MaskHelpMemo.Lines.Add('');
-    MaskHelpMemo.Lines.Add(SMaskHelp14 + ' ' + SMaskHelp15 + ' ' + SMaskHelp16);
-  finally
-    MaskHelpMemo.Lines.EndUpdate;
-  end;
-end;
-
 procedure TRulePropsDlg.FormShow(Sender: TObject);
 begin
   DisplayTabs;
   if edName.CanFocus then edName.SetFocus;
+end;
+
+procedure TRulePropsDlg.HelpExecute(Sender: TObject);
+begin
+  ShellOpen(TAction(Sender).Hint);
 end;
 
 procedure TRulePropsDlg.OKExecute(Sender: TObject);
