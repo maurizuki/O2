@@ -2,7 +2,7 @@ object RulePropsDlg: TRulePropsDlg
   Left = 192
   Top = 107
   Caption = 'Rule properties'
-  ClientHeight = 243
+  ClientHeight = 186
   ClientWidth = 357
   Color = clBtnFace
   Font.Charset = ANSI_CHARSET
@@ -14,22 +14,22 @@ object RulePropsDlg: TRulePropsDlg
   OnShow = FormShow
   DesignSize = (
     357
-    243)
+    186)
   TextHeight = 13
   object btOk: TButton
     Left = 193
-    Top = 210
+    Top = 153
     Width = 75
     Height = 25
     Action = OK
     Anchors = [akRight, akBottom]
     Default = True
     TabOrder = 2
-    ExplicitTop = 394
+    ExplicitTop = 210
   end
   object btCancel: TButton
     Left = 274
-    Top = 210
+    Top = 153
     Width = 75
     Height = 25
     Anchors = [akRight, akBottom]
@@ -37,22 +37,22 @@ object RulePropsDlg: TRulePropsDlg
     Caption = 'Cancel'
     ModalResult = 2
     TabOrder = 3
-    ExplicitTop = 394
+    ExplicitTop = 210
   end
   object PageControl1: TPageControl
     Left = 8
     Top = 8
     Width = 341
-    Height = 196
+    Height = 139
     ActivePage = tsGeneral
     Anchors = [akLeft, akTop, akRight, akBottom]
     TabOrder = 0
-    ExplicitHeight = 380
+    ExplicitHeight = 196
     object tsGeneral: TTabSheet
       Caption = 'General'
       DesignSize = (
         333
-        168)
+        111)
       object Label1: TLabel
         Left = 3
         Top = 12
@@ -130,7 +130,7 @@ object RulePropsDlg: TRulePropsDlg
       ImageIndex = 5
       DesignSize = (
         333
-        168)
+        111)
       object Label12: TLabel
         Left = 3
         Top = 12
@@ -165,7 +165,7 @@ object RulePropsDlg: TRulePropsDlg
       ImageIndex = 2
       DesignSize = (
         333
-        168)
+        111)
       object Label7: TLabel
         Left = 3
         Top = 12
@@ -200,7 +200,7 @@ object RulePropsDlg: TRulePropsDlg
       ImageIndex = 3
       DesignSize = (
         333
-        168)
+        111)
       object Label8: TLabel
         Left = 3
         Top = 12
@@ -244,7 +244,7 @@ object RulePropsDlg: TRulePropsDlg
       ImageIndex = 4
       DesignSize = (
         333
-        168)
+        111)
       object Label10: TLabel
         Left = 3
         Top = 12
@@ -290,7 +290,7 @@ object RulePropsDlg: TRulePropsDlg
       ImageIndex = 1
       DesignSize = (
         333
-        168)
+        111)
       object Label5: TLabel
         Left = 3
         Top = 12
@@ -334,7 +334,7 @@ object RulePropsDlg: TRulePropsDlg
       ImageIndex = 6
       DesignSize = (
         333
-        168)
+        111)
       object ckDisplayPasswordStrength: TCheckBox
         Left = 3
         Top = 11
@@ -349,16 +349,16 @@ object RulePropsDlg: TRulePropsDlg
   end
   object btHelp: TButton
     Left = 8
-    Top = 210
+    Top = 153
     Width = 75
     Height = 25
     Action = Help
     Anchors = [akLeft, akBottom]
     TabOrder = 1
-    ExplicitTop = 394
+    ExplicitTop = 210
   end
   object ActionList: TActionList
-    Left = 24
+    Left = 88
     Top = 152
     object OK: TAction
       Caption = 'OK'
@@ -417,7 +417,7 @@ object RulePropsDlg: TRulePropsDlg
     end
   end
   object HyperLinkMacrosMenu: TPopupMenu
-    Left = 248
+    Left = 152
     Top = 152
     object Fieldname1: TMenuItem
       Action = HyperLinkFieldNameMacro
