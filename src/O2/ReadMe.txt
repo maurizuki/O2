@@ -1,4 +1,4 @@
-O2 3.4 Copyright (C) 2004-2026 Maurizio Basaglia. All rights reserved.
+O2 3.5 Copyright (C) 2004-2026 Maurizio Basaglia. All rights reserved.
 
 
 CONTENTS
@@ -25,10 +25,24 @@ https://developer.microsoft.com/en-us/microsoft-edge/webview2/
 In order to start to use O2, see the examples in the "Examples"
 directory (the password to open PasswordWallet.o2 is "password").
 
+For a complete guide to O2, see the user manual:
+https://maurizuki.github.io/O2-user-manual
+
 For further informations see: https://github.com/maurizuki/O2
 
 
 2. CHANGE LOG
+
+Version 3.5
+- Fields view: new "Copy as table" commands, to copy the fields as a
+  table in HTML and Markdown format, ready to be pasted in documents,
+  e-mails or Markdown files.
+- Fields view: copy commands organized in submenus.
+- New online user manual, available from the Help menu.
+- Object properties and Rule properties dialogs: new Help button that
+  opens the related page of the user manual. It replaces the Markdown
+  syntax help link of the Object properties dialog and the mask syntax
+  help of the Rule properties dialog.
 
 Version 3.4.1
 - Deprecated cipher and hash algorithms: the cipher algorithms CAST-128,

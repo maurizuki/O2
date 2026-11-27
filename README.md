@@ -24,7 +24,15 @@ To install O2 with the Windows Package Manager - a.k.a. *winget* - use the follo
 winget install --id=maurizuki.O2 -e
 ```
 
+For a complete guide to O2, see the [user manual](https://maurizuki.github.io/O2-user-manual).
+
 ## Change log
+
+### Version 3.5
+- *Fields* view: new *Copy as table* commands, to copy the fields as a table in HTML and Markdown format, ready to be pasted in documents, e-mails or Markdown files.
+- *Fields* view: copy commands organized in submenus.
+- New online [user manual](https://maurizuki.github.io/O2-user-manual), available from the *Help* menu.
+- *Object properties* and *Rule properties* dialogs: new *Help* button that opens the related page of the user manual. It replaces the Markdown syntax help link of the *Object properties* dialog and the mask syntax help of the *Rule properties* dialog.
 
 ### Version 3.4.1
 - Deprecated cipher and hash algorithms: the cipher algorithms CAST-128, Triple DES and the hash algorithms HAVAL, MD4, RIPEMD-128, RIPEMD-160, Tiger have been deprecated due to evidences of their lack of security. It's still possible to open files encrypted using the deprecated algorithms, but it's no longer possible to save files encrypted with them.
